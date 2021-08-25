@@ -1,0 +1,3 @@
+rootProject.name = 'ReforgedGTS'
+include 'api'
+include 'forge'
