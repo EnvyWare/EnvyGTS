@@ -31,7 +31,7 @@ public class MainUI {
         GuiFactory.guiBuilder()
                 .setPlayerManager(ReforgedGTSForge.getInstance().getPlayerManager())
                 .addPane(pane)
-                .height(6)
+                .height(5)
                 .title("GTS")
                 .build().open(player);
     }
