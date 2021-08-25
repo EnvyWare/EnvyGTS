@@ -50,4 +50,54 @@ public class PokemonTrade extends ForgeTrade {
     public void delete() {
         //TODO:
     }
+
+    public static class Builder extends ForgeTrade.Builder {
+
+        private Pokemon pokemon = null;
+
+        public Builder() {}
+
+        @Override
+        public Builder owner(EnvyPlayer<?> player) {
+            return (Builder) super.owner(player);
+        }
+
+        @Override
+        public Builder owner(UUID owner) {
+            return (Builder) super.owner(owner);
+        }
+
+        @Override
+        public Builder cost(double cost) {
+            return (Builder) super.cost(cost);
+        }
+
+        @Override
+        public Builder expiry(long expiry) {
+            return (Builder) super.expiry(expiry);
+        }
+
+        @Override
+        public Builder type(FilterType type) {
+            return (Builder) super.type(type);
+        }
+
+        @Override
+        public Builder content(String type) {
+            return (Builder) super.content(type);
+        }
+
+        public Builder contents(Pokemon pokemon) {
+            this.pokemon = pokemon;
+            return this;
+        }
+
+        public PokemonTrade build() {
+            if (this.pokemon == null) {
+                return null;
+            }
+
+            return new PokemonTrade(this.owner, this.cost, this.expiry, this.type, this.pokemon);
+        }
+    }
 }

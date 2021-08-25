@@ -5,6 +5,7 @@ import com.envyful.reforged.gts.api.Trade;
 import com.envyful.reforged.gts.api.gui.FilterType;
 import com.envyful.reforged.gts.api.gui.SortType;
 import com.envyful.reforged.gts.forge.impl.trade.ForgeTrade;
+import com.pixelmonmod.pixelmon.api.pokemon.Pokemon;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 
@@ -57,5 +58,55 @@ public class ItemTrade extends ForgeTrade {
     @Override
     public void delete() {
         //TODO:
+    }
+
+    public static class Builder extends ForgeTrade.Builder {
+
+        private ItemStack itemStack = null;
+
+        public Builder() {}
+
+        @Override
+        public Builder owner(EnvyPlayer<?> player) {
+            return (Builder) super.owner(player);
+        }
+
+        @Override
+        public Builder owner(UUID owner) {
+            return (Builder) super.owner(owner);
+        }
+
+        @Override
+        public Builder cost(double cost) {
+            return (Builder) super.cost(cost);
+        }
+
+        @Override
+        public Builder expiry(long expiry) {
+            return (Builder) super.expiry(expiry);
+        }
+
+        @Override
+        public Builder type(FilterType type) {
+            return (Builder) super.type(type);
+        }
+
+        @Override
+        public Builder content(String type) {
+            return (Builder) super.content(type);
+        }
+
+        public Builder contents(ItemStack itemStack) {
+            this.itemStack = itemStack;
+            return this;
+        }
+
+        public ItemTrade build() {
+            if (this.itemStack == null) {
+                return null;
+            }
+
+            return new ItemTrade(this.owner, this.cost, this.expiry, this.type, this.itemStack);
+        }
     }
 }
