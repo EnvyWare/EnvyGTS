@@ -22,7 +22,7 @@ public class ReforgedGTSConfig extends AbstractYamlConfig {
 
         private String poolName = "ReforgedGTS";
         private String ip = "0.0.0.0";
-        private String port = "3306";
+        private int port = 3306;
         private String username = "admin";
         private String password = "admin";
         private String database = "database";
@@ -35,7 +35,7 @@ public class ReforgedGTSConfig extends AbstractYamlConfig {
             return this.ip;
         }
 
-        public String getPort() {
+        public int getPort() {
             return this.port;
         }
 
