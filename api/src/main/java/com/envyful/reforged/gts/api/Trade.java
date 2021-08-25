@@ -1,7 +1,10 @@
 package com.envyful.reforged.gts.api;
 
 import com.envyful.api.player.EnvyPlayer;
+import com.envyful.reforged.gts.api.gui.FilterType;
+import com.envyful.reforged.gts.api.gui.SortType;
 
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -65,6 +68,26 @@ public interface Trade {
      * @param admin The admin who removed the item
      */
     void adminRemove(EnvyPlayer<?> admin);
+
+    /**
+     *
+     * Used for sorting the GTS GUI
+     *
+     * @param other The other trade to compare to
+     * @param type The type of sorting happening
+     * @return positive if should be placed first; 0 - if equal; negative if should be placed after
+     */
+    int compare(Trade other, SortType type);
+
+    /**
+     *
+     * Used for filtering the GTS GUI for specific types
+     * Returns true if it matches the filter type
+     *
+     * @param filterType The type of filter being checked
+     * @return true if it matches the filter
+     */
+    boolean filter(FilterType filterType);
 
     /**
      *
