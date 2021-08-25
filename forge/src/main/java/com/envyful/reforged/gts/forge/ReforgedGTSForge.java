@@ -9,7 +9,9 @@ import com.envyful.api.forge.concurrency.ForgeUpdateBuilder;
 import com.envyful.api.forge.gui.factory.ForgeGuiFactory;
 import com.envyful.api.forge.player.ForgePlayerManager;
 import com.envyful.api.gui.factory.GuiFactory;
+import com.envyful.reforged.gts.api.GlobalTradeManager;
 import com.envyful.reforged.gts.forge.config.ReforgedGTSConfig;
+import com.envyful.reforged.gts.forge.impl.storage.SQLGlobalTradeManager;
 import com.envyful.reforged.gts.forge.player.GTSAttribute;
 import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.Mod;
@@ -37,6 +39,7 @@ public class ReforgedGTSForge {
 
     private ReforgedGTSConfig config;
     private Database database;
+    private GlobalTradeManager tradeManager;
 
     @Mod.EventHandler
     public void onServerStarting(FMLPreInitializationEvent event) {
@@ -55,6 +58,7 @@ public class ReforgedGTSForge {
                     databaseDetails.getPassword(),
                     databaseDetails.getDatabase()
             );
+            this.tradeManager = new SQLGlobalTradeManager(this);
         });
 
         Metrics metrics = new Metrics(
@@ -100,5 +104,9 @@ public class ReforgedGTSForge {
 
     public ForgePlayerManager getPlayerManager() {
         return this.playerManager;
+    }
+
+    public GlobalTradeManager getTradeManager() {
+        return this.tradeManager;
     }
 }
