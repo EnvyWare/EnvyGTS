@@ -10,6 +10,7 @@ import com.envyful.api.forge.gui.factory.ForgeGuiFactory;
 import com.envyful.api.forge.player.ForgePlayerManager;
 import com.envyful.api.gui.factory.GuiFactory;
 import com.envyful.reforged.gts.api.GlobalTradeManager;
+import com.envyful.reforged.gts.forge.command.GTSCommand;
 import com.envyful.reforged.gts.forge.config.ReforgedGTSConfig;
 import com.envyful.reforged.gts.forge.impl.storage.SQLGlobalTradeManager;
 import com.envyful.reforged.gts.forge.player.GTSAttribute;
@@ -88,6 +89,7 @@ public class ReforgedGTSForge {
     @Mod.EventHandler
     public void onServerStarting(FMLServerStartingEvent event) {
         this.playerManager.registerAttribute(this, GTSAttribute.class);
+        this.commandFactory.registerCommand(event.getServer(), new GTSCommand());
     }
 
     public static ReforgedGTSForge getInstance() {
