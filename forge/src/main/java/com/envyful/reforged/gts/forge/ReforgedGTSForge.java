@@ -7,8 +7,10 @@ import com.envyful.api.database.impl.SimpleHikariDatabase;
 import com.envyful.api.forge.command.ForgeCommandFactory;
 import com.envyful.api.forge.concurrency.ForgeUpdateBuilder;
 import com.envyful.api.forge.gui.factory.ForgeGuiFactory;
+import com.envyful.api.forge.player.ForgePlayerManager;
 import com.envyful.api.gui.factory.GuiFactory;
 import com.envyful.reforged.gts.forge.config.ReforgedGTSConfig;
+import com.envyful.reforged.gts.forge.player.GTSAttribute;
 import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
@@ -30,6 +32,7 @@ public class ReforgedGTSForge {
 
     private static ReforgedGTSForge instance;
 
+    private ForgePlayerManager playerManager = new ForgePlayerManager();
     private ForgeCommandFactory commandFactory = new ForgeCommandFactory();
 
     private ReforgedGTSConfig config;
@@ -80,10 +83,22 @@ public class ReforgedGTSForge {
 
     @Mod.EventHandler
     public void onServerStarting(FMLServerStartingEvent event) {
-
+        this.playerManager.registerAttribute(this, GTSAttribute.class);
     }
 
     public static ReforgedGTSForge getInstance() {
         return instance;
+    }
+
+    public ReforgedGTSConfig getConfig() {
+        return this.config;
+    }
+
+    public Database getDatabase() {
+        return this.database;
+    }
+
+    public ForgePlayerManager getPlayerManager() {
+        return this.playerManager;
     }
 }
