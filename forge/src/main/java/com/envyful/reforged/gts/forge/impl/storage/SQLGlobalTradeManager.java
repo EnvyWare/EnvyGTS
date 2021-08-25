@@ -5,6 +5,7 @@ import com.envyful.reforged.gts.api.Trade;
 import com.envyful.reforged.gts.api.sql.ReforgedGTSQueries;
 import com.envyful.reforged.gts.forge.ReforgedGTSForge;
 import com.envyful.reforged.gts.forge.impl.ForgeGlobalTradeManager;
+import com.envyful.reforged.gts.forge.impl.TradeFactory;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -21,7 +22,7 @@ public class SQLGlobalTradeManager extends ForgeGlobalTradeManager {
             ResultSet resultSet = preparedStatement.executeQuery();
 
             while (resultSet.next()) {
-                //TODO: load
+                TradeFactory.fromResultSet(resultSet);
             }
         } catch (SQLException e) {
             e.printStackTrace();
