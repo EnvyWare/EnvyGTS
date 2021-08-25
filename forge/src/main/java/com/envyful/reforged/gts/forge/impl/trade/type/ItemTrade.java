@@ -1,5 +1,6 @@
 package com.envyful.reforged.gts.forge.impl.trade.type;
 
+import com.envyful.api.json.UtilGson;
 import com.envyful.api.player.EnvyPlayer;
 import com.envyful.reforged.gts.api.Trade;
 import com.envyful.reforged.gts.api.gui.FilterType;
@@ -96,11 +97,17 @@ public class ItemTrade extends ForgeTrade {
             return (Builder) super.content(type);
         }
 
+        @Override
+        public Builder contents(String contents) {
+            return this.contents(UtilGson.GSON.fromJson(contents, ItemStack.class));
+        }
+
         public Builder contents(ItemStack itemStack) {
             this.itemStack = itemStack;
             return this;
         }
 
+        @Override
         public ItemTrade build() {
             if (this.itemStack == null) {
                 return null;

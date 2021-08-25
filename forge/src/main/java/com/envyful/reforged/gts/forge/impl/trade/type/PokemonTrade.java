@@ -1,5 +1,6 @@
 package com.envyful.reforged.gts.forge.impl.trade.type;
 
+import com.envyful.api.json.UtilGson;
 import com.envyful.api.player.EnvyPlayer;
 import com.envyful.api.reforged.pixelmon.storage.UtilPixelmonPlayer;
 import com.envyful.reforged.gts.api.Trade;
@@ -87,11 +88,17 @@ public class PokemonTrade extends ForgeTrade {
             return (Builder) super.content(type);
         }
 
+        @Override
+        public Builder contents(String contents) {
+            return this.contents(UtilGson.GSON.fromJson(contents, Pokemon.class));
+        }
+
         public Builder contents(Pokemon pokemon) {
             this.pokemon = pokemon;
             return this;
         }
 
+        @Override
         public PokemonTrade build() {
             if (this.pokemon == null) {
                 return null;

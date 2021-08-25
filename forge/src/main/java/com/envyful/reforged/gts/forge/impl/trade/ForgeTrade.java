@@ -113,5 +113,12 @@ public abstract class ForgeTrade implements Trade {
             return builder;
         }
 
+        public Builder contents(String contents) {
+            return this;
+        }
+
+        public Trade build() {
+            return null;
+        }
     }
 }
