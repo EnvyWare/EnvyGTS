@@ -12,7 +12,7 @@ import java.util.List;
 
 public abstract class ForgeGlobalTradeManager implements GlobalTradeManager {
 
-    private final List<Trade> activeTrades = Lists.newArrayList();
+    protected final List<Trade> activeTrades = Lists.newArrayList();
 
     public ForgeGlobalTradeManager() {}
 
