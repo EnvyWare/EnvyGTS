@@ -9,6 +9,7 @@ import org.spongepowered.configurate.objectmapping.ConfigSerializable;
 public class ReforgedGTSConfig extends AbstractYamlConfig {
 
     private DatabaseDetails databaseDetails = new DatabaseDetails();
+    private int tradeDurationSeconds = 86400;
 
     public ReforgedGTSConfig() {
         super();
@@ -16,6 +17,10 @@ public class ReforgedGTSConfig extends AbstractYamlConfig {
 
     public DatabaseDetails getDatabaseDetails() {
         return this.databaseDetails;
+    }
+
+    public int getTradeDurationSeconds() {
+        return this.tradeDurationSeconds;
     }
 
     @ConfigSerializable
