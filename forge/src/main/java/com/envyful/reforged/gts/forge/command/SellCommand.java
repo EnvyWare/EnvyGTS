@@ -7,13 +7,17 @@ import com.envyful.api.command.annotate.executor.Sender;
 import com.envyful.api.forge.chat.UtilChatColour;
 import com.envyful.api.forge.player.ForgeEnvyPlayer;
 import com.envyful.api.type.UtilParse;
+import com.envyful.reforged.gts.api.gui.FilterType;
 import com.envyful.reforged.gts.forge.ReforgedGTSForge;
+import com.envyful.reforged.gts.forge.impl.trade.ForgeTrade;
+import com.envyful.reforged.gts.forge.impl.trade.type.ItemTrade;
 import com.envyful.reforged.gts.forge.ui.SelectTypeUI;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 
 import java.util.Objects;
+import java.util.concurrent.TimeUnit;
 
 @Command(
         value = "sell",
@@ -64,6 +68,16 @@ public class SellCommand {
             return;
         }
 
-        //TODO: create trade and add to GTS
+        ItemTrade.Builder builder = (ItemTrade.Builder) ForgeTrade.builder()
+                .owner(sender)
+                .type(FilterType.INSTANT_BUY)
+                .cost(price)
+                .expiry(System.currentTimeMillis()
+                        + TimeUnit.SECONDS.toMillis(ReforgedGTSForge.getInstance().getConfig().getTradeDurationSeconds()))
+                .content("i");
+
+        builder.contents(inHand);
+
+        ReforgedGTSForge.getInstance().getTradeManager().addTrade(sender, builder.build());
     }
 }
