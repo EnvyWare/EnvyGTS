@@ -3,7 +3,6 @@ package com.envyful.reforged.gts.forge.event;
 import com.envyful.api.forge.player.ForgeEnvyPlayer;
 import com.envyful.api.player.EnvyPlayer;
 import com.envyful.reforged.gts.api.Trade;
-import com.envyful.reforged.gts.api.sql.ReforgedGTSQueries;
 import com.envyful.reforged.gts.forge.ReforgedGTSForge;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraftforge.fml.common.eventhandler.Cancelable;
@@ -14,7 +13,7 @@ import java.util.UUID;
 
 /**
  *
- * Represents when a player adds a trade to the GTS
+ * Represents when a player purchases a trade from the GTS
  *
  */
 @Cancelable
