@@ -32,7 +32,7 @@ public class MainUI {
                 .setPlayerManager(ReforgedGTSForge.getInstance().getPlayerManager())
                 .addPane(pane)
                 .height(5)
-                .title("GTS")
+                .title(ReforgedGTSForge.getInstance().getLocale().getGuiName())
                 .build().open(player);
     }
 }

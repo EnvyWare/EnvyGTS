@@ -5,7 +5,9 @@ import com.envyful.api.forge.player.attribute.AbstractForgeAttribute;
 import com.envyful.reforged.gts.api.Trade;
 import com.envyful.reforged.gts.api.sql.ReforgedGTSQueries;
 import com.envyful.reforged.gts.forge.ReforgedGTSForge;
+import com.envyful.reforged.gts.forge.impl.TradeFactory;
 import com.google.common.collect.Lists;
+import com.pixelmonmod.pixelmon.api.pokemon.Pokemon;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -16,6 +18,7 @@ import java.util.List;
 public class GTSAttribute extends AbstractForgeAttribute<ReforgedGTSForge> {
 
     private List<Trade> ownedTrades = Lists.newArrayList();
+    private Pokemon selected = null;
 
     public GTSAttribute(ReforgedGTSForge manager, ForgeEnvyPlayer parent) {
         super(manager, parent);
@@ -23,6 +26,14 @@ public class GTSAttribute extends AbstractForgeAttribute<ReforgedGTSForge> {
 
     public List<Trade> getOwnedTrades() {
         return this.ownedTrades;
+    }
+
+    public Pokemon getSelected() {
+        return this.selected;
+    }
+
+    public void setSelected(Pokemon selected) {
+        this.selected = selected;
     }
 
     @Override
@@ -34,7 +45,7 @@ public class GTSAttribute extends AbstractForgeAttribute<ReforgedGTSForge> {
             ResultSet resultSet = preparedStatement.executeQuery();
 
             while (resultSet.next()) {
-                //TODO:
+                this.ownedTrades.add(TradeFactory.fromResultSet(resultSet));
             }
         } catch (SQLException e) {
             e.printStackTrace();
