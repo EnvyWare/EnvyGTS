@@ -12,6 +12,8 @@ import java.util.List;
 @ConfigSerializable
 public class LocaleConfig extends AbstractYamlConfig {
 
+    private Messages messages = new Messages();
+
     private String guiName = "GTS";
     private ItemSetting pokemonItem = new ItemSetting("&ePokemon", Lists.newArrayList(
             "&e&nClick me&7 to add a pokemon to",
@@ -24,6 +26,10 @@ public class LocaleConfig extends AbstractYamlConfig {
 
     public LocaleConfig() {
         super();
+    }
+
+    public Messages getMessages() {
+        return this.messages;
     }
 
     public String getGuiName() {
@@ -68,6 +74,19 @@ public class LocaleConfig extends AbstractYamlConfig {
             }
 
             return this.cachedLore;
+        }
+    }
+
+    @ConfigSerializable
+    public class Messages {
+
+        private String openingUi = "&e&l(!) &eOpening GTS...";
+
+
+        public Messages() {}
+
+        public String getOpeningUi() {
+            return UtilChatColour.translateColourCodes('&', this.openingUi);
         }
     }
 }

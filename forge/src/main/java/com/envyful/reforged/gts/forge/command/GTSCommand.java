@@ -8,6 +8,7 @@ import com.envyful.api.command.annotate.executor.Sender;
 import com.envyful.reforged.gts.forge.ReforgedGTSForge;
 import com.envyful.reforged.gts.forge.ui.MainUI;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.util.text.TextComponentString;
 
 @Command(
         value = "gts",
@@ -24,6 +25,7 @@ public class GTSCommand {
 
     @CommandProcessor
     public void onCommand(@Sender EntityPlayerMP player, String[] args) {
+        player.sendMessage(new TextComponentString(ReforgedGTSForge.getInstance().getLocale().getMessages().getOpeningUi()));
         MainUI.open(ReforgedGTSForge.getInstance().getPlayerManager().getPlayer(player));
     }
 }
