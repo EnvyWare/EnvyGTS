@@ -61,6 +61,11 @@ public class ItemTrade extends ForgeTrade {
         //TODO:
     }
 
+    @Override
+    public void save() {
+        //TODO:
+    }
+
     public static class Builder extends ForgeTrade.Builder {
 
         private ItemStack itemStack = null;

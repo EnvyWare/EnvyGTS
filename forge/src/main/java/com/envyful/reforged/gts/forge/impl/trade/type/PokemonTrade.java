@@ -52,6 +52,11 @@ public class PokemonTrade extends ForgeTrade {
         //TODO:
     }
 
+    @Override
+    public void save() {
+        //TODO:
+    }
+
     public static class Builder extends ForgeTrade.Builder {
 
         private Pokemon pokemon = null;
