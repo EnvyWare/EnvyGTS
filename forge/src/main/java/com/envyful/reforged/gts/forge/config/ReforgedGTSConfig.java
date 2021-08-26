@@ -5,6 +5,7 @@ import com.envyful.api.config.yaml.AbstractYamlConfig;
 import org.spongepowered.configurate.objectmapping.ConfigSerializable;
 
 @ConfigPath("config/ReforgedGTS/config.yml")
+@ConfigSerializable
 public class ReforgedGTSConfig extends AbstractYamlConfig {
 
     private DatabaseDetails databaseDetails = new DatabaseDetails();
