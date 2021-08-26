@@ -11,6 +11,7 @@ import com.envyful.api.forge.player.ForgePlayerManager;
 import com.envyful.api.gui.factory.GuiFactory;
 import com.envyful.reforged.gts.api.GlobalTradeManager;
 import com.envyful.reforged.gts.forge.command.GTSCommand;
+import com.envyful.reforged.gts.forge.config.LocaleConfig;
 import com.envyful.reforged.gts.forge.config.ReforgedGTSConfig;
 import com.envyful.reforged.gts.forge.impl.storage.SQLGlobalTradeManager;
 import com.envyful.reforged.gts.forge.player.GTSAttribute;
@@ -39,6 +40,8 @@ public class ReforgedGTSForge {
     private ForgeCommandFactory commandFactory = new ForgeCommandFactory();
 
     private ReforgedGTSConfig config;
+    private LocaleConfig locale;
+
     private Database database;
     private GlobalTradeManager tradeManager;
 
@@ -81,6 +84,7 @@ public class ReforgedGTSForge {
     private void loadConfig() {
         try {
             this.config = YamlConfigFactory.getInstance(ReforgedGTSConfig.class);
+            this.locale = YamlConfigFactory.getInstance(LocaleConfig.class);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -110,5 +114,9 @@ public class ReforgedGTSForge {
 
     public GlobalTradeManager getTradeManager() {
         return this.tradeManager;
+    }
+
+    public LocaleConfig getLocale() {
+        return this.locale;
     }
 }
