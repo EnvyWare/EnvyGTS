@@ -81,12 +81,32 @@ public class LocaleConfig extends AbstractYamlConfig {
     public class Messages {
 
         private String openingUi = "&e&l(!) &eOpening GTS...";
+        private String sellInsuffucientArgs = "&c&l(!) &cInsufficient args! /gts s <amount> <price>";
+        private String sellNoItemInHand = "&c&l(!) &cYou must have an item in your hand to sell!";
 
+        private String amountMustBePositive = "&c&l(!) &cAmount must be a positive number!";
+        private String priceMustBeMoreThanOne = "&c&l(!) &cPrice cannot be less than $1";
 
         public Messages() {}
 
         public String getOpeningUi() {
             return UtilChatColour.translateColourCodes('&', this.openingUi);
+        }
+
+        public String getSellInsuffucientArgs() {
+            return UtilChatColour.translateColourCodes('&', this.sellInsuffucientArgs);
+        }
+
+        public String getSellNoItemInHand() {
+            return UtilChatColour.translateColourCodes('&', this.sellNoItemInHand);
+        }
+
+        public String getAmountMustBePositive() {
+            return UtilChatColour.translateColourCodes('&', this.amountMustBePositive);
+        }
+
+        public String getPriceMustBeMoreThanOne() {
+            return UtilChatColour.translateColourCodes('&', this.priceMustBeMoreThanOne);
         }
     }
 }
