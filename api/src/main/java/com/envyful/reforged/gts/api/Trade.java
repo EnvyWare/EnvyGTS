@@ -96,4 +96,11 @@ public interface Trade {
      */
     void delete();
 
+    /**
+     *
+     * Method for saving this {@link Trade} to the storage. Do not call outside of creation methods
+     *
+     */
+    void save();
+
 }
