@@ -18,7 +18,7 @@ public interface GlobalTradeManager {
      * @param player The player adding the trade
      * @param trade The trade being added
      */
-    void addTrade(EnvyPlayer<?> player, Trade trade);
+    boolean addTrade(EnvyPlayer<?> player, Trade trade);
 
     /**
      *

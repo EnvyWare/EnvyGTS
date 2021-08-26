@@ -17,11 +17,11 @@ public abstract class ForgeGlobalTradeManager implements GlobalTradeManager {
     public ForgeGlobalTradeManager() {}
 
     @Override
-    public void addTrade(EnvyPlayer<?> player, Trade trade) {
+    public boolean addTrade(EnvyPlayer<?> player, Trade trade) {
         GTSAttribute attribute = player.getAttribute(ReforgedGTSForge.class);
 
         if (attribute == null) {
-            return;
+            return false;
         }
 
         this.activeTrades.add(trade);
