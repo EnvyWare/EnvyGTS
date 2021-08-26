@@ -4,8 +4,12 @@ import com.envyful.api.player.EnvyPlayer;
 import com.envyful.reforged.gts.api.GlobalTradeManager;
 import com.envyful.reforged.gts.api.Trade;
 import com.envyful.reforged.gts.forge.ReforgedGTSForge;
+import com.envyful.reforged.gts.forge.event.TradeCreateEvent;
 import com.envyful.reforged.gts.forge.player.GTSAttribute;
 import com.google.common.collect.Lists;
+import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.fml.common.FMLCommonHandler;
 
 import java.util.Collections;
 import java.util.List;
@@ -24,8 +28,16 @@ public abstract class ForgeGlobalTradeManager implements GlobalTradeManager {
             return false;
         }
 
+        TradeCreateEvent event = new TradeCreateEvent((EnvyPlayer<EntityPlayerMP>) player, trade);
+        MinecraftForge.EVENT_BUS.post(event);
+
+        if (event.isCanceled()) {
+            return false;
+        }
+
         this.activeTrades.add(trade);
         attribute.getOwnedTrades().add(trade);
+        return true;
     }
 
     @Override
