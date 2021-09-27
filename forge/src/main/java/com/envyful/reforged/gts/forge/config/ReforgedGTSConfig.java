@@ -1,6 +1,7 @@
 package com.envyful.reforged.gts.forge.config;
 
 import com.envyful.api.config.data.ConfigPath;
+import com.envyful.api.config.type.ConfigInterface;
 import com.envyful.api.config.yaml.AbstractYamlConfig;
 import org.spongepowered.configurate.objectmapping.ConfigSerializable;
 
@@ -9,6 +10,8 @@ import org.spongepowered.configurate.objectmapping.ConfigSerializable;
 public class ReforgedGTSConfig extends AbstractYamlConfig {
 
     private DatabaseDetails databaseDetails = new DatabaseDetails();
+    private ConfigInterface guiSettings = new ConfigInterface();
+
     private int tradeDurationSeconds = 86400;
 
     public ReforgedGTSConfig() {
@@ -21,6 +24,10 @@ public class ReforgedGTSConfig extends AbstractYamlConfig {
 
     public int getTradeDurationSeconds() {
         return this.tradeDurationSeconds;
+    }
+
+    public ConfigInterface getGuiSettings() {
+        return this.guiSettings;
     }
 
     @ConfigSerializable
