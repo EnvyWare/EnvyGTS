@@ -54,15 +54,13 @@ shadowJar {
     configurations = [project.configurations.shadow]
     archiveName = rootProject.name + '-Forge.jar'
 
-    relocate('org.spongepowered.configurate', 'com.envyful.holograms.forge.shade.configurate')
-    relocate('org.yaml.snakeyaml', 'com.envyful.holograms.forge.shade.snakeyaml')
-    relocate('io.leangen.geantyref', 'com.envyful.holograms.forge.shade.geantyref')
-    relocate('com.google.gson', 'com.envyful.holograms.forge.shade.gson')
-    relocate('com.zaxxer', 'com.envyful.holograms.forge.shade.hikari')
-    relocate('org.slf4j', 'com.envyful.holograms.forge.shade.slf4j')
-    relocate('com.envyful.api', 'com.envyful.holograms.forge.shade.envy.api')
-    relocate('org.bstats', 'com.envyful.holograms.forge.shade.bstats')
-
+    relocate('org.spongepowered.configurate', 'com.envyful.reforged.gts.forge.shade.configurate')
+    relocate('org.yaml.snakeyaml', 'com.envyful.reforged.gts.forge.shade.snakeyaml')
+    relocate('io.leangen.geantyref', 'com.envyful.reforged.gts.forge.shade.geantyref')
+    relocate('com.google.gson', 'com.envyful.reforged.gts.forge.shade.gson')
+    relocate('com.zaxxer', 'com.envyful.reforged.gts.forge.shade.hikari')
+    relocate('org.slf4j', 'com.envyful.reforged.gts.forge.shade.slf4j')
+    relocate('com.envyful.api', 'com.envyful.reforged.gts.forge.shade.envy.api')
 
     exclude "**/module-info.class"
 }
