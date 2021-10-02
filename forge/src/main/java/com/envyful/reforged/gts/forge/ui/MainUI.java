@@ -1,13 +1,13 @@
 package com.envyful.reforged.gts.forge.ui;
 
 import com.envyful.api.config.type.ConfigItem;
-import com.envyful.api.forge.items.ItemBuilder;
+import com.envyful.api.forge.config.UtilConfigItem;
 import com.envyful.api.gui.factory.GuiFactory;
 import com.envyful.api.gui.pane.Pane;
 import com.envyful.api.player.EnvyPlayer;
 import com.envyful.reforged.gts.forge.ReforgedGTSForge;
+import com.envyful.reforged.gts.forge.config.ReforgedGTSConfig;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 
 public class MainUI {
@@ -20,16 +20,48 @@ public class MainUI {
                 .build();
 
         for (ConfigItem fillerItem : ReforgedGTSForge.getInstance().getConfig().getGuiSettings().getFillerItems()) {
-            pane.add(GuiFactory.displayableBuilder(ItemStack.class).itemStack(new ItemBuilder()
-                             .type(Item.getByNameOrId(fillerItem.getType()))
-                             .amount(fillerItem.getAmount())
-                             .damage(fillerItem.getDamage())
-                             .name(fillerItem.getName())
-                             .lore(fillerItem.getLore())
-                             .build()).build());
+            pane.add(GuiFactory.displayableBuilder(ItemStack.class)
+                             .itemStack(UtilConfigItem.fromConfigItem(fillerItem))
+                             .build());
         }
 
+        ReforgedGTSConfig config = ReforgedGTSForge.getInstance().getConfig();
 
+        if (config.getSellItemButton().isEnabled()) {
+            pane.set(config.getSellItemButton().getXPos(), config.getSellItemButton().getYPos(),
+                     GuiFactory.displayableBuilder(ItemStack.class)
+                             .itemStack(UtilConfigItem.fromConfigItem(config.getSellItemButton()))
+                             .clickHandler((envyPlayer, clickType) -> {})
+                             .build()
+            );
+        }
+
+        if (config.getViewClaimsButton().isEnabled()) {
+            pane.set(config.getViewClaimsButton().getXPos(), config.getViewClaimsButton().getYPos(),
+                     GuiFactory.displayableBuilder(ItemStack.class)
+                             .itemStack(UtilConfigItem.fromConfigItem(config.getViewClaimsButton()))
+                             .clickHandler((envyPlayer, clickType) -> {})
+                             .build()
+            );
+        }
+
+        if (config.getViewTimeoutButton().isEnabled()) {
+            pane.set(config.getViewTimeoutButton().getXPos(), config.getViewTimeoutButton().getYPos(),
+                     GuiFactory.displayableBuilder(ItemStack.class)
+                             .itemStack(UtilConfigItem.fromConfigItem(config.getViewTimeoutButton()))
+                             .clickHandler((envyPlayer, clickType) -> {})
+                             .build()
+            );
+        }
+
+        if (config.getViewTradesButton().isEnabled()) {
+            pane.set(config.getViewTradesButton().getXPos(), config.getViewTradesButton().getYPos(),
+                     GuiFactory.displayableBuilder(ItemStack.class)
+                             .itemStack(UtilConfigItem.fromConfigItem(config.getViewTradesButton()))
+                             .clickHandler((envyPlayer, clickType) -> {})
+                             .build()
+            );
+        }
 
         GuiFactory.guiBuilder()
                 .setPlayerManager(ReforgedGTSForge.getInstance().getPlayerManager())
