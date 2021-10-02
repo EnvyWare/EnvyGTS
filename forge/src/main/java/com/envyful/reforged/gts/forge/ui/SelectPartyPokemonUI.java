@@ -1,25 +1,20 @@
 package com.envyful.reforged.gts.forge.ui;
 
-import com.envyful.api.forge.items.ItemBuilder;
+import com.envyful.api.config.type.ConfigItem;
+import com.envyful.api.forge.config.UtilConfigItem;
 import com.envyful.api.gui.factory.GuiFactory;
-import com.envyful.api.gui.item.Displayable;
 import com.envyful.api.gui.pane.Pane;
 import com.envyful.api.player.EnvyPlayer;
 import com.envyful.api.reforged.pixelmon.sprite.UtilSprite;
 import com.envyful.api.reforged.pixelmon.storage.UtilPixelmonPlayer;
 import com.envyful.reforged.gts.forge.ReforgedGTSForge;
+import com.envyful.reforged.gts.forge.config.ReforgedGTSConfig;
 import com.pixelmonmod.pixelmon.api.pokemon.Pokemon;
+import com.pixelmonmod.pixelmon.storage.PlayerPartyStorage;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 
 public class SelectPartyPokemonUI {
-
-    private static final Displayable EMPTY_POKEMON = GuiFactory.displayableBuilder(ItemStack.class)
-            .itemStack(new ItemBuilder()
-                    .type(Item.getByNameOrId("minecraft:barrier"))
-                    .name(" ")
-                    .build()).build();
 
     public static void openUI(EnvyPlayer<EntityPlayerMP> player) {
         Pane pane = GuiFactory.paneBuilder()
@@ -27,6 +22,12 @@ public class SelectPartyPokemonUI {
                 .width(9)
                 .height(4)
                 .build();
+
+        for (ConfigItem fillerItem : ReforgedGTSForge.getInstance().getConfig().getGuiSettings().getFillerItems()) {
+            pane.add(GuiFactory.displayableBuilder(ItemStack.class)
+                             .itemStack(UtilConfigItem.fromConfigItem(fillerItem))
+                             .build());
+        }
 
         setPokemon(player, pane);
 
@@ -39,26 +40,23 @@ public class SelectPartyPokemonUI {
     }
 
     private static void setPokemon(EnvyPlayer<EntityPlayerMP> player, Pane pane) {
-        pane.set(1, 1, EMPTY_POKEMON);
-        pane.set(1, 2, EMPTY_POKEMON);
-        pane.set(1, 3, EMPTY_POKEMON);
-        pane.set(1, 5, EMPTY_POKEMON);
-        pane.set(1, 6, EMPTY_POKEMON);
-        pane.set(1, 7, EMPTY_POKEMON);
+        PlayerPartyStorage party = UtilPixelmonPlayer.getParty(player.getParent());
+        Pokemon[] all = party.getAll();
+        ReforgedGTSConfig config = ReforgedGTSForge.getInstance().getConfig();
 
-        int pos = 0;
+        for (int i = 0; i < 6; i++) {
+            int pos = config.getPartySelectionPositions().get(i);
 
-        for (Pokemon pokemon : UtilPixelmonPlayer.getParty(player.getParent()).getAll()) {
-            ++pos;
-            if (pokemon == null) {
-                continue;
+            if (i >= all.length || all[i] == null) {
+                pane.set(pos % 9, pos / 9, GuiFactory.displayableBuilder(ItemStack.class)
+                        .itemStack(UtilConfigItem.fromConfigItem(config.getNoPokemonItem())).build());
+            } else {
+                pane.set(pos % 9, pos / 9, GuiFactory.displayableBuilder(ItemStack.class)
+                        .itemStack(UtilSprite.getPixelmonSprite(all[i]))
+                        .clickHandler((envyPlayer, clickType) -> {
+
+                        }).build());
             }
-
-            pane.set(1, pos, GuiFactory.displayableBuilder(ItemStack.class)
-                    .itemStack(UtilSprite.getPixelmonSprite(pokemon))
-                    .clickHandler((envyPlayer, clickType) -> {
-
-                    }).build());
         }
     }
 }

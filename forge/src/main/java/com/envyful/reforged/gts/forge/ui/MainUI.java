@@ -31,7 +31,7 @@ public class MainUI {
             pane.set(config.getSellItemButton().getXPos(), config.getSellItemButton().getYPos(),
                      GuiFactory.displayableBuilder(ItemStack.class)
                              .itemStack(UtilConfigItem.fromConfigItem(config.getSellItemButton()))
-                             .clickHandler((envyPlayer, clickType) -> {})
+                             .clickHandler((envyPlayer, clickType) -> SelectPartyPokemonUI.openUI(player))
                              .build()
             );
         }
