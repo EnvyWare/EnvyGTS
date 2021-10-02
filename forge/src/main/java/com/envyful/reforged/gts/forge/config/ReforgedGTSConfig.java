@@ -4,6 +4,7 @@ import com.envyful.api.config.data.ConfigPath;
 import com.envyful.api.config.type.ConfigInterface;
 import com.envyful.api.config.type.PositionableConfigItem;
 import com.envyful.api.config.yaml.AbstractYamlConfig;
+import com.pixelmonmod.pixelmon.config.PixelmonItems;
 import com.pixelmonmod.pixelmon.config.PixelmonItemsPokeballs;
 import net.minecraft.item.Item;
 import org.spongepowered.configurate.objectmapping.ConfigSerializable;
@@ -23,10 +24,20 @@ public class ReforgedGTSConfig extends AbstractYamlConfig {
             Collections.emptyList(), 1, 1, Collections.emptyMap()
     );
 
+    private PositionableConfigItem viewClaims = new PositionableConfigItem(
+            Item.getIdFromItem(PixelmonItems.Protein) + "",
+            1, (byte) 0, "&bClaim Trades",
+            Collections.emptyList(), 3, 1, Collections.emptyMap()
+    );
+
     private int tradeDurationSeconds = 86400;
 
     public ReforgedGTSConfig() {
         super();
+    }
+
+    public PositionableConfigItem getViewClaims() {
+        return this.viewClaims;
     }
 
     public PositionableConfigItem getViewTradesButton() {
