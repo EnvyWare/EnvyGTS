@@ -3,6 +3,8 @@ package com.envyful.reforged.gts.forge.ui;
 import com.envyful.api.config.type.ConfigItem;
 import com.envyful.api.config.type.PositionableConfigItem;
 import com.envyful.api.forge.config.UtilConfigItem;
+import com.envyful.api.forge.items.ItemBuilder;
+import com.envyful.api.forge.items.ItemFlag;
 import com.envyful.api.gui.factory.GuiFactory;
 import com.envyful.api.gui.pane.Pane;
 import com.envyful.api.player.EnvyPlayer;
@@ -14,6 +16,7 @@ import com.envyful.reforged.gts.forge.player.GTSAttribute;
 import com.pixelmonmod.pixelmon.api.pokemon.Pokemon;
 import com.pixelmonmod.pixelmon.storage.PlayerPartyStorage;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.init.Enchantments;
 import net.minecraft.item.ItemStack;
 
 public class SelectPartyPokemonUI {
@@ -79,7 +82,10 @@ public class SelectPartyPokemonUI {
                             attribute.setSelectedSlot(slot);
                             pane.set(config.getConfirmDisplay() % 9, config.getConfirmDisplay() / 9,
                                      GuiFactory.displayableBuilder(ItemStack.class)
-                                             .itemStack(UtilSprite.getPokemonElement(all[slot]))
+                                             .itemStack(new ItemBuilder(UtilSprite.getPokemonElement(all[slot]))
+                                                                .enchant(Enchantments.UNBREAKING, 1)
+                                                                .itemFlag(ItemFlag.HIDE_ENCHANTS)
+                                                                .build())
                                              .build()
                             );
                         }).build());
