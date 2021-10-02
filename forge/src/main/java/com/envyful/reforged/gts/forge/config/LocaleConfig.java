@@ -11,18 +11,12 @@ public class LocaleConfig extends AbstractYamlConfig {
 
     private Messages messages = new Messages();
 
-    private String guiName = "GTS";
-
     public LocaleConfig() {
         super();
     }
 
     public Messages getMessages() {
         return this.messages;
-    }
-
-    public String getGuiName() {
-        return UtilChatColour.translateColourCodes('&', this.guiName);
     }
 
     @ConfigSerializable

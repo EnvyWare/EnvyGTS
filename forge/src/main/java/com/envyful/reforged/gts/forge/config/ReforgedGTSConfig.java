@@ -62,7 +62,7 @@ public class ReforgedGTSConfig extends AbstractYamlConfig {
 
     private PositionableConfigItem confirmItem = new PositionableConfigItem(
             "pixelmon:poke_ball", 1, (byte) 0, "&a&lCONFIRM",
-            Lists.newArrayList(), 2, 4, Maps.newHashMap()
+            Lists.newArrayList(), 4, 2, Maps.newHashMap()
     );
 
     public ReforgedGTSConfig() {

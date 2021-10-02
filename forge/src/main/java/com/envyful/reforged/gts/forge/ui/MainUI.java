@@ -68,7 +68,7 @@ public class MainUI {
                 .addPane(pane)
                 .setCloseConsumer(envyPlayer -> {})
                 .height(ReforgedGTSForge.getInstance().getConfig().getGuiSettings().getHeight())
-                .title(ReforgedGTSForge.getInstance().getLocale().getGuiName())
+                .title(ReforgedGTSForge.getInstance().getConfig().getGuiSettings().getTitle())
                 .build().open(player);
     }
 }

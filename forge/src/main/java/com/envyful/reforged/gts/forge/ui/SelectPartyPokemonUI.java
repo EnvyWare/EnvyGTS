@@ -22,7 +22,7 @@ public class SelectPartyPokemonUI {
         Pane pane = GuiFactory.paneBuilder()
                 .topLeftX(0).topLeftY(0)
                 .width(9)
-                .height(4)
+                .height(ReforgedGTSForge.getInstance().getConfig().getGuiSettings().getHeight())
                 .build();
 
         for (ConfigItem fillerItem : ReforgedGTSForge.getInstance().getConfig().getGuiSettings().getFillerItems()) {
@@ -54,8 +54,8 @@ public class SelectPartyPokemonUI {
                 .setPlayerManager(ReforgedGTSForge.getInstance().getPlayerManager())
                 .addPane(pane)
                 .setCloseConsumer(envyPlayer -> {})
-                .height(4)
-                .title(ReforgedGTSForge.getInstance().getLocale().getGuiName())
+                .height(ReforgedGTSForge.getInstance().getConfig().getGuiSettings().getHeight())
+                .title(ReforgedGTSForge.getInstance().getConfig().getGuiSettings().getTitle())
                 .build().open(player);
     }
 
@@ -73,13 +73,13 @@ public class SelectPartyPokemonUI {
             } else {
                 final int slot = i;
                 pane.set(pos % 9, pos / 9, GuiFactory.displayableBuilder(ItemStack.class)
-                        .itemStack(UtilSprite.getPixelmonSprite(all[i]))
+                        .itemStack(UtilSprite.getPokemonElement(all[i]))
                         .clickHandler((envyPlayer, clickType) -> {
                             GTSAttribute attribute = envyPlayer.getAttribute(ReforgedGTSForge.class);
                             attribute.setSelectedSlot(slot);
                             pane.set(config.getConfirmDisplay() % 9, config.getConfirmDisplay() / 9,
                                      GuiFactory.displayableBuilder(ItemStack.class)
-                                             .itemStack(UtilSprite.getPixelmonSprite(all[slot]))
+                                             .itemStack(UtilSprite.getPokemonElement(all[slot]))
                                              .build()
                             );
                         }).build());
