@@ -2,6 +2,7 @@ package com.envyful.reforged.gts.forge.config;
 
 import com.envyful.api.config.data.ConfigPath;
 import com.envyful.api.config.type.ConfigInterface;
+import com.envyful.api.config.type.ConfigItem;
 import com.envyful.api.config.type.PositionableConfigItem;
 import com.envyful.api.config.type.SQLDatabaseDetails;
 import com.envyful.api.config.yaml.AbstractYamlConfig;
@@ -10,6 +11,8 @@ import com.google.common.collect.Maps;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import org.spongepowered.configurate.objectmapping.ConfigSerializable;
+
+import java.util.List;
 
 @ConfigPath("config/ReforgedGTS/config.yml")
 @ConfigSerializable
@@ -43,10 +46,28 @@ public class ReforgedGTSConfig extends AbstractYamlConfig {
             Lists.newArrayList(), 7, 1, Maps.newHashMap()
     );
 
+    private ConfigItem noPokemonItem = new ConfigItem(
+            "minecraft:barrier",
+            1, (byte) 0, "&cNo pokemon in this position",
+            Lists.newArrayList(), Maps.newHashMap()
+    );
+
     private int tradeDurationSeconds = 86400;
+
+    private List<Integer> partySelectionPositions = Lists.newArrayList(
+            10, 11, 12, 14, 15, 16
+    );
 
     public ReforgedGTSConfig() {
         super();
+    }
+
+    public ConfigItem getNoPokemonItem() {
+        return this.noPokemonItem;
+    }
+
+    public List<Integer> getPartySelectionPositions() {
+        return this.partySelectionPositions;
     }
 
     public PositionableConfigItem getSellItemButton() {
