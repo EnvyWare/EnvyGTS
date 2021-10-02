@@ -28,8 +28,6 @@ public class SelectPartyPokemonUI {
                 .height(4)
                 .build();
 
-        pane.fill(MainUI.BACKGROUND_ITEM);
-
         setPokemon(player, pane);
 
         GuiFactory.guiBuilder()
