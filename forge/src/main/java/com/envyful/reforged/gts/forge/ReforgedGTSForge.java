@@ -54,7 +54,7 @@ public class ReforgedGTSForge {
         });
     }
 
-    private void loadConfig() {
+    public void loadConfig() {
         try {
             this.config = YamlConfigFactory.getInstance(ReforgedGTSConfig.class);
             this.locale = YamlConfigFactory.getInstance(LocaleConfig.class);
