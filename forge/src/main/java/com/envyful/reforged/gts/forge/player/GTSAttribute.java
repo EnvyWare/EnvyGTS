@@ -2,6 +2,7 @@ package com.envyful.reforged.gts.forge.player;
 
 import com.envyful.api.forge.player.ForgeEnvyPlayer;
 import com.envyful.api.forge.player.attribute.AbstractForgeAttribute;
+import com.envyful.api.player.EnvyPlayer;
 import com.envyful.reforged.gts.api.Trade;
 import com.envyful.reforged.gts.api.sql.ReforgedGTSQueries;
 import com.envyful.reforged.gts.forge.ReforgedGTSForge;
@@ -19,8 +20,8 @@ public class GTSAttribute extends AbstractForgeAttribute<ReforgedGTSForge> {
     private List<Trade> ownedTrades = Lists.newArrayList();
     private int selectedSlot = -1;
 
-    public GTSAttribute(ReforgedGTSForge manager, ForgeEnvyPlayer parent) {
-        super(manager, parent);
+    public GTSAttribute(ReforgedGTSForge manager, EnvyPlayer<?> parent) {
+        super(manager, (ForgeEnvyPlayer) parent);
     }
 
     public List<Trade> getOwnedTrades() {
