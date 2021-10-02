@@ -7,8 +7,6 @@ import com.envyful.api.config.type.SQLDatabaseDetails;
 import com.envyful.api.config.yaml.AbstractYamlConfig;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import com.pixelmonmod.pixelmon.config.PixelmonItems;
-import com.pixelmonmod.pixelmon.config.PixelmonItemsPokeballs;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import org.spongepowered.configurate.objectmapping.ConfigSerializable;
@@ -22,13 +20,13 @@ public class ReforgedGTSConfig extends AbstractYamlConfig {
     private ConfigInterface guiSettings = new ConfigInterface();
 
     private PositionableConfigItem viewTradesButton = new PositionableConfigItem(
-            Item.getIdFromItem(PixelmonItemsPokeballs.pokeBall) + "",
+            "pixelmon:poke_ball",
             1, (byte) 0, "&bView Trades",
             Lists.newArrayList(), 1, 1, Maps.newHashMap()
     );
 
     private PositionableConfigItem viewClaimsButton = new PositionableConfigItem(
-            Item.getIdFromItem(PixelmonItems.Protein) + "",
+            "pixelmon:protein",
             1, (byte) 0, "&bClaim Trades",
             Lists.newArrayList(), 3, 1, Maps.newHashMap()
     );
@@ -40,7 +38,7 @@ public class ReforgedGTSConfig extends AbstractYamlConfig {
     );
 
     private PositionableConfigItem sellItemButton = new PositionableConfigItem(
-            Item.getIdFromItem(PixelmonItems.tradePanel) + "",
+            "pixelmon:trade_machine",
             1, (byte) 0, "&bSell Item",
             Lists.newArrayList(), 7, 1, Maps.newHashMap()
     );
