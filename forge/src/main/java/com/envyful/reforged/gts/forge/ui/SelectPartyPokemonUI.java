@@ -1,6 +1,7 @@
 package com.envyful.reforged.gts.forge.ui;
 
 import com.envyful.api.config.type.ConfigItem;
+import com.envyful.api.config.type.PositionableConfigItem;
 import com.envyful.api.forge.config.UtilConfigItem;
 import com.envyful.api.gui.factory.GuiFactory;
 import com.envyful.api.gui.pane.Pane;
@@ -9,6 +10,7 @@ import com.envyful.api.reforged.pixelmon.sprite.UtilSprite;
 import com.envyful.api.reforged.pixelmon.storage.UtilPixelmonPlayer;
 import com.envyful.reforged.gts.forge.ReforgedGTSForge;
 import com.envyful.reforged.gts.forge.config.ReforgedGTSConfig;
+import com.envyful.reforged.gts.forge.player.GTSAttribute;
 import com.pixelmonmod.pixelmon.api.pokemon.Pokemon;
 import com.pixelmonmod.pixelmon.storage.PlayerPartyStorage;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -31,9 +33,27 @@ public class SelectPartyPokemonUI {
 
         setPokemon(player, pane);
 
+        PositionableConfigItem confirmItem = ReforgedGTSForge.getInstance().getConfig().getConfirmItem();
+
+        if (confirmItem.isEnabled()) {
+            pane.set(confirmItem.getXPos(), confirmItem.getYPos(), GuiFactory.displayableBuilder(ItemStack.class)
+                    .itemStack(UtilConfigItem.fromConfigItem(confirmItem))
+                    .clickHandler((envyPlayer, clickType) -> {
+                        GTSAttribute attribute = envyPlayer.getAttribute(ReforgedGTSForge.class);
+
+                        if (attribute.getSelectedSlot() == -1) {
+                            return;
+                        }
+
+                        //TODO: open next UI
+                    })
+                    .build());
+        }
+
         GuiFactory.guiBuilder()
                 .setPlayerManager(ReforgedGTSForge.getInstance().getPlayerManager())
                 .addPane(pane)
+                .setCloseConsumer(envyPlayer -> {})
                 .height(4)
                 .title(ReforgedGTSForge.getInstance().getLocale().getGuiName())
                 .build().open(player);
@@ -51,10 +71,17 @@ public class SelectPartyPokemonUI {
                 pane.set(pos % 9, pos / 9, GuiFactory.displayableBuilder(ItemStack.class)
                         .itemStack(UtilConfigItem.fromConfigItem(config.getNoPokemonItem())).build());
             } else {
+                final int slot = i;
                 pane.set(pos % 9, pos / 9, GuiFactory.displayableBuilder(ItemStack.class)
                         .itemStack(UtilSprite.getPixelmonSprite(all[i]))
                         .clickHandler((envyPlayer, clickType) -> {
-
+                            GTSAttribute attribute = envyPlayer.getAttribute(ReforgedGTSForge.class);
+                            attribute.setSelectedSlot(slot);
+                            pane.set(config.getConfirmDisplay() % 9, config.getConfirmDisplay() / 9,
+                                     GuiFactory.displayableBuilder(ItemStack.class)
+                                             .itemStack(UtilSprite.getPixelmonSprite(all[slot]))
+                                             .build()
+                            );
                         }).build());
             }
         }

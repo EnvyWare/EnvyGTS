@@ -10,7 +10,7 @@ import com.envyful.reforged.gts.api.gui.FilterType;
 import com.envyful.reforged.gts.forge.ReforgedGTSForge;
 import com.envyful.reforged.gts.forge.impl.trade.ForgeTrade;
 import com.envyful.reforged.gts.forge.impl.trade.type.ItemTrade;
-import com.envyful.reforged.gts.forge.ui.SelectTypeUI;
+import com.envyful.reforged.gts.forge.ui.SelectPartyPokemonUI;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
@@ -33,7 +33,7 @@ public class SellCommand {
         ForgeEnvyPlayer sender = ReforgedGTSForge.getInstance().getPlayerManager().getPlayer(player);
 
         if (args.length == 0) {
-            SelectTypeUI.openUI(sender);
+            SelectPartyPokemonUI.openUI(sender);
             return;
         }
 

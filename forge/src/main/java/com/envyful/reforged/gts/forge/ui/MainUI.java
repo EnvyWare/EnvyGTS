@@ -66,6 +66,7 @@ public class MainUI {
         GuiFactory.guiBuilder()
                 .setPlayerManager(ReforgedGTSForge.getInstance().getPlayerManager())
                 .addPane(pane)
+                .setCloseConsumer(envyPlayer -> {})
                 .height(ReforgedGTSForge.getInstance().getConfig().getGuiSettings().getHeight())
                 .title(ReforgedGTSForge.getInstance().getLocale().getGuiName())
                 .build().open(player);
