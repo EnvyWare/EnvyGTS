@@ -37,10 +37,20 @@ public class ReforgedGTSConfig extends AbstractYamlConfig {
             Collections.emptyList(), 5, 1, Collections.emptyMap()
     );
 
+    private PositionableConfigItem sellItemButton = new PositionableConfigItem(
+            Item.getIdFromItem(PixelmonItems.tradePanel) + "",
+            1, (byte) 0, "&bSell Item",
+            Collections.emptyList(), 7, 1, Collections.emptyMap()
+    );
+
     private int tradeDurationSeconds = 86400;
 
     public ReforgedGTSConfig() {
         super();
+    }
+
+    public PositionableConfigItem getSellItemButton() {
+        return this.sellItemButton;
     }
 
     public PositionableConfigItem getViewTimeoutButton() {
