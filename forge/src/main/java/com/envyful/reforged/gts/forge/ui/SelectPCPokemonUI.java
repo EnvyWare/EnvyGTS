@@ -1,7 +1,6 @@
 package com.envyful.reforged.gts.forge.ui;
 
 import com.envyful.api.config.type.ConfigItem;
-import com.envyful.api.config.type.PositionableConfigItem;
 import com.envyful.api.forge.config.UtilConfigItem;
 import com.envyful.api.forge.items.ItemBuilder;
 import com.envyful.api.forge.items.ItemFlag;
@@ -13,15 +12,19 @@ import com.envyful.api.reforged.pixelmon.storage.UtilPixelmonPlayer;
 import com.envyful.reforged.gts.forge.ReforgedGTSForge;
 import com.envyful.reforged.gts.forge.config.ReforgedGTSConfig;
 import com.envyful.reforged.gts.forge.player.GTSAttribute;
-import com.pixelmonmod.pixelmon.api.pokemon.Pokemon;
-import com.pixelmonmod.pixelmon.storage.PlayerPartyStorage;
+import com.pixelmonmod.pixelmon.api.storage.PCBox;
+import com.pixelmonmod.pixelmon.api.storage.PCStorage;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Enchantments;
 import net.minecraft.item.ItemStack;
 
-public class SelectPartyPokemonUI {
+public class SelectPCPokemonUI {
 
     public static void openUI(EnvyPlayer<EntityPlayerMP> player) {
+        openUI(player, 0);
+    }
+
+    public static void openUI(EnvyPlayer<EntityPlayerMP> player, int page) {
         Pane pane = GuiFactory.paneBuilder()
                 .topLeftX(0).topLeftY(0)
                 .width(9)
@@ -34,33 +37,50 @@ public class SelectPartyPokemonUI {
                              .build());
         }
 
-        setPokemon(player, pane);
+        setPokemon(player, page, pane);
 
-        ReforgedGTSConfig config = ReforgedGTSForge.getInstance().getConfig();
+        ReforgedGTSConfig.SelectFromPCConfig config = ReforgedGTSForge.getInstance().getConfig().getPcConfig();
 
-        if (config.getViewPCButton().isEnabled()) {
-            pane.set(config.getViewPCButton().getXPos(), config.getViewPCButton().getYPos(),
+        if (config.getConfirmButton().isEnabled()) {
+            pane.set(config.getConfirmButton().getXPos(), config.getConfirmButton().getYPos(),
                      GuiFactory.displayableBuilder(ItemStack.class)
-                             .itemStack(UtilConfigItem.fromConfigItem(config.getViewPCButton()))
-                             .clickHandler((envyPlayer, clickType) -> SelectPCPokemonUI.openUI(player))
+                             .itemStack(UtilConfigItem.fromConfigItem(config.getConfirmButton()))
+                             .clickHandler((envyPlayer, clickType) -> {})
                              .build()
             );
         }
 
-        if (config.getSellBackButton().isEnabled()) {
-            pane.set(config.getSellBackButton().getXPos(), config.getSellBackButton().getYPos(),
+        if (config.getBackButton().isEnabled()) {
+            pane.set(config.getBackButton().getXPos(), config.getBackButton().getYPos(),
                      GuiFactory.displayableBuilder(ItemStack.class)
-                             .itemStack(UtilConfigItem.fromConfigItem(config.getSellBackButton()))
-                             .clickHandler((envyPlayer, clickType) -> MainUI.open(player))
+                             .itemStack(UtilConfigItem.fromConfigItem(config.getBackButton()))
+                             .clickHandler((envyPlayer, clickType) -> SelectPartyPokemonUI.openUI(player))
                              .build()
             );
         }
-        
-        PositionableConfigItem confirmItem = ReforgedGTSForge.getInstance().getConfig().getConfirmItem();
 
-        if (confirmItem.isEnabled()) {
-            pane.set(confirmItem.getXPos(), confirmItem.getYPos(), GuiFactory.displayableBuilder(ItemStack.class)
-                    .itemStack(UtilConfigItem.fromConfigItem(confirmItem))
+        if (config.getNextPageButton().isEnabled()) {
+            pane.set(config.getNextPageButton().getXPos(), config.getNextPageButton().getYPos(),
+                     GuiFactory.displayableBuilder(ItemStack.class)
+                             .itemStack(UtilConfigItem.fromConfigItem(config.getNextPageButton()))
+                             .clickHandler((envyPlayer, clickType) -> {})
+                             .build()
+            );
+        }
+
+        if (config.getPreviousPageButton().isEnabled()) {
+            pane.set(config.getPreviousPageButton().getXPos(), config.getPreviousPageButton().getYPos(),
+                     GuiFactory.displayableBuilder(ItemStack.class)
+                             .itemStack(UtilConfigItem.fromConfigItem(config.getPreviousPageButton()))
+                             .clickHandler((envyPlayer, clickType) -> {})
+                             .build()
+            );
+        }
+
+        if (config.getConfirmButton().isEnabled()) {
+            pane.set(config.getConfirmButton().getXPos(), config.getConfirmButton().getYPos(),
+                     GuiFactory.displayableBuilder(ItemStack.class)
+                    .itemStack(UtilConfigItem.fromConfigItem(config.getConfirmButton()))
                     .clickHandler((envyPlayer, clickType) -> {
                         GTSAttribute attribute = envyPlayer.getAttribute(ReforgedGTSForge.class);
 
@@ -82,27 +102,28 @@ public class SelectPartyPokemonUI {
                 .build().open(player);
     }
 
-    private static void setPokemon(EnvyPlayer<EntityPlayerMP> player, Pane pane) {
-        PlayerPartyStorage party = UtilPixelmonPlayer.getParty(player.getParent());
-        Pokemon[] all = party.getAll();
-        ReforgedGTSConfig config = ReforgedGTSForge.getInstance().getConfig();
+    private static void setPokemon(EnvyPlayer<EntityPlayerMP> player, int page, Pane pane) {
+        PCStorage pc = UtilPixelmonPlayer.getPC(player.getParent());
+        PCBox box = pc.getBox(page);
+        ReforgedGTSConfig.SelectFromPCConfig config = ReforgedGTSForge.getInstance().getConfig().getPcConfig();
 
-        for (int i = 0; i < 6; i++) {
-            int pos = config.getPartySelectionPositions().get(i);
+        for (int i = 0; i < config.getPerPage(); i++) {
+            int posX = i % 5;
+            int posY = i / 5;
 
-            if (i >= all.length || all[i] == null) {
-                pane.set(pos % 9, pos / 9, GuiFactory.displayableBuilder(ItemStack.class)
+            if (box.get(i) == null) {
+                pane.set(2 + posX, posY, GuiFactory.displayableBuilder(ItemStack.class)
                         .itemStack(UtilConfigItem.fromConfigItem(config.getNoPokemonItem())).build());
             } else {
                 final int slot = i;
-                pane.set(pos % 9, pos / 9, GuiFactory.displayableBuilder(ItemStack.class)
-                        .itemStack(UtilSprite.getPokemonElement(all[i]))
+                pane.set(2 + posX, posY, GuiFactory.displayableBuilder(ItemStack.class)
+                        .itemStack(UtilSprite.getPokemonElement(box.get(i)))
                         .clickHandler((envyPlayer, clickType) -> {
                             GTSAttribute attribute = envyPlayer.getAttribute(ReforgedGTSForge.class);
                             attribute.setSelectedSlot(slot);
-                            pane.set(config.getConfirmDisplay() % 9, config.getConfirmDisplay() / 9,
+                            pane.set(config.getConfirmSlot() % 9, config.getConfirmSlot() / 9,
                                      GuiFactory.displayableBuilder(ItemStack.class)
-                                             .itemStack(new ItemBuilder(UtilSprite.getPokemonElement(all[slot]))
+                                             .itemStack(new ItemBuilder(UtilSprite.getPokemonElement(box.get(slot)))
                                                                 .enchant(Enchantments.UNBREAKING, 1)
                                                                 .itemFlag(ItemFlag.HIDE_ENCHANTS)
                                                                 .build())

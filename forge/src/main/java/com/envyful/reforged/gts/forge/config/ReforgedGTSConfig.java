@@ -102,6 +102,8 @@ public class ReforgedGTSConfig extends AbstractYamlConfig {
             Lists.newArrayList(), 4, 5, Maps.newHashMap()
     );
 
+    private SelectFromPCConfig pcConfig = new SelectFromPCConfig();
+
     public ReforgedGTSConfig() {
         super();
     }
@@ -180,5 +182,79 @@ public class ReforgedGTSConfig extends AbstractYamlConfig {
 
     public PositionableConfigItem getSellBackButton() {
         return this.sellBackButton;
+    }
+
+    public SelectFromPCConfig getPcConfig() {
+        return this.pcConfig;
+    }
+
+    @ConfigSerializable
+    public static class SelectFromPCConfig {
+
+        private ConfigInterface guiSettings = new ConfigInterface();
+
+        private PositionableConfigItem backButton = new PositionableConfigItem(
+                "pixelmon:eject_button", 1, (byte) 0, "&cBack",
+                Lists.newArrayList(), 0, 5, Maps.newHashMap()
+        );
+
+        private PositionableConfigItem nextPageButton = new PositionableConfigItem(
+                "pixelmon:trade_holder_right", 1, (byte) 0, "&aNext Page",
+                Lists.newArrayList(), 8, 0, Maps.newHashMap()
+        );
+
+        private PositionableConfigItem previousPageButton = new PositionableConfigItem(
+                "pixelmon:trade_holder_left", 1, (byte) 0, "&aPrevious Page",
+                Lists.newArrayList(), 0, 0, Maps.newHashMap()
+        );
+
+        private PositionableConfigItem confirmButton = new PositionableConfigItem(
+                "pixelmon:poke_ball", 1, (byte) 0, "&a&lCONFIRM",
+                Lists.newArrayList(), 7, 3, Maps.newHashMap()
+        );
+
+        private ConfigItem noPokemonItem = new ConfigItem(
+                "minecraft:barrier",
+                1, (byte) 0, "&cNo pokemon in this position",
+                Lists.newArrayList(), Maps.newHashMap()
+        );
+
+        private int perPage = 30;
+
+        private int confirmSlot = 25;
+
+        public SelectFromPCConfig() {}
+
+        public ConfigInterface getGuiSettings() {
+            return this.guiSettings;
+        }
+
+        public PositionableConfigItem getBackButton() {
+            return this.backButton;
+        }
+
+        public PositionableConfigItem getNextPageButton() {
+            return this.nextPageButton;
+        }
+
+        public PositionableConfigItem getPreviousPageButton() {
+            return this.previousPageButton;
+        }
+
+        public int getPerPage() {
+            return this.perPage;
+        }
+
+        public PositionableConfigItem getConfirmButton() {
+            return this.confirmButton;
+        }
+
+        public int getConfirmSlot() {
+            return this.confirmSlot;
+        }
+
+        public ConfigItem getNoPokemonItem() {
+            return this.noPokemonItem;
+        }
     }
 }
