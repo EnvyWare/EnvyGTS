@@ -39,6 +39,8 @@ public class SelectPCPokemonUI {
                              .build());
         }
 
+        PCStorage pc = UtilPixelmonPlayer.getPC(player.getParent());
+
         setPokemon(player, page, pane);
 
         if (config.getConfirmButton().isEnabled()) {
@@ -63,7 +65,13 @@ public class SelectPCPokemonUI {
             pane.set(config.getNextPageButton().getXPos(), config.getNextPageButton().getYPos(),
                      GuiFactory.displayableBuilder(ItemStack.class)
                              .itemStack(UtilConfigItem.fromConfigItem(config.getNextPageButton()))
-                             .clickHandler((envyPlayer, clickType) -> {})
+                             .clickHandler((envyPlayer, clickType) -> {
+                                 if (page >= pc.getLastBox()) {
+                                     openUI(player, 0);
+                                 } else {
+                                     openUI(player, page + 1);
+                                 }
+                             })
                              .build()
             );
         }
@@ -72,7 +80,13 @@ public class SelectPCPokemonUI {
             pane.set(config.getPreviousPageButton().getXPos(), config.getPreviousPageButton().getYPos(),
                      GuiFactory.displayableBuilder(ItemStack.class)
                              .itemStack(UtilConfigItem.fromConfigItem(config.getPreviousPageButton()))
-                             .clickHandler((envyPlayer, clickType) -> {})
+                             .clickHandler((envyPlayer, clickType) -> {
+                                 if (page <= 0) {
+                                     openUI(player, pc.getLastBox());
+                                 } else {
+                                     openUI(player, page - 1);
+                                 }
+                             })
                              .build()
             );
         }
