@@ -31,6 +31,8 @@ public class ReforgedGTSConfig extends AbstractYamlConfig {
             "example", new PokeSpecPricing("shiny:1", new PokeSpecPricing.MathHandler("*", 2.0))
     );
 
+    private List<String> unbreedableConditions = Lists.newArrayList("abs:2");
+
     private MainUIConfig mainUIConfig = new MainUIConfig();
     private SearchTradesConfig searchUIConfig = new SearchTradesConfig();
     private TimedOutTradesConfig timedOutUIConfig = new TimedOutTradesConfig();
@@ -56,6 +58,10 @@ public class ReforgedGTSConfig extends AbstractYamlConfig {
 
     public List<PokeSpecPricing> getMinPriceModifiers() {
         return Lists.newArrayList(this.minPriceModifiers.values());
+    }
+
+    public List<String> getUnbreedableConditions() {
+        return this.unbreedableConditions;
     }
 
     public MainUIConfig getMainUIConfig() {
