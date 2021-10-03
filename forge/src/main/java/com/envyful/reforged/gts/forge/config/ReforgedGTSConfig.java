@@ -68,12 +68,12 @@ public class ReforgedGTSConfig extends AbstractYamlConfig {
 
     private PositionableConfigItem nextPageItem = new PositionableConfigItem(
             "pixelmon:trade_holder_right", 1, (byte) 0, "&aNext Page",
-            Lists.newArrayList(), 0, 5, Maps.newHashMap()
+            Lists.newArrayList(), 8, 5, Maps.newHashMap()
     );
 
     private PositionableConfigItem previousPageItem = new PositionableConfigItem(
             "pixelmon:trade_holder_left", 1, (byte) 0, "&aPrevious Page",
-            Lists.newArrayList(), 8, 5, Maps.newHashMap()
+            Lists.newArrayList(), 0, 5, Maps.newHashMap()
     );
 
     private PositionableConfigItem backButton = new PositionableConfigItem(

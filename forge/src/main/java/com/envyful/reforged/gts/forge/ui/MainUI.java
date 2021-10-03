@@ -40,7 +40,7 @@ public class MainUI {
             pane.set(config.getViewClaimsButton().getXPos(), config.getViewClaimsButton().getYPos(),
                      GuiFactory.displayableBuilder(ItemStack.class)
                              .itemStack(UtilConfigItem.fromConfigItem(config.getViewClaimsButton()))
-                             .clickHandler((envyPlayer, clickType) -> {})
+                             .clickHandler((envyPlayer, clickType) -> ClaimTradesUI.openUI(player))
                              .build()
             );
         }
