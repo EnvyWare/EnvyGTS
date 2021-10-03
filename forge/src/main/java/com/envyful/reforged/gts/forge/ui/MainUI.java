@@ -49,7 +49,7 @@ public class MainUI {
             pane.set(config.getViewTimeoutButton().getXPos(), config.getViewTimeoutButton().getYPos(),
                      GuiFactory.displayableBuilder(ItemStack.class)
                              .itemStack(UtilConfigItem.fromConfigItem(config.getViewTimeoutButton()))
-                             .clickHandler((envyPlayer, clickType) -> {})
+                             .clickHandler((envyPlayer, clickType) -> TimedOutTradesUI.openUI(player))
                              .build()
             );
         }
