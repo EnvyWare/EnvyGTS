@@ -54,8 +54,8 @@ public class ReforgedGTSConfig extends AbstractYamlConfig {
         return this.minPokemonPrice;
     }
 
-    public Map<String, PokeSpecPricing> getMinPriceModifiers() {
-        return this.minPriceModifiers;
+    public List<PokeSpecPricing> getMinPriceModifiers() {
+        return Lists.newArrayList(this.minPriceModifiers.values());
     }
 
     public MainUIConfig getMainUIConfig() {
