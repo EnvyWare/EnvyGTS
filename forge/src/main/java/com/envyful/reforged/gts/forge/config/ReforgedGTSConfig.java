@@ -19,7 +19,8 @@ import java.util.List;
 public class ReforgedGTSConfig extends AbstractYamlConfig {
 
     private SQLDatabaseDetails databaseDetails = new SQLDatabaseDetails("ReforgedGTS", "0.0.0.0", 3306, "admin",
-                                                                        "password", "database");
+                                                                        "password", "database"
+    );
     private ConfigInterface guiSettings = new ConfigInterface();
     private ConfigInterface searchGuiSettings = new ConfigInterface();
 
@@ -79,6 +80,16 @@ public class ReforgedGTSConfig extends AbstractYamlConfig {
     private PositionableConfigItem backButton = new PositionableConfigItem(
             "pixelmon:eject_button", 1, (byte) 0, "&cBack",
             Lists.newArrayList(), 4, 5, Maps.newHashMap()
+    );
+
+    private PositionableConfigItem filterButton = new PositionableConfigItem(
+            "pixelmon:net_ball", 1, (byte) 0, "&bChange filter",
+            Lists.newArrayList("&aCurrent Filter: &f%filter%"), 2, 5, Maps.newHashMap()
+    );
+
+    private PositionableConfigItem orderButton = new PositionableConfigItem(
+            "pixelmon:blue_orb", 1, (byte) 0, "&bChange order",
+            Lists.newArrayList("&aCurrent order: &f%order%"), 6, 5, Maps.newHashMap()
     );
 
     public ReforgedGTSConfig() {
@@ -143,5 +154,13 @@ public class ReforgedGTSConfig extends AbstractYamlConfig {
 
     public PositionableConfigItem getBackButton() {
         return this.backButton;
+    }
+
+    public PositionableConfigItem getFilterButton() {
+        return this.filterButton;
+    }
+
+    public PositionableConfigItem getOrderButton() {
+        return this.orderButton;
     }
 }

@@ -1,7 +1,9 @@
 package com.envyful.reforged.gts.forge.ui;
 
 import com.envyful.api.config.type.ConfigItem;
+import com.envyful.api.forge.chat.UtilChatColour;
 import com.envyful.api.forge.config.UtilConfigItem;
+import com.envyful.api.forge.items.ItemBuilder;
 import com.envyful.api.gui.factory.GuiFactory;
 import com.envyful.api.gui.pane.Pane;
 import com.envyful.api.player.EnvyPlayer;
@@ -10,6 +12,7 @@ import com.envyful.reforged.gts.api.gui.FilterType;
 import com.envyful.reforged.gts.api.gui.SortType;
 import com.envyful.reforged.gts.forge.ReforgedGTSForge;
 import com.envyful.reforged.gts.forge.config.ReforgedGTSConfig;
+import com.google.common.collect.Lists;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 
@@ -81,6 +84,28 @@ public class ViewTradesUI {
             );
         }
 
+        if (config.getOrderButton().isEnabled()) {
+            pane.set(config.getOrderButton().getXPos(), config.getOrderButton().getYPos(),
+                     GuiFactory.displayableBuilder(ItemStack.class)
+                             .itemStack(new ItemBuilder(UtilConfigItem.fromConfigItem(config.getPreviousPageItem()))
+                                                .lore(formatButtonLores(config.getOrderButton().getLore(), filter, sort))
+                                                .build())
+                             .clickHandler((envyPlayer, clickType) -> openUI(player, page, filter, sort.getNext()))
+                             .build()
+            );
+        }
+
+        if (config.getFilterButton().isEnabled()) {
+            pane.set(config.getFilterButton().getXPos(), config.getFilterButton().getYPos(),
+                     GuiFactory.displayableBuilder(ItemStack.class)
+                             .itemStack(new ItemBuilder(UtilConfigItem.fromConfigItem(config.getPreviousPageItem()))
+                                                .lore(formatButtonLores(config.getFilterButton().getLore(), filter, sort))
+                                                .build())
+                             .clickHandler((envyPlayer, clickType) -> openUI(player, page, filter.getNext(), sort))
+                             .build()
+            );
+        }
+
         for (int i = (page * 45); i < ((page + 1) * 45); i++) {
             if (i >= allTrades.size()) {
                 continue;
@@ -97,5 +122,17 @@ public class ViewTradesUI {
                 .height(ReforgedGTSForge.getInstance().getConfig().getSearchGuiSettings().getHeight())
                 .title(ReforgedGTSForge.getInstance().getConfig().getSearchGuiSettings().getTitle())
                 .build().open(player);
+    }
+
+    private static List<String> formatButtonLores(List<String> lore, FilterType filterType, SortType sortType) {
+        List<String> newLore = Lists.newArrayList();
+
+        for (String s : lore) {
+            newLore.add(UtilChatColour.translateColourCodes('&', s
+                    .replace("%filter%", filterType.getDisplayName())
+                    .replace("%order%", sortType.getDisplayName())));
+        }
+
+        return newLore;
     }
 }

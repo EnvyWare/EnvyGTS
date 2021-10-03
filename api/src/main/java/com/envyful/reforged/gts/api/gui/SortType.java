@@ -27,4 +27,14 @@ public enum SortType {
     public Comparator<?> getComparator() {
         return this.comparator;
     }
+
+    public SortType getNext() {
+        SortType[] values = values();
+
+        if (ordinal() >= values.length) {
+            return values[0];
+        }
+
+        return values[ordinal() + 1];
+    }
 }

@@ -1,6 +1,5 @@
 package com.envyful.reforged.gts.api.gui;
 
-import java.util.Objects;
 import java.util.function.Predicate;
 
 /**
@@ -30,5 +29,15 @@ public enum FilterType {
 
     public boolean isAllowed(FilterType type) {
         return this.predicate.test(type);
+    }
+
+    public FilterType getNext() {
+        FilterType[] values = values();
+
+        if (ordinal() >= values.length) {
+            return values[0];
+        }
+
+        return values[ordinal() + 1];
     }
 }
