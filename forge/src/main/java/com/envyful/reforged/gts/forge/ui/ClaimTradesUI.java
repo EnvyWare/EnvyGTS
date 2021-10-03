@@ -20,22 +20,22 @@ public class ClaimTradesUI {
     }
 
     public static void openUI(EnvyPlayer<EntityPlayerMP> player, int page) {
+        ReforgedGTSConfig.ClaimTradesConfig config = ReforgedGTSForge.getInstance().getConfig().getClaimTradesUIConfig();
+
         Pane pane = GuiFactory.paneBuilder()
                 .topLeftX(0)
                 .topLeftY(0)
                 .width(9)
-                .height(ReforgedGTSForge.getInstance().getConfig().getSearchGuiSettings().getHeight())
+                .height(config.getGuiSettings().getHeight())
                 .build();
 
-        for (ConfigItem fillerItem : ReforgedGTSForge.getInstance().getConfig().getSearchGuiSettings().getFillerItems()) {
+        for (ConfigItem fillerItem : config.getGuiSettings().getFillerItems()) {
             pane.add(GuiFactory.displayableBuilder(ItemStack.class)
                              .itemStack(UtilConfigItem.fromConfigItem(fillerItem))
                              .build());
         }
 
         List<Trade> allTrades = ReforgedGTSForge.getInstance().getTradeManager().getPurchasedTrades(player);
-
-        ReforgedGTSConfig config = ReforgedGTSForge.getInstance().getConfig();
 
         if (config.getBackButton().isEnabled()) {
             pane.set(config.getBackButton().getXPos(), config.getBackButton().getYPos(),
@@ -89,8 +89,8 @@ public class ClaimTradesUI {
                 .setPlayerManager(ReforgedGTSForge.getInstance().getPlayerManager())
                 .addPane(pane)
                 .setCloseConsumer(envyPlayer -> {})
-                .height(ReforgedGTSForge.getInstance().getConfig().getSearchGuiSettings().getHeight())
-                .title(ReforgedGTSForge.getInstance().getConfig().getSearchGuiSettings().getTitle())
+                .height(config.getGuiSettings().getHeight())
+                .title(config.getGuiSettings().getTitle())
                 .build().open(player);
     }
 }

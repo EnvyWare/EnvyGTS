@@ -54,6 +54,7 @@ public class ReforgedGTSConfig extends AbstractYamlConfig {
     private MainUIConfig mainUIConfig = new MainUIConfig();
     private SearchTradesConfig searchUIConfig = new SearchTradesConfig();
     private TimedOutTradesConfig timedOutUIConfig = new TimedOutTradesConfig();
+    private ClaimTradesConfig claimTradesUIConfig = new ClaimTradesConfig();
     private SelectFromPCConfig pcConfig = new SelectFromPCConfig();
 
     public ReforgedGTSConfig() {
@@ -102,6 +103,10 @@ public class ReforgedGTSConfig extends AbstractYamlConfig {
 
     public TimedOutTradesConfig getTimedOutUIConfig() {
         return this.timedOutUIConfig;
+    }
+
+    public ClaimTradesConfig getClaimTradesUIConfig() {
+        return this.claimTradesUIConfig;
     }
 
     public SelectFromPCConfig getPcConfig() {
@@ -240,6 +245,47 @@ public class ReforgedGTSConfig extends AbstractYamlConfig {
         );
 
         public TimedOutTradesConfig() {
+        }
+
+        public ConfigInterface getGuiSettings() {
+            return this.guiSettings;
+        }
+
+        public PositionableConfigItem getNextPageItem() {
+            return this.nextPageItem;
+        }
+
+        public PositionableConfigItem getPreviousPageItem() {
+            return this.previousPageItem;
+        }
+
+        public PositionableConfigItem getBackButton() {
+            return this.backButton;
+        }
+    }
+
+
+    @ConfigSerializable
+    public static class ClaimTradesConfig {
+
+        private ConfigInterface guiSettings = new ConfigInterface();
+
+        private PositionableConfigItem nextPageItem = new PositionableConfigItem(
+                "pixelmon:trade_holder_right", 1, (byte) 0, "&aNext Page",
+                Lists.newArrayList(), 8, 5, Maps.newHashMap()
+        );
+
+        private PositionableConfigItem previousPageItem = new PositionableConfigItem(
+                "pixelmon:trade_holder_left", 1, (byte) 0, "&aPrevious Page",
+                Lists.newArrayList(), 0, 5, Maps.newHashMap()
+        );
+
+        private PositionableConfigItem backButton = new PositionableConfigItem(
+                "pixelmon:eject_button", 1, (byte) 0, "&cBack",
+                Lists.newArrayList(), 4, 5, Maps.newHashMap()
+        );
+
+        public ClaimTradesConfig() {
         }
 
         public ConfigInterface getGuiSettings() {
