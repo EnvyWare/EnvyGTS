@@ -31,7 +31,7 @@ public enum SortType {
     public SortType getNext() {
         SortType[] values = values();
 
-        if (ordinal() >= values.length) {
+        if (ordinal() >= (values.length - 1)) {
             return values[0];
         }
 

@@ -87,7 +87,7 @@ public class ViewTradesUI {
         if (config.getOrderButton().isEnabled()) {
             pane.set(config.getOrderButton().getXPos(), config.getOrderButton().getYPos(),
                      GuiFactory.displayableBuilder(ItemStack.class)
-                             .itemStack(new ItemBuilder(UtilConfigItem.fromConfigItem(config.getPreviousPageItem()))
+                             .itemStack(new ItemBuilder(UtilConfigItem.fromConfigItem(config.getOrderButton()))
                                                 .lore(formatButtonLores(config.getOrderButton().getLore(), filter, sort))
                                                 .build())
                              .clickHandler((envyPlayer, clickType) -> openUI(player, page, filter, sort.getNext()))
@@ -98,7 +98,7 @@ public class ViewTradesUI {
         if (config.getFilterButton().isEnabled()) {
             pane.set(config.getFilterButton().getXPos(), config.getFilterButton().getYPos(),
                      GuiFactory.displayableBuilder(ItemStack.class)
-                             .itemStack(new ItemBuilder(UtilConfigItem.fromConfigItem(config.getPreviousPageItem()))
+                             .itemStack(new ItemBuilder(UtilConfigItem.fromConfigItem(config.getFilterButton()))
                                                 .lore(formatButtonLores(config.getFilterButton().getLore(), filter, sort))
                                                 .build())
                              .clickHandler((envyPlayer, clickType) -> openUI(player, page, filter.getNext(), sort))
