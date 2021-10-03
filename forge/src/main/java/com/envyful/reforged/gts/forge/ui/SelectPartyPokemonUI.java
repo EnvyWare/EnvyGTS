@@ -36,6 +36,26 @@ public class SelectPartyPokemonUI {
 
         setPokemon(player, pane);
 
+        ReforgedGTSConfig config = ReforgedGTSForge.getInstance().getConfig();
+
+        if (config.getViewPCButton().isEnabled()) {
+            pane.set(config.getViewPCButton().getXPos(), config.getViewPCButton().getYPos(),
+                     GuiFactory.displayableBuilder(ItemStack.class)
+                             .itemStack(UtilConfigItem.fromConfigItem(config.getViewPCButton()))
+                             .clickHandler((envyPlayer, clickType) -> {})
+                             .build()
+            );
+        }
+
+        if (config.getSellBackButton().isEnabled()) {
+            pane.set(config.getSellBackButton().getXPos(), config.getSellBackButton().getYPos(),
+                     GuiFactory.displayableBuilder(ItemStack.class)
+                             .itemStack(UtilConfigItem.fromConfigItem(config.getSellBackButton()))
+                             .clickHandler((envyPlayer, clickType) -> MainUI.open(player))
+                             .build()
+            );
+        }
+        
         PositionableConfigItem confirmItem = ReforgedGTSForge.getInstance().getConfig().getConfirmItem();
 
         if (confirmItem.isEnabled()) {

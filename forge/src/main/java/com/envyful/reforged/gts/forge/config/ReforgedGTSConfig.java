@@ -92,6 +92,16 @@ public class ReforgedGTSConfig extends AbstractYamlConfig {
             Lists.newArrayList("&aCurrent order: &f%order%"), 6, 5, Maps.newHashMap()
     );
 
+    private PositionableConfigItem viewPCButton = new PositionableConfigItem(
+            "pixelmon:blue_orb", 1, (byte) 0, "&aYour PC",
+            Lists.newArrayList(), 4, 0, Maps.newHashMap()
+    );
+
+    private PositionableConfigItem sellBackButton = new PositionableConfigItem(
+            "pixelmon:eject_button", 1, (byte) 0, "&cBack",
+            Lists.newArrayList(), 4, 5, Maps.newHashMap()
+    );
+
     public ReforgedGTSConfig() {
         super();
     }
@@ -162,5 +172,13 @@ public class ReforgedGTSConfig extends AbstractYamlConfig {
 
     public PositionableConfigItem getOrderButton() {
         return this.orderButton;
+    }
+
+    public PositionableConfigItem getViewPCButton() {
+        return this.viewPCButton;
+    }
+
+    public PositionableConfigItem getSellBackButton() {
+        return this.sellBackButton;
     }
 }
