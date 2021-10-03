@@ -14,6 +14,7 @@ import net.minecraft.item.Item;
 import org.spongepowered.configurate.objectmapping.ConfigSerializable;
 
 import java.util.List;
+import java.util.Map;
 
 @ConfigPath("config/ReforgedGTS/config.yml")
 @ConfigSerializable
@@ -24,6 +25,11 @@ public class ReforgedGTSConfig extends AbstractYamlConfig {
     );
 
     private int tradeDurationSeconds = 86400;
+    private double minPokemonPrice = 10_000.00;
+
+    private Map<String, PokeSpecPricing> minPriceModifiers = ImmutableMap.of(
+            "example", new PokeSpecPricing("shiny:1", new PokeSpecPricing.MathHandler("*", 2.0))
+    );
 
     private MainUIConfig mainUIConfig = new MainUIConfig();
     private SearchTradesConfig searchUIConfig = new SearchTradesConfig();
@@ -42,6 +48,14 @@ public class ReforgedGTSConfig extends AbstractYamlConfig {
 
     public int getTradeDurationSeconds() {
         return this.tradeDurationSeconds;
+    }
+
+    public double getMinPokemonPrice() {
+        return this.minPokemonPrice;
+    }
+
+    public Map<String, PokeSpecPricing> getMinPriceModifiers() {
+        return this.minPriceModifiers;
     }
 
     public MainUIConfig getMainUIConfig() {
