@@ -22,8 +22,6 @@ public class ReforgedGTSConfig extends AbstractYamlConfig {
                                                                         "password", "database"
     );
 
-    private ConfigInterface searchGuiSettings = new ConfigInterface();
-
     private ConfigItem noPokemonItem = new ConfigItem(
             "minecraft:barrier",
             1, (byte) 0, "&cNo pokemon in this position",
@@ -43,31 +41,6 @@ public class ReforgedGTSConfig extends AbstractYamlConfig {
             Lists.newArrayList(), 4, 2, Maps.newHashMap()
     );
 
-    private PositionableConfigItem nextPageItem = new PositionableConfigItem(
-            "pixelmon:trade_holder_right", 1, (byte) 0, "&aNext Page",
-            Lists.newArrayList(), 8, 5, Maps.newHashMap()
-    );
-
-    private PositionableConfigItem previousPageItem = new PositionableConfigItem(
-            "pixelmon:trade_holder_left", 1, (byte) 0, "&aPrevious Page",
-            Lists.newArrayList(), 0, 5, Maps.newHashMap()
-    );
-
-    private PositionableConfigItem backButton = new PositionableConfigItem(
-            "pixelmon:eject_button", 1, (byte) 0, "&cBack",
-            Lists.newArrayList(), 4, 5, Maps.newHashMap()
-    );
-
-    private PositionableConfigItem filterButton = new PositionableConfigItem(
-            "pixelmon:net_ball", 1, (byte) 0, "&bChange filter",
-            Lists.newArrayList("&aCurrent Filter: &f%filter%"), 2, 5, Maps.newHashMap()
-    );
-
-    private PositionableConfigItem orderButton = new PositionableConfigItem(
-            "pixelmon:blue_orb", 1, (byte) 0, "&bChange order",
-            Lists.newArrayList("&aCurrent order: &f%order%"), 6, 5, Maps.newHashMap()
-    );
-
     private PositionableConfigItem viewPCButton = new PositionableConfigItem(
             "pixelmon:blue_orb", 1, (byte) 0, "&aYour PC",
             Lists.newArrayList(), 4, 0, Maps.newHashMap()
@@ -79,6 +52,7 @@ public class ReforgedGTSConfig extends AbstractYamlConfig {
     );
 
     private MainUIConfig mainUIConfig = new MainUIConfig();
+    private SearchTradesConfig searchUIConfig = new SearchTradesConfig();
     private SelectFromPCConfig pcConfig = new SelectFromPCConfig();
 
     public ReforgedGTSConfig() {
@@ -109,30 +83,6 @@ public class ReforgedGTSConfig extends AbstractYamlConfig {
         return this.tradeDurationSeconds;
     }
 
-    public ConfigInterface getSearchGuiSettings() {
-        return this.searchGuiSettings;
-    }
-
-    public PositionableConfigItem getNextPageItem() {
-        return this.nextPageItem;
-    }
-
-    public PositionableConfigItem getPreviousPageItem() {
-        return this.previousPageItem;
-    }
-
-    public PositionableConfigItem getBackButton() {
-        return this.backButton;
-    }
-
-    public PositionableConfigItem getFilterButton() {
-        return this.filterButton;
-    }
-
-    public PositionableConfigItem getOrderButton() {
-        return this.orderButton;
-    }
-
     public PositionableConfigItem getViewPCButton() {
         return this.viewPCButton;
     }
@@ -143,6 +93,10 @@ public class ReforgedGTSConfig extends AbstractYamlConfig {
 
     public MainUIConfig getMainUIConfig() {
         return this.mainUIConfig;
+    }
+
+    public SearchTradesConfig getSearchUIConfig() {
+        return this.searchUIConfig;
     }
 
     public SelectFromPCConfig getPcConfig() {
@@ -178,6 +132,9 @@ public class ReforgedGTSConfig extends AbstractYamlConfig {
                 Lists.newArrayList(), 7, 1, Maps.newHashMap()
         );
 
+        public MainUIConfig() {
+        }
+
         public ConfigInterface getGuiSettings() {
             return this.guiSettings;
         }
@@ -196,6 +153,64 @@ public class ReforgedGTSConfig extends AbstractYamlConfig {
 
         public PositionableConfigItem getSellItemButton() {
             return this.sellItemButton;
+        }
+    }
+
+    @ConfigSerializable
+    public static class SearchTradesConfig {
+
+        private ConfigInterface guiSettings = new ConfigInterface();
+
+        private PositionableConfigItem nextPageItem = new PositionableConfigItem(
+                "pixelmon:trade_holder_right", 1, (byte) 0, "&aNext Page",
+                Lists.newArrayList(), 8, 5, Maps.newHashMap()
+        );
+
+        private PositionableConfigItem previousPageItem = new PositionableConfigItem(
+                "pixelmon:trade_holder_left", 1, (byte) 0, "&aPrevious Page",
+                Lists.newArrayList(), 0, 5, Maps.newHashMap()
+        );
+
+        private PositionableConfigItem backButton = new PositionableConfigItem(
+                "pixelmon:eject_button", 1, (byte) 0, "&cBack",
+                Lists.newArrayList(), 4, 5, Maps.newHashMap()
+        );
+
+        private PositionableConfigItem filterButton = new PositionableConfigItem(
+                "pixelmon:net_ball", 1, (byte) 0, "&bChange filter",
+                Lists.newArrayList("&aCurrent Filter: &f%filter%"), 2, 5, Maps.newHashMap()
+        );
+
+        private PositionableConfigItem orderButton = new PositionableConfigItem(
+                "pixelmon:blue_orb", 1, (byte) 0, "&bChange order",
+                Lists.newArrayList("&aCurrent order: &f%order%"), 6, 5, Maps.newHashMap()
+        );
+
+        public SearchTradesConfig() {
+        }
+
+        public ConfigInterface getGuiSettings() {
+            return this.guiSettings;
+        }
+
+        public PositionableConfigItem getNextPageItem() {
+            return this.nextPageItem;
+        }
+
+        public PositionableConfigItem getPreviousPageItem() {
+            return this.previousPageItem;
+        }
+
+        public PositionableConfigItem getBackButton() {
+            return this.backButton;
+        }
+
+        public PositionableConfigItem getFilterButton() {
+            return this.filterButton;
+        }
+
+        public PositionableConfigItem getOrderButton() {
+            return this.orderButton;
         }
     }
 
