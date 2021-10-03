@@ -22,59 +22,17 @@ public class ReforgedGTSConfig extends AbstractYamlConfig {
                                                                         "password", "database"
     );
 
-    private ConfigItem noPokemonItem = new ConfigItem(
-            "minecraft:barrier",
-            1, (byte) 0, "&cNo pokemon in this position",
-            Lists.newArrayList(), Maps.newHashMap()
-    );
-
     private int tradeDurationSeconds = 86400;
-
-    private List<Integer> partySelectionPositions = Lists.newArrayList(
-            10, 11, 12, 14, 15, 16
-    );
-
-    private int confirmDisplay = 13;
-
-    private PositionableConfigItem confirmItem = new PositionableConfigItem(
-            "pixelmon:poke_ball", 1, (byte) 0, "&a&lCONFIRM",
-            Lists.newArrayList(), 4, 2, Maps.newHashMap()
-    );
-
-    private PositionableConfigItem viewPCButton = new PositionableConfigItem(
-            "pixelmon:blue_orb", 1, (byte) 0, "&aYour PC",
-            Lists.newArrayList(), 4, 0, Maps.newHashMap()
-    );
-
-    private PositionableConfigItem sellBackButton = new PositionableConfigItem(
-            "pixelmon:eject_button", 1, (byte) 0, "&cBack",
-            Lists.newArrayList(), 4, 5, Maps.newHashMap()
-    );
 
     private MainUIConfig mainUIConfig = new MainUIConfig();
     private SearchTradesConfig searchUIConfig = new SearchTradesConfig();
     private TimedOutTradesConfig timedOutUIConfig = new TimedOutTradesConfig();
     private ClaimTradesConfig claimTradesUIConfig = new ClaimTradesConfig();
+    private PartyPokemonConfig partyPokemonUIConfig = new PartyPokemonConfig();
     private SelectFromPCConfig pcConfig = new SelectFromPCConfig();
 
     public ReforgedGTSConfig() {
         super();
-    }
-
-    public PositionableConfigItem getConfirmItem() {
-        return this.confirmItem;
-    }
-
-    public int getConfirmDisplay() {
-        return this.confirmDisplay;
-    }
-
-    public ConfigItem getNoPokemonItem() {
-        return this.noPokemonItem;
-    }
-
-    public List<Integer> getPartySelectionPositions() {
-        return this.partySelectionPositions;
     }
 
     public SQLDatabaseDetails getDatabaseDetails() {
@@ -83,14 +41,6 @@ public class ReforgedGTSConfig extends AbstractYamlConfig {
 
     public int getTradeDurationSeconds() {
         return this.tradeDurationSeconds;
-    }
-
-    public PositionableConfigItem getViewPCButton() {
-        return this.viewPCButton;
-    }
-
-    public PositionableConfigItem getSellBackButton() {
-        return this.sellBackButton;
     }
 
     public MainUIConfig getMainUIConfig() {
@@ -107,6 +57,10 @@ public class ReforgedGTSConfig extends AbstractYamlConfig {
 
     public ClaimTradesConfig getClaimTradesUIConfig() {
         return this.claimTradesUIConfig;
+    }
+
+    public PartyPokemonConfig getPartyPokemonUIConfig() {
+        return this.partyPokemonUIConfig;
     }
 
     public SelectFromPCConfig getPcConfig() {
@@ -302,6 +256,70 @@ public class ReforgedGTSConfig extends AbstractYamlConfig {
 
         public PositionableConfigItem getBackButton() {
             return this.backButton;
+        }
+    }
+
+    @ConfigSerializable
+    public static class PartyPokemonConfig {
+
+        private ConfigInterface guiSettings = new ConfigInterface();
+
+        private PositionableConfigItem backButton = new PositionableConfigItem(
+                "pixelmon:eject_button", 1, (byte) 0, "&cBack",
+                Lists.newArrayList(), 4, 5, Maps.newHashMap()
+        );
+
+        private List<Integer> partySelectionPositions = Lists.newArrayList(
+                10, 11, 12, 14, 15, 16
+        );
+
+        private int confirmDisplay = 13;
+
+        private PositionableConfigItem confirmItem = new PositionableConfigItem(
+                "pixelmon:poke_ball", 1, (byte) 0, "&a&lCONFIRM",
+                Lists.newArrayList(), 4, 2, Maps.newHashMap()
+        );
+
+        private PositionableConfigItem viewPCButton = new PositionableConfigItem(
+                "pixelmon:blue_orb", 1, (byte) 0, "&aYour PC",
+                Lists.newArrayList(), 4, 0, Maps.newHashMap()
+        );
+
+        private ConfigItem noPokemonItem = new ConfigItem(
+                "minecraft:barrier",
+                1, (byte) 0, "&cNo pokemon in this position",
+                Lists.newArrayList(), Maps.newHashMap()
+        );
+
+        public PartyPokemonConfig() {
+        }
+
+        public ConfigInterface getGuiSettings() {
+            return this.guiSettings;
+        }
+
+        public PositionableConfigItem getBackButton() {
+            return this.backButton;
+        }
+
+        public List<Integer> getPartySelectionPositions() {
+            return this.partySelectionPositions;
+        }
+
+        public int getConfirmDisplay() {
+            return this.confirmDisplay;
+        }
+
+        public PositionableConfigItem getConfirmItem() {
+            return this.confirmItem;
+        }
+
+        public PositionableConfigItem getViewPCButton() {
+            return this.viewPCButton;
+        }
+
+        public ConfigItem getNoPokemonItem() {
+            return this.noPokemonItem;
         }
     }
 

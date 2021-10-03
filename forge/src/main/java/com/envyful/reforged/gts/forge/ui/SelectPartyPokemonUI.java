@@ -1,7 +1,6 @@
 package com.envyful.reforged.gts.forge.ui;
 
 import com.envyful.api.config.type.ConfigItem;
-import com.envyful.api.config.type.PositionableConfigItem;
 import com.envyful.api.forge.config.UtilConfigItem;
 import com.envyful.api.forge.items.ItemBuilder;
 import com.envyful.api.forge.items.ItemFlag;
@@ -22,21 +21,21 @@ import net.minecraft.item.ItemStack;
 public class SelectPartyPokemonUI {
 
     public static void openUI(EnvyPlayer<EntityPlayerMP> player) {
+        ReforgedGTSConfig.PartyPokemonConfig config = ReforgedGTSForge.getInstance().getConfig().getPartyPokemonUIConfig();
+
         Pane pane = GuiFactory.paneBuilder()
                 .topLeftX(0).topLeftY(0)
                 .width(9)
-                .height(ReforgedGTSForge.getInstance().getConfig().getGuiSettings().getHeight())
+                .height(config.getGuiSettings().getHeight())
                 .build();
 
-        for (ConfigItem fillerItem : ReforgedGTSForge.getInstance().getConfig().getGuiSettings().getFillerItems()) {
+        for (ConfigItem fillerItem : config.getGuiSettings().getFillerItems()) {
             pane.add(GuiFactory.displayableBuilder(ItemStack.class)
                              .itemStack(UtilConfigItem.fromConfigItem(fillerItem))
                              .build());
         }
 
         setPokemon(player, pane);
-
-        ReforgedGTSConfig config = ReforgedGTSForge.getInstance().getConfig();
 
         if (config.getViewPCButton().isEnabled()) {
             pane.set(config.getViewPCButton().getXPos(), config.getViewPCButton().getYPos(),
@@ -47,20 +46,19 @@ public class SelectPartyPokemonUI {
             );
         }
 
-        if (config.getSellBackButton().isEnabled()) {
-            pane.set(config.getSellBackButton().getXPos(), config.getSellBackButton().getYPos(),
+        if (config.getBackButton().isEnabled()) {
+            pane.set(config.getBackButton().getXPos(), config.getBackButton().getYPos(),
                      GuiFactory.displayableBuilder(ItemStack.class)
-                             .itemStack(UtilConfigItem.fromConfigItem(config.getSellBackButton()))
+                             .itemStack(UtilConfigItem.fromConfigItem(config.getBackButton()))
                              .clickHandler((envyPlayer, clickType) -> MainUI.open(player))
                              .build()
             );
         }
-        
-        PositionableConfigItem confirmItem = ReforgedGTSForge.getInstance().getConfig().getConfirmItem();
 
-        if (confirmItem.isEnabled()) {
-            pane.set(confirmItem.getXPos(), confirmItem.getYPos(), GuiFactory.displayableBuilder(ItemStack.class)
-                    .itemStack(UtilConfigItem.fromConfigItem(confirmItem))
+        if (config.getConfirmItem().isEnabled()) {
+            pane.set(config.getConfirmItem().getXPos(), config.getConfirmItem().getYPos(),
+                     GuiFactory.displayableBuilder(ItemStack.class)
+                    .itemStack(UtilConfigItem.fromConfigItem(config.getConfirmItem()))
                     .clickHandler((envyPlayer, clickType) -> {
                         GTSAttribute attribute = envyPlayer.getAttribute(ReforgedGTSForge.class);
 
@@ -77,15 +75,15 @@ public class SelectPartyPokemonUI {
                 .setPlayerManager(ReforgedGTSForge.getInstance().getPlayerManager())
                 .addPane(pane)
                 .setCloseConsumer(envyPlayer -> {})
-                .height(ReforgedGTSForge.getInstance().getConfig().getGuiSettings().getHeight())
-                .title(ReforgedGTSForge.getInstance().getConfig().getGuiSettings().getTitle())
+                .height(config.getGuiSettings().getHeight())
+                .title(config.getGuiSettings().getTitle())
                 .build().open(player);
     }
 
     private static void setPokemon(EnvyPlayer<EntityPlayerMP> player, Pane pane) {
         PlayerPartyStorage party = UtilPixelmonPlayer.getParty(player.getParent());
         Pokemon[] all = party.getAll();
-        ReforgedGTSConfig config = ReforgedGTSForge.getInstance().getConfig();
+        ReforgedGTSConfig.PartyPokemonConfig config = ReforgedGTSForge.getInstance().getConfig().getPartyPokemonUIConfig();
 
         for (int i = 0; i < 6; i++) {
             int pos = config.getPartySelectionPositions().get(i);
