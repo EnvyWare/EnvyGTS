@@ -58,7 +58,7 @@ public class MainUI {
             pane.set(config.getViewTradesButton().getXPos(), config.getViewTradesButton().getYPos(),
                      GuiFactory.displayableBuilder(ItemStack.class)
                              .itemStack(UtilConfigItem.fromConfigItem(config.getViewTradesButton()))
-                             .clickHandler((envyPlayer, clickType) -> {})
+                             .clickHandler((envyPlayer, clickType) -> ViewTradesUI.openUI(player))
                              .build()
             );
         }

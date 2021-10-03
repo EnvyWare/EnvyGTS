@@ -1,10 +1,10 @@
 package com.envyful.reforged.gts.api;
 
+import com.envyful.api.gui.pane.Pane;
 import com.envyful.api.player.EnvyPlayer;
 import com.envyful.reforged.gts.api.gui.FilterType;
 import com.envyful.reforged.gts.api.gui.SortType;
 
-import java.util.List;
 import java.util.UUID;
 
 /**
@@ -88,6 +88,15 @@ public interface Trade {
      * @return true if it matches the filter
      */
     boolean filter(FilterType filterType);
+
+    /**
+     *
+     * Displays the Trade in the GUI
+     *
+     * @param pos The position in the pane
+     * @param pane The pane to display in
+     */
+    void display(int pos, Pane pane);
 
     /**
      *

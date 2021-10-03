@@ -21,6 +21,7 @@ public class ReforgedGTSConfig extends AbstractYamlConfig {
     private SQLDatabaseDetails databaseDetails = new SQLDatabaseDetails("ReforgedGTS", "0.0.0.0", 3306, "admin",
                                                                         "password", "database");
     private ConfigInterface guiSettings = new ConfigInterface();
+    private ConfigInterface searchGuiSettings = new ConfigInterface();
 
     private PositionableConfigItem viewTradesButton = new PositionableConfigItem(
             "pixelmon:poke_ball",
@@ -63,6 +64,21 @@ public class ReforgedGTSConfig extends AbstractYamlConfig {
     private PositionableConfigItem confirmItem = new PositionableConfigItem(
             "pixelmon:poke_ball", 1, (byte) 0, "&a&lCONFIRM",
             Lists.newArrayList(), 4, 2, Maps.newHashMap()
+    );
+
+    private PositionableConfigItem nextPageItem = new PositionableConfigItem(
+            "pixelmon:trade_holder_right", 1, (byte) 0, "&aNext Page",
+            Lists.newArrayList(), 0, 5, Maps.newHashMap()
+    );
+
+    private PositionableConfigItem previousPageItem = new PositionableConfigItem(
+            "pixelmon:trade_holder_left", 1, (byte) 0, "&aPrevious Page",
+            Lists.newArrayList(), 8, 5, Maps.newHashMap()
+    );
+
+    private PositionableConfigItem backButton = new PositionableConfigItem(
+            "pixelmon:eject_button", 1, (byte) 0, "&cBack",
+            Lists.newArrayList(), 4, 5, Maps.newHashMap()
     );
 
     public ReforgedGTSConfig() {
@@ -111,5 +127,21 @@ public class ReforgedGTSConfig extends AbstractYamlConfig {
 
     public ConfigInterface getGuiSettings() {
         return this.guiSettings;
+    }
+
+    public ConfigInterface getSearchGuiSettings() {
+        return this.searchGuiSettings;
+    }
+
+    public PositionableConfigItem getNextPageItem() {
+        return this.nextPageItem;
+    }
+
+    public PositionableConfigItem getPreviousPageItem() {
+        return this.previousPageItem;
+    }
+
+    public PositionableConfigItem getBackButton() {
+        return this.backButton;
     }
 }

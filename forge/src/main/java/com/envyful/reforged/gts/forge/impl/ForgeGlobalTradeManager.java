@@ -9,7 +9,6 @@ import com.envyful.reforged.gts.forge.player.GTSAttribute;
 import com.google.common.collect.Lists;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.fml.common.FMLCommonHandler;
 
 import java.util.Collections;
 import java.util.List;
@@ -42,7 +41,7 @@ public abstract class ForgeGlobalTradeManager implements GlobalTradeManager {
 
     @Override
     public List<Trade> getAllTrades() {
-        return this.activeTrades;
+        return Lists.newArrayList(this.activeTrades);
     }
 
     @Override
