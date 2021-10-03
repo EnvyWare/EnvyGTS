@@ -1,12 +1,12 @@
 package com.envyful.reforged.gts.forge.impl.trade;
 
+import com.envyful.api.gui.pane.Pane;
 import com.envyful.api.player.EnvyPlayer;
 import com.envyful.reforged.gts.api.Trade;
 import com.envyful.reforged.gts.api.gui.FilterType;
 import com.envyful.reforged.gts.forge.impl.trade.type.ItemTrade;
 import com.envyful.reforged.gts.forge.impl.trade.type.PokemonTrade;
 
-import java.util.Locale;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -42,6 +42,11 @@ public abstract class ForgeTrade implements Trade {
     @Override
     public boolean filter(FilterType filterType) {
         return filterType.isAllowed(this.type);
+    }
+
+    @Override
+    public void display(int pos, Pane pane) {
+        //TODO
     }
 
     public static Builder builder() {

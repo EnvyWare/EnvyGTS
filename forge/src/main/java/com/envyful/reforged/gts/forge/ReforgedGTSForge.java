@@ -9,6 +9,7 @@ import com.envyful.api.forge.gui.factory.ForgeGuiFactory;
 import com.envyful.api.forge.player.ForgePlayerManager;
 import com.envyful.api.gui.factory.GuiFactory;
 import com.envyful.reforged.gts.api.GlobalTradeManager;
+import com.envyful.reforged.gts.api.sql.ReforgedGTSQueries;
 import com.envyful.reforged.gts.forge.command.GTSCommand;
 import com.envyful.reforged.gts.forge.config.LocaleConfig;
 import com.envyful.reforged.gts.forge.config.ReforgedGTSConfig;
@@ -19,6 +20,9 @@ import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
 
 import java.io.IOException;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 
 @Mod(
         modid = "reforgedgts",
@@ -50,6 +54,15 @@ public class ReforgedGTSForge {
 
         UtilConcurrency.runAsync(() -> {
             this.database = new SimpleHikariDatabase(this.config.getDatabaseDetails());
+
+            try (Connection connection = this.database.getConnection();
+                 PreparedStatement preparedStatement =
+                         connection.prepareStatement(ReforgedGTSQueries.CREATE_MAIN_TABLE)) {
+                preparedStatement.executeUpdate();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+
             this.tradeManager = new SQLGlobalTradeManager(this);
         });
     }
