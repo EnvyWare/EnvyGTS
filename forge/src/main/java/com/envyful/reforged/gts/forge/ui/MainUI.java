@@ -13,19 +13,20 @@ import net.minecraft.item.ItemStack;
 public class MainUI {
 
     public static void open(EnvyPlayer<EntityPlayerMP> player) {
+        ReforgedGTSConfig.MainUIConfig config = ReforgedGTSForge.getInstance().getConfig().getMainUIConfig();
+
         Pane pane = GuiFactory.paneBuilder()
-                .topLeftX(0).topLeftY(0)
+                .topLeftX(0)
+                .topLeftY(0)
                 .width(9)
-                .height(ReforgedGTSForge.getInstance().getConfig().getGuiSettings().getHeight())
+                .height(config.getGuiSettings().getHeight())
                 .build();
 
-        for (ConfigItem fillerItem : ReforgedGTSForge.getInstance().getConfig().getGuiSettings().getFillerItems()) {
+        for (ConfigItem fillerItem : config.getGuiSettings().getFillerItems()) {
             pane.add(GuiFactory.displayableBuilder(ItemStack.class)
                              .itemStack(UtilConfigItem.fromConfigItem(fillerItem))
                              .build());
         }
-
-        ReforgedGTSConfig config = ReforgedGTSForge.getInstance().getConfig();
 
         if (config.getSellItemButton().isEnabled()) {
             pane.set(config.getSellItemButton().getXPos(), config.getSellItemButton().getYPos(),
@@ -67,8 +68,8 @@ public class MainUI {
                 .setPlayerManager(ReforgedGTSForge.getInstance().getPlayerManager())
                 .addPane(pane)
                 .setCloseConsumer(envyPlayer -> {})
-                .height(ReforgedGTSForge.getInstance().getConfig().getGuiSettings().getHeight())
-                .title(ReforgedGTSForge.getInstance().getConfig().getGuiSettings().getTitle())
+                .height(config.getGuiSettings().getHeight())
+                .title(config.getGuiSettings().getTitle())
                 .build().open(player);
     }
 }
