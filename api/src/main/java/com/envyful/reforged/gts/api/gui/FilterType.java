@@ -10,7 +10,10 @@ import java.util.function.Predicate;
 public enum FilterType {
 
     INSTANT_BUY("Instant Buy", type -> type.getDisplayName().equalsIgnoreCase("Instant Buy")),
+/*
     AUCTION("Auction", type -> type.getDisplayName().equalsIgnoreCase("Auction")),
+*/
+    OWN("Your Trades", type -> type.getDisplayName().equalsIgnoreCase("Your Trades")),
     ALL("All", type -> true)
 
     ;
