@@ -34,7 +34,7 @@ public enum FilterType {
     public FilterType getNext() {
         FilterType[] values = values();
 
-        if (ordinal() >= values.length) {
+        if (ordinal() >= (values.length - 1)) {
             return values[0];
         }
 

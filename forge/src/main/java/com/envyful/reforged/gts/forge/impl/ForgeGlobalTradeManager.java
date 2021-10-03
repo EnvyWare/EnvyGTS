@@ -78,6 +78,6 @@ public abstract class ForgeGlobalTradeManager implements GlobalTradeManager {
 
     @Override
     public List<Trade> getPurchasedTrades(EnvyPlayer<?> player) {
-        return null; //TODO:
+        return Collections.emptyList(); //TODO:
     }
 }
