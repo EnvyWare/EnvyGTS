@@ -54,15 +54,7 @@ public class ReforgedGTSForge {
 
         UtilConcurrency.runAsync(() -> {
             this.database = new SimpleHikariDatabase(this.config.getDatabaseDetails());
-
-            try (Connection connection = this.database.getConnection();
-                 PreparedStatement preparedStatement =
-                         connection.prepareStatement(ReforgedGTSQueries.CREATE_MAIN_TABLE)) {
-                preparedStatement.executeUpdate();
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-
+            this.createTables();
             this.tradeManager = new SQLGlobalTradeManager(this);
         });
     }
@@ -72,6 +64,16 @@ public class ReforgedGTSForge {
             this.config = YamlConfigFactory.getInstance(ReforgedGTSConfig.class);
             this.locale = YamlConfigFactory.getInstance(LocaleConfig.class);
         } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void createTables() {
+        try (Connection connection = this.database.getConnection();
+             PreparedStatement preparedStatement =
+                     connection.prepareStatement(ReforgedGTSQueries.CREATE_MAIN_TABLE)) {
+            preparedStatement.executeUpdate();
+        } catch (SQLException e) {
             e.printStackTrace();
         }
     }
