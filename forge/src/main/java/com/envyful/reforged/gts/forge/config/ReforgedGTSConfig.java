@@ -6,6 +6,7 @@ import com.envyful.api.config.type.ConfigItem;
 import com.envyful.api.config.type.PositionableConfigItem;
 import com.envyful.api.config.type.SQLDatabaseDetails;
 import com.envyful.api.config.yaml.AbstractYamlConfig;
+import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import net.minecraft.init.Items;
@@ -70,7 +71,11 @@ public class ReforgedGTSConfig extends AbstractYamlConfig {
     @ConfigSerializable
     public static class MainUIConfig {
 
-        private ConfigInterface guiSettings = new ConfigInterface();
+        private ConfigInterface guiSettings = new ConfigInterface(
+                "Reforged GTS", 3, "BLOCK", ImmutableMap.of("one", new ConfigItem(
+                "minecraft:stained_glass_pane", 1, (byte) 15, " ",
+                Lists.newArrayList(), Maps.newHashMap()
+        )));
 
         private PositionableConfigItem viewTradesButton = new PositionableConfigItem(
                 "pixelmon:poke_ball",
@@ -123,7 +128,11 @@ public class ReforgedGTSConfig extends AbstractYamlConfig {
     @ConfigSerializable
     public static class SearchTradesConfig {
 
-        private ConfigInterface guiSettings = new ConfigInterface();
+        private ConfigInterface guiSettings = new ConfigInterface(
+                "Reforged GTS", 6, "BLOCK", ImmutableMap.of("one", new ConfigItem(
+                "minecraft:stained_glass_pane", 1, (byte) 15, " ",
+                Lists.newArrayList(), Maps.newHashMap()
+        )));
 
         private PositionableConfigItem nextPageItem = new PositionableConfigItem(
                 "pixelmon:trade_holder_right", 1, (byte) 0, "&aNext Page",
@@ -181,7 +190,11 @@ public class ReforgedGTSConfig extends AbstractYamlConfig {
     @ConfigSerializable
     public static class TimedOutTradesConfig {
 
-        private ConfigInterface guiSettings = new ConfigInterface();
+        private ConfigInterface guiSettings = new ConfigInterface(
+                "Reforged GTS", 6, "BLOCK", ImmutableMap.of("one", new ConfigItem(
+                "minecraft:stained_glass_pane", 1, (byte) 15, " ",
+                Lists.newArrayList(), Maps.newHashMap()
+        )));
 
         private PositionableConfigItem nextPageItem = new PositionableConfigItem(
                 "pixelmon:trade_holder_right", 1, (byte) 0, "&aNext Page",
@@ -222,7 +235,11 @@ public class ReforgedGTSConfig extends AbstractYamlConfig {
     @ConfigSerializable
     public static class ClaimTradesConfig {
 
-        private ConfigInterface guiSettings = new ConfigInterface();
+        private ConfigInterface guiSettings = new ConfigInterface(
+                "Reforged GTS", 6, "BLOCK", ImmutableMap.of("one", new ConfigItem(
+                "minecraft:stained_glass_pane", 1, (byte) 15, " ",
+                Lists.newArrayList(), Maps.newHashMap()
+        )));
 
         private PositionableConfigItem nextPageItem = new PositionableConfigItem(
                 "pixelmon:trade_holder_right", 1, (byte) 0, "&aNext Page",
@@ -262,11 +279,15 @@ public class ReforgedGTSConfig extends AbstractYamlConfig {
     @ConfigSerializable
     public static class PartyPokemonConfig {
 
-        private ConfigInterface guiSettings = new ConfigInterface();
+        private ConfigInterface guiSettings = new ConfigInterface(
+                "Reforged GTS", 3, "BLOCK", ImmutableMap.of("one", new ConfigItem(
+                        "minecraft:stained_glass_pane", 1, (byte) 15, " ",
+                        Lists.newArrayList(), Maps.newHashMap()
+        )));
 
         private PositionableConfigItem backButton = new PositionableConfigItem(
                 "pixelmon:eject_button", 1, (byte) 0, "&cBack",
-                Lists.newArrayList(), 4, 5, Maps.newHashMap()
+                Lists.newArrayList(), 0, 0, Maps.newHashMap()
         );
 
         private List<Integer> partySelectionPositions = Lists.newArrayList(
@@ -326,7 +347,11 @@ public class ReforgedGTSConfig extends AbstractYamlConfig {
     @ConfigSerializable
     public static class SelectFromPCConfig {
 
-        private ConfigInterface guiSettings = new ConfigInterface();
+        private ConfigInterface guiSettings = new ConfigInterface(
+                "Reforged GTS", 6, "BLOCK", ImmutableMap.of("one", new ConfigItem(
+                "minecraft:stained_glass_pane", 1, (byte) 15, " ",
+                Lists.newArrayList(), Maps.newHashMap()
+        )));
 
         private PositionableConfigItem backButton = new PositionableConfigItem(
                 "pixelmon:eject_button", 1, (byte) 0, "&cBack",

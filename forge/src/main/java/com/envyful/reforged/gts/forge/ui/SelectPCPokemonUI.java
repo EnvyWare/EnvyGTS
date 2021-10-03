@@ -25,21 +25,21 @@ public class SelectPCPokemonUI {
     }
 
     public static void openUI(EnvyPlayer<EntityPlayerMP> player, int page) {
+        ReforgedGTSConfig.SelectFromPCConfig config = ReforgedGTSForge.getInstance().getConfig().getPcConfig();
+
         Pane pane = GuiFactory.paneBuilder()
                 .topLeftX(0).topLeftY(0)
                 .width(9)
-                .height(ReforgedGTSForge.getInstance().getConfig().getGuiSettings().getHeight())
+                .height(config.getGuiSettings().getHeight())
                 .build();
 
-        for (ConfigItem fillerItem : ReforgedGTSForge.getInstance().getConfig().getGuiSettings().getFillerItems()) {
+        for (ConfigItem fillerItem : config.getGuiSettings().getFillerItems()) {
             pane.add(GuiFactory.displayableBuilder(ItemStack.class)
                              .itemStack(UtilConfigItem.fromConfigItem(fillerItem))
                              .build());
         }
 
         setPokemon(player, page, pane);
-
-        ReforgedGTSConfig.SelectFromPCConfig config = ReforgedGTSForge.getInstance().getConfig().getPcConfig();
 
         if (config.getConfirmButton().isEnabled()) {
             pane.set(config.getConfirmButton().getXPos(), config.getConfirmButton().getYPos(),
@@ -97,8 +97,8 @@ public class SelectPCPokemonUI {
                 .setPlayerManager(ReforgedGTSForge.getInstance().getPlayerManager())
                 .addPane(pane)
                 .setCloseConsumer(envyPlayer -> {})
-                .height(ReforgedGTSForge.getInstance().getConfig().getGuiSettings().getHeight())
-                .title(ReforgedGTSForge.getInstance().getConfig().getGuiSettings().getTitle())
+                .height(config.getGuiSettings().getHeight())
+                .title(config.getGuiSettings().getTitle())
                 .build().open(player);
     }
 
