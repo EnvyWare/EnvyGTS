@@ -302,7 +302,7 @@ public class GuiConfig extends AbstractYamlConfig {
         );
 
         private PositionableConfigItem viewPCButton = new PositionableConfigItem(
-                "pixelmon:blue_orb", 1, (byte) 0, "&aYour PC",
+                "pixelmon:pc", 1, (byte) 0, "&aYour PC",
                 Lists.newArrayList(), 4, 0, Maps.newHashMap()
         );
 
