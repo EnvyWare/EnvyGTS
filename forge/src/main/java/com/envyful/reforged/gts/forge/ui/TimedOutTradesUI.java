@@ -82,7 +82,7 @@ public class TimedOutTradesUI {
             }
 
             Trade trade = allTrades.get(i);
-            trade.display(i % 45, pane);
+            trade.displayClaimable(i % 45, pane);
         }
 
         GuiFactory.guiBuilder()

@@ -101,6 +101,15 @@ public interface Trade {
 
     /**
      *
+     * Displays the trade when claimable or expired
+     *
+     * @param pos The position in the pane
+     * @param pane The pane to display in
+     */
+    void displayClaimable(int pos, Pane pane);
+
+    /**
+     *
      * Method for deleting this {@link Trade} from all storage
      *
      */

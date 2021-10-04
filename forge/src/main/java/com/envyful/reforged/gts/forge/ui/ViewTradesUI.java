@@ -111,7 +111,6 @@ public class ViewTradesUI {
                 continue;
             }
 
-            System.out.println("TRADE: "+ allTrades.get(i));
             Trade trade = allTrades.get(i);
             trade.display(i % 45, pane);
         }
