@@ -73,7 +73,7 @@ public class SelectPriceUI {
                                                 .name(formatName(attribute, config.getModifyPriceButton().getName()))
                                                 .lore(formatLore(attribute, config.getModifyPriceButton().getLore()))
                                                 .build())
-                             .clickHandler((envyPlayer, clickType) -> {})
+                             .clickHandler((envyPlayer, clickType) -> EditPriceUI.openUI(player, page, slot))
                              .build()
             );
         }
@@ -105,7 +105,7 @@ public class SelectPriceUI {
                 .build().open(player);
     }
 
-    private static Pokemon getPokemon(EnvyPlayer<EntityPlayerMP> player, int page, int slot) {
+    public static Pokemon getPokemon(EnvyPlayer<EntityPlayerMP> player, int page, int slot) {
         if (page == -1) {
             return UtilPixelmonPlayer.getParty(player.getParent()).get(slot);
         } else {
@@ -113,7 +113,7 @@ public class SelectPriceUI {
         }
     }
 
-    private static List<String> formatLore(GTSAttribute attribute, List<String> lore) {
+    public static List<String> formatLore(GTSAttribute attribute, List<String> lore) {
         List<String> newLore = Lists.newArrayList();
 
         for (String s : lore) {
@@ -123,7 +123,7 @@ public class SelectPriceUI {
         return newLore;
     }
 
-    private static String formatName(GTSAttribute attribute, String name) {
+    public static String formatName(GTSAttribute attribute, String name) {
         return UtilChatColour.translateColourCodes('&', name
                 .replace("%min_price%", attribute.getCurrentMinPrice() + "")
                 .replace(

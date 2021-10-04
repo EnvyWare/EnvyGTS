@@ -95,6 +95,10 @@ public class ReforgedGTSConfig extends AbstractYamlConfig {
         return this.priceConfig;
     }
 
+    public EditPriceConfig getEditPriceUIConfig() {
+        return this.editPriceUIConfig;
+    }
+
     @ConfigSerializable
     public static class MainUIConfig {
 
