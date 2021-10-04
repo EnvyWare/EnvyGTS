@@ -68,7 +68,12 @@ public class SelectPartyPokemonUI {
                         if (attribute.getSelectedSlot() == -1) {
                             return;
                         }
+
                         PlayerPartyStorage party = UtilPixelmonPlayer.getParty(player.getParent());
+
+                        if (party.countAblePokemon() <= 1) {
+                            return;
+                        }
 
                         double price = UtilPokemonPrice.getMinPrice(party.get(attribute.getSelectedSlot()));
 
