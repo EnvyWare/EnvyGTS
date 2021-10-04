@@ -15,6 +15,10 @@ import net.minecraft.item.ItemStack;
 
 public class SelectPriceUI {
 
+    public static void openUI(EnvyPlayer<EntityPlayerMP> player, int slot) {
+        openUI(player, -1, slot);
+    }
+
     public static void openUI(EnvyPlayer<EntityPlayerMP> player, int page, int slot) {
         ReforgedGTSConfig.PokemonPriceConfig config = ReforgedGTSForge.getInstance().getConfig().getPriceConfig();
 

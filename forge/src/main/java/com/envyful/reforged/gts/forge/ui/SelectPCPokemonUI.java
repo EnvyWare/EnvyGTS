@@ -102,7 +102,7 @@ public class SelectPCPokemonUI {
                             return;
                         }
 
-                        //TODO: open next UI
+                        SelectPriceUI.openUI(player, page, attribute.getSelectedSlot());
                     })
                     .build());
         }

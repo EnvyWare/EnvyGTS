@@ -66,7 +66,7 @@ public class SelectPartyPokemonUI {
                             return;
                         }
 
-                        //TODO: open next UI
+                        SelectPriceUI.openUI(player, attribute.getSelectedSlot());
                     })
                     .build());
         }
