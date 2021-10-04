@@ -8,15 +8,15 @@ import com.envyful.api.gui.pane.Pane;
 import com.envyful.api.player.EnvyPlayer;
 import com.envyful.api.reforged.pixelmon.sprite.UtilSprite;
 import com.envyful.reforged.gts.forge.ReforgedGTSForge;
-import com.envyful.reforged.gts.forge.config.EditPriceConfig;
+import com.envyful.reforged.gts.forge.config.EditDurationConfig;
 import com.envyful.reforged.gts.forge.player.GTSAttribute;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 
-public class EditPriceUI {
+public class EditDurationUI {
 
     public static void openUI(EnvyPlayer<EntityPlayerMP> player, int page, int position) {
-        EditPriceConfig config = ReforgedGTSForge.getInstance().getConfig().getEditPriceUIConfig();
+        EditDurationConfig config = ReforgedGTSForge.getInstance().getConfig().getEditDurationUIConfig();
         GTSAttribute attribute = player.getAttribute(ReforgedGTSForge.class);
 
         Pane pane = GuiFactory.paneBuilder()
@@ -39,40 +39,38 @@ public class EditPriceUI {
                              .build());
         }
 
-        if (config.getMinPriceItem().isEnabled()) {
-            pane.set(config.getMinPriceItem().getXPos(), config.getMinPriceItem().getYPos(),
+        if (config.getMinTimeItem().isEnabled()) {
+            pane.set(config.getMinTimeItem().getXPos(), config.getMinTimeItem().getYPos(),
                      GuiFactory.displayableBuilder(ItemStack.class)
-                             .itemStack(new ItemBuilder(UtilConfigItem.fromConfigItem(config.getMinPriceItem()))
+                             .itemStack(new ItemBuilder(UtilConfigItem.fromConfigItem(config.getMinTimeItem()))
                                                 .name(SelectPriceUI.formatName(attribute,
-                                                                               config.getMinPriceItem().getName()))
-                                                .lore(SelectPriceUI.formatLore(attribute, config.getMinPriceItem().getLore()))
+                                                                               config.getMinTimeItem().getName()))
+                                                .lore(SelectPriceUI.formatLore(attribute, config.getMinTimeItem().getLore()))
                                                 .build())
-                             .clickHandler((envyPlayer, clickType) -> {})
                              .build()
             );
         }
 
-        if (config.getCurrentPriceButton().isEnabled()) {
-            pane.set(config.getCurrentPriceButton().getXPos(), config.getCurrentPriceButton().getYPos(),
+        if (config.getCurrentTimeButton().isEnabled()) {
+            pane.set(config.getCurrentTimeButton().getXPos(), config.getCurrentTimeButton().getYPos(),
                      GuiFactory.displayableBuilder(ItemStack.class)
-                             .itemStack(new ItemBuilder(UtilConfigItem.fromConfigItem(config.getCurrentPriceButton()))
+                             .itemStack(new ItemBuilder(UtilConfigItem.fromConfigItem(config.getCurrentTimeButton()))
                                                 .name(SelectPriceUI.formatName(attribute,
-                                                                               config.getCurrentPriceButton().getName()))
-                                                .lore(SelectPriceUI.formatLore(attribute, config.getCurrentPriceButton().getLore()))
+                                                                               config.getCurrentTimeButton().getName()))
+                                                .lore(SelectPriceUI.formatLore(attribute, config.getCurrentTimeButton().getLore()))
                                                 .build())
-                             .clickHandler((envyPlayer, clickType) -> {})
                              .build()
             );
         }
 
-        for (EditPriceConfig.ModifyPriceButton priceButton : config.getPriceButtons()) {
-            pane.set(priceButton.getConfigItem().getXPos(), priceButton.getConfigItem().getYPos(),
+        for (EditDurationConfig.ModifyTimeButton timeButton : config.getTimeButtons()) {
+            pane.set(timeButton.getConfigItem().getXPos(), timeButton.getConfigItem().getYPos(),
                      GuiFactory.displayableBuilder(ItemStack.class)
-                             .itemStack(UtilConfigItem.fromConfigItem(priceButton.getConfigItem()))
+                             .itemStack(UtilConfigItem.fromConfigItem(timeButton.getConfigItem()))
                              .clickHandler((envyPlayer, clickType) -> {
-                                 attribute.setCurrentPrice(Math.max(
-                                         attribute.getCurrentMinPrice(),
-                                         attribute.getCurrentPrice() + priceButton.getPriceModifier()
+                                 attribute.setCurrentDuration(Math.max(
+                                         ReforgedGTSForge.getInstance().getConfig().getMinTradeDuration(),
+                                         attribute.getCurrentDuration() + timeButton.getTimeModifier()
                                  ));
                                  openUI(player, page, position);
                              })

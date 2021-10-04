@@ -25,6 +25,7 @@ public class ReforgedGTSConfig extends AbstractYamlConfig {
                                                                         "password", "database"
     );
 
+    private int minTradeDuration = 300;
     private int tradeDurationSeconds = 86400;
     private double minPokemonPrice = 10_000.00;
 
@@ -50,6 +51,10 @@ public class ReforgedGTSConfig extends AbstractYamlConfig {
 
     public SQLDatabaseDetails getDatabaseDetails() {
         return this.databaseDetails;
+    }
+
+    public int getMinTradeDuration() {
+        return this.minTradeDuration;
     }
 
     public int getTradeDurationSeconds() {

@@ -22,7 +22,7 @@ public class EditDurationConfig {
     )));
 
     private PositionableConfigItem minTimeItem = new PositionableConfigItem(
-            "pixelmon:relic_gold", 1, (byte) 0, "&bMin Time: &a$%mine_time%",
+            "pixelmon:relic_gold", 1, (byte) 0, "&bMin Time: &a$%min_time%",
             Lists.newArrayList(), 2, 1, Maps.newHashMap()
     );
 
@@ -110,11 +110,11 @@ public class EditDurationConfig {
     public static class ModifyTimeButton {
 
         private PositionableConfigItem configItem;
-        private double priceModifier;
+        private long timeModifier;
 
-        public ModifyTimeButton(PositionableConfigItem configItem, double priceModifier) {
+        public ModifyTimeButton(PositionableConfigItem configItem, long timeModifier) {
             this.configItem = configItem;
-            this.priceModifier = priceModifier;
+            this.timeModifier = timeModifier;
         }
 
         public ModifyTimeButton() {
@@ -124,8 +124,8 @@ public class EditDurationConfig {
             return this.configItem;
         }
 
-        public double getPriceModifier() {
-            return this.priceModifier;
+        public long getTimeModifier() {
+            return this.timeModifier;
         }
     }
 }

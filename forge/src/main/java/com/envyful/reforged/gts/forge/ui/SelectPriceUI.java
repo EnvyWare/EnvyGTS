@@ -85,7 +85,7 @@ public class SelectPriceUI {
                                                 .name(formatName(attribute, config.getModifyDurationButton().getName()))
                                                 .lore(formatLore(attribute, config.getModifyDurationButton().getLore()))
                                                 .build())
-                             .clickHandler((envyPlayer, clickType) -> {})
+                             .clickHandler((envyPlayer, clickType) -> EditDurationUI.openUI(player, page, slot))
                              .build()
             );
         }
@@ -131,6 +131,9 @@ public class SelectPriceUI {
                         UtilTimeFormat.getFormattedDuration(TimeUnit.SECONDS.toMillis(attribute.getCurrentDuration())) + ""
                 )
                 .replace("%price%", attribute.getCurrentPrice() + "")
+                .replace("%min_time%", UtilTimeFormat.getFormattedDuration(
+                        TimeUnit.SECONDS.toMillis(ReforgedGTSForge.getInstance().getConfig().getMinTradeDuration())
+                ))
         );
     }
 }
