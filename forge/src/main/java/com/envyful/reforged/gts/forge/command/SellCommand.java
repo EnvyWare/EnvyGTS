@@ -6,7 +6,6 @@ import com.envyful.api.command.annotate.executor.CommandProcessor;
 import com.envyful.api.command.annotate.executor.Sender;
 import com.envyful.api.forge.player.ForgeEnvyPlayer;
 import com.envyful.api.type.UtilParse;
-import com.envyful.reforged.gts.api.gui.FilterType;
 import com.envyful.reforged.gts.forge.ReforgedGTSForge;
 import com.envyful.reforged.gts.forge.impl.trade.ForgeTrade;
 import com.envyful.reforged.gts.forge.impl.trade.type.ItemTrade;
@@ -65,7 +64,6 @@ public class SellCommand {
 
         ItemTrade.Builder builder = (ItemTrade.Builder) ForgeTrade.builder()
                 .owner(sender)
-                .type(FilterType.INSTANT_BUY)
                 .cost(price)
                 .expiry(System.currentTimeMillis()
                         + TimeUnit.SECONDS.toMillis(ReforgedGTSForge.getInstance().getConfig().getDefaultTradeDurationSeconds()))

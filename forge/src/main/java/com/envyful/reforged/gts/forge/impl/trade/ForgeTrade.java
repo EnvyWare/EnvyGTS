@@ -20,13 +20,11 @@ public abstract class ForgeTrade implements Trade {
     private final UUID owner;
     private final double cost;
     private final long expiry;
-    private final FilterType type;
 
-    protected ForgeTrade(UUID owner, double cost, long expiry, FilterType type) {
+    protected ForgeTrade(UUID owner, double cost, long expiry) {
         this.owner = owner;
         this.cost = cost;
         this.expiry = expiry;
-        this.type = type;
     }
 
     @Override
@@ -40,8 +38,8 @@ public abstract class ForgeTrade implements Trade {
     }
 
     @Override
-    public boolean filter(FilterType filterType) {
-        return filterType.isAllowed(this.type);
+    public boolean filter(EnvyPlayer<?> filterer, FilterType filterType) {
+        return filterType.isAllowed(filterer, this);
     }
 
     @Override
@@ -58,7 +56,6 @@ public abstract class ForgeTrade implements Trade {
         protected UUID owner = null;
         protected double cost = -1;
         protected long expiry = -1;
-        protected FilterType type = null;
 
         protected Builder() {}
 
@@ -81,11 +78,6 @@ public abstract class ForgeTrade implements Trade {
             return this;
         }
 
-        public Builder type(FilterType type) {
-            this.type = type;
-            return this;
-        }
-
         public Builder content(String type) {
             Builder builder = null;
 
@@ -101,10 +93,6 @@ public abstract class ForgeTrade implements Trade {
 
             if (this.owner != null) {
                 builder.owner(this.owner);
-            }
-
-            if (this.type != null) {
-                builder.type(this.type);
             }
 
             if (this.cost != -1) {

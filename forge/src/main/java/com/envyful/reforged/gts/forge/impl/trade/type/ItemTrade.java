@@ -3,10 +3,8 @@ package com.envyful.reforged.gts.forge.impl.trade.type;
 import com.envyful.api.json.UtilGson;
 import com.envyful.api.player.EnvyPlayer;
 import com.envyful.reforged.gts.api.Trade;
-import com.envyful.reforged.gts.api.gui.FilterType;
 import com.envyful.reforged.gts.api.gui.SortType;
 import com.envyful.reforged.gts.forge.impl.trade.ForgeTrade;
-import com.pixelmonmod.pixelmon.api.pokemon.Pokemon;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 
@@ -16,8 +14,8 @@ public class ItemTrade extends ForgeTrade {
 
     private final ItemStack item;
 
-    public ItemTrade(UUID owner, double cost, long expiry, FilterType type, ItemStack item) {
-        super(owner, cost, expiry, type);
+    public ItemTrade(UUID owner, double cost, long expiry, ItemStack item) {
+        super(owner, cost, expiry);
 
         this.item = item;
     }
@@ -93,11 +91,6 @@ public class ItemTrade extends ForgeTrade {
         }
 
         @Override
-        public Builder type(FilterType type) {
-            return (Builder) super.type(type);
-        }
-
-        @Override
         public Builder content(String type) {
             return (Builder) super.content(type);
         }
@@ -118,7 +111,7 @@ public class ItemTrade extends ForgeTrade {
                 return null;
             }
 
-            return new ItemTrade(this.owner, this.cost, this.expiry, this.type, this.itemStack);
+            return new ItemTrade(this.owner, this.cost, this.expiry, this.itemStack);
         }
     }
 }

@@ -42,7 +42,7 @@ public class ViewTradesUI {
 
         List<Trade> allTrades = ReforgedGTSForge.getInstance().getTradeManager().getAllTrades();
 
-        allTrades.removeIf(trade -> trade.filter(filter));
+        allTrades.removeIf(trade -> trade.filter(player, filter));
         allTrades.sort((o1, o2) -> o1.compare(o2, sort));
 
         if (config.getBackButton().isEnabled()) {

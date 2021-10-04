@@ -4,7 +4,6 @@ import com.envyful.api.json.UtilGson;
 import com.envyful.api.player.EnvyPlayer;
 import com.envyful.api.reforged.pixelmon.storage.UtilPixelmonPlayer;
 import com.envyful.reforged.gts.api.Trade;
-import com.envyful.reforged.gts.api.gui.FilterType;
 import com.envyful.reforged.gts.api.gui.SortType;
 import com.envyful.reforged.gts.forge.impl.trade.ForgeTrade;
 import com.pixelmonmod.pixelmon.api.pokemon.Pokemon;
@@ -21,8 +20,8 @@ public class PokemonTrade extends ForgeTrade {
 
     private final Pokemon pokemon;
 
-    public PokemonTrade(UUID owner, double cost, long expiry, FilterType type, Pokemon pokemon) {
-        super(owner, cost, expiry, type);
+    public PokemonTrade(UUID owner, double cost, long expiry, Pokemon pokemon) {
+        super(owner, cost, expiry);
 
         this.pokemon = pokemon;
     }
@@ -84,11 +83,6 @@ public class PokemonTrade extends ForgeTrade {
         }
 
         @Override
-        public Builder type(FilterType type) {
-            return (Builder) super.type(type);
-        }
-
-        @Override
         public Builder content(String type) {
             return (Builder) super.content(type);
         }
@@ -109,7 +103,7 @@ public class PokemonTrade extends ForgeTrade {
                 return null;
             }
 
-            return new PokemonTrade(this.owner, this.cost, this.expiry, this.type, this.pokemon);
+            return new PokemonTrade(this.owner, this.cost, this.expiry, this.pokemon);
         }
     }
 }

@@ -1,6 +1,9 @@
 package com.envyful.reforged.gts.api.gui;
 
-import java.util.function.Predicate;
+import com.envyful.api.player.EnvyPlayer;
+import com.envyful.reforged.gts.api.Trade;
+
+import java.util.function.BiPredicate;
 
 /**
  *
@@ -9,19 +12,16 @@ import java.util.function.Predicate;
  */
 public enum FilterType {
 
-    INSTANT_BUY("Instant Buy", type -> type.getDisplayName().equalsIgnoreCase("Instant Buy")),
-/*
-    AUCTION("Auction", type -> type.getDisplayName().equalsIgnoreCase("Auction")),
-*/
-    OWN("Your Trades", type -> type.getDisplayName().equalsIgnoreCase("Your Trades")),
-    ALL("All", type -> true)
+    INSTANT_BUY("Instant Buy", (envyPlayer, trade) -> true),
+    OWN("Your Trades", (envyPlayer, trade) -> trade.isOwner(envyPlayer)),
+    ALL("All", (envyPlayer, trade) -> true)
 
     ;
 
     private final String displayName;
-    private final Predicate<FilterType> predicate;
+    private final BiPredicate<EnvyPlayer<?>, Trade> predicate;
 
-    FilterType(String displayName, Predicate<FilterType> predicate) {
+    FilterType(String displayName, BiPredicate<EnvyPlayer<?>, Trade> predicate) {
         this.displayName = displayName;
         this.predicate = predicate;
     }
@@ -30,8 +30,8 @@ public enum FilterType {
         return this.displayName;
     }
 
-    public boolean isAllowed(FilterType type) {
-        return this.predicate.test(type);
+    public boolean isAllowed(EnvyPlayer<?> filterer, Trade trade) {
+        return this.predicate.test(filterer, trade);
     }
 
     public FilterType getNext() {

@@ -84,10 +84,11 @@ public interface Trade {
      * Used for filtering the GTS GUI for specific types
      * Returns true if it matches the filter type
      *
+     * @param filterer The person filtering
      * @param filterType The type of filter being checked
      * @return true if it matches the filter
      */
-    boolean filter(FilterType filterType);
+    boolean filter(EnvyPlayer<?> filterer, FilterType filterType);
 
     /**
      *
