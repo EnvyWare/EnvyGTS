@@ -39,6 +39,7 @@ public class ReforgedGTSConfig extends AbstractYamlConfig {
     private ClaimTradesConfig claimTradesUIConfig = new ClaimTradesConfig();
     private PartyPokemonConfig partyPokemonUIConfig = new PartyPokemonConfig();
     private SelectFromPCConfig pcConfig = new SelectFromPCConfig();
+    private PokemonPriceConfig priceConfig = new PokemonPriceConfig();
 
     public ReforgedGTSConfig() {
         super();
@@ -86,6 +87,10 @@ public class ReforgedGTSConfig extends AbstractYamlConfig {
 
     public SelectFromPCConfig getPcConfig() {
         return this.pcConfig;
+    }
+
+    public PokemonPriceConfig getPriceConfig() {
+        return this.priceConfig;
     }
 
     @ConfigSerializable
@@ -435,6 +440,65 @@ public class ReforgedGTSConfig extends AbstractYamlConfig {
 
         public ConfigItem getNoPokemonItem() {
             return this.noPokemonItem;
+        }
+    }
+
+    @ConfigSerializable
+    public static class PokemonPriceConfig {
+
+        private ConfigInterface guiSettings = new ConfigInterface(
+                "Reforged GTS", 3, "BLOCK", ImmutableMap.of("one", new ConfigItem(
+                "minecraft:stained_glass_pane", 1, (byte) 15, " ",
+                Lists.newArrayList(), Maps.newHashMap()
+        )));
+
+        private int pokemonPosition = 10;
+
+        private PositionableConfigItem minPriceItem = new PositionableConfigItem(
+                "pixelmon:relic_gold", 1, (byte) 0, "&bMin Price: &a$%min_price%",
+                Lists.newArrayList(), 3, 2, Maps.newHashMap()
+        );
+
+        private PositionableConfigItem modifyPriceButton = new PositionableConfigItem(
+                "pixelmon:relic_silver", 1, (byte) 0, "&bEdit Price",
+                Lists.newArrayList(), 3, 4, Maps.newHashMap()
+        );
+
+        private PositionableConfigItem modifyDurationButton = new PositionableConfigItem(
+                "minecraft:clock", 1, (byte) 0, "&bEdit Duration",
+                Lists.newArrayList("&bDuration: &e%time%"), 3, 5, Maps.newHashMap()
+        );
+
+        private PositionableConfigItem confirmItem = new PositionableConfigItem(
+                "pixelmon:poke_ball", 1, (byte) 0, "&a&lCONFIRM",
+                Lists.newArrayList(), 4, 2, Maps.newHashMap()
+        );
+
+        public PokemonPriceConfig() {
+        }
+
+        public ConfigInterface getGuiSettings() {
+            return this.guiSettings;
+        }
+
+        public int getPokemonPosition() {
+            return this.pokemonPosition;
+        }
+
+        public PositionableConfigItem getMinPriceItem() {
+            return this.minPriceItem;
+        }
+
+        public PositionableConfigItem getModifyPriceButton() {
+            return this.modifyPriceButton;
+        }
+
+        public PositionableConfigItem getModifyDurationButton() {
+            return this.modifyDurationButton;
+        }
+
+        public PositionableConfigItem getConfirmItem() {
+            return this.confirmItem;
         }
     }
 }
