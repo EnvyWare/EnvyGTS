@@ -58,7 +58,8 @@ public class SelectPriceUI {
             pane.set(config.getMinPriceItem().getXPos(), config.getMinPriceItem().getYPos(),
                      GuiFactory.displayableBuilder(ItemStack.class)
                              .itemStack(new ItemBuilder(UtilConfigItem.fromConfigItem(config.getMinPriceItem()))
-                                                .lore(formatLore(attribute, pokemon, config.getMinPriceItem().getLore()))
+                                     .name(formatName(attribute, config.getMinPriceItem().getName()))
+                                                .lore(formatLore(attribute, config.getMinPriceItem().getLore()))
                                                 .build())
                              .clickHandler((envyPlayer, clickType) -> {})
                              .build()
@@ -78,8 +79,8 @@ public class SelectPriceUI {
             pane.set(config.getModifyDurationButton().getXPos(), config.getModifyDurationButton().getYPos(),
                      GuiFactory.displayableBuilder(ItemStack.class)
                              .itemStack(new ItemBuilder(UtilConfigItem.fromConfigItem(config.getModifyDurationButton()))
-                                                .lore(formatLore(attribute, pokemon,
-                                                                 config.getMinPriceItem().getLore()))
+                                                .name(formatName(attribute, config.getModifyDurationButton().getName()))
+                                                .lore(formatLore(attribute, config.getMinPriceItem().getLore()))
                                                 .build())
                              .clickHandler((envyPlayer, clickType) -> {})
                              .build()
@@ -109,17 +110,25 @@ public class SelectPriceUI {
         }
     }
 
-    private static List<String> formatLore(GTSAttribute attribute, Pokemon pokemon, List<String> lore) {
+    private static List<String> formatLore(GTSAttribute attribute, List<String> lore) {
         List<String> newLore = Lists.newArrayList();
 
         for (String s : lore) {
             newLore.add(UtilChatColour.translateColourCodes('&', s
                     .replace("%min_price%", attribute.getCurrentMinPrice() + "")
-                    .replace("%duration%",
+                    .replace("%time%",
                              UtilTimeFormat.getFormattedDuration(TimeUnit.SECONDS.toMillis(attribute.getCurrentDuration())) + "")
             ));
         }
 
         return newLore;
+    }
+
+    private static String formatName(GTSAttribute attribute, String name) {
+        return UtilChatColour.translateColourCodes('&', name
+                .replace("%min_price%", attribute.getCurrentMinPrice() + "")
+                .replace("%time%",
+                         UtilTimeFormat.getFormattedDuration(TimeUnit.SECONDS.toMillis(attribute.getCurrentDuration())) + "")
+        );
     }
 }
