@@ -23,6 +23,7 @@ public class ReforgedGTSConfig extends AbstractYamlConfig {
     private long defaultTradeDurationSeconds = 300;
     private long maxTradeDurationSeconds = 172800;
     private double minPokemonPrice = 10_000.00;
+    private boolean enableWebHooks = false;
 
     private Map<String, PokeSpecPricing> minPriceModifiers = ImmutableMap.of(
             "example", new PokeSpecPricing("shiny:1", new PokeSpecPricing.MathHandler("*", 2.0))
@@ -62,4 +63,7 @@ public class ReforgedGTSConfig extends AbstractYamlConfig {
         return this.unbreedableConditions;
     }
 
+    public boolean isEnableWebHooks() {
+        return this.enableWebHooks;
+    }
 }
