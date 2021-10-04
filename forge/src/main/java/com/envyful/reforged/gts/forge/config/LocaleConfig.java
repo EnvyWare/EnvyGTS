@@ -18,6 +18,10 @@ public class LocaleConfig extends AbstractYamlConfig {
             "&bRemaining Time: &e%duration%"
     );
 
+    private List<String> listingBelowExpiredOrClaimableLore = Lists.newArrayList(
+            "  "
+    );
+
     private Messages messages = new Messages();
 
     public LocaleConfig() {
@@ -30,6 +34,10 @@ public class LocaleConfig extends AbstractYamlConfig {
 
     public List<String> getListingBelowDataLore() {
         return this.listingBelowDataLore;
+    }
+
+    public List<String> getListingBelowExpiredOrClaimableLore() {
+        return this.listingBelowExpiredOrClaimableLore;
     }
 
     @ConfigSerializable

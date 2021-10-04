@@ -82,6 +82,19 @@ public class PokemonTrade extends ForgeTrade {
     }
 
     @Override
+    public void displayClaimable(int pos, Pane pane) {
+        int posX = pos % 9;
+        int posY = pos / 9;
+
+        pane.set(posX, posY, GuiFactory.displayableBuilder(ItemStack.class)
+                .itemStack(new ItemBuilder(UtilSprite.getPokemonElement(pokemon))
+                                   .addLore(ReforgedGTSForge.getInstance().getLocale().getListingBelowExpiredOrClaimableLore().toArray(new String[0]))
+                                   .build())
+                .clickHandler((envyPlayer, clickType) -> {}) //TODO: confirm UI
+                .build());
+    }
+
+    @Override
     public void delete() {
         //TODO:
     }
