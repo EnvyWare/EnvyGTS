@@ -14,6 +14,7 @@ import com.envyful.reforged.gts.forge.command.GTSCommand;
 import com.envyful.reforged.gts.forge.config.GuiConfig;
 import com.envyful.reforged.gts.forge.config.LocaleConfig;
 import com.envyful.reforged.gts.forge.config.ReforgedGTSConfig;
+import com.envyful.reforged.gts.forge.config.discord.DiscordEventManager;
 import com.envyful.reforged.gts.forge.impl.storage.SQLGlobalTradeManager;
 import com.envyful.reforged.gts.forge.player.GTSAttribute;
 import net.minecraftforge.fml.common.Mod;
@@ -53,6 +54,10 @@ public class ReforgedGTSForge {
         instance = this;
 
         this.loadConfig();
+
+        if (this.config.isEnableWebHooks()) {
+            DiscordEventManager.init();
+        }
 
         UtilConcurrency.runAsync(() -> {
             this.database = new SimpleHikariDatabase(this.config.getDatabaseDetails());
