@@ -28,12 +28,12 @@ public class EditPriceConfig {
 
     private PositionableConfigItem currentPriceButton = new PositionableConfigItem(
             "pixelmon:relic_silver", 1, (byte) 0, "&bCurrent Price: &e%price%",
-            Lists.newArrayList(), 4, 2, Maps.newHashMap()
+            Lists.newArrayList(), 1, 1, Maps.newHashMap()
     );
 
     private PositionableConfigItem confirmItem = new PositionableConfigItem(
             "pixelmon:poke_ball", 1, (byte) 0, "&a&lCONFIRM",
-            Lists.newArrayList(), 2, 3, Maps.newHashMap()
+            Lists.newArrayList(), 2, 2, Maps.newHashMap()
     );
 
     private int pokemonPosition = 19;
