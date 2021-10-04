@@ -436,7 +436,7 @@ public class GuiConfig extends AbstractYamlConfig {
 
         private PositionableConfigItem modifyPriceButton = new PositionableConfigItem(
                 "pixelmon:relic_silver", 1, (byte) 0, "&bEdit Price",
-                Lists.newArrayList("&bCurrent Price: &e%price%"), 4, 2, Maps.newHashMap()
+                Lists.newArrayList("&bCurrent Price: &e%price%"), 4, 1, Maps.newHashMap()
         );
 
         private PositionableConfigItem modifyDurationButton = new PositionableConfigItem(
