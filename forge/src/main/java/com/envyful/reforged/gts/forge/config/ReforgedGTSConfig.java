@@ -25,8 +25,9 @@ public class ReforgedGTSConfig extends AbstractYamlConfig {
                                                                         "password", "database"
     );
 
-    private int minTradeDuration = 300;
-    private int tradeDurationSeconds = 86400;
+    private long minTradeDuration = 300;
+    private long defaultTradeDurationSeconds = 300;
+    private long maxTradeDurationSeconds = 172800;
     private double minPokemonPrice = 10_000.00;
 
     private Map<String, PokeSpecPricing> minPriceModifiers = ImmutableMap.of(
@@ -53,16 +54,20 @@ public class ReforgedGTSConfig extends AbstractYamlConfig {
         return this.databaseDetails;
     }
 
-    public int getMinTradeDuration() {
+    public long getMinTradeDuration() {
         return this.minTradeDuration;
     }
 
-    public int getTradeDurationSeconds() {
-        return this.tradeDurationSeconds;
+    public long getDefaultTradeDurationSeconds() {
+        return this.defaultTradeDurationSeconds;
     }
 
     public double getMinPokemonPrice() {
         return this.minPokemonPrice;
+    }
+
+    public long getMaxTradeDurationSeconds() {
+        return this.maxTradeDurationSeconds;
     }
 
     public List<PokeSpecPricing> getMinPriceModifiers() {

@@ -109,7 +109,7 @@ public class SelectPCPokemonUI {
 
                         attribute.setCurrentPrice(price);
                         attribute.setCurrentMinPrice(price);
-                        attribute.setCurrentDuration(ReforgedGTSForge.getInstance().getConfig().getTradeDurationSeconds());
+                        attribute.setCurrentDuration(ReforgedGTSForge.getInstance().getConfig().getDefaultTradeDurationSeconds());
                         SelectPriceUI.openUI(player, page, attribute.getSelectedSlot());
                     })
                     .build());

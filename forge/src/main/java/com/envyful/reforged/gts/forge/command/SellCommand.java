@@ -68,7 +68,7 @@ public class SellCommand {
                 .type(FilterType.INSTANT_BUY)
                 .cost(price)
                 .expiry(System.currentTimeMillis()
-                        + TimeUnit.SECONDS.toMillis(ReforgedGTSForge.getInstance().getConfig().getTradeDurationSeconds()))
+                        + TimeUnit.SECONDS.toMillis(ReforgedGTSForge.getInstance().getConfig().getDefaultTradeDurationSeconds()))
                 .content("i");
 
         builder.contents(inHand);
