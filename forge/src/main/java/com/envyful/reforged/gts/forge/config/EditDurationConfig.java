@@ -22,7 +22,7 @@ public class EditDurationConfig {
     )));
 
     private PositionableConfigItem minTimeItem = new PositionableConfigItem(
-            "pixelmon:relic_gold", 1, (byte) 0, "&bMin Time: &a$%min_time%",
+            "pixelmon:relic_gold", 1, (byte) 0, "&bMin Time: &e%min_time%",
             Lists.newArrayList(), 2, 1, Maps.newHashMap()
     );
 
