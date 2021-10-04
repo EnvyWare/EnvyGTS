@@ -1,7 +1,9 @@
 package com.envyful.reforged.gts.forge.ui;
 
 import com.envyful.api.config.type.ConfigItem;
+import com.envyful.api.forge.chat.UtilChatColour;
 import com.envyful.api.forge.config.UtilConfigItem;
+import com.envyful.api.forge.items.ItemBuilder;
 import com.envyful.api.gui.factory.GuiFactory;
 import com.envyful.api.gui.pane.Pane;
 import com.envyful.api.player.EnvyPlayer;
@@ -9,9 +11,12 @@ import com.envyful.api.reforged.pixelmon.sprite.UtilSprite;
 import com.envyful.api.reforged.pixelmon.storage.UtilPixelmonPlayer;
 import com.envyful.reforged.gts.forge.ReforgedGTSForge;
 import com.envyful.reforged.gts.forge.config.ReforgedGTSConfig;
+import com.google.common.collect.Lists;
 import com.pixelmonmod.pixelmon.api.pokemon.Pokemon;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
+
+import java.util.List;
 
 public class SelectPriceUI {
 
@@ -28,6 +33,8 @@ public class SelectPriceUI {
                 .width(9)
                 .height(config.getGuiSettings().getHeight())
                 .build();
+
+        Pokemon pokemon = getPokemon(player, page, slot);
 
         for (ConfigItem fillerItem : config.getGuiSettings().getFillerItems()) {
             pane.add(GuiFactory.displayableBuilder(ItemStack.class)
@@ -46,7 +53,9 @@ public class SelectPriceUI {
         if (config.getMinPriceItem().isEnabled()) {
             pane.set(config.getMinPriceItem().getXPos(), config.getMinPriceItem().getYPos(),
                      GuiFactory.displayableBuilder(ItemStack.class)
-                             .itemStack(UtilConfigItem.fromConfigItem(config.getMinPriceItem()))
+                             .itemStack(new ItemBuilder(UtilConfigItem.fromConfigItem(config.getMinPriceItem()))
+                                                .lore(formatLore(pokemon, config.getMinPriceItem().getLore()))
+                                                .build())
                              .clickHandler((envyPlayer, clickType) -> {})
                              .build()
             );
@@ -61,15 +70,19 @@ public class SelectPriceUI {
             );
         }
 
+        if (config.getModifyDurationButton().isEnabled()) {
+            pane.set(config.getModifyDurationButton().getXPos(), config.getModifyDurationButton().getYPos(),
+                     GuiFactory.displayableBuilder(ItemStack.class)
+                             .itemStack(new ItemBuilder(UtilConfigItem.fromConfigItem(config.getModifyDurationButton()))
+                                                .lore(formatLore(pokemon, config.getMinPriceItem().getLore()))
+                                                .build())
+                             .clickHandler((envyPlayer, clickType) -> {})
+                             .build()
+            );
+        }
+
         int posX = config.getPokemonPosition() % 9;
         int posY = config.getPokemonPosition() / 9;
-        Pokemon pokemon = null;
-
-        if (page == -1) {
-            pokemon = UtilPixelmonPlayer.getParty(player.getParent()).get(slot);
-        } else {
-            pokemon = UtilPixelmonPlayer.getPC(player.getParent()).getBox(page).get(slot);
-        }
 
         pane.set(posX, posY, GuiFactory.displayableBuilder(ItemStack.class)
                 .itemStack(UtilSprite.getPokemonElement(pokemon)).build());
@@ -81,5 +94,26 @@ public class SelectPriceUI {
                 .height(config.getGuiSettings().getHeight())
                 .title(config.getGuiSettings().getTitle())
                 .build().open(player);
+    }
+
+    private static Pokemon getPokemon(EnvyPlayer<EntityPlayerMP> player, int page, int slot) {
+        if (page == -1) {
+            return UtilPixelmonPlayer.getParty(player.getParent()).get(slot);
+        } else {
+            return UtilPixelmonPlayer.getPC(player.getParent()).getBox(page).get(slot);
+        }
+    }
+
+    private static List<String> formatLore(Pokemon pokemon, List<String> lore) {
+        List<String> newLore = Lists.newArrayList();
+
+        for (String s : lore) {
+            newLore.add(UtilChatColour.translateColourCodes('&', s
+                    .replace("%min_price%", "2")
+                    .replace("%duration%", "2") //TODO: calc min price
+            ));
+        }
+
+        return newLore;
     }
 }

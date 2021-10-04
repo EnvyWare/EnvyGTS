@@ -12,6 +12,7 @@ import com.envyful.api.reforged.pixelmon.storage.UtilPixelmonPlayer;
 import com.envyful.reforged.gts.forge.ReforgedGTSForge;
 import com.envyful.reforged.gts.forge.config.ReforgedGTSConfig;
 import com.envyful.reforged.gts.forge.player.GTSAttribute;
+import com.envyful.reforged.gts.forge.util.UtilPokemonPrice;
 import com.pixelmonmod.pixelmon.api.storage.PCBox;
 import com.pixelmonmod.pixelmon.api.storage.PCStorage;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -26,6 +27,8 @@ public class SelectPCPokemonUI {
 
     public static void openUI(EnvyPlayer<EntityPlayerMP> player, int page) {
         ReforgedGTSConfig.SelectFromPCConfig config = ReforgedGTSForge.getInstance().getConfig().getPcConfig();
+
+        ((GTSAttribute) player.getAttribute(ReforgedGTSForge.class)).setSelectedSlot(-1);
 
         Pane pane = GuiFactory.paneBuilder()
                 .topLeftX(0).topLeftY(0)
@@ -102,6 +105,11 @@ public class SelectPCPokemonUI {
                             return;
                         }
 
+                        double price = UtilPokemonPrice.getMinPrice(pc.getBox(page).get(attribute.getSelectedSlot()));
+
+                        attribute.setCurrentPrice(price);
+                        attribute.setCurrentMinPrice(price);
+                        attribute.setCurrentDuration(ReforgedGTSForge.getInstance().getConfig().getTradeDurationSeconds());
                         SelectPriceUI.openUI(player, page, attribute.getSelectedSlot());
                     })
                     .build());

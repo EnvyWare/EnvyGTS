@@ -12,6 +12,7 @@ import com.envyful.api.reforged.pixelmon.storage.UtilPixelmonPlayer;
 import com.envyful.reforged.gts.forge.ReforgedGTSForge;
 import com.envyful.reforged.gts.forge.config.ReforgedGTSConfig;
 import com.envyful.reforged.gts.forge.player.GTSAttribute;
+import com.envyful.reforged.gts.forge.util.UtilPokemonPrice;
 import com.pixelmonmod.pixelmon.api.pokemon.Pokemon;
 import com.pixelmonmod.pixelmon.storage.PlayerPartyStorage;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -22,6 +23,8 @@ public class SelectPartyPokemonUI {
 
     public static void openUI(EnvyPlayer<EntityPlayerMP> player) {
         ReforgedGTSConfig.PartyPokemonConfig config = ReforgedGTSForge.getInstance().getConfig().getPartyPokemonUIConfig();
+
+        ((GTSAttribute) player.getAttribute(ReforgedGTSForge.class)).setSelectedSlot(-1);
 
         Pane pane = GuiFactory.paneBuilder()
                 .topLeftX(0).topLeftY(0)
@@ -65,7 +68,13 @@ public class SelectPartyPokemonUI {
                         if (attribute.getSelectedSlot() == -1) {
                             return;
                         }
+                        PlayerPartyStorage party = UtilPixelmonPlayer.getParty(player.getParent());
 
+                        double price = UtilPokemonPrice.getMinPrice(party.get(attribute.getSelectedSlot()));
+
+                        attribute.setCurrentPrice(price);
+                        attribute.setCurrentMinPrice(price);
+                        attribute.setCurrentDuration(ReforgedGTSForge.getInstance().getConfig().getTradeDurationSeconds());
                         SelectPriceUI.openUI(player, attribute.getSelectedSlot());
                     })
                     .build());

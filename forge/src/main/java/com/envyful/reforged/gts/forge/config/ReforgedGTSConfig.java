@@ -16,6 +16,7 @@ import org.spongepowered.configurate.objectmapping.ConfigSerializable;
 import java.util.List;
 import java.util.Map;
 
+@SuppressWarnings("FieldMayBeFinal")
 @ConfigPath("config/ReforgedGTS/config.yml")
 @ConfigSerializable
 public class ReforgedGTSConfig extends AbstractYamlConfig {
@@ -456,22 +457,22 @@ public class ReforgedGTSConfig extends AbstractYamlConfig {
 
         private PositionableConfigItem minPriceItem = new PositionableConfigItem(
                 "pixelmon:relic_gold", 1, (byte) 0, "&bMin Price: &a$%min_price%",
-                Lists.newArrayList(), 3, 2, Maps.newHashMap()
+                Lists.newArrayList(), 2, 1, Maps.newHashMap()
         );
 
         private PositionableConfigItem modifyPriceButton = new PositionableConfigItem(
                 "pixelmon:relic_silver", 1, (byte) 0, "&bEdit Price",
-                Lists.newArrayList(), 3, 4, Maps.newHashMap()
+                Lists.newArrayList(), 4, 2, Maps.newHashMap()
         );
 
         private PositionableConfigItem modifyDurationButton = new PositionableConfigItem(
                 "minecraft:clock", 1, (byte) 0, "&bEdit Duration",
-                Lists.newArrayList("&bDuration: &e%time%"), 3, 5, Maps.newHashMap()
+                Lists.newArrayList("&bDuration: &e%time%"), 5, 1, Maps.newHashMap()
         );
 
         private PositionableConfigItem confirmItem = new PositionableConfigItem(
                 "pixelmon:poke_ball", 1, (byte) 0, "&a&lCONFIRM",
-                Lists.newArrayList(), 4, 2, Maps.newHashMap()
+                Lists.newArrayList(), 7, 1, Maps.newHashMap()
         );
 
         public PokemonPriceConfig() {

@@ -19,6 +19,9 @@ public class GTSAttribute extends AbstractForgeAttribute<ReforgedGTSForge> {
 
     private List<Trade> ownedTrades = Lists.newArrayList();
     private int selectedSlot = -1;
+    private double currentPrice = -1;
+    private double currentMinPrice = -1;
+    private long currentDuration = -1;
 
     public GTSAttribute(ReforgedGTSForge manager, EnvyPlayer<?> parent) {
         super(manager, (ForgeEnvyPlayer) parent);
@@ -34,6 +37,30 @@ public class GTSAttribute extends AbstractForgeAttribute<ReforgedGTSForge> {
 
     public void setSelectedSlot(int selectedSlot) {
         this.selectedSlot = selectedSlot;
+    }
+
+    public double getCurrentPrice() {
+        return this.currentPrice;
+    }
+
+    public void setCurrentPrice(double currentPrice) {
+        this.currentPrice = currentPrice;
+    }
+
+    public long getCurrentDuration() {
+        return this.currentDuration;
+    }
+
+    public void setCurrentDuration(long currentDuration) {
+        this.currentDuration = currentDuration;
+    }
+
+    public double getCurrentMinPrice() {
+        return this.currentMinPrice;
+    }
+
+    public void setCurrentMinPrice(double currentMinPrice) {
+        this.currentMinPrice = currentMinPrice;
     }
 
     @Override
