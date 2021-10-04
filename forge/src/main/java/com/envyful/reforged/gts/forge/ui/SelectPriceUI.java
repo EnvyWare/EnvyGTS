@@ -9,14 +9,17 @@ import com.envyful.api.gui.pane.Pane;
 import com.envyful.api.player.EnvyPlayer;
 import com.envyful.api.reforged.pixelmon.sprite.UtilSprite;
 import com.envyful.api.reforged.pixelmon.storage.UtilPixelmonPlayer;
+import com.envyful.api.time.UtilTimeFormat;
 import com.envyful.reforged.gts.forge.ReforgedGTSForge;
 import com.envyful.reforged.gts.forge.config.ReforgedGTSConfig;
+import com.envyful.reforged.gts.forge.player.GTSAttribute;
 import com.google.common.collect.Lists;
 import com.pixelmonmod.pixelmon.api.pokemon.Pokemon;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 public class SelectPriceUI {
 
@@ -35,6 +38,7 @@ public class SelectPriceUI {
                 .build();
 
         Pokemon pokemon = getPokemon(player, page, slot);
+        GTSAttribute attribute = player.getAttribute(ReforgedGTSForge.class);
 
         for (ConfigItem fillerItem : config.getGuiSettings().getFillerItems()) {
             pane.add(GuiFactory.displayableBuilder(ItemStack.class)
@@ -54,7 +58,7 @@ public class SelectPriceUI {
             pane.set(config.getMinPriceItem().getXPos(), config.getMinPriceItem().getYPos(),
                      GuiFactory.displayableBuilder(ItemStack.class)
                              .itemStack(new ItemBuilder(UtilConfigItem.fromConfigItem(config.getMinPriceItem()))
-                                                .lore(formatLore(pokemon, config.getMinPriceItem().getLore()))
+                                                .lore(formatLore(attribute, pokemon, config.getMinPriceItem().getLore()))
                                                 .build())
                              .clickHandler((envyPlayer, clickType) -> {})
                              .build()
@@ -74,7 +78,8 @@ public class SelectPriceUI {
             pane.set(config.getModifyDurationButton().getXPos(), config.getModifyDurationButton().getYPos(),
                      GuiFactory.displayableBuilder(ItemStack.class)
                              .itemStack(new ItemBuilder(UtilConfigItem.fromConfigItem(config.getModifyDurationButton()))
-                                                .lore(formatLore(pokemon, config.getMinPriceItem().getLore()))
+                                                .lore(formatLore(attribute, pokemon,
+                                                                 config.getMinPriceItem().getLore()))
                                                 .build())
                              .clickHandler((envyPlayer, clickType) -> {})
                              .build()
@@ -104,13 +109,14 @@ public class SelectPriceUI {
         }
     }
 
-    private static List<String> formatLore(Pokemon pokemon, List<String> lore) {
+    private static List<String> formatLore(GTSAttribute attribute, Pokemon pokemon, List<String> lore) {
         List<String> newLore = Lists.newArrayList();
 
         for (String s : lore) {
             newLore.add(UtilChatColour.translateColourCodes('&', s
-                    .replace("%min_price%", "2")
-                    .replace("%duration%", "2") //TODO: calc min price
+                    .replace("%min_price%", attribute.getCurrentMinPrice() + "")
+                    .replace("%duration%",
+                             UtilTimeFormat.getFormattedDuration(TimeUnit.SECONDS.toMillis(attribute.getCurrentDuration())) + "")
             ));
         }
 
