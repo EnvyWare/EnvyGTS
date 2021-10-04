@@ -9,8 +9,8 @@ public enum SortType {
 
     ALPHABETICAL("Alphabetical", (o1, o2) -> o1.getName().compareTo(o2.getName())),
     REVERSE_ALPHABETICAL("Reverse Alphabetical", (o1, o2) -> o2.getName().compareTo(o1.getName())),
-    MOST_RECENT("Most Recent", Comparator.comparingLong(TradeData::getExpiry)),
-    EXPIRING_SOON("Expiring Soon", Comparator.comparingLong(TradeData::getExpiry).reversed()),
+    MOST_RECENT("Most Recent", Comparator.comparingLong(TradeData::getExpiry).reversed()),
+    EXPIRING_SOON("Expiring Soon", Comparator.comparingLong(TradeData::getExpiry)),
 
     ;
 
