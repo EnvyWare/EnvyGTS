@@ -54,6 +54,21 @@ public class SelectPriceUI {
             );
         }
 
+        if (config.getBackButton().isEnabled()) {
+            pane.set(config.getBackButton().getXPos(), config.getBackButton().getYPos(),
+                     GuiFactory.displayableBuilder(ItemStack.class)
+                             .itemStack(UtilConfigItem.fromConfigItem(config.getBackButton()))
+                             .clickHandler((envyPlayer, clickType) -> {
+                                 if (page == -1) {
+                                     SelectPartyPokemonUI.openUI(player);
+                                 } else {
+                                     SelectPCPokemonUI.openUI(player, page);
+                                 }
+                             })
+                             .build()
+            );
+        }
+
         if (config.getMinPriceItem().isEnabled()) {
             pane.set(config.getMinPriceItem().getXPos(), config.getMinPriceItem().getYPos(),
                      GuiFactory.displayableBuilder(ItemStack.class)

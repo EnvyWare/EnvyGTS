@@ -495,6 +495,11 @@ public class ReforgedGTSConfig extends AbstractYamlConfig {
                 Lists.newArrayList(), 7, 1, Maps.newHashMap()
         );
 
+        private PositionableConfigItem backButton = new PositionableConfigItem(
+                "pixelmon:eject_button", 1, (byte) 0, "&cBack",
+                Lists.newArrayList(), 0, 0, Maps.newHashMap()
+        );
+
         public PokemonPriceConfig() {
         }
 
@@ -520,6 +525,10 @@ public class ReforgedGTSConfig extends AbstractYamlConfig {
 
         public PositionableConfigItem getConfirmItem() {
             return this.confirmItem;
+        }
+
+        public PositionableConfigItem getBackButton() {
+            return this.backButton;
         }
     }
 }
