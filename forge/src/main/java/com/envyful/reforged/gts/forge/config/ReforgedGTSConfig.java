@@ -42,6 +42,7 @@ public class ReforgedGTSConfig extends AbstractYamlConfig {
     private SelectFromPCConfig pcConfig = new SelectFromPCConfig();
     private PokemonPriceConfig priceConfig = new PokemonPriceConfig();
     private EditPriceConfig editPriceUIConfig = new EditPriceConfig();
+    private EditDurationConfig editDurationUIConfig = new EditDurationConfig();
 
     public ReforgedGTSConfig() {
         super();
@@ -97,6 +98,10 @@ public class ReforgedGTSConfig extends AbstractYamlConfig {
 
     public EditPriceConfig getEditPriceUIConfig() {
         return this.editPriceUIConfig;
+    }
+
+    public EditDurationConfig getEditDurationUIConfig() {
+        return this.editDurationUIConfig;
     }
 
     @ConfigSerializable
