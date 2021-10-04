@@ -27,7 +27,7 @@ public class EditPriceConfig {
     );
 
     private PositionableConfigItem currentPriceButton = new PositionableConfigItem(
-            "pixelmon:relic_silver", 1, (byte) 0, "&bCurrent Price: &e%price%",
+            "pixelmon:relic_silver", 1, (byte) 0, "&bCurrent Price: &a$%price%",
             Lists.newArrayList(), 1, 1, Maps.newHashMap()
     );
 
