@@ -3,11 +3,20 @@ package com.envyful.reforged.gts.forge.config;
 import com.envyful.api.config.data.ConfigPath;
 import com.envyful.api.config.yaml.AbstractYamlConfig;
 import com.envyful.api.forge.chat.UtilChatColour;
+import com.google.common.collect.Lists;
 import org.spongepowered.configurate.objectmapping.ConfigSerializable;
+
+import java.util.List;
 
 @ConfigPath("config/ReforgedGTS/locale.yml")
 @ConfigSerializable
 public class LocaleConfig extends AbstractYamlConfig {
+
+    private List<String> listingBelowDataLore = Lists.newArrayList(
+            "  ",
+            "&bCost: &a$%cost%",
+            "&bRemaining Time: &e%duration%"
+    );
 
     private Messages messages = new Messages();
 
@@ -17,6 +26,10 @@ public class LocaleConfig extends AbstractYamlConfig {
 
     public Messages getMessages() {
         return this.messages;
+    }
+
+    public List<String> getListingBelowDataLore() {
+        return this.listingBelowDataLore;
     }
 
     @ConfigSerializable

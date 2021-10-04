@@ -1,6 +1,5 @@
 package com.envyful.reforged.gts.forge.impl.trade;
 
-import com.envyful.api.gui.pane.Pane;
 import com.envyful.api.player.EnvyPlayer;
 import com.envyful.reforged.gts.api.Trade;
 import com.envyful.reforged.gts.api.gui.FilterType;
@@ -17,9 +16,9 @@ import java.util.UUID;
  */
 public abstract class ForgeTrade implements Trade {
 
-    private final UUID owner;
-    private final double cost;
-    private final long expiry;
+    protected final UUID owner;
+    protected final double cost;
+    protected final long expiry;
 
     protected ForgeTrade(UUID owner, double cost, long expiry) {
         this.owner = owner;
@@ -40,11 +39,6 @@ public abstract class ForgeTrade implements Trade {
     @Override
     public boolean filter(EnvyPlayer<?> filterer, FilterType filterType) {
         return filterType.isAllowed(filterer, this);
-    }
-
-    @Override
-    public void display(int pos, Pane pane) {
-        //TODO
     }
 
     public static Builder builder() {

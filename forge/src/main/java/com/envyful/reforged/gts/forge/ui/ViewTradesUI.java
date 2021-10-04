@@ -42,8 +42,14 @@ public class ViewTradesUI {
 
         List<Trade> allTrades = ReforgedGTSForge.getInstance().getTradeManager().getAllTrades();
 
-        allTrades.removeIf(trade -> trade.filter(player, filter));
+        System.out.println(allTrades.toString() + " ALL TRADES");
+        allTrades.removeIf(trade -> {
+            System.out.println((!trade.filter(player, filter)) + " FILTERED");
+            return !trade.filter(player, filter);
+        });
+        System.out.println(allTrades.toString() + " ALL TRADES");
         allTrades.sort((o1, o2) -> o1.compare(o2, sort));
+        System.out.println(allTrades.toString() + " ALL TRADES");
 
         if (config.getBackButton().isEnabled()) {
             pane.set(config.getBackButton().getXPos(), config.getBackButton().getYPos(),
@@ -107,10 +113,12 @@ public class ViewTradesUI {
         }
 
         for (int i = (page * 45); i < ((page + 1) * 45); i++) {
+            System.out.println("I: " + i + " " + allTrades.size());
             if (i >= allTrades.size()) {
                 continue;
             }
 
+            System.out.println("TRADE: "+ allTrades.get(i));
             Trade trade = allTrades.get(i);
             trade.display(i % 45, pane);
         }

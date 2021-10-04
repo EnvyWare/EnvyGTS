@@ -34,6 +34,7 @@ public abstract class ForgeGlobalTradeManager implements GlobalTradeManager {
             return false;
         }
 
+        System.out.println("ADDING TRADE: " + this.activeTrades);
         this.activeTrades.add(trade);
         attribute.getOwnedTrades().add(trade);
         return true;
