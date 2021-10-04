@@ -69,7 +69,10 @@ public class SelectPriceUI {
         if (config.getModifyPriceButton().isEnabled()) {
             pane.set(config.getModifyPriceButton().getXPos(), config.getModifyPriceButton().getYPos(),
                      GuiFactory.displayableBuilder(ItemStack.class)
-                             .itemStack(UtilConfigItem.fromConfigItem(config.getModifyPriceButton()))
+                             .itemStack(new ItemBuilder(UtilConfigItem.fromConfigItem(config.getModifyPriceButton()))
+                                                .name(formatName(attribute, config.getModifyPriceButton().getName()))
+                                                .lore(formatLore(attribute, config.getModifyPriceButton().getLore()))
+                                                .build())
                              .clickHandler((envyPlayer, clickType) -> {})
                              .build()
             );
@@ -80,7 +83,7 @@ public class SelectPriceUI {
                      GuiFactory.displayableBuilder(ItemStack.class)
                              .itemStack(new ItemBuilder(UtilConfigItem.fromConfigItem(config.getModifyDurationButton()))
                                                 .name(formatName(attribute, config.getModifyDurationButton().getName()))
-                                                .lore(formatLore(attribute, config.getMinPriceItem().getLore()))
+                                                .lore(formatLore(attribute, config.getModifyDurationButton().getLore()))
                                                 .build())
                              .clickHandler((envyPlayer, clickType) -> {})
                              .build()
@@ -114,11 +117,7 @@ public class SelectPriceUI {
         List<String> newLore = Lists.newArrayList();
 
         for (String s : lore) {
-            newLore.add(UtilChatColour.translateColourCodes('&', s
-                    .replace("%min_price%", attribute.getCurrentMinPrice() + "")
-                    .replace("%time%",
-                             UtilTimeFormat.getFormattedDuration(TimeUnit.SECONDS.toMillis(attribute.getCurrentDuration())) + "")
-            ));
+            newLore.add(formatName(attribute, s));
         }
 
         return newLore;
@@ -127,8 +126,11 @@ public class SelectPriceUI {
     private static String formatName(GTSAttribute attribute, String name) {
         return UtilChatColour.translateColourCodes('&', name
                 .replace("%min_price%", attribute.getCurrentMinPrice() + "")
-                .replace("%time%",
-                         UtilTimeFormat.getFormattedDuration(TimeUnit.SECONDS.toMillis(attribute.getCurrentDuration())) + "")
+                .replace(
+                        "%time%",
+                        UtilTimeFormat.getFormattedDuration(TimeUnit.SECONDS.toMillis(attribute.getCurrentDuration())) + ""
+                )
+                .replace("%price%", attribute.getCurrentPrice() + "")
         );
     }
 }

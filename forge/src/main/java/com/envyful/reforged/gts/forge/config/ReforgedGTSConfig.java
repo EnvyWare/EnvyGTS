@@ -41,6 +41,7 @@ public class ReforgedGTSConfig extends AbstractYamlConfig {
     private PartyPokemonConfig partyPokemonUIConfig = new PartyPokemonConfig();
     private SelectFromPCConfig pcConfig = new SelectFromPCConfig();
     private PokemonPriceConfig priceConfig = new PokemonPriceConfig();
+    private EditPriceConfig editPriceUIConfig = new EditPriceConfig();
 
     public ReforgedGTSConfig() {
         super();
@@ -462,7 +463,7 @@ public class ReforgedGTSConfig extends AbstractYamlConfig {
 
         private PositionableConfigItem modifyPriceButton = new PositionableConfigItem(
                 "pixelmon:relic_silver", 1, (byte) 0, "&bEdit Price",
-                Lists.newArrayList(), 4, 2, Maps.newHashMap()
+                Lists.newArrayList("&bCurrent Price: &e%price%"), 4, 2, Maps.newHashMap()
         );
 
         private PositionableConfigItem modifyDurationButton = new PositionableConfigItem(
