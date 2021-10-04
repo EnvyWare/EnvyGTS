@@ -10,6 +10,7 @@ import com.envyful.api.reforged.pixelmon.sprite.UtilSprite;
 import com.envyful.api.reforged.pixelmon.storage.UtilPixelmonPlayer;
 import com.envyful.api.time.UtilTimeFormat;
 import com.envyful.reforged.gts.api.Trade;
+import com.envyful.reforged.gts.api.TradeData;
 import com.envyful.reforged.gts.api.gui.SortType;
 import com.envyful.reforged.gts.forge.ReforgedGTSForge;
 import com.envyful.reforged.gts.forge.impl.trade.ForgeTrade;
@@ -29,11 +30,13 @@ import java.util.UUID;
 public class PokemonTrade extends ForgeTrade {
 
     private final Pokemon pokemon;
+    private final TradeData tradeData;
 
     public PokemonTrade(UUID owner, double cost, long expiry, Pokemon pokemon) {
         super(owner, cost, expiry);
 
         this.pokemon = pokemon;
+        this.tradeData = new TradeData(this.pokemon.getDisplayName(), expiry);
     }
 
     @Override
@@ -53,7 +56,7 @@ public class PokemonTrade extends ForgeTrade {
 
     @Override
     public int compare(Trade other, SortType type) {
-        return 0;
+        return type.getComparator().compare(this.toData(), other.toData());
     }
 
     @Override
@@ -102,6 +105,11 @@ public class PokemonTrade extends ForgeTrade {
     @Override
     public void save() {
         //TODO:
+    }
+
+    @Override
+    public TradeData toData() {
+        return this.tradeData;
     }
 
     public static class Builder extends ForgeTrade.Builder {

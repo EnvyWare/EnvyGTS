@@ -122,4 +122,12 @@ public interface Trade {
      */
     void save();
 
+    /**
+     *
+     * Converts to TradeData
+     *
+     * @return The TradeData representation
+     */
+    TradeData toData();
+
 }

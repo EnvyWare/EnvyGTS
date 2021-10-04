@@ -8,6 +8,7 @@ import com.envyful.api.json.UtilGson;
 import com.envyful.api.player.EnvyPlayer;
 import com.envyful.api.time.UtilTimeFormat;
 import com.envyful.reforged.gts.api.Trade;
+import com.envyful.reforged.gts.api.TradeData;
 import com.envyful.reforged.gts.api.gui.SortType;
 import com.envyful.reforged.gts.forge.ReforgedGTSForge;
 import com.envyful.reforged.gts.forge.impl.trade.ForgeTrade;
@@ -21,11 +22,13 @@ import java.util.UUID;
 public class ItemTrade extends ForgeTrade {
 
     private final ItemStack item;
+    private final TradeData tradeData;
 
     public ItemTrade(UUID owner, double cost, long expiry, ItemStack item) {
         super(owner, cost, expiry);
 
         this.item = item;
+        this.tradeData = new TradeData(this.item.getDisplayName(), this.expiry);
     }
 
     @Override
@@ -59,7 +62,7 @@ public class ItemTrade extends ForgeTrade {
 
     @Override
     public int compare(Trade other, SortType type) {
-        return 0;
+        return type.getComparator().compare(this.toData(), other.toData());
     }
 
     @Override
@@ -108,6 +111,11 @@ public class ItemTrade extends ForgeTrade {
     @Override
     public void save() {
         //TODO:
+    }
+
+    @Override
+    public TradeData toData() {
+        return this.tradeData;
     }
 
     public static class Builder extends ForgeTrade.Builder {

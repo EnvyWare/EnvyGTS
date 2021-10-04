@@ -1,21 +1,23 @@
 package com.envyful.reforged.gts.api.gui;
 
 
+import com.envyful.reforged.gts.api.TradeData;
+
 import java.util.Comparator;
 
 public enum SortType {
 
-    ALPHABETICAL("Alphabetical", (o1, o2) -> ((String) o1).compareTo(((String) o2))),
-    REVERSE_ALPHABETICAL("Reverse Alphabetical", (o1, o2) -> ((String) o2).compareTo((String) o1)),
-    MOST_RECENT("Most Recent", Comparator.comparingLong(Long.class::cast)),
-    EXPIRING_SOON("Expiring Soon", Comparator.comparingLong(Long.class::cast)),
+    ALPHABETICAL("Alphabetical", (o1, o2) -> o1.getName().compareTo(o2.getName())),
+    REVERSE_ALPHABETICAL("Reverse Alphabetical", (o1, o2) -> o2.getName().compareTo(o1.getName())),
+    MOST_RECENT("Most Recent", Comparator.comparingLong(TradeData::getExpiry)),
+    EXPIRING_SOON("Expiring Soon", Comparator.comparingLong(TradeData::getExpiry).reversed()),
 
     ;
 
     private final String displayName;
-    private final Comparator<?> comparator;
+    private final Comparator<TradeData> comparator;
 
-    <T> SortType(String displayName, Comparator<T> comparator) {
+    SortType(String displayName, Comparator<TradeData> comparator) {
         this.displayName = displayName;
         this.comparator = comparator;
     }
@@ -24,7 +26,7 @@ public enum SortType {
         return this.displayName;
     }
 
-    public Comparator<?> getComparator() {
+    public Comparator<TradeData> getComparator() {
         return this.comparator;
     }
 
