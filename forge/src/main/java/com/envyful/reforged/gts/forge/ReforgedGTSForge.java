@@ -11,6 +11,7 @@ import com.envyful.api.gui.factory.GuiFactory;
 import com.envyful.reforged.gts.api.GlobalTradeManager;
 import com.envyful.reforged.gts.api.sql.ReforgedGTSQueries;
 import com.envyful.reforged.gts.forge.command.GTSCommand;
+import com.envyful.reforged.gts.forge.config.GuiConfig;
 import com.envyful.reforged.gts.forge.config.LocaleConfig;
 import com.envyful.reforged.gts.forge.config.ReforgedGTSConfig;
 import com.envyful.reforged.gts.forge.impl.storage.SQLGlobalTradeManager;
@@ -41,6 +42,7 @@ public class ReforgedGTSForge {
 
     private ReforgedGTSConfig config;
     private LocaleConfig locale;
+    private GuiConfig gui;
 
     private Database database;
     private GlobalTradeManager tradeManager;
@@ -62,6 +64,7 @@ public class ReforgedGTSForge {
     public void loadConfig() {
         try {
             this.config = YamlConfigFactory.getInstance(ReforgedGTSConfig.class);
+            this.gui = YamlConfigFactory.getInstance(GuiConfig.class);
             this.locale = YamlConfigFactory.getInstance(LocaleConfig.class);
         } catch (IOException e) {
             e.printStackTrace();
@@ -106,5 +109,9 @@ public class ReforgedGTSForge {
 
     public LocaleConfig getLocale() {
         return this.locale;
+    }
+
+    public GuiConfig getGui() {
+        return this.gui;
     }
 }

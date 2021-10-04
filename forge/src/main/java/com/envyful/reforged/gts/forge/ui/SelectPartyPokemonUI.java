@@ -10,7 +10,7 @@ import com.envyful.api.player.EnvyPlayer;
 import com.envyful.api.reforged.pixelmon.sprite.UtilSprite;
 import com.envyful.api.reforged.pixelmon.storage.UtilPixelmonPlayer;
 import com.envyful.reforged.gts.forge.ReforgedGTSForge;
-import com.envyful.reforged.gts.forge.config.ReforgedGTSConfig;
+import com.envyful.reforged.gts.forge.config.GuiConfig;
 import com.envyful.reforged.gts.forge.player.GTSAttribute;
 import com.envyful.reforged.gts.forge.util.UtilPokemonPrice;
 import com.pixelmonmod.pixelmon.api.pokemon.Pokemon;
@@ -22,7 +22,7 @@ import net.minecraft.item.ItemStack;
 public class SelectPartyPokemonUI {
 
     public static void openUI(EnvyPlayer<EntityPlayerMP> player) {
-        ReforgedGTSConfig.PartyPokemonConfig config = ReforgedGTSForge.getInstance().getConfig().getPartyPokemonUIConfig();
+        GuiConfig.PartyPokemonConfig config = ReforgedGTSForge.getInstance().getGui().getPartyPokemonUIConfig();
 
         ((GTSAttribute) player.getAttribute(ReforgedGTSForge.class)).setSelectedSlot(-1);
 
@@ -92,7 +92,7 @@ public class SelectPartyPokemonUI {
     private static void setPokemon(EnvyPlayer<EntityPlayerMP> player, Pane pane) {
         PlayerPartyStorage party = UtilPixelmonPlayer.getParty(player.getParent());
         Pokemon[] all = party.getAll();
-        ReforgedGTSConfig.PartyPokemonConfig config = ReforgedGTSForge.getInstance().getConfig().getPartyPokemonUIConfig();
+        GuiConfig.PartyPokemonConfig config = ReforgedGTSForge.getInstance().getGui().getPartyPokemonUIConfig();
 
         for (int i = 0; i < 6; i++) {
             int pos = config.getPartySelectionPositions().get(i);

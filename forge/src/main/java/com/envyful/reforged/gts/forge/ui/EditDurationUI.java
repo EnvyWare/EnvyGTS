@@ -16,7 +16,7 @@ import net.minecraft.item.ItemStack;
 public class EditDurationUI {
 
     public static void openUI(EnvyPlayer<EntityPlayerMP> player, int page, int position) {
-        EditDurationConfig config = ReforgedGTSForge.getInstance().getConfig().getEditDurationUIConfig();
+        EditDurationConfig config = ReforgedGTSForge.getInstance().getGui().getEditDurationUIConfig();
         GTSAttribute attribute = player.getAttribute(ReforgedGTSForge.class);
 
         Pane pane = GuiFactory.paneBuilder()

@@ -16,7 +16,7 @@ import net.minecraft.item.ItemStack;
 public class EditPriceUI {
 
     public static void openUI(EnvyPlayer<EntityPlayerMP> player, int page, int position) {
-        EditPriceConfig config = ReforgedGTSForge.getInstance().getConfig().getEditPriceUIConfig();
+        EditPriceConfig config = ReforgedGTSForge.getInstance().getGui().getEditPriceUIConfig();
         GTSAttribute attribute = player.getAttribute(ReforgedGTSForge.class);
 
         Pane pane = GuiFactory.paneBuilder()

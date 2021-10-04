@@ -10,7 +10,7 @@ import com.envyful.api.player.EnvyPlayer;
 import com.envyful.api.reforged.pixelmon.sprite.UtilSprite;
 import com.envyful.api.reforged.pixelmon.storage.UtilPixelmonPlayer;
 import com.envyful.reforged.gts.forge.ReforgedGTSForge;
-import com.envyful.reforged.gts.forge.config.ReforgedGTSConfig;
+import com.envyful.reforged.gts.forge.config.GuiConfig;
 import com.envyful.reforged.gts.forge.player.GTSAttribute;
 import com.envyful.reforged.gts.forge.util.UtilPokemonPrice;
 import com.pixelmonmod.pixelmon.api.storage.PCBox;
@@ -26,7 +26,7 @@ public class SelectPCPokemonUI {
     }
 
     public static void openUI(EnvyPlayer<EntityPlayerMP> player, int page) {
-        ReforgedGTSConfig.SelectFromPCConfig config = ReforgedGTSForge.getInstance().getConfig().getPcConfig();
+        GuiConfig.SelectFromPCConfig config = ReforgedGTSForge.getInstance().getGui().getPcConfig();
 
         ((GTSAttribute) player.getAttribute(ReforgedGTSForge.class)).setSelectedSlot(-1);
 
@@ -127,7 +127,7 @@ public class SelectPCPokemonUI {
     private static void setPokemon(EnvyPlayer<EntityPlayerMP> player, int page, Pane pane) {
         PCStorage pc = UtilPixelmonPlayer.getPC(player.getParent());
         PCBox box = pc.getBox(page);
-        ReforgedGTSConfig.SelectFromPCConfig config = ReforgedGTSForge.getInstance().getConfig().getPcConfig();
+        GuiConfig.SelectFromPCConfig config = ReforgedGTSForge.getInstance().getGui().getPcConfig();
 
         for (int i = 0; i < config.getPerPage(); i++) {
             int posX = i % 5;

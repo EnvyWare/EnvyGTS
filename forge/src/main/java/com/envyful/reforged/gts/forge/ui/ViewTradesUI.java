@@ -11,7 +11,7 @@ import com.envyful.reforged.gts.api.Trade;
 import com.envyful.reforged.gts.api.gui.FilterType;
 import com.envyful.reforged.gts.api.gui.SortType;
 import com.envyful.reforged.gts.forge.ReforgedGTSForge;
-import com.envyful.reforged.gts.forge.config.ReforgedGTSConfig;
+import com.envyful.reforged.gts.forge.config.GuiConfig;
 import com.google.common.collect.Lists;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
@@ -25,7 +25,7 @@ public class ViewTradesUI {
     }
 
     public static void openUI(EnvyPlayer<EntityPlayerMP> player, int page, FilterType filter, SortType sort) {
-        ReforgedGTSConfig.SearchTradesConfig config = ReforgedGTSForge.getInstance().getConfig().getSearchUIConfig();
+        GuiConfig.SearchTradesConfig config = ReforgedGTSForge.getInstance().getGui().getSearchUIConfig();
 
         Pane pane = GuiFactory.paneBuilder()
                 .topLeftX(0)

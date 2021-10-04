@@ -6,14 +6,14 @@ import com.envyful.api.gui.factory.GuiFactory;
 import com.envyful.api.gui.pane.Pane;
 import com.envyful.api.player.EnvyPlayer;
 import com.envyful.reforged.gts.forge.ReforgedGTSForge;
-import com.envyful.reforged.gts.forge.config.ReforgedGTSConfig;
+import com.envyful.reforged.gts.forge.config.GuiConfig;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 
 public class MainUI {
 
     public static void open(EnvyPlayer<EntityPlayerMP> player) {
-        ReforgedGTSConfig.MainUIConfig config = ReforgedGTSForge.getInstance().getConfig().getMainUIConfig();
+        GuiConfig.MainUIConfig config = ReforgedGTSForge.getInstance().getGui().getMainUIConfig();
 
         Pane pane = GuiFactory.paneBuilder()
                 .topLeftX(0)

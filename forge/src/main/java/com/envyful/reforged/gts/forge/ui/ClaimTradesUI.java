@@ -7,7 +7,7 @@ import com.envyful.api.gui.pane.Pane;
 import com.envyful.api.player.EnvyPlayer;
 import com.envyful.reforged.gts.api.Trade;
 import com.envyful.reforged.gts.forge.ReforgedGTSForge;
-import com.envyful.reforged.gts.forge.config.ReforgedGTSConfig;
+import com.envyful.reforged.gts.forge.config.GuiConfig;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 
@@ -20,7 +20,7 @@ public class ClaimTradesUI {
     }
 
     public static void openUI(EnvyPlayer<EntityPlayerMP> player, int page) {
-        ReforgedGTSConfig.ClaimTradesConfig config = ReforgedGTSForge.getInstance().getConfig().getClaimTradesUIConfig();
+        GuiConfig.ClaimTradesConfig config = ReforgedGTSForge.getInstance().getGui().getClaimTradesUIConfig();
 
         Pane pane = GuiFactory.paneBuilder()
                 .topLeftX(0)

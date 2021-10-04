@@ -11,7 +11,7 @@ import com.envyful.api.reforged.pixelmon.sprite.UtilSprite;
 import com.envyful.api.reforged.pixelmon.storage.UtilPixelmonPlayer;
 import com.envyful.api.time.UtilTimeFormat;
 import com.envyful.reforged.gts.forge.ReforgedGTSForge;
-import com.envyful.reforged.gts.forge.config.ReforgedGTSConfig;
+import com.envyful.reforged.gts.forge.config.GuiConfig;
 import com.envyful.reforged.gts.forge.player.GTSAttribute;
 import com.google.common.collect.Lists;
 import com.pixelmonmod.pixelmon.api.pokemon.Pokemon;
@@ -28,7 +28,7 @@ public class SelectPriceUI {
     }
 
     public static void openUI(EnvyPlayer<EntityPlayerMP> player, int page, int slot) {
-        ReforgedGTSConfig.PokemonPriceConfig config = ReforgedGTSForge.getInstance().getConfig().getPriceConfig();
+        GuiConfig.PokemonPriceConfig config = ReforgedGTSForge.getInstance().getGui().getPriceConfig();
 
         Pane pane = GuiFactory.paneBuilder()
                 .topLeftX(0)

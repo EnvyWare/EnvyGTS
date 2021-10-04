@@ -7,7 +7,7 @@ import com.envyful.api.gui.pane.Pane;
 import com.envyful.api.player.EnvyPlayer;
 import com.envyful.reforged.gts.api.Trade;
 import com.envyful.reforged.gts.forge.ReforgedGTSForge;
-import com.envyful.reforged.gts.forge.config.ReforgedGTSConfig;
+import com.envyful.reforged.gts.forge.config.GuiConfig;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 
@@ -20,7 +20,7 @@ public class TimedOutTradesUI {
     }
 
     public static void openUI(EnvyPlayer<EntityPlayerMP> player, int page) {
-        ReforgedGTSConfig.TimedOutTradesConfig config = ReforgedGTSForge.getInstance().getConfig().getTimedOutUIConfig();
+        GuiConfig.TimedOutTradesConfig config = ReforgedGTSForge.getInstance().getGui().getTimedOutUIConfig();
 
         Pane pane = GuiFactory.paneBuilder()
                 .topLeftX(0)
