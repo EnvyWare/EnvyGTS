@@ -12,9 +12,12 @@ import com.envyful.api.reforged.pixelmon.storage.UtilPixelmonPlayer;
 import com.envyful.api.time.UtilTimeFormat;
 import com.envyful.reforged.gts.forge.ReforgedGTSForge;
 import com.envyful.reforged.gts.forge.config.GuiConfig;
+import com.envyful.reforged.gts.forge.impl.trade.type.PokemonTrade;
 import com.envyful.reforged.gts.forge.player.GTSAttribute;
 import com.google.common.collect.Lists;
 import com.pixelmonmod.pixelmon.api.pokemon.Pokemon;
+import com.pixelmonmod.pixelmon.api.storage.PCBox;
+import com.pixelmonmod.pixelmon.storage.PlayerPartyStorage;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 
@@ -49,7 +52,29 @@ public class SelectPriceUI {
             pane.set(config.getConfirmItem().getXPos(), config.getConfirmItem().getYPos(),
                      GuiFactory.displayableBuilder(ItemStack.class)
                              .itemStack(UtilConfigItem.fromConfigItem(config.getConfirmItem()))
-                             .clickHandler((envyPlayer, clickType) -> {})
+                             .clickHandler((envyPlayer, clickType) -> {
+                                 Pokemon pixelmon = null;
+
+                                 if (page == -1) {
+                                     PlayerPartyStorage party = UtilPixelmonPlayer.getParty(player.getParent());
+                                     pixelmon = party.get(slot);
+                                     party.set(slot, null);
+                                 } else {
+                                     PCBox box = UtilPixelmonPlayer.getPC(player.getParent()).getBox(page);
+                                     pixelmon = box.get(slot);
+                                     box.set(slot, null);
+                                 }
+
+                                 ReforgedGTSForge.getInstance().getTradeManager()
+                                         .addTrade(player, ((PokemonTrade.Builder) PokemonTrade.builder()
+                                                 .cost(attribute.getCurrentPrice())
+                                                 .expiry(System.currentTimeMillis() + TimeUnit.SECONDS.toMillis(attribute.getCurrentDuration()))
+                                                 .owner(player)
+                                                 .content("p"))
+                                                 .contents(pixelmon)
+                                         .build());
+                                 ((EntityPlayerMP) envyPlayer.getParent()).closeScreen();
+                             })
                              .build()
             );
         }
