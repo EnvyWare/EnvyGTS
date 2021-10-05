@@ -12,13 +12,18 @@ import com.envyful.api.time.UtilTimeFormat;
 import com.envyful.reforged.gts.api.Trade;
 import com.envyful.reforged.gts.api.TradeData;
 import com.envyful.reforged.gts.api.gui.SortType;
+import com.envyful.reforged.gts.api.sql.ReforgedGTSQueries;
 import com.envyful.reforged.gts.forge.ReforgedGTSForge;
 import com.envyful.reforged.gts.forge.impl.trade.ForgeTrade;
 import com.google.common.collect.Lists;
 import com.pixelmonmod.pixelmon.api.pokemon.Pokemon;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.util.List;
 import java.util.UUID;
 
@@ -99,12 +104,43 @@ public class PokemonTrade extends ForgeTrade {
 
     @Override
     public void delete() {
-        //TODO:
+        try (Connection connection = ReforgedGTSForge.getInstance().getDatabase().getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(ReforgedGTSQueries.REMOVE_TRADE)) {
+            preparedStatement.setString(1, this.owner.toString());
+            preparedStatement.setLong(2, this.expiry);
+            preparedStatement.setDouble(3, this.cost);
+            preparedStatement.setString(4, "p");
+            preparedStatement.setString(5, "INSTANT_BUY");
+
+            preparedStatement.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
     public void save() {
-        //TODO:
+        try (Connection connection = ReforgedGTSForge.getInstance().getDatabase().getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(ReforgedGTSQueries.ADD_TRADE)) {
+            preparedStatement.setString(1, this.owner.toString());
+            preparedStatement.setString(2, this.ownerName);
+            preparedStatement.setLong(3, this.expiry);
+            preparedStatement.setDouble(4, this.cost);
+            preparedStatement.setInt(5, this.removed ? 1 : 0);
+            preparedStatement.setString(6, "INSTANT_BUY");
+            preparedStatement.setString(7, "p");
+            preparedStatement.setString(8, this.getPokemonJson());
+
+            preparedStatement.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private String getPokemonJson() {
+        NBTTagCompound tag = new NBTTagCompound();
+        this.pokemon.writeToNBT(tag);
+        return tag.toString();
     }
 
     @Override
