@@ -99,7 +99,7 @@ public class ItemTrade extends ForgeTrade {
                 .itemStack(new ItemBuilder(this.item)
                                    .addLore(ReforgedGTSForge.getInstance().getLocale().getListingBelowExpiredOrClaimableLore().toArray(new String[0]))
                                    .build())
-                .clickHandler((envyPlayer, clickType) -> {}) //TODO: confirm UI
+                .clickHandler((envyPlayer, clickType) -> this.collect(envyPlayer))
                 .build());
     }
 

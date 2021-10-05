@@ -93,7 +93,7 @@ public class PokemonTrade extends ForgeTrade {
                 .itemStack(new ItemBuilder(UtilSprite.getPokemonElement(pokemon))
                                    .addLore(ReforgedGTSForge.getInstance().getLocale().getListingBelowExpiredOrClaimableLore().toArray(new String[0]))
                                    .build())
-                .clickHandler((envyPlayer, clickType) -> {}) //TODO: confirm UI
+                .clickHandler((envyPlayer, clickType) -> this.collect(envyPlayer))
                 .build());
     }
 
