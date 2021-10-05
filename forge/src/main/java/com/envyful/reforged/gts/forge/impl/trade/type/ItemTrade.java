@@ -16,6 +16,7 @@ import com.envyful.reforged.gts.forge.impl.trade.ForgeTrade;
 import com.google.common.collect.Lists;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -134,12 +135,18 @@ public class ItemTrade extends ForgeTrade {
             preparedStatement.setInt(5, this.removed ? 1 : 0);
             preparedStatement.setString(6, "INSTANT_BUY");
             preparedStatement.setString(7, "i");
-            preparedStatement.setString(8, ""); //TODO: JSON ples
+            preparedStatement.setString(8, this.getItemJson());
 
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
         }
+    }
+
+    private String getItemJson() {
+        NBTTagCompound tag = new NBTTagCompound();
+        this.item.writeToNBT(tag);
+        return tag.toString();
     }
 
     @Override
