@@ -17,13 +17,18 @@ import java.util.UUID;
 public abstract class ForgeTrade implements Trade {
 
     protected final UUID owner;
+    protected final String ownerName;
     protected final double cost;
     protected final long expiry;
 
-    protected ForgeTrade(UUID owner, double cost, long expiry) {
+    protected boolean removed;
+
+    protected ForgeTrade(UUID owner, String ownerName, double cost, long expiry, boolean removed) {
         this.owner = owner;
+        this.ownerName = ownerName;
         this.cost = cost;
         this.expiry = expiry;
+        this.removed = removed;
     }
 
     @Override
@@ -48,17 +53,30 @@ public abstract class ForgeTrade implements Trade {
     public static class Builder {
 
         protected UUID owner = null;
+        protected String ownerName = "";
         protected double cost = -1;
         protected long expiry = -1;
+        protected boolean removed = false;
 
         protected Builder() {}
 
         public Builder owner(EnvyPlayer<?> player) {
+            this.ownerName(player.getName());
             return this.owner(player.getUuid());
         }
 
         public Builder owner(UUID owner) {
             this.owner = owner;
+            return this;
+        }
+
+        public Builder ownerName(String ownerName) {
+            this.ownerName = ownerName;
+            return this;
+        }
+
+        public Builder removed(boolean removed) {
+            this.removed = removed;
             return this;
         }
 
@@ -96,6 +114,9 @@ public abstract class ForgeTrade implements Trade {
             if (this.expiry != -1) {
                 builder.expiry(expiry);
             }
+
+            builder.removed(this.removed);
+            builder.ownerName(this.ownerName);
 
             return builder;
         }

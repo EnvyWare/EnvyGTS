@@ -32,8 +32,8 @@ public class PokemonTrade extends ForgeTrade {
     private final Pokemon pokemon;
     private final TradeData tradeData;
 
-    public PokemonTrade(UUID owner, double cost, long expiry, Pokemon pokemon) {
-        super(owner, cost, expiry);
+    public PokemonTrade(UUID owner, String ownerName, double cost, long expiry, Pokemon pokemon, boolean removed) {
+        super(owner, ownerName, cost, expiry, removed);
 
         this.pokemon = pokemon;
         this.tradeData = new TradeData(this.pokemon.getDisplayName(), expiry);
@@ -129,6 +129,16 @@ public class PokemonTrade extends ForgeTrade {
         }
 
         @Override
+        public Builder ownerName(String ownerName) {
+            return (Builder) super.ownerName(ownerName);
+        }
+
+        @Override
+        public Builder removed(boolean removed) {
+            return (Builder) super.removed(removed);
+        }
+
+        @Override
         public Builder cost(double cost) {
             return (Builder) super.cost(cost);
         }
@@ -159,7 +169,7 @@ public class PokemonTrade extends ForgeTrade {
                 return null;
             }
 
-            return new PokemonTrade(this.owner, this.cost, this.expiry, this.pokemon);
+            return new PokemonTrade(this.owner, this.ownerName, this.cost, this.expiry, this.pokemon, this.removed);
         }
     }
 }
