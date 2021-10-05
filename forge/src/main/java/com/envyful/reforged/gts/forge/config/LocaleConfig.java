@@ -50,6 +50,8 @@ public class LocaleConfig extends AbstractYamlConfig {
         private String amountMustBePositive = "&c&l(!) &cAmount must be a positive number!";
         private String priceMustBeMoreThanOne = "&c&l(!) &cPrice cannot be less than $1";
 
+        private String addedItemToGts = "&e&l(!) &eSuccessfully listed item on GTS";
+
         public Messages() {}
 
         public String getOpeningUi() {
@@ -70,6 +72,10 @@ public class LocaleConfig extends AbstractYamlConfig {
 
         public String getPriceMustBeMoreThanOne() {
             return UtilChatColour.translateColourCodes('&', this.priceMustBeMoreThanOne);
+        }
+
+        public String getAddedItemToGts() {
+            return this.addedItemToGts;
         }
     }
 }
