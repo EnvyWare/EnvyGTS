@@ -1,13 +1,17 @@
 package com.envyful.reforged.gts.forge.impl.trade;
 
 import com.envyful.api.concurrency.UtilConcurrency;
+import com.envyful.api.forge.chat.UtilChatColour;
 import com.envyful.api.player.EnvyPlayer;
+import com.envyful.api.reforged.pixelmon.storage.UtilPixelmonPlayer;
 import com.envyful.reforged.gts.api.Trade;
 import com.envyful.reforged.gts.api.gui.FilterType;
 import com.envyful.reforged.gts.api.sql.ReforgedGTSQueries;
 import com.envyful.reforged.gts.forge.ReforgedGTSForge;
 import com.envyful.reforged.gts.forge.impl.trade.type.ItemTrade;
 import com.envyful.reforged.gts.forge.impl.trade.type.PokemonTrade;
+import com.pixelmonmod.pixelmon.storage.PlayerPartyStorage;
+import net.minecraft.entity.player.EntityPlayerMP;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -50,6 +54,33 @@ public abstract class ForgeTrade implements Trade {
     @Override
     public boolean filter(EnvyPlayer<?> filterer, FilterType filterType) {
         return filterType.isAllowed(filterer, this);
+    }
+
+    @Override
+    public boolean attemptPurchase(EnvyPlayer<?> player) {
+        if (this.removed) {
+            return false;
+        }
+
+        EntityPlayerMP parent = (EntityPlayerMP) player.getParent();
+        PlayerPartyStorage party = UtilPixelmonPlayer.getParty(parent);
+
+        if (party.getMoney() < this.cost) {
+            player.message(UtilChatColour.translateColourCodes(
+                    '&',
+                    ReforgedGTSForge.getInstance().getLocale().getMessages().getInsufficientFunds()
+            ));
+            return false;
+        }
+
+        party.setMoney((int) (party.getMoney() - this.cost));
+        this.setRemoved();
+        parent.closeScreen();
+        player.message(UtilChatColour.translateColourCodes(
+                '&',
+                ReforgedGTSForge.getInstance().getLocale().getMessages().getPurchasedTrade()
+        ));
+        return true;
     }
 
     protected void setRemoved() {

@@ -46,11 +46,6 @@ public class PokemonTrade extends ForgeTrade {
     }
 
     @Override
-    public boolean attemptPurchase(EnvyPlayer<?> player) {
-        return false; //TODO
-    }
-
-    @Override
     public void collect(EnvyPlayer<?> player) {
         EntityPlayerMP parent = (EntityPlayerMP) player.getParent();
 

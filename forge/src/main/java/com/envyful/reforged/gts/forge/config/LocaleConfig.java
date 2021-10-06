@@ -50,11 +50,21 @@ public class LocaleConfig extends AbstractYamlConfig {
         private String amountMustBePositive = "&c&l(!) &cAmount must be a positive number!";
         private String priceMustBeMoreThanOne = "&c&l(!) &cPrice cannot be less than $1";
         private String inventoryFull = "&c&l(!) &cYour inventory is full!";
+        private String insufficientFunds = "&c&l(!) &cYou don't have enough money!";
 
         private String addedItemToGts = "&e&l(!) &eSuccessfully listed item on GTS";
         private String adminRemoveTrade = "&e&l(!) &eYou successfully removed the trade from the GTS";
+        private String purchasedTrade = "&e&l(!) &eSuccessfully purchased trade from GTS";
 
         public Messages() {}
+
+        public String getInsufficientFunds() {
+            return this.insufficientFunds;
+        }
+
+        public String getPurchasedTrade() {
+            return this.purchasedTrade;
+        }
 
         public String getAdminRemoveTrade() {
             return this.adminRemoveTrade;

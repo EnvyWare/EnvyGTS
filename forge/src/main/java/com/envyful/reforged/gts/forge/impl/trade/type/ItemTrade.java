@@ -38,15 +38,6 @@ public class ItemTrade extends ForgeTrade {
     }
 
     @Override
-    public boolean attemptPurchase(EnvyPlayer<?> player) {
-        if (this.removed) {
-            return false;
-        }
-
-        return false; //TODO:
-    }
-
-    @Override
     public void collect(EnvyPlayer<?> player) {
         EntityPlayerMP parent = (EntityPlayerMP) player.getParent();
 
