@@ -6,12 +6,10 @@ import com.envyful.api.player.EnvyPlayer;
 import com.envyful.reforged.gts.api.Trade;
 import com.envyful.reforged.gts.api.sql.ReforgedGTSQueries;
 import com.envyful.reforged.gts.forge.ReforgedGTSForge;
-import com.envyful.reforged.gts.forge.impl.TradeFactory;
 import com.google.common.collect.Lists;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 
@@ -65,18 +63,7 @@ public class GTSAttribute extends AbstractForgeAttribute<ReforgedGTSForge> {
 
     @Override
     public void load() {
-        try (Connection connection = this.manager.getDatabase().getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(ReforgedGTSQueries.GET_ALL_PLAYER)) {
-            preparedStatement.setString(1, this.parent.getUuid().toString());
-
-            ResultSet resultSet = preparedStatement.executeQuery();
-
-            while (resultSet.next()) {
-                this.ownedTrades.add(TradeFactory.fromResultSet(resultSet));
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+        this.ownedTrades = ReforgedGTSForge.getInstance().getTradeManager().getUserTrades(this.parent);
     }
 
     @Override
