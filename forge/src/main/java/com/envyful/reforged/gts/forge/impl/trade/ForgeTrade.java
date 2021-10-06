@@ -1,11 +1,17 @@
 package com.envyful.reforged.gts.forge.impl.trade;
 
+import com.envyful.api.concurrency.UtilConcurrency;
 import com.envyful.api.player.EnvyPlayer;
 import com.envyful.reforged.gts.api.Trade;
 import com.envyful.reforged.gts.api.gui.FilterType;
+import com.envyful.reforged.gts.api.sql.ReforgedGTSQueries;
+import com.envyful.reforged.gts.forge.ReforgedGTSForge;
 import com.envyful.reforged.gts.forge.impl.trade.type.ItemTrade;
 import com.envyful.reforged.gts.forge.impl.trade.type.PokemonTrade;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -44,6 +50,31 @@ public abstract class ForgeTrade implements Trade {
     @Override
     public boolean filter(EnvyPlayer<?> filterer, FilterType filterType) {
         return filterType.isAllowed(filterer, this);
+    }
+
+    protected void setRemoved() {
+        this.removed = true;
+
+        UtilConcurrency.runAsync(() -> {
+            try (Connection connection = ReforgedGTSForge.getInstance().getDatabase().getConnection();
+                 PreparedStatement preparedStatement = connection.prepareStatement(ReforgedGTSQueries.UPDATE_REMOVED)) {
+                preparedStatement.setInt(1, 1);
+                preparedStatement.setString(2, this.owner.toString());
+                preparedStatement.setLong(3, this.expiry);
+                preparedStatement.setDouble(4, this.cost);
+
+                if (this instanceof ItemTrade) {
+                    preparedStatement.setString(5, "i");
+                } else {
+                    preparedStatement.setString(5, "p");
+                }
+
+                preparedStatement.setString(6, "INSTANT_BUY");
+                preparedStatement.executeUpdate();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        });
     }
 
     public static Builder builder() {
