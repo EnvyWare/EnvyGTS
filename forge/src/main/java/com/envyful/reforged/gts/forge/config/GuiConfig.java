@@ -312,7 +312,17 @@ public class GuiConfig extends AbstractYamlConfig {
                 Lists.newArrayList(), Maps.newHashMap()
         );
 
+        private ConfigItem untradeablePokemonItem = new ConfigItem(
+                "minecraft:barrier",
+                1, (byte) 0, "&c&lUNTRADEABLE",
+                Lists.newArrayList(), Maps.newHashMap()
+        );
+
         public PartyPokemonConfig() {
+        }
+
+        public ConfigItem getUntradeablePokemonItem() {
+            return this.untradeablePokemonItem;
         }
 
         public ConfigInterface getGuiSettings() {
@@ -379,11 +389,21 @@ public class GuiConfig extends AbstractYamlConfig {
                 Lists.newArrayList(), Maps.newHashMap()
         );
 
+        private ConfigItem untradeablePokemonItem = new ConfigItem(
+                "minecraft:barrier",
+                1, (byte) 0, "&c&lUNTRADEABLE",
+                Lists.newArrayList(), Maps.newHashMap()
+        );
+
         private int perPage = 30;
 
         private int confirmSlot = 25;
 
         public SelectFromPCConfig() {}
+
+        public ConfigItem getUntradeablePokemonItem() {
+            return this.untradeablePokemonItem;
+        }
 
         public ConfigInterface getGuiSettings() {
             return this.guiSettings;

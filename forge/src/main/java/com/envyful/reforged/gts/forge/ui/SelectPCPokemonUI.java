@@ -13,6 +13,7 @@ import com.envyful.reforged.gts.forge.ReforgedGTSForge;
 import com.envyful.reforged.gts.forge.config.GuiConfig;
 import com.envyful.reforged.gts.forge.player.GTSAttribute;
 import com.envyful.reforged.gts.forge.util.UtilPokemonPrice;
+import com.pixelmonmod.pixelmon.api.pokemon.Pokemon;
 import com.pixelmonmod.pixelmon.api.storage.PCBox;
 import com.pixelmonmod.pixelmon.api.storage.PCStorage;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -132,14 +133,18 @@ public class SelectPCPokemonUI {
         for (int i = 0; i < config.getPerPage(); i++) {
             int posX = i % 5;
             int posY = i / 5;
+            Pokemon pokemon = box.get(i);
 
-            if (box.get(i) == null) {
+            if (pokemon == null) {
                 pane.set(2 + posX, posY, GuiFactory.displayableBuilder(ItemStack.class)
                         .itemStack(UtilConfigItem.fromConfigItem(config.getNoPokemonItem())).build());
+            } else if (pokemon.hasSpecFlag("untradeable")) {
+                pane.set(2 + posX, posY, GuiFactory.displayableBuilder(ItemStack.class)
+                        .itemStack(UtilConfigItem.fromConfigItem(config.getUntradeablePokemonItem())).build());
             } else {
                 final int slot = i;
                 pane.set(2 + posX, posY, GuiFactory.displayableBuilder(ItemStack.class)
-                        .itemStack(UtilSprite.getPokemonElement(box.get(i)))
+                        .itemStack(UtilSprite.getPokemonElement(pokemon))
                         .clickHandler((envyPlayer, clickType) -> {
                             GTSAttribute attribute = envyPlayer.getAttribute(ReforgedGTSForge.class);
                             attribute.setSelectedSlot(slot);
