@@ -13,6 +13,7 @@ import com.envyful.reforged.gts.api.gui.SortType;
 import com.envyful.reforged.gts.api.sql.ReforgedGTSQueries;
 import com.envyful.reforged.gts.forge.ReforgedGTSForge;
 import com.envyful.reforged.gts.forge.impl.trade.ForgeTrade;
+import com.envyful.reforged.gts.forge.ui.ViewTradesUI;
 import com.google.common.collect.Lists;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
@@ -86,7 +87,12 @@ public class ItemTrade extends ForgeTrade {
                 .itemStack(new ItemBuilder(this.item)
                                    .addLore(this.formatLore(ReforgedGTSForge.getInstance().getLocale().getListingBelowDataLore()))
                                    .build())
-                .clickHandler((envyPlayer, clickType) -> {}) //TODO: confirm UI
+                .clickHandler((envyPlayer, clickType) -> {
+                    if (!this.attemptPurchase(envyPlayer)) {
+                        ViewTradesUI.openUI((EnvyPlayer<EntityPlayerMP>) envyPlayer);
+                        return;
+                    }
+                })
                 .build());
     }
 
