@@ -19,6 +19,7 @@ import com.envyful.reforged.gts.forge.ui.ViewTradesUI;
 import com.google.common.collect.Lists;
 import com.pixelmonmod.pixelmon.Pixelmon;
 import com.pixelmonmod.pixelmon.api.pokemon.Pokemon;
+import com.pixelmonmod.pixelmon.enums.EnumSpecies;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.JsonToNBT;
@@ -225,6 +226,7 @@ public class PokemonTrade extends ForgeTrade {
                 return this.contents(Pixelmon.pokemonFactory.create(tagCompound));
             } catch (NBTException e) {
                 e.printStackTrace();
+                this.contents(Pixelmon.pokemonFactory.create(EnumSpecies.Magikarp));
             }
             return this;
         }
