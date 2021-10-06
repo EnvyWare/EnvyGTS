@@ -3,6 +3,7 @@ package com.envyful.reforged.gts.forge.config;
 import com.envyful.api.config.type.ConfigInterface;
 import com.envyful.api.config.type.ConfigItem;
 import com.envyful.api.config.type.PositionableConfigItem;
+import com.envyful.api.reforged.pixelmon.config.SpriteConfig;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
@@ -35,6 +36,8 @@ public class EditPriceConfig {
             "pixelmon:poke_ball", 1, (byte) 0, "&a&lCONFIRM",
             Lists.newArrayList(), 2, 2, Maps.newHashMap()
     );
+
+    private SpriteConfig spriteConfig = new SpriteConfig();
 
     private int pokemonPosition = 19;
 
@@ -81,6 +84,10 @@ public class EditPriceConfig {
             ), -10000));
         }
     };
+
+    public SpriteConfig getSpriteConfig() {
+        return this.spriteConfig;
+    }
 
     public ConfigInterface getGuiSettings() {
         return this.guiSettings;

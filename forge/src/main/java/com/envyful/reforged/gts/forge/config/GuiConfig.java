@@ -5,6 +5,7 @@ import com.envyful.api.config.type.ConfigInterface;
 import com.envyful.api.config.type.ConfigItem;
 import com.envyful.api.config.type.PositionableConfigItem;
 import com.envyful.api.config.yaml.AbstractYamlConfig;
+import com.envyful.api.reforged.pixelmon.config.SpriteConfig;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
@@ -159,7 +160,13 @@ public class GuiConfig extends AbstractYamlConfig {
                 Lists.newArrayList("&aCurrent order: &f%order%"), 6, 5, Maps.newHashMap()
         );
 
+        private SpriteConfig spriteConfig = new SpriteConfig();
+
         public SearchTradesConfig() {
+        }
+
+        public SpriteConfig getSpriteConfig() {
+            return this.spriteConfig;
         }
 
         public ConfigInterface getGuiSettings() {
@@ -211,7 +218,13 @@ public class GuiConfig extends AbstractYamlConfig {
                 Lists.newArrayList(), 4, 5, Maps.newHashMap()
         );
 
+        private SpriteConfig spriteConfig = new SpriteConfig();
+
         public TimedOutTradesConfig() {
+        }
+
+        public SpriteConfig getSpriteConfig() {
+            return this.spriteConfig;
         }
 
         public ConfigInterface getGuiSettings() {
@@ -256,7 +269,13 @@ public class GuiConfig extends AbstractYamlConfig {
                 Lists.newArrayList(), 4, 5, Maps.newHashMap()
         );
 
+        private SpriteConfig spriteConfig = new SpriteConfig();
+
         public ClaimTradesConfig() {
+        }
+
+        public SpriteConfig getSpriteConfig() {
+            return this.spriteConfig;
         }
 
         public ConfigInterface getGuiSettings() {
@@ -318,7 +337,13 @@ public class GuiConfig extends AbstractYamlConfig {
                 Lists.newArrayList(), Maps.newHashMap()
         );
 
+        private SpriteConfig spriteConfig = new SpriteConfig();
+
         public PartyPokemonConfig() {
+        }
+
+        public SpriteConfig getSpriteConfig() {
+            return this.spriteConfig;
         }
 
         public ConfigItem getUntradeablePokemonItem() {
@@ -395,11 +420,17 @@ public class GuiConfig extends AbstractYamlConfig {
                 Lists.newArrayList(), Maps.newHashMap()
         );
 
+        private SpriteConfig spriteConfig = new SpriteConfig();
+
         private int perPage = 30;
 
         private int confirmSlot = 25;
 
         public SelectFromPCConfig() {}
+
+        public SpriteConfig getSpriteConfig() {
+            return this.spriteConfig;
+        }
 
         public ConfigItem getUntradeablePokemonItem() {
             return this.untradeablePokemonItem;
@@ -474,7 +505,13 @@ public class GuiConfig extends AbstractYamlConfig {
                 Lists.newArrayList(), 0, 0, Maps.newHashMap()
         );
 
+        private SpriteConfig spriteConfig = new SpriteConfig();
+
         public PokemonPriceConfig() {
+        }
+
+        public SpriteConfig getSpriteConfig() {
+            return this.spriteConfig;
         }
 
         public ConfigInterface getGuiSettings() {
