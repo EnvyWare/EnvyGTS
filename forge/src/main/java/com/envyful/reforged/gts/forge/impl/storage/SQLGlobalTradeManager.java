@@ -16,7 +16,7 @@ public class SQLGlobalTradeManager extends ForgeGlobalTradeManager {
 
     public SQLGlobalTradeManager(ReforgedGTSForge mod) {
         try (Connection connection = mod.getDatabase().getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(ReforgedGTSQueries.GET_ALL)) {
+             PreparedStatement preparedStatement = connection.prepareStatement(ReforgedGTSQueries.GET_ALL_ACTIVE)) {
             preparedStatement.setLong(1, System.currentTimeMillis());
 
             ResultSet resultSet = preparedStatement.executeQuery();

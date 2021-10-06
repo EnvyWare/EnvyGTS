@@ -14,10 +14,12 @@ public class ReforgedGTSQueries {
             "contents   BLOB            NOT NULL, " +
             "PRIMARY KEY(id));";
 
-    public static final String GET_ALL = "SELECT owner, ownerName, expiry, cost, removed, type, content_type, contents " +
-            "FROM `reforged_gts_trades`;";
+    public static final String GET_ALL_ACTIVE = "SELECT owner, ownerName, expiry, cost, removed, type, content_type, contents " +
+            "FROM `reforged_gts_trades` " +
+            "WHERE expiry > ? AND removed = 0;";
 
-    public static final String GET_ALL_PLAYER = "SELECT expiry, cost, removed, type, content_type, contents " +
+    public static final String GET_ALL_PLAYER = "SELECT owner, ownerName, expiry, cost, removed, type, content_type, " +
+            "contents " +
             "FROM `reforged_gts_trades` " +
             "WHERE owner = ?;";
 

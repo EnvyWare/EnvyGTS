@@ -14,6 +14,7 @@ public class TradeFactory {
                 .cost(resultSet.getDouble("cost"))
                 .expiry(resultSet.getLong("expiry"))
                 .owner(UUID.fromString(resultSet.getString("owner")))
+                .ownerName(resultSet.getString("ownerName"))
                 .content(resultSet.getString("content_type"))
                 .contents(resultSet.getString("contents"))
                 .build();
