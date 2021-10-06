@@ -44,6 +44,14 @@ public interface Trade {
 
     /**
      *
+     * Used to determine if a Trade was purchased by the owner
+     *
+     * @return True if purchased - false if own
+     */
+    boolean wasPurchased();
+
+    /**
+     *
      * Method for when a player attempts to purchase an item from GTS.
      * Will return false if something fails
      * Returns true if the purchase is successful

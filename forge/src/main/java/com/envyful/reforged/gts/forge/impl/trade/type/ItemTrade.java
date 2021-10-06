@@ -33,8 +33,9 @@ public class ItemTrade extends ForgeTrade {
     private final ItemStack item;
     private final TradeData tradeData;
 
-    public ItemTrade(UUID owner, String ownerName, double cost, long expiry, ItemStack item, boolean removed) {
-        super(owner, ownerName, cost, expiry, removed);
+    public ItemTrade(UUID owner, String ownerName, double cost, long expiry, ItemStack item, boolean removed,
+                     boolean purchased) {
+        super(owner, ownerName, cost, expiry, removed, purchased);
 
         this.item = item;
         this.tradeData = new TradeData(this.item.getDisplayName(), this.expiry);
@@ -236,12 +237,18 @@ public class ItemTrade extends ForgeTrade {
         }
 
         @Override
+        public Builder purchased(boolean purchased) {
+            return (Builder) super.purchased(purchased);
+        }
+
+        @Override
         public ItemTrade build() {
             if (this.itemStack == null) {
                 return null;
             }
 
-            return new ItemTrade(this.owner, this.ownerName, this.cost, this.expiry, this.itemStack, this.removed);
+            return new ItemTrade(this.owner, this.ownerName, this.cost, this.expiry, this.itemStack, this.removed,
+                                 this.purchased);
         }
     }
 }

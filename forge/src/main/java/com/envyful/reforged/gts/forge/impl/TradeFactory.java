@@ -17,6 +17,8 @@ public class TradeFactory {
                 .ownerName(resultSet.getString("ownerName"))
                 .content(resultSet.getString("content_type"))
                 .contents(resultSet.getString("contents"))
+                .purchased(resultSet.getInt("purchased") == 1)
+                .removed(resultSet.getInt("removed") == 1)
                 .build();
     }
 

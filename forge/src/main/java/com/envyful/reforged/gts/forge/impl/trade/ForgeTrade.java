@@ -32,13 +32,15 @@ public abstract class ForgeTrade implements Trade {
     protected UUID owner;
     protected String ownerName;
     protected boolean removed;
+    protected boolean purchased;
 
-    protected ForgeTrade(UUID owner, String ownerName, double cost, long expiry, boolean removed) {
+    protected ForgeTrade(UUID owner, String ownerName, double cost, long expiry, boolean removed, boolean purchased) {
         this.owner = owner;
         this.ownerName = ownerName;
         this.cost = cost;
         this.expiry = expiry;
         this.removed = removed;
+        this.purchased = purchased;
     }
 
     @Override
@@ -49,6 +51,11 @@ public abstract class ForgeTrade implements Trade {
     @Override
     public boolean hasExpired() {
         return System.currentTimeMillis() >= this.expiry;
+    }
+
+    @Override
+    public boolean wasPurchased() {
+        return this.purchased;
     }
 
     @Override
@@ -75,6 +82,7 @@ public abstract class ForgeTrade implements Trade {
 
         party.setMoney((int) (party.getMoney() - this.cost));
         this.updateOwner(player.getUuid(), player.getName());
+        this.purchased = true;
         this.setRemoved();
         parent.closeScreen();
         player.message(UtilChatColour.translateColourCodes(
@@ -91,9 +99,10 @@ public abstract class ForgeTrade implements Trade {
             try (Connection connection = ReforgedGTSForge.getInstance().getDatabase().getConnection();
                  PreparedStatement preparedStatement = connection.prepareStatement(ReforgedGTSQueries.UPDATE_REMOVED)) {
                 preparedStatement.setInt(1, 1);
-                preparedStatement.setString(2, this.owner.toString());
-                preparedStatement.setLong(3, this.expiry);
-                preparedStatement.setDouble(4, this.cost);
+                preparedStatement.setInt(2, this.purchased ? 1 : 0);
+                preparedStatement.setString(3, this.owner.toString());
+                preparedStatement.setLong(4, this.expiry);
+                preparedStatement.setDouble(5, this.cost);
 
                 if (this instanceof ItemTrade) {
                     preparedStatement.setString(5, "i");
@@ -148,6 +157,7 @@ public abstract class ForgeTrade implements Trade {
         protected double cost = -1;
         protected long expiry = -1;
         protected boolean removed = false;
+        protected boolean purchased = false;
 
         protected Builder() {}
 
@@ -181,6 +191,11 @@ public abstract class ForgeTrade implements Trade {
             return this;
         }
 
+        public Builder purchased(boolean purchased) {
+            this.purchased = purchased;
+            return this;
+        }
+
         public Builder content(String type) {
             Builder builder = null;
 
@@ -208,6 +223,7 @@ public abstract class ForgeTrade implements Trade {
 
             builder.removed(this.removed);
             builder.ownerName(this.ownerName);
+            builder.purchased(this.purchased);
 
             return builder;
         }
