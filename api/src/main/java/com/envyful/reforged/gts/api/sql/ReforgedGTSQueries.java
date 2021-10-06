@@ -32,7 +32,8 @@ public class ReforgedGTSQueries {
             "WHERE owner = ? AND expiry = ? AND cost = ? AND content_type = ? AND type = ?;";
 
     public static final String ADD_TRADE = "INSERT INTO `reforged_gts_trade`" +
-            "(owner, ownerName, expiry, cost, removed, type, content_type, contents) VALUES (?, ?, ?, ?, ?, ?, ?, ?);";
+            "(owner, ownerName, expiry, cost, removed, type, content_type, contents, purchased)" +
+            " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);";
 
     public static final String REMOVE_TRADE = "DELETE FROM `reforged_gts_trade` " +
             "WHERE owner = ? AND expiry = ? AND cost = ? AND content_type = ? AND type = ?;";

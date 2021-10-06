@@ -161,6 +161,7 @@ public class ItemTrade extends ForgeTrade {
             preparedStatement.setString(6, "INSTANT_BUY");
             preparedStatement.setString(7, "i");
             preparedStatement.setString(8, this.getItemJson());
+            preparedStatement.setInt(9, 0);
 
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
