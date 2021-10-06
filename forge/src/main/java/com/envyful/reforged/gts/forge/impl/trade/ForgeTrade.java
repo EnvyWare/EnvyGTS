@@ -26,11 +26,11 @@ import java.util.UUID;
  */
 public abstract class ForgeTrade implements Trade {
 
-    protected final UUID owner;
-    protected final String ownerName;
     protected final double cost;
     protected final long expiry;
 
+    protected UUID owner;
+    protected String ownerName;
     protected boolean removed;
 
     protected ForgeTrade(UUID owner, String ownerName, double cost, long expiry, boolean removed) {
@@ -74,6 +74,7 @@ public abstract class ForgeTrade implements Trade {
         }
 
         party.setMoney((int) (party.getMoney() - this.cost));
+        this.updateOwner(player.getUuid(), player.getName());
         this.setRemoved();
         parent.closeScreen();
         player.message(UtilChatColour.translateColourCodes(
@@ -101,6 +102,34 @@ public abstract class ForgeTrade implements Trade {
                 }
 
                 preparedStatement.setString(6, "INSTANT_BUY");
+                preparedStatement.executeUpdate();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        });
+    }
+
+    protected void updateOwner(UUID newOwner, String newOwnerName) {
+        UUID owner = this.owner;
+        this.owner = newOwner;
+        this.ownerName = newOwnerName;
+
+        UtilConcurrency.runAsync(() -> {
+            try (Connection connection = ReforgedGTSForge.getInstance().getDatabase().getConnection();
+                 PreparedStatement preparedStatement = connection.prepareStatement(ReforgedGTSQueries.UPDATE_OWNER)) {
+                preparedStatement.setString(1, newOwner.toString());
+                preparedStatement.setString(2, newOwnerName);
+                preparedStatement.setString(3, owner.toString());
+                preparedStatement.setLong(4, this.expiry);
+                preparedStatement.setDouble(5, this.cost);
+
+                if (this instanceof ItemTrade) {
+                    preparedStatement.setString(6, "i");
+                } else {
+                    preparedStatement.setString(6, "p");
+                }
+
+                preparedStatement.setString(7, "INSTANT_BUY");
                 preparedStatement.executeUpdate();
             } catch (SQLException e) {
                 e.printStackTrace();

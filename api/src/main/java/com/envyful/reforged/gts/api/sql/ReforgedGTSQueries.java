@@ -33,4 +33,8 @@ public class ReforgedGTSQueries {
     public static final String REMOVE_TRADE = "DELETE FROM `reforged_gts_trades` " +
             "WHERE owner = ? AND expiry = ? AND cost = ? AND content_type = ? AND type = ?;";
 
+    public static final String UPDATE_OWNER = "UPDATE `reforged_gts_trades` " +
+            "SET owner = ?, ownerName = ? " +
+            "WHERE owner = ? AND expiry = ? AND cost = ? AND content_type = ? AND type = ?;";
+
 }
