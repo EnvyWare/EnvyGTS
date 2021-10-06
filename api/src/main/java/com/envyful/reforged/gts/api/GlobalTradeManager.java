@@ -22,6 +22,14 @@ public interface GlobalTradeManager {
 
     /**
      *
+     * Removes a trade from the cache
+     *
+     * @param trade The trade to remove
+     */
+    void removeTrade(Trade trade);
+
+    /**
+     *
      * Gets all trades on the GTS
      *
      * @return The list of all active trades

@@ -49,10 +49,20 @@ public class LocaleConfig extends AbstractYamlConfig {
 
         private String amountMustBePositive = "&c&l(!) &cAmount must be a positive number!";
         private String priceMustBeMoreThanOne = "&c&l(!) &cPrice cannot be less than $1";
+        private String inventoryFull = "&c&l(!) &cYour inventory is full!";
 
         private String addedItemToGts = "&e&l(!) &eSuccessfully listed item on GTS";
+        private String adminRemoveTrade = "&e&l(!) &eYou successfully removed the trade from the GTS";
 
         public Messages() {}
+
+        public String getAdminRemoveTrade() {
+            return this.adminRemoveTrade;
+        }
+
+        public String getInventoryFull() {
+            return this.inventoryFull;
+        }
 
         public String getOpeningUi() {
             return UtilChatColour.translateColourCodes('&', this.openingUi);

@@ -1,5 +1,6 @@
 package com.envyful.reforged.gts.forge.impl.trade.type;
 
+import com.envyful.api.concurrency.UtilConcurrency;
 import com.envyful.api.forge.chat.UtilChatColour;
 import com.envyful.api.forge.items.ItemBuilder;
 import com.envyful.api.gui.factory.GuiFactory;
@@ -38,6 +39,10 @@ public class ItemTrade extends ForgeTrade {
 
     @Override
     public boolean attemptPurchase(EnvyPlayer<?> player) {
+        if (this.removed) {
+            return false;
+        }
+
         return false; //TODO:
     }
 
@@ -45,24 +50,34 @@ public class ItemTrade extends ForgeTrade {
     public void collect(EnvyPlayer<?> player) {
         EntityPlayerMP parent = (EntityPlayerMP) player.getParent();
 
+        parent.closeScreen();
+
         if (!parent.inventory.addItemStackToInventory(this.item)) {
-            //TODO: send message
+            player.message(UtilChatColour.translateColourCodes('&',
+                                                               ReforgedGTSForge.getInstance().getLocale().getMessages().getInventoryFull()));
             return;
         }
 
-        //TODO: send message
+        ReforgedGTSForge.getInstance().getTradeManager().removeTrade(this);
+        UtilConcurrency.runAsync(this::delete);
     }
 
     @Override
     public void adminRemove(EnvyPlayer<?> admin) {
         EntityPlayerMP parent = (EntityPlayerMP) admin.getParent();
 
+        parent.closeScreen();
+
         if (!parent.inventory.addItemStackToInventory(this.item)) {
-            //TODO: send message
+            admin.message(UtilChatColour.translateColourCodes('&',
+                                                               ReforgedGTSForge.getInstance().getLocale().getMessages().getInventoryFull()));
             return;
         }
 
-        //TODO: send message
+        admin.message(UtilChatColour.translateColourCodes('&',
+                                                          ReforgedGTSForge.getInstance().getLocale().getMessages().getAdminRemoveTrade()));
+        ReforgedGTSForge.getInstance().getTradeManager().removeTrade(this);
+        UtilConcurrency.runAsync(this::delete);
     }
 
     @Override

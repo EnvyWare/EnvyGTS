@@ -1,5 +1,6 @@
 package com.envyful.reforged.gts.forge.impl.trade.type;
 
+import com.envyful.api.concurrency.UtilConcurrency;
 import com.envyful.api.forge.chat.UtilChatColour;
 import com.envyful.api.forge.items.ItemBuilder;
 import com.envyful.api.gui.factory.GuiFactory;
@@ -51,12 +52,24 @@ public class PokemonTrade extends ForgeTrade {
 
     @Override
     public void collect(EnvyPlayer<?> player) {
+        EntityPlayerMP parent = (EntityPlayerMP) player.getParent();
+
+        parent.closeScreen();
+
         UtilPixelmonPlayer.getParty((EntityPlayerMP) player.getParent()).add(this.pokemon);
+        ReforgedGTSForge.getInstance().getTradeManager().removeTrade(this);
+        UtilConcurrency.runAsync(this::delete);
     }
 
     @Override
     public void adminRemove(EnvyPlayer<?> admin) {
+        EntityPlayerMP parent = (EntityPlayerMP) admin.getParent();
+
+        parent.closeScreen();
+
         UtilPixelmonPlayer.getParty((EntityPlayerMP) admin.getParent()).add(this.pokemon);
+        ReforgedGTSForge.getInstance().getTradeManager().removeTrade(this);
+        UtilConcurrency.runAsync(this::delete);
     }
 
     @Override
