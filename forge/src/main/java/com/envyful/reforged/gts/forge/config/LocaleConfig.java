@@ -55,8 +55,13 @@ public class LocaleConfig extends AbstractYamlConfig {
         private String addedItemToGts = "&e&l(!) &eSuccessfully listed item on GTS";
         private String adminRemoveTrade = "&e&l(!) &eYou successfully removed the trade from the GTS";
         private String purchasedTrade = "&e&l(!) &eSuccessfully purchased trade from GTS";
+        private String removedOwnTrade = "&e&l(!) &eSuccessfully removed your trade";
 
         public Messages() {}
+
+        public String getRemovedOwnTrade() {
+            return this.removedOwnTrade;
+        }
 
         public String getInsufficientFunds() {
             return this.insufficientFunds;

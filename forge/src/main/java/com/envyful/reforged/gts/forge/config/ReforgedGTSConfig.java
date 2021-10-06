@@ -3,6 +3,7 @@ package com.envyful.reforged.gts.forge.config;
 import com.envyful.api.config.data.ConfigPath;
 import com.envyful.api.config.type.SQLDatabaseDetails;
 import com.envyful.api.config.yaml.AbstractYamlConfig;
+import com.envyful.api.gui.item.Displayable;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
 import org.spongepowered.configurate.objectmapping.ConfigSerializable;
@@ -24,6 +25,9 @@ public class ReforgedGTSConfig extends AbstractYamlConfig {
     private long maxTradeDurationSeconds = 172800;
     private double minPokemonPrice = 10_000.00;
     private boolean enableWebHooks = false;
+    private String ownerRemoveButton = "MIDDLE";
+
+    private transient Displayable.ClickType cachedOwnerRemoveButton = null;
 
     private Map<String, PokeSpecPricing> minPriceModifiers = ImmutableMap.of(
             "example", new PokeSpecPricing("shiny:1", new PokeSpecPricing.MathHandler("*", 2.0))
@@ -65,5 +69,13 @@ public class ReforgedGTSConfig extends AbstractYamlConfig {
 
     public boolean isEnableWebHooks() {
         return this.enableWebHooks;
+    }
+
+    public Displayable.ClickType getOwnerRemoveButton() {
+        if (this.cachedOwnerRemoveButton == null) {
+            this.cachedOwnerRemoveButton = Displayable.ClickType.valueOf(this.ownerRemoveButton);
+        }
+
+        return this.cachedOwnerRemoveButton;
     }
 }

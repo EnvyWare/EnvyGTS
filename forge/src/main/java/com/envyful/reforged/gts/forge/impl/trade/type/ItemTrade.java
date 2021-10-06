@@ -25,6 +25,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 
 public class ItemTrade extends ForgeTrade {
@@ -88,7 +89,13 @@ public class ItemTrade extends ForgeTrade {
                                    .addLore(this.formatLore(ReforgedGTSForge.getInstance().getLocale().getListingBelowDataLore()))
                                    .build())
                 .clickHandler((envyPlayer, clickType) -> {
-                    if (this.isOwner(envyPlayer)) {
+                    if (this.isOwner(envyPlayer) && Objects.equals(clickType,
+                                                                   ReforgedGTSForge.getInstance().getConfig().getOwnerRemoveButton())) {
+                        this.setRemoved();
+                        envyPlayer.message(UtilChatColour.translateColourCodes(
+                                '&',
+                                ReforgedGTSForge.getInstance().getLocale().getMessages().getRemovedOwnTrade()
+                        ));
                         return;
                     }
 
