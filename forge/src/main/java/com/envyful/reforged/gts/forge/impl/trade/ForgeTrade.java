@@ -8,8 +8,10 @@ import com.envyful.reforged.gts.api.Trade;
 import com.envyful.reforged.gts.api.gui.FilterType;
 import com.envyful.reforged.gts.api.sql.ReforgedGTSQueries;
 import com.envyful.reforged.gts.forge.ReforgedGTSForge;
+import com.envyful.reforged.gts.forge.config.ReforgedGTSConfig;
 import com.envyful.reforged.gts.forge.impl.trade.type.ItemTrade;
 import com.envyful.reforged.gts.forge.impl.trade.type.PokemonTrade;
+import com.pixelmonmod.pixelmon.Pixelmon;
 import com.pixelmonmod.pixelmon.storage.PlayerPartyStorage;
 import net.minecraft.entity.player.EntityPlayerMP;
 
@@ -81,6 +83,12 @@ public abstract class ForgeTrade implements Trade {
         }
 
         party.setMoney((int) (party.getMoney() - this.cost));
+
+        ReforgedGTSConfig config = ReforgedGTSForge.getInstance().getConfig();
+        PlayerPartyStorage target = Pixelmon.storageManager.getParty(this.owner);
+
+        target.changeMoney((int) ((target.getMoney() + this.cost) * (config.isEnableTax() ? config.getTaxRate() : 1.0)));
+
         this.updateOwner(player.getUuid(), player.getName());
         this.purchased = true;
         this.setRemoved();

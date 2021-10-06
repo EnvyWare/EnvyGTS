@@ -26,6 +26,8 @@ public class ReforgedGTSConfig extends AbstractYamlConfig {
     private double minPokemonPrice = 10_000.00;
     private boolean enableWebHooks = false;
     private String ownerRemoveButton = "MIDDLE";
+    private boolean enableTax = false;
+    private double taxRate = 0.95;
 
     private transient Displayable.ClickType cachedOwnerRemoveButton = null;
 
@@ -77,5 +79,13 @@ public class ReforgedGTSConfig extends AbstractYamlConfig {
         }
 
         return this.cachedOwnerRemoveButton;
+    }
+
+    public boolean isEnableTax() {
+        return this.enableTax;
+    }
+
+    public double getTaxRate() {
+        return this.taxRate;
     }
 }
