@@ -84,7 +84,8 @@ public class PokemonTrade extends ForgeTrade {
         int posY = pos / 9;
 
         pane.set(posX, posY, GuiFactory.displayableBuilder(ItemStack.class)
-                .itemStack(new ItemBuilder(UtilSprite.getPokemonElement(pokemon))
+                .itemStack(new ItemBuilder(UtilSprite.getPokemonElement(pokemon,
+                                                                        ReforgedGTSForge.getInstance().getGui().getSearchUIConfig().getSpriteConfig()))
                                    .addLore(this.formatLore(ReforgedGTSForge.getInstance().getLocale().getListingBelowDataLore()))
                                    .build())
                 .clickHandler((envyPlayer, clickType) -> {
@@ -124,7 +125,8 @@ public class PokemonTrade extends ForgeTrade {
         int posY = pos / 9;
 
         pane.set(posX, posY, GuiFactory.displayableBuilder(ItemStack.class)
-                .itemStack(new ItemBuilder(UtilSprite.getPokemonElement(pokemon))
+                .itemStack(new ItemBuilder(UtilSprite.getPokemonElement(pokemon,
+                                                                        ReforgedGTSForge.getInstance().getGui().getSearchUIConfig().getSpriteConfig()))
                                    .addLore(ReforgedGTSForge.getInstance().getLocale().getListingBelowExpiredOrClaimableLore().toArray(new String[0]))
                                    .build())
                 .clickHandler((envyPlayer, clickType) -> this.collect(envyPlayer))

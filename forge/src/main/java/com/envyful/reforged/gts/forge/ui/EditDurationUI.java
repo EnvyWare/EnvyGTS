@@ -85,7 +85,8 @@ public class EditDurationUI {
         int posY = config.getPokemonPosition() / 9;
 
         pane.set(posX, posY, GuiFactory.displayableBuilder(ItemStack.class)
-                .itemStack(UtilSprite.getPokemonElement(SelectPriceUI.getPokemon(player, page, position))).build());
+                .itemStack(UtilSprite.getPokemonElement(SelectPriceUI.getPokemon(player, page, position),
+                                                        config.getSpriteConfig())).build());
 
         GuiFactory.guiBuilder()
                 .setPlayerManager(ReforgedGTSForge.getInstance().getPlayerManager())

@@ -134,7 +134,7 @@ public class SelectPriceUI {
         int posY = config.getPokemonPosition() / 9;
 
         pane.set(posX, posY, GuiFactory.displayableBuilder(ItemStack.class)
-                .itemStack(UtilSprite.getPokemonElement(pokemon)).build());
+                .itemStack(UtilSprite.getPokemonElement(pokemon, config.getSpriteConfig())).build());
 
         GuiFactory.guiBuilder()
                 .setPlayerManager(ReforgedGTSForge.getInstance().getPlayerManager())

@@ -111,7 +111,8 @@ public class SelectPartyPokemonUI {
             } else {
                 final int slot = i;
                 pane.set(pos % 9, pos / 9, GuiFactory.displayableBuilder(ItemStack.class)
-                        .itemStack(UtilSprite.getPokemonElement(all[i]))
+                        .itemStack(UtilSprite.getPokemonElement(all[i],
+                                                                ReforgedGTSForge.getInstance().getGui().getPartyPokemonUIConfig().getSpriteConfig()))
                         .clickHandler((envyPlayer, clickType) -> {
                             GTSAttribute attribute = envyPlayer.getAttribute(ReforgedGTSForge.class);
                             attribute.setSelectedSlot(slot);
