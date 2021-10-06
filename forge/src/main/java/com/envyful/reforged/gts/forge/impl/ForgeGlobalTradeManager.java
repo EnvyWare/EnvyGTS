@@ -41,6 +41,11 @@ public abstract class ForgeGlobalTradeManager implements GlobalTradeManager {
     }
 
     @Override
+    public void removeTrade(Trade trade) {
+        this.activeTrades.remove(trade);
+    }
+
+    @Override
     public List<Trade> getAllTrades() {
         return Lists.newArrayList(this.activeTrades);
     }

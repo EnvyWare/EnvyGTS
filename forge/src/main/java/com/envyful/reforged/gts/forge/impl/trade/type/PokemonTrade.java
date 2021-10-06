@@ -5,7 +5,6 @@ import com.envyful.api.forge.chat.UtilChatColour;
 import com.envyful.api.forge.items.ItemBuilder;
 import com.envyful.api.gui.factory.GuiFactory;
 import com.envyful.api.gui.pane.Pane;
-import com.envyful.api.json.UtilGson;
 import com.envyful.api.player.EnvyPlayer;
 import com.envyful.api.reforged.pixelmon.sprite.UtilSprite;
 import com.envyful.api.reforged.pixelmon.storage.UtilPixelmonPlayer;
@@ -17,9 +16,12 @@ import com.envyful.reforged.gts.api.sql.ReforgedGTSQueries;
 import com.envyful.reforged.gts.forge.ReforgedGTSForge;
 import com.envyful.reforged.gts.forge.impl.trade.ForgeTrade;
 import com.google.common.collect.Lists;
+import com.pixelmonmod.pixelmon.Pixelmon;
 import com.pixelmonmod.pixelmon.api.pokemon.Pokemon;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.JsonToNBT;
+import net.minecraft.nbt.NBTException;
 import net.minecraft.nbt.NBTTagCompound;
 
 import java.sql.Connection;
@@ -199,7 +201,13 @@ public class PokemonTrade extends ForgeTrade {
 
         @Override
         public Builder contents(String contents) {
-            return this.contents(UtilGson.GSON.fromJson(contents, Pokemon.class));
+            try {
+                NBTTagCompound tagCompound = JsonToNBT.getTagFromJson(contents);
+                return this.contents(Pixelmon.pokemonFactory.create(tagCompound));
+            } catch (NBTException e) {
+                e.printStackTrace();
+            }
+            return this;
         }
 
         public Builder contents(Pokemon pokemon) {

@@ -5,7 +5,6 @@ import com.envyful.api.forge.chat.UtilChatColour;
 import com.envyful.api.forge.items.ItemBuilder;
 import com.envyful.api.gui.factory.GuiFactory;
 import com.envyful.api.gui.pane.Pane;
-import com.envyful.api.json.UtilGson;
 import com.envyful.api.player.EnvyPlayer;
 import com.envyful.api.time.UtilTimeFormat;
 import com.envyful.reforged.gts.api.Trade;
@@ -17,6 +16,8 @@ import com.envyful.reforged.gts.forge.impl.trade.ForgeTrade;
 import com.google.common.collect.Lists;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.JsonToNBT;
+import net.minecraft.nbt.NBTException;
 import net.minecraft.nbt.NBTTagCompound;
 
 import java.sql.Connection;
@@ -203,7 +204,13 @@ public class ItemTrade extends ForgeTrade {
 
         @Override
         public Builder contents(String contents) {
-            return this.contents(UtilGson.GSON.fromJson(contents, ItemStack.class));
+            try {
+                NBTTagCompound tagCompound = JsonToNBT.getTagFromJson(contents);
+                return this.contents(new ItemStack(tagCompound));
+            } catch (NBTException e) {
+                e.printStackTrace();
+            }
+            return this;
         }
 
         public Builder contents(ItemStack itemStack) {
