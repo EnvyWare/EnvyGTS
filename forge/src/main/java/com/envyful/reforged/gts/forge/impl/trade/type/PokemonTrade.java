@@ -85,6 +85,10 @@ public class PokemonTrade extends ForgeTrade {
                                    .addLore(this.formatLore(ReforgedGTSForge.getInstance().getLocale().getListingBelowDataLore()))
                                    .build())
                 .clickHandler((envyPlayer, clickType) -> {
+                    if (this.isOwner(envyPlayer)) {
+                        return;
+                    }
+
                     if (!this.attemptPurchase(envyPlayer)) {
                         ViewTradesUI.openUI((EnvyPlayer<EntityPlayerMP>) envyPlayer);
                         return;
