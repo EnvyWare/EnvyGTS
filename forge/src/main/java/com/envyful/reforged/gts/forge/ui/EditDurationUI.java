@@ -1,6 +1,7 @@
 package com.envyful.reforged.gts.forge.ui;
 
 import com.envyful.api.config.type.ConfigItem;
+import com.envyful.api.forge.chat.UtilChatColour;
 import com.envyful.api.forge.config.UtilConfigItem;
 import com.envyful.api.forge.items.ItemBuilder;
 import com.envyful.api.gui.factory.GuiFactory;
@@ -93,7 +94,7 @@ public class EditDurationUI {
                 .addPane(pane)
                 .setCloseConsumer(envyPlayer -> {})
                 .height(config.getGuiSettings().getHeight())
-                .title(config.getGuiSettings().getTitle())
+                .title(UtilChatColour.translateColourCodes('&', config.getGuiSettings().getTitle()))
                 .build().open(player);
     }
 

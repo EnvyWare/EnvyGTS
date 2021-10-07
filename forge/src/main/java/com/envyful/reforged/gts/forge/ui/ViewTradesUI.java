@@ -120,7 +120,7 @@ public class ViewTradesUI {
                 .addPane(pane)
                 .setCloseConsumer(envyPlayer -> {})
                 .height(config.getGuiSettings().getHeight())
-                .title(config.getGuiSettings().getTitle())
+                .title(UtilChatColour.translateColourCodes('&', config.getGuiSettings().getTitle()))
                 .build().open(player);
     }
 
