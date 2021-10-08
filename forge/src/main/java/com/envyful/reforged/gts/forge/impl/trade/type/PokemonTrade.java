@@ -43,9 +43,10 @@ public class PokemonTrade extends ForgeTrade {
     private final Pokemon pokemon;
     private final TradeData tradeData;
 
-    public PokemonTrade(UUID owner, String ownerName, double cost, long expiry, Pokemon pokemon, boolean removed,
+    public PokemonTrade(UUID owner, String ownerName, String originalOwnerName, double cost, long expiry,
+                        Pokemon pokemon, boolean removed,
                         boolean purchased) {
-        super(owner, ownerName, cost, expiry, removed, purchased);
+        super(owner, ownerName, cost, expiry, originalOwnerName, removed, purchased);
 
         this.pokemon = pokemon;
         this.tradeData = new TradeData(this.pokemon.getDisplayName(), expiry);
@@ -113,7 +114,9 @@ public class PokemonTrade extends ForgeTrade {
         for (String s : lore) {
             newLore.add(UtilChatColour.translateColourCodes('&', s
                     .replace("%cost%", this.cost + "")
-                    .replace("%duration%", UtilTimeFormat.getFormattedDuration((this.expiry - System.currentTimeMillis())))));
+                    .replace("%duration%", UtilTimeFormat.getFormattedDuration((this.expiry - System.currentTimeMillis())))
+                    .replace("%owner%", this.ownerName)
+                    .replace("%original_owner%", this.originalOwnerName)));
         }
 
         return newLore.toArray(new String[0]);
@@ -127,7 +130,7 @@ public class PokemonTrade extends ForgeTrade {
         pane.set(posX, posY, GuiFactory.displayableBuilder(ItemStack.class)
                 .itemStack(new ItemBuilder(UtilSprite.getPokemonElement(pokemon,
                                                                         ReforgedGTSForge.getInstance().getGui().getSearchUIConfig().getSpriteConfig()))
-                                   .addLore(ReforgedGTSForge.getInstance().getLocale().getListingBelowExpiredOrClaimableLore().toArray(new String[0]))
+                                   .addLore(this.formatLore(ReforgedGTSForge.getInstance().getLocale().getListingBelowExpiredOrClaimableLore()))
                                    .build())
                 .clickHandler((envyPlayer, clickType) -> this.collect(envyPlayer))
                 .build());
@@ -155,13 +158,14 @@ public class PokemonTrade extends ForgeTrade {
              PreparedStatement preparedStatement = connection.prepareStatement(ReforgedGTSQueries.ADD_TRADE)) {
             preparedStatement.setString(1, this.owner.toString());
             preparedStatement.setString(2, this.ownerName);
-            preparedStatement.setLong(3, this.expiry);
-            preparedStatement.setDouble(4, this.cost);
-            preparedStatement.setInt(5, this.removed ? 1 : 0);
-            preparedStatement.setString(6, "INSTANT_BUY");
-            preparedStatement.setString(7, "p");
-            preparedStatement.setString(8, this.getPokemonJson());
-            preparedStatement.setInt(9, 0);
+            preparedStatement.setString(3, this.originalOwnerName);
+            preparedStatement.setLong(4, this.expiry);
+            preparedStatement.setDouble(5, this.cost);
+            preparedStatement.setInt(6, this.removed ? 1 : 0);
+            preparedStatement.setString(7, "INSTANT_BUY");
+            preparedStatement.setString(8, "p");
+            preparedStatement.setString(9, this.getPokemonJson());
+            preparedStatement.setInt(10, 0);
 
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
@@ -199,6 +203,11 @@ public class PokemonTrade extends ForgeTrade {
         @Override
         public Builder ownerName(String ownerName) {
             return (Builder) super.ownerName(ownerName);
+        }
+
+        @Override
+        public Builder originalOwnerName(String originalOwnerName) {
+            return (Builder) super.originalOwnerName(originalOwnerName);
         }
 
         @Override
@@ -249,7 +258,9 @@ public class PokemonTrade extends ForgeTrade {
                 return null;
             }
 
-            return new PokemonTrade(this.owner, this.ownerName, this.cost, this.expiry, this.pokemon, this.removed,
+            return new PokemonTrade(this.owner, this.ownerName, this.originalOwnerName, this.cost, this.expiry,
+                                    this.pokemon,
+                                    this.removed,
                                     this.purchased);
         }
     }

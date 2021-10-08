@@ -31,17 +31,19 @@ public abstract class ForgeTrade implements Trade {
 
     protected final double cost;
     protected final long expiry;
+    protected final String originalOwnerName;
 
     protected UUID owner;
     protected String ownerName;
     protected boolean removed;
     protected boolean purchased;
 
-    protected ForgeTrade(UUID owner, String ownerName, double cost, long expiry, boolean removed, boolean purchased) {
+    protected ForgeTrade(UUID owner, String ownerName, double cost, long expiry, String originalOwnerName, boolean removed, boolean purchased) {
         this.owner = owner;
         this.ownerName = ownerName;
         this.cost = cost;
         this.expiry = expiry;
+        this.originalOwnerName = originalOwnerName;
         this.removed = removed;
         this.purchased = purchased;
     }
@@ -166,6 +168,7 @@ public abstract class ForgeTrade implements Trade {
 
         protected UUID owner = null;
         protected String ownerName = "";
+        protected String originalOwnerName = "";
         protected double cost = -1;
         protected long expiry = -1;
         protected boolean removed = false;
@@ -185,6 +188,11 @@ public abstract class ForgeTrade implements Trade {
 
         public Builder ownerName(String ownerName) {
             this.ownerName = ownerName;
+            return this;
+        }
+
+        public Builder originalOwnerName(String originalOwnerName) {
+            this.originalOwnerName = originalOwnerName;
             return this;
         }
 
