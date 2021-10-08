@@ -19,7 +19,9 @@ public class LocaleConfig extends AbstractYamlConfig {
     );
 
     private List<String> listingBelowExpiredOrClaimableLore = Lists.newArrayList(
-            "  "
+            "  ",
+            "&bOriginal Owner: %original_owner%",
+            "&bCost: &a$%cost%"
     );
 
     private Messages messages = new Messages();
