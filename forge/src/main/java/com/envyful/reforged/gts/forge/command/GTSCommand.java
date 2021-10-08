@@ -19,7 +19,7 @@ import net.minecraft.util.text.TextComponentString;
 )
 @Permissible("reforged.gts.command.gts")
 @SubCommands({
-        SellCommand.class, ReloadCommand.class
+        SellCommand.class, ReloadCommand.class, BroadcastsCommand.class
 })
 public class GTSCommand {
 

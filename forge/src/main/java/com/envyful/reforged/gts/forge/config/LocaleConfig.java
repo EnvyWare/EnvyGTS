@@ -59,6 +59,9 @@ public class LocaleConfig extends AbstractYamlConfig {
         private String purchasedTrade = "&e&l(!) &eSuccessfully purchased trade from GTS";
         private String removedOwnTrade = "&e&l(!) &eSuccessfully removed your trade";
 
+        private String toggledBroadcastsOn = "&e&l(!) &eToggled broadcasts &a&lON";
+        private String toggledBroadcastsOff = "&e&l(!) &eToggled broadcasts &c&lOFF";
+
         public Messages() {}
 
         public String getRemovedOwnTrade() {
@@ -103,6 +106,14 @@ public class LocaleConfig extends AbstractYamlConfig {
 
         public String getAddedItemToGts() {
             return this.addedItemToGts;
+        }
+
+        public String getToggledBroadcastsOn() {
+            return this.toggledBroadcastsOn;
+        }
+
+        public String getToggledBroadcastsOff() {
+            return this.toggledBroadcastsOff;
         }
     }
 }
