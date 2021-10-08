@@ -43,6 +43,11 @@ public class ItemTrade extends ForgeTrade {
     }
 
     @Override
+    public String getDisplayName() {
+        return this.item.getDisplayName();
+    }
+
+    @Override
     public void collect(EnvyPlayer<?> player) {
         EntityPlayerMP parent = (EntityPlayerMP) player.getParent();
 

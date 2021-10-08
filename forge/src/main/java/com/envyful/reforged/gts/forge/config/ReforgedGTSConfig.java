@@ -28,6 +28,7 @@ public class ReforgedGTSConfig extends AbstractYamlConfig {
     private String ownerRemoveButton = "RIGHT";
     private boolean enableTax = false;
     private double taxRate = 0.95;
+    private boolean enableNewListingBroadcasts = true;
 
     private transient Displayable.ClickType cachedOwnerRemoveButton = null;
 
@@ -87,5 +88,9 @@ public class ReforgedGTSConfig extends AbstractYamlConfig {
 
     public double getTaxRate() {
         return this.taxRate;
+    }
+
+    public boolean isEnableNewListingBroadcasts() {
+        return this.enableNewListingBroadcasts;
     }
 }

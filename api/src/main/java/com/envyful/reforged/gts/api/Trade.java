@@ -16,6 +16,14 @@ public interface Trade {
 
     /**
      *
+     * Gets the Trade's display name
+     *
+     * @return The display name
+     */
+    String getDisplayName();
+
+    /**
+     *
      * Method for checking if the given player is the owner (the person selling) of the item on GTS
      *
      * @param player The player to check

@@ -53,6 +53,11 @@ public class PokemonTrade extends ForgeTrade {
     }
 
     @Override
+    public String getDisplayName() {
+        return this.pokemon.getLocalizedName();
+    }
+
+    @Override
     public void collect(EnvyPlayer<?> player) {
         EntityPlayerMP parent = (EntityPlayerMP) player.getParent();
 

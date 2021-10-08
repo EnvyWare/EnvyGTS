@@ -62,6 +62,13 @@ public class LocaleConfig extends AbstractYamlConfig {
         private String toggledBroadcastsOn = "&e&l(!) &eToggled broadcasts &a&lON";
         private String toggledBroadcastsOff = "&e&l(!) &eToggled broadcasts &c&lOFF";
 
+        private List<String> createTradeBroadcast = Lists.newArrayList(
+                " ",
+                "&a&lREFORGED GTS",
+                "&e%player%&7 added a new GTS listing for %name%",
+                " "
+        );
+
         public Messages() {}
 
         public String getRemovedOwnTrade() {
@@ -114,6 +121,10 @@ public class LocaleConfig extends AbstractYamlConfig {
 
         public String getToggledBroadcastsOff() {
             return this.toggledBroadcastsOff;
+        }
+
+        public List<String> getCreateTradeBroadcast() {
+            return this.createTradeBroadcast;
         }
     }
 }
