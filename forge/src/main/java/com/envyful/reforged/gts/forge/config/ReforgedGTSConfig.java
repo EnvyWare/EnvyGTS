@@ -25,7 +25,7 @@ public class ReforgedGTSConfig extends AbstractYamlConfig {
     private long maxTradeDurationSeconds = 172800;
     private double minPokemonPrice = 10_000.00;
     private boolean enableWebHooks = false;
-    private String ownerRemoveButton = "MIDDLE";
+    private String ownerRemoveButton = "RIGHT";
     private boolean enableTax = false;
     private double taxRate = 0.95;
 
