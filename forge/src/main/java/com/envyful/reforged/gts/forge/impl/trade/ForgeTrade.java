@@ -12,6 +12,7 @@ import com.envyful.reforged.gts.forge.config.ReforgedGTSConfig;
 import com.envyful.reforged.gts.forge.impl.trade.type.ItemTrade;
 import com.envyful.reforged.gts.forge.impl.trade.type.PokemonTrade;
 import com.pixelmonmod.pixelmon.Pixelmon;
+import com.pixelmonmod.pixelmon.api.economy.IPixelmonBankAccount;
 import com.pixelmonmod.pixelmon.storage.PlayerPartyStorage;
 import net.minecraft.entity.player.EntityPlayerMP;
 
@@ -74,7 +75,10 @@ public abstract class ForgeTrade implements Trade {
         EntityPlayerMP parent = (EntityPlayerMP) player.getParent();
         PlayerPartyStorage party = UtilPixelmonPlayer.getParty(parent);
 
-        if (party.getMoney() < this.cost) {
+
+        IPixelmonBankAccount iPixelmonBankAccount = UtilPixelmonPlayer.getBank(parent);
+
+        if (iPixelmonBankAccount.getMoney() < this.cost) {
             player.message(UtilChatColour.translateColourCodes(
                     '&',
                     ReforgedGTSForge.getInstance().getLocale().getMessages().getInsufficientFunds()
@@ -113,12 +117,12 @@ public abstract class ForgeTrade implements Trade {
                 preparedStatement.setDouble(5, this.cost);
 
                 if (this instanceof ItemTrade) {
-                    preparedStatement.setString(5, "i");
+                    preparedStatement.setString(6, "i");
                 } else {
-                    preparedStatement.setString(5, "p");
+                    preparedStatement.setString(6, "p");
                 }
 
-                preparedStatement.setString(6, "INSTANT_BUY");
+                preparedStatement.setString(7, "INSTANT_BUY");
                 preparedStatement.executeUpdate();
             } catch (SQLException e) {
                 e.printStackTrace();
