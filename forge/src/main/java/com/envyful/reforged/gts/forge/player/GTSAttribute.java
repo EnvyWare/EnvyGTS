@@ -76,7 +76,7 @@ public class GTSAttribute extends AbstractForgeAttribute<ReforgedGTSForge> {
              PreparedStatement preparedStatement = connection.prepareStatement(ReforgedGTSQueries.GET_ALL_PLAYER);
              PreparedStatement settingsStatement = connection.prepareStatement(ReforgedGTSQueries.GET_PLAYER_SETTINGS)) {
             preparedStatement.setString(1, this.parent.getUuid().toString());
-            preparedStatement.setString(1, this.parent.getUuid().toString());
+            settingsStatement.setString(1, this.parent.getUuid().toString());
 
             ResultSet resultSet = preparedStatement.executeQuery();
 
@@ -90,7 +90,7 @@ public class GTSAttribute extends AbstractForgeAttribute<ReforgedGTSForge> {
                 return;
             }
 
-            this.settings = UtilGson.GSON.fromJson(resultSet.getString("settings"), PlayerSettings.class);
+            this.settings = UtilGson.GSON.fromJson(settingsSet.getString("settings"), PlayerSettings.class);
         } catch (SQLException e) {
             e.printStackTrace();
         }
