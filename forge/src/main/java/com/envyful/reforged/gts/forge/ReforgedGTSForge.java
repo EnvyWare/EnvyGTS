@@ -79,8 +79,10 @@ public class ReforgedGTSForge {
     private void createTables() {
         try (Connection connection = this.database.getConnection();
              PreparedStatement preparedStatement =
-                     connection.prepareStatement(ReforgedGTSQueries.CREATE_MAIN_TABLE)) {
+                     connection.prepareStatement(ReforgedGTSQueries.CREATE_MAIN_TABLE);
+             PreparedStatement settingsStatement = connection.prepareStatement(ReforgedGTSQueries.CREATE_SETTINGS_TABLE)) {
             preparedStatement.executeUpdate();
+            settingsStatement.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
         }
