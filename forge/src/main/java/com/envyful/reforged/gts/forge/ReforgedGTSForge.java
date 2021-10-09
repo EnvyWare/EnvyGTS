@@ -16,6 +16,7 @@ import com.envyful.reforged.gts.forge.config.LocaleConfig;
 import com.envyful.reforged.gts.forge.config.ReforgedGTSConfig;
 import com.envyful.reforged.gts.forge.config.discord.DiscordEventManager;
 import com.envyful.reforged.gts.forge.impl.storage.SQLGlobalTradeManager;
+import com.envyful.reforged.gts.forge.listener.TradeCreateListener;
 import com.envyful.reforged.gts.forge.player.GTSAttribute;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
@@ -92,6 +93,8 @@ public class ReforgedGTSForge {
     public void onServerStarting(FMLServerStartingEvent event) {
         this.playerManager.registerAttribute(this, GTSAttribute.class);
         this.commandFactory.registerCommand(event.getServer(), new GTSCommand());
+
+        new TradeCreateListener(this);
     }
 
     public static ReforgedGTSForge getInstance() {
