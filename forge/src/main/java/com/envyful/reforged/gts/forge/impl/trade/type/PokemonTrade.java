@@ -24,7 +24,6 @@ import com.pixelmonmod.pixelmon.enums.EnumSpecies;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.JsonToNBT;
-import net.minecraft.nbt.NBTException;
 import net.minecraft.nbt.NBTTagCompound;
 
 import java.sql.Connection;
@@ -244,7 +243,7 @@ public class PokemonTrade extends ForgeTrade {
             try {
                 NBTTagCompound tagCompound = JsonToNBT.getTagFromJson(contents);
                 return this.contents(Pixelmon.pokemonFactory.create(tagCompound));
-            } catch (NBTException e) {
+            } catch (Exception e) {
                 e.printStackTrace();
                 this.contents(Pixelmon.pokemonFactory.create(EnumSpecies.Magikarp));
             }
