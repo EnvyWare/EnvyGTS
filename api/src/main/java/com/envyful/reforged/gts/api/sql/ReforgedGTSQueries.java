@@ -52,9 +52,9 @@ public class ReforgedGTSQueries {
             "SET owner = ?, ownerName = ? " +
             "WHERE owner = ? AND expiry = ? AND cost = ? AND content_type = ? AND type = ?;";
 
-    public static final String GET_PLAYER_SETTINGS = "SELECT settings FROM `reforged_gts_settings` WHERE uuid = ?;";
+    public static final String GET_PLAYER_SETTINGS = "SELECT settings FROM `reforged_gts_settings` WHERE owner = ?;";
 
-    public static final String UPDATE_OR_CREATE_SETTINGS = "INSERT INTO `reforged_gts_settings`(uuid, settings) " +
+    public static final String UPDATE_OR_CREATE_SETTINGS = "INSERT INTO `reforged_gts_settings`(owner, settings) " +
             "VALUES (?, ?) ON DUPLICATE KEY UPDATE settings = VALUES(`settings`);";
 
 }
