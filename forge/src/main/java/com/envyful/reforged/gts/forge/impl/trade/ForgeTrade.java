@@ -75,9 +75,6 @@ public abstract class ForgeTrade implements Trade {
         }
 
         EntityPlayerMP parent = (EntityPlayerMP) player.getParent();
-        PlayerPartyStorage party = UtilPixelmonPlayer.getParty(parent);
-
-
         IPixelmonBankAccount iPixelmonBankAccount = UtilPixelmonPlayer.getBank(parent);
 
         if (iPixelmonBankAccount.getMoney() < this.cost) {
@@ -88,7 +85,7 @@ public abstract class ForgeTrade implements Trade {
             return false;
         }
 
-        party.setMoney((int) (party.getMoney() - this.cost));
+        iPixelmonBankAccount.setMoney((int) (iPixelmonBankAccount.getMoney() - this.cost));
 
         ReforgedGTSConfig config = ReforgedGTSForge.getInstance().getConfig();
         PlayerPartyStorage target = Pixelmon.storageManager.getParty(this.owner);
