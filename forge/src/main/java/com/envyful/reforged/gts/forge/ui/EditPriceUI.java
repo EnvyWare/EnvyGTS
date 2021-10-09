@@ -71,10 +71,11 @@ public class EditPriceUI {
                      GuiFactory.displayableBuilder(ItemStack.class)
                              .itemStack(UtilConfigItem.fromConfigItem(priceButton.getConfigItem()))
                              .clickHandler((envyPlayer, clickType) -> {
-                                 attribute.setCurrentPrice(Math.max(
+                                 attribute.setCurrentPrice(Math.min(ReforgedGTSForge.getInstance().getConfig().getMaxPrice(),
+                                                                    Math.max(
                                          attribute.getCurrentMinPrice(),
                                          attribute.getCurrentPrice() + priceButton.getPriceModifier()
-                                 ));
+                                 )));
                                  openUI(player, page, position);
                              })
                              .build()

@@ -29,6 +29,8 @@ public class ReforgedGTSConfig extends AbstractYamlConfig {
     private boolean enableTax = false;
     private double taxRate = 0.95;
     private boolean enableNewListingBroadcasts = true;
+    private int maxListingsPerUser = 5;
+    private double maxPrice = 10_000_000;
 
     private transient Displayable.ClickType cachedOwnerRemoveButton = null;
 
@@ -92,5 +94,13 @@ public class ReforgedGTSConfig extends AbstractYamlConfig {
 
     public boolean isEnableNewListingBroadcasts() {
         return this.enableNewListingBroadcasts;
+    }
+
+    public int getMaxListingsPerUser() {
+        return this.maxListingsPerUser;
+    }
+
+    public double getMaxPrice() {
+        return this.maxPrice;
     }
 }

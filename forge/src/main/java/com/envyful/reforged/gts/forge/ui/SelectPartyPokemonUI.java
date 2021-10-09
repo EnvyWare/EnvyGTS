@@ -10,15 +10,19 @@ import com.envyful.api.gui.pane.Pane;
 import com.envyful.api.player.EnvyPlayer;
 import com.envyful.api.reforged.pixelmon.sprite.UtilSprite;
 import com.envyful.api.reforged.pixelmon.storage.UtilPixelmonPlayer;
+import com.envyful.reforged.gts.api.Trade;
 import com.envyful.reforged.gts.forge.ReforgedGTSForge;
 import com.envyful.reforged.gts.forge.config.GuiConfig;
 import com.envyful.reforged.gts.forge.player.GTSAttribute;
 import com.envyful.reforged.gts.forge.util.UtilPokemonPrice;
+import com.google.common.collect.Lists;
 import com.pixelmonmod.pixelmon.api.pokemon.Pokemon;
 import com.pixelmonmod.pixelmon.storage.PlayerPartyStorage;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Enchantments;
 import net.minecraft.item.ItemStack;
+
+import java.util.List;
 
 public class SelectPartyPokemonUI {
 
@@ -62,28 +66,41 @@ public class SelectPartyPokemonUI {
         if (config.getConfirmItem().isEnabled()) {
             pane.set(config.getConfirmItem().getXPos(), config.getConfirmItem().getYPos(),
                      GuiFactory.displayableBuilder(ItemStack.class)
-                    .itemStack(UtilConfigItem.fromConfigItem(config.getConfirmItem()))
-                    .clickHandler((envyPlayer, clickType) -> {
-                        GTSAttribute attribute = envyPlayer.getAttribute(ReforgedGTSForge.class);
+                             .itemStack(UtilConfigItem.fromConfigItem(config.getConfirmItem()))
+                             .clickHandler((envyPlayer, clickType) -> {
+                                 GTSAttribute attribute = envyPlayer.getAttribute(ReforgedGTSForge.class);
 
-                        if (attribute.getSelectedSlot() == -1) {
-                            return;
-                        }
+                                 List<Trade> trades = Lists.newArrayList(attribute.getOwnedTrades());
 
-                        PlayerPartyStorage party = UtilPixelmonPlayer.getParty(player.getParent());
+                                 trades.removeIf(trade -> trade.hasExpired() || trade.wasPurchased());
 
-                        if (party.countAblePokemon() <= 1) {
-                            return;
-                        }
+                                 if (trades.size() >= ReforgedGTSForge.getInstance().getConfig().getMaxListingsPerUser()) {
+                                     player.message(UtilChatColour.translateColourCodes(
+                                             '&',
+                                             ReforgedGTSForge.getInstance().getLocale().getMessages().getMaxTradesAlreadyReached()
+                                     ));
+                                     return;
+                                 }
 
-                        double price = UtilPokemonPrice.getMinPrice(party.get(attribute.getSelectedSlot()));
+                                 if (attribute.getSelectedSlot() == -1) {
+                                     return;
+                                 }
 
-                        attribute.setCurrentPrice(price);
-                        attribute.setCurrentMinPrice(price);
-                        attribute.setCurrentDuration(ReforgedGTSForge.getInstance().getConfig().getDefaultTradeDurationSeconds());
-                        SelectPriceUI.openUI(player, attribute.getSelectedSlot());
-                    })
-                    .build());
+                                 PlayerPartyStorage party = UtilPixelmonPlayer.getParty(player.getParent());
+
+                                 if (party.countAblePokemon() <= 1) {
+                                     return;
+                                 }
+
+                                 double price = UtilPokemonPrice.getMinPrice(party.get(attribute.getSelectedSlot()));
+
+                                 attribute.setCurrentPrice(price);
+                                 attribute.setCurrentMinPrice(price);
+                                 attribute.setCurrentDuration(ReforgedGTSForge.getInstance().getConfig().getDefaultTradeDurationSeconds());
+                                 SelectPriceUI.openUI(player, attribute.getSelectedSlot());
+                             })
+                             .build()
+            );
         }
 
         GuiFactory.guiBuilder()

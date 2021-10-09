@@ -53,6 +53,7 @@ public class LocaleConfig extends AbstractYamlConfig {
         private String priceMustBeMoreThanOne = "&c&l(!) &cPrice cannot be less than $1";
         private String inventoryFull = "&c&l(!) &cYour inventory is full!";
         private String insufficientFunds = "&c&l(!) &cYou don't have enough money!";
+        private String maxTradesAlreadyReached = "&c&l(!) &cYou cannot add anymore trades to the GTS";
 
         private String addedItemToGts = "&e&l(!) &eSuccessfully listed item on GTS";
         private String adminRemoveTrade = "&e&l(!) &eYou successfully removed the trade from the GTS";
@@ -125,6 +126,10 @@ public class LocaleConfig extends AbstractYamlConfig {
 
         public List<String> getCreateTradeBroadcast() {
             return this.createTradeBroadcast;
+        }
+
+        public String getMaxTradesAlreadyReached() {
+            return this.maxTradesAlreadyReached;
         }
     }
 }
