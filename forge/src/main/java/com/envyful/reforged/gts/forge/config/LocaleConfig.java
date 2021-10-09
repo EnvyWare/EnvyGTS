@@ -14,7 +14,7 @@ public class LocaleConfig extends AbstractYamlConfig {
 
     private List<String> listingBelowDataLore = Lists.newArrayList(
             "  ",
-            "&bSeller: %player%",
+            "&bSeller: %owner%",
             "&bCost: &a$%cost%",
             "&bRemaining Time: &e%duration%"
     );
