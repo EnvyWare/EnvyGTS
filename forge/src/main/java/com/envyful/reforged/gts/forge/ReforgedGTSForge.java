@@ -9,6 +9,7 @@ import com.envyful.api.forge.gui.factory.ForgeGuiFactory;
 import com.envyful.api.forge.player.ForgePlayerManager;
 import com.envyful.api.gui.factory.GuiFactory;
 import com.envyful.reforged.gts.api.GlobalTradeManager;
+import com.envyful.reforged.gts.api.TradeManager;
 import com.envyful.reforged.gts.api.sql.ReforgedGTSQueries;
 import com.envyful.reforged.gts.forge.command.GTSCommand;
 import com.envyful.reforged.gts.forge.config.GuiConfig;
@@ -64,6 +65,7 @@ public class ReforgedGTSForge {
             this.database = new SimpleHikariDatabase(this.config.getDatabaseDetails());
             this.createTables();
             this.tradeManager = new SQLGlobalTradeManager(this);
+            TradeManager.setPlatformTradeManager(this.tradeManager);
         });
     }
 

@@ -25,7 +25,6 @@ public class DiscordTradeCreateListener extends LazyListener {
             return;
         }
 
-        String jsonObject = publishHandler.getWebHook().toJson().toString();
-        jsonObject.replace("%owner%", "");
+
     }
 }
