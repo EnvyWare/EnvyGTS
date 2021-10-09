@@ -14,13 +14,14 @@ public class LocaleConfig extends AbstractYamlConfig {
 
     private List<String> listingBelowDataLore = Lists.newArrayList(
             "  ",
+            "&bSeller: %player%",
             "&bCost: &a$%cost%",
             "&bRemaining Time: &e%duration%"
     );
 
     private List<String> listingBelowExpiredOrClaimableLore = Lists.newArrayList(
             "  ",
-            "&bOriginal Owner: %original_owner%",
+            "&bSeller: %original_owner%",
             "&bCost: &a$%cost%"
     );
 
