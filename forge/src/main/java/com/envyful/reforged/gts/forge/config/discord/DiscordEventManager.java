@@ -30,4 +30,8 @@ public class DiscordEventManager {
 
         return new DiscordEvent(webHook);
     }
+
+    public static DiscordEvent getPublishHandler() {
+        return publishHandler;
+    }
 }
