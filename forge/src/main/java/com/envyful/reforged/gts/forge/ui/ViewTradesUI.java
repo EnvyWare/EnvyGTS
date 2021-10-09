@@ -112,6 +112,7 @@ public class ViewTradesUI {
             }
 
             Trade trade = allTrades.get(i);
+            System.out.println("TRADE: " + trade.wasRemoved());
             trade.display(i % 45, pane);
         }
 

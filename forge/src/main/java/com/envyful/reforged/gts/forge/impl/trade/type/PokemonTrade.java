@@ -15,6 +15,7 @@ import com.envyful.reforged.gts.api.gui.SortType;
 import com.envyful.reforged.gts.api.sql.ReforgedGTSQueries;
 import com.envyful.reforged.gts.forge.ReforgedGTSForge;
 import com.envyful.reforged.gts.forge.impl.trade.ForgeTrade;
+import com.envyful.reforged.gts.forge.player.GTSAttribute;
 import com.envyful.reforged.gts.forge.ui.ViewTradesUI;
 import com.google.common.collect.Lists;
 import com.pixelmonmod.pixelmon.Pixelmon;
@@ -60,9 +61,11 @@ public class PokemonTrade extends ForgeTrade {
     @Override
     public void collect(EnvyPlayer<?> player) {
         EntityPlayerMP parent = (EntityPlayerMP) player.getParent();
+        GTSAttribute attribute = player.getAttribute(ReforgedGTSForge.class);
 
         parent.closeScreen();
 
+        attribute.getOwnedTrades().remove(this);
         UtilPixelmonPlayer.getParty((EntityPlayerMP) player.getParent()).add(this.pokemon);
         ReforgedGTSForge.getInstance().getTradeManager().removeTrade(this);
         UtilConcurrency.runAsync(this::delete);
