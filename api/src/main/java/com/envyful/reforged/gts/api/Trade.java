@@ -46,9 +46,17 @@ public interface Trade {
      *
      * Checks if the item has gone past the expiry date (and hence moved to the collection area)
      *
-     * @return
+     * @return If the item expired
      */
     boolean hasExpired();
+
+    /**
+     *
+     * If the item was removed by the owner
+     *
+     * @return If the item was removed
+     */
+    boolean wasRemoved();
 
     /**
      *

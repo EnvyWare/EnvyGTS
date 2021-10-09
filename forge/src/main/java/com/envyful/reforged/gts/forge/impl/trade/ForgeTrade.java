@@ -64,6 +64,11 @@ public abstract class ForgeTrade implements Trade {
     }
 
     @Override
+    public boolean wasRemoved() {
+        return this.removed;
+    }
+
+    @Override
     public boolean filter(EnvyPlayer<?> filterer, FilterType filterType) {
         return filterType.isAllowed(filterer, this);
     }

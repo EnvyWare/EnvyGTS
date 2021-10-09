@@ -102,6 +102,7 @@ public class PokemonTrade extends ForgeTrade {
                                 '&',
                                 ReforgedGTSForge.getInstance().getLocale().getMessages().getRemovedOwnTrade()
                         ));
+                        ((EntityPlayerMP) envyPlayer.getParent()).closeScreen();
                         return;
                     }
 

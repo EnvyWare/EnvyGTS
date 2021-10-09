@@ -103,6 +103,7 @@ public class ItemTrade extends ForgeTrade {
                                 '&',
                                 ReforgedGTSForge.getInstance().getLocale().getMessages().getRemovedOwnTrade()
                         ));
+                        ((EntityPlayerMP) envyPlayer.getParent()).closeScreen();
                         return;
                     }
 
