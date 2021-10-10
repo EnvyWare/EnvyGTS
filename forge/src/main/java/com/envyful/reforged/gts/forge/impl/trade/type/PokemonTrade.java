@@ -24,6 +24,11 @@ import com.envyful.reforged.gts.forge.ui.ViewTradesUI;
 import com.google.common.collect.Lists;
 import com.pixelmonmod.pixelmon.Pixelmon;
 import com.pixelmonmod.pixelmon.api.pokemon.Pokemon;
+import com.pixelmonmod.pixelmon.entities.pixelmon.stats.ExtraStats;
+import com.pixelmonmod.pixelmon.entities.pixelmon.stats.IVStore;
+import com.pixelmonmod.pixelmon.entities.pixelmon.stats.StatsType;
+import com.pixelmonmod.pixelmon.entities.pixelmon.stats.extraStats.LakeTrioStats;
+import com.pixelmonmod.pixelmon.entities.pixelmon.stats.extraStats.MewStats;
 import com.pixelmonmod.pixelmon.enums.EnumSpecies;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
@@ -206,7 +211,73 @@ public class PokemonTrade extends ForgeTrade {
 
     @Override
     public DiscordWebHook getWebHook(DiscordEvent event) {
-        return null;
+        if (!event.isPokemonEnabled()) {
+            return null;
+        }
+
+        IVStore iVs = pokemon.getIVs();
+        float ivHP = iVs.get(StatsType.HP);
+        float ivAtk = iVs.get(StatsType.Attack);
+        float ivDef = iVs.get(StatsType.Defence);
+        float ivSpeed = iVs.get(StatsType.Speed);
+        float ivSAtk = iVs.get(StatsType.SpecialAttack);
+        float ivSDef = iVs.get(StatsType.SpecialDefence);
+        int percentage = Math.round(((ivHP + ivDef + ivAtk + ivSpeed + ivSAtk + ivSDef) / 186f) * 100);
+        float evHP = pokemon.getEVs().get(StatsType.HP);
+        float evAtk = pokemon.getEVs().get(StatsType.Attack);
+        float evDef = pokemon.getEVs().get(StatsType.Defence);
+        float evSpeed = pokemon.getEVs().get(StatsType.Speed);
+        float evSAtk = pokemon.getEVs().get(StatsType.SpecialAttack);
+        float evSDef = pokemon.getEVs().get(StatsType.SpecialDefence);
+        ExtraStats extraStats = pokemon.getExtraStats();
+
+        String newJSON = event.getPokemonJSON()
+                .replace("%level%", pokemon.getLevel() + "")
+                .replace("%gender%", pokemon.getGender().getLocalizedName())
+                .replace("%breedable%", pokemon.hasSpecFlag("unbreedable") ? "True" : "False")
+                .replace("%nature%", pokemon.getNature().getLocalizedName())
+                .replace("%ability%", pokemon.getAbility().getLocalizedName())
+                .replace("%untradeable%", pokemon.hasSpecFlag("untradeable") ? "True" : "False")
+                .replace("%iv_percentage%", percentage + "")
+                .replace("%iv_hp%", ((int) ivHP) + "")
+                .replace("%iv_attack%", ((int) ivAtk) + "")
+                .replace("%iv_defence%", ((int) ivDef) + "")
+                .replace("%iv_spattack%", ((int) ivSAtk) + "")
+                .replace("%iv_spdefence%", ((int) ivSDef) + "")
+                .replace("%iv_speed%", ((int) ivSpeed) + "")
+                .replace("%ev_hp%", ((int) evHP) + "")
+                .replace("%ev_attack%", ((int) evAtk) + "")
+                .replace("%ev_defence%", ((int) evDef) + "")
+                .replace("%ev_spattack%", ((int) evSAtk) + "")
+                .replace("%ev_spdefence%", ((int) evSDef) + "")
+                .replace("%ev_speed%", ((int) evSpeed) + "")
+                .replace("%move_1%", getMove(pokemon, 0))
+                .replace("%move_2%", getMove(pokemon, 1))
+                .replace("%move_3%", getMove(pokemon, 2))
+                .replace("%move_4%", getMove(pokemon, 3))
+                .replace("%mew_cloned%", extraStats instanceof MewStats ? (((MewStats) extraStats).numCloned + "") : "")
+                .replace("%trio_gemmed%", extraStats instanceof LakeTrioStats ? (((LakeTrioStats) extraStats).numEnchanted + "") : "")
+                .replace("%shiny%", pokemon.isShiny() ? "True" : "False")
+                .replace("%form%", pokemon.getFormEnum().getLocalizedName())
+                .replace("%size%", pokemon.getGrowth().getLocalizedName());
+
+        return DiscordWebHook.fromJson(newJSON);
+    }
+
+    private String getMove(Pokemon pokemon, int pos) {
+        if (pokemon.getMoveset() == null) {
+            return "";
+        }
+
+        if (pokemon.getMoveset().attacks.length <= pos) {
+            return "";
+        }
+
+        if (pokemon.getMoveset().attacks[pos] == null) {
+            return "";
+        }
+
+        return pokemon.getMoveset().attacks[pos].getActualMove().getLocalizedName();
     }
 
     public static class Builder extends ForgeTrade.Builder {
