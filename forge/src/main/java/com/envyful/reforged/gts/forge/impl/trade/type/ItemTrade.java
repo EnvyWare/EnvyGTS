@@ -59,15 +59,15 @@ public class ItemTrade extends ForgeTrade {
         EntityPlayerMP parent = (EntityPlayerMP) player.getParent();
         GTSAttribute attribute = player.getAttribute(ReforgedGTSForge.class);
 
-        parent.closeScreen();
-
-        if (returnGui != null) {
-            returnGui.accept(player);
-        }
-
         if (!parent.inventory.addItemStackToInventory(this.item)) {
             player.message(UtilChatColour.translateColourCodes('&',
                                                                ReforgedGTSForge.getInstance().getLocale().getMessages().getInventoryFull()));
+
+            if (returnGui == null) {
+                parent.closeScreen();
+            } else {
+                returnGui.accept(player);
+            }
             return;
         }
 
@@ -76,6 +76,12 @@ public class ItemTrade extends ForgeTrade {
         attribute.getOwnedTrades().remove(this);
         ReforgedGTSForge.getInstance().getTradeManager().removeTrade(this);
         UtilConcurrency.runAsync(this::delete);
+
+        if (returnGui == null) {
+            parent.closeScreen();
+        } else {
+            returnGui.accept(player);
+        }
     }
 
     @Override

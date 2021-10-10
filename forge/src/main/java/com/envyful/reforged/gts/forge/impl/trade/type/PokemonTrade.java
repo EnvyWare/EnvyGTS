@@ -75,16 +75,16 @@ public class PokemonTrade extends ForgeTrade {
 
         MinecraftForge.EVENT_BUS.post(new TradeCollectEvent((EnvyPlayer<EntityPlayerMP>) player, this));
 
-        parent.closeScreen();
-
-        if (returnGui != null) {
-            returnGui.accept(player);
-        }
-
         attribute.getOwnedTrades().remove(this);
         UtilPixelmonPlayer.getParty((EntityPlayerMP) player.getParent()).add(this.pokemon);
         ReforgedGTSForge.getInstance().getTradeManager().removeTrade(this);
         UtilConcurrency.runAsync(this::delete);
+
+        if (returnGui == null) {
+            parent.closeScreen();
+        } else {
+            returnGui.accept(player);
+        }
     }
 
     @Override
