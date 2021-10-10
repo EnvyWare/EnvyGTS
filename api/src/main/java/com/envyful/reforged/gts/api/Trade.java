@@ -1,7 +1,9 @@
 package com.envyful.reforged.gts.api;
 
+import com.envyful.api.discord.DiscordWebHook;
 import com.envyful.api.gui.pane.Pane;
 import com.envyful.api.player.EnvyPlayer;
+import com.envyful.reforged.gts.api.discord.DiscordEvent;
 import com.envyful.reforged.gts.api.gui.FilterType;
 import com.envyful.reforged.gts.api.gui.SortType;
 
@@ -153,5 +155,13 @@ public interface Trade {
      * @return The TradeData representation
      */
     TradeData toData();
+
+    /**
+     *
+     * Gets the webhook for this event
+     *
+     * @return The webhook for this event
+     */
+    DiscordWebHook getWebHook(DiscordEvent event);
 
 }
