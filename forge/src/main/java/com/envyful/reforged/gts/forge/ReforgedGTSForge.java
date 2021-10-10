@@ -60,10 +60,6 @@ public class ReforgedGTSForge {
 
         this.loadConfig();
 
-        if (this.config.isEnableWebHooks()) {
-            DiscordEventManager.init();
-        }
-
         UtilConcurrency.runAsync(() -> {
             this.database = new SimpleHikariDatabase(this.config.getDatabaseDetails());
             this.createTables();
@@ -79,6 +75,10 @@ public class ReforgedGTSForge {
             this.locale = YamlConfigFactory.getInstance(LocaleConfig.class);
         } catch (IOException e) {
             e.printStackTrace();
+        }
+
+        if (this.config.isEnableWebHooks()) {
+            DiscordEventManager.init();
         }
     }
 
