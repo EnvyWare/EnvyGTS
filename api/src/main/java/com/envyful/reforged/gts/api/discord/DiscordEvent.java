@@ -1,4 +1,4 @@
-package com.envyful.reforged.gts.forge.config.discord;
+package com.envyful.reforged.gts.api.discord;
 
 public class DiscordEvent {
 

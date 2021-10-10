@@ -1,4 +1,4 @@
-package com.envyful.reforged.gts.forge.config.discord;
+package com.envyful.reforged.gts.api.discord;
 
 import java.io.File;
 import java.io.IOException;

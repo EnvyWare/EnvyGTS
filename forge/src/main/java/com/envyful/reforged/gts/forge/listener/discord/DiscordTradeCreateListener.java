@@ -1,9 +1,9 @@
 package com.envyful.reforged.gts.forge.listener.discord;
 
 import com.envyful.api.forge.listener.LazyListener;
+import com.envyful.reforged.gts.api.discord.DiscordEvent;
+import com.envyful.reforged.gts.api.discord.DiscordEventManager;
 import com.envyful.reforged.gts.forge.ReforgedGTSForge;
-import com.envyful.reforged.gts.forge.config.discord.DiscordEvent;
-import com.envyful.reforged.gts.forge.config.discord.DiscordEventManager;
 import com.envyful.reforged.gts.forge.event.TradeCreateEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
