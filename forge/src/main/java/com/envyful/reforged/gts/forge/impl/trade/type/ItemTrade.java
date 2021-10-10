@@ -59,9 +59,9 @@ public class ItemTrade extends ForgeTrade {
         EntityPlayerMP parent = (EntityPlayerMP) player.getParent();
         GTSAttribute attribute = player.getAttribute(ReforgedGTSForge.class);
 
-        if (returnGui == null) {
-            parent.closeScreen();
-        } else {
+        parent.closeScreen();
+
+        if (returnGui != null) {
             returnGui.accept(player);
         }
 

@@ -75,9 +75,9 @@ public class PokemonTrade extends ForgeTrade {
 
         MinecraftForge.EVENT_BUS.post(new TradeCollectEvent((EnvyPlayer<EntityPlayerMP>) player, this));
 
-        if (returnGui == null) {
-            parent.closeScreen();
-        } else {
+        parent.closeScreen();
+
+        if (returnGui != null) {
             returnGui.accept(player);
         }
 
