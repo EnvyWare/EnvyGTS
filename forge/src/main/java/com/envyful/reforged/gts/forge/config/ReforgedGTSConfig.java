@@ -6,6 +6,7 @@ import com.envyful.api.config.yaml.AbstractYamlConfig;
 import com.envyful.api.gui.item.Displayable;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
+import com.pixelmonmod.pixelmon.enums.EnumSpecies;
 import org.spongepowered.configurate.objectmapping.ConfigSerializable;
 
 import java.util.List;
@@ -31,6 +32,9 @@ public class ReforgedGTSConfig extends AbstractYamlConfig {
     private boolean enableNewListingBroadcasts = true;
     private int maxListingsPerUser = 5;
     private double maxPrice = 10_000_000;
+
+    private List<String> blacklist = Lists.newArrayList("hoopa");
+    private transient List<EnumSpecies> blacklistCache = null;
 
     private transient Displayable.ClickType cachedOwnerRemoveButton = null;
 
@@ -102,5 +106,19 @@ public class ReforgedGTSConfig extends AbstractYamlConfig {
 
     public double getMaxPrice() {
         return this.maxPrice;
+    }
+
+    public List<EnumSpecies> getBlacklist() {
+        if (this.blacklistCache == null) {
+            List<EnumSpecies> blacklist = Lists.newArrayList();
+
+            for (String s : this.blacklist) {
+                blacklist.add(EnumSpecies.getFromNameAnyCase(s));
+            }
+
+            this.blacklistCache = blacklist;
+        }
+
+        return this.blacklistCache;
     }
 }
