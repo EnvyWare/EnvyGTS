@@ -2,6 +2,7 @@ package com.envyful.reforged.gts.api.discord;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 
 public class DiscordEventManager {
@@ -31,11 +32,11 @@ public class DiscordEventManager {
         }
 
         if (pokemonFile.exists()) {
-            pokemonJSON = String.join(System.lineSeparator(), Files.readAllLines(pokemonFile.toPath()));
+            pokemonJSON = String.join(System.lineSeparator(), Files.readAllLines(pokemonFile.toPath(), StandardCharsets.UTF_8));
         }
 
         if (itemFile.exists()) {
-            itemJSON = String.join(System.lineSeparator(), Files.readAllLines(itemFile.toPath()));
+            itemJSON = String.join(System.lineSeparator(), Files.readAllLines(itemFile.toPath(), StandardCharsets.UTF_8));
         }
 
         return new DiscordEvent(true, pokemonJSON, itemJSON);
