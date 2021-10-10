@@ -270,7 +270,8 @@ public class PokemonTrade extends ForgeTrade {
                 .replace("%trio_gemmed%", extraStats instanceof LakeTrioStats ? (((LakeTrioStats) extraStats).numEnchanted + "") : "")
                 .replace("%shiny%", pokemon.isShiny() ? "True" : "False")
                 .replace("%form%", pokemon.getFormEnum().getLocalizedName())
-                .replace("%size%", pokemon.getGrowth().getLocalizedName());
+                .replace("%size%", pokemon.getGrowth().getLocalizedName())
+                .replace("%custom_texture%", pokemon.getCustomTexture());
 
         return DiscordWebHook.fromJson(newJSON);
     }
