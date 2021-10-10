@@ -272,8 +272,6 @@ public class PokemonTrade extends ForgeTrade {
                 .replace("%form%", pokemon.getFormEnum().getLocalizedName())
                 .replace("%size%", pokemon.getGrowth().getLocalizedName());
 
-        System.out.println(newJSON);
-
         return DiscordWebHook.fromJson(newJSON);
     }
 
