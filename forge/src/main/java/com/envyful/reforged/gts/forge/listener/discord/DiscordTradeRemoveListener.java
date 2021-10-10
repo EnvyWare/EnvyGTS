@@ -4,28 +4,28 @@ import com.envyful.api.concurrency.UtilConcurrency;
 import com.envyful.api.forge.listener.LazyListener;
 import com.envyful.reforged.gts.api.discord.DiscordEvent;
 import com.envyful.reforged.gts.api.discord.DiscordEventManager;
-import com.envyful.reforged.gts.forge.event.TradeCreateEvent;
+import com.envyful.reforged.gts.forge.event.TradeRemoveEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 import java.io.IOException;
 
-public class DiscordTradeCreateListener extends LazyListener {
+public class DiscordTradeRemoveListener extends LazyListener {
 
-    public DiscordTradeCreateListener() {
+    public DiscordTradeRemoveListener() {
         super();
     }
 
     @SubscribeEvent
-    public void onTradeCreate(TradeCreateEvent event) {
-        DiscordEvent publishHandler = DiscordEventManager.getPublishHandler();
+    public void onTradeCreate(TradeRemoveEvent event) {
+        DiscordEvent removeHandler = DiscordEventManager.getExpireHandler();
 
-        if (!publishHandler.isEnabled()) {
+        if (!removeHandler.isEnabled()) {
             return;
         }
 
         UtilConcurrency.runAsync(() -> {
             try {
-                event.getTrade().getWebHook(publishHandler).execute();
+                event.getTrade().getWebHook(removeHandler).execute();
             } catch (IOException e) {
                 e.printStackTrace();
             }

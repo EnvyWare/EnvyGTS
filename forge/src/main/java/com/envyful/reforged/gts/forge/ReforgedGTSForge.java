@@ -18,6 +18,10 @@ import com.envyful.reforged.gts.forge.config.LocaleConfig;
 import com.envyful.reforged.gts.forge.config.ReforgedGTSConfig;
 import com.envyful.reforged.gts.forge.impl.storage.SQLGlobalTradeManager;
 import com.envyful.reforged.gts.forge.listener.TradeCreateListener;
+import com.envyful.reforged.gts.forge.listener.discord.DiscordTradeCreateListener;
+import com.envyful.reforged.gts.forge.listener.discord.DiscordTradeExpireListener;
+import com.envyful.reforged.gts.forge.listener.discord.DiscordTradePurchaseListener;
+import com.envyful.reforged.gts.forge.listener.discord.DiscordTradeRemoveListener;
 import com.envyful.reforged.gts.forge.player.GTSAttribute;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
@@ -97,6 +101,10 @@ public class ReforgedGTSForge {
         this.commandFactory.registerCommand(event.getServer(), new GTSCommand());
 
         new TradeCreateListener(this);
+        new DiscordTradeCreateListener();
+        new DiscordTradeExpireListener();
+        new DiscordTradePurchaseListener();
+        new DiscordTradeRemoveListener();
     }
 
     public static ReforgedGTSForge getInstance() {
