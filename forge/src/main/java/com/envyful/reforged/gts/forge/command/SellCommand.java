@@ -64,6 +64,14 @@ public class SellCommand {
             return;
         }
 
+        if (amount > inHand.getCount()) {
+            player.sendMessage(new TextComponentString(UtilChatColour.translateColourCodes(
+                    '&',
+                    ReforgedGTSForge.getInstance().getLocale().getMessages().getNotEnoughItems()
+            )));
+            return;
+        }
+
         ItemTrade.Builder builder = (ItemTrade.Builder) ForgeTrade.builder()
                 .owner(sender)
                 .cost(price)
@@ -71,9 +79,11 @@ public class SellCommand {
                                 + TimeUnit.SECONDS.toMillis(ReforgedGTSForge.getInstance().getConfig().getDefaultTradeDurationSeconds()))
                 .content("i");
 
-        builder.contents(inHand);
+        ItemStack copy = inHand.copy();
+        copy.setCount(amount);
+        builder.contents(copy);
+        inHand.shrink(amount);
 
-        inHand.shrink(1);
         player.sendMessage(new TextComponentString(UtilChatColour.translateColourCodes(
                 '&',
                 ReforgedGTSForge.getInstance().getLocale().getMessages().getAddedItemToGts()
