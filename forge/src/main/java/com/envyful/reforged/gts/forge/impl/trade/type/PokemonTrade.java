@@ -1,6 +1,7 @@
 package com.envyful.reforged.gts.forge.impl.trade.type;
 
 import com.envyful.api.concurrency.UtilConcurrency;
+import com.envyful.api.discord.DiscordWebHook;
 import com.envyful.api.forge.chat.UtilChatColour;
 import com.envyful.api.forge.items.ItemBuilder;
 import com.envyful.api.gui.factory.GuiFactory;
@@ -11,9 +12,11 @@ import com.envyful.api.reforged.pixelmon.storage.UtilPixelmonPlayer;
 import com.envyful.api.time.UtilTimeFormat;
 import com.envyful.reforged.gts.api.Trade;
 import com.envyful.reforged.gts.api.TradeData;
+import com.envyful.reforged.gts.api.discord.DiscordEvent;
 import com.envyful.reforged.gts.api.gui.SortType;
 import com.envyful.reforged.gts.api.sql.ReforgedGTSQueries;
 import com.envyful.reforged.gts.forge.ReforgedGTSForge;
+import com.envyful.reforged.gts.forge.event.TradeCollectEvent;
 import com.envyful.reforged.gts.forge.impl.trade.ForgeTrade;
 import com.envyful.reforged.gts.forge.player.GTSAttribute;
 import com.envyful.reforged.gts.forge.ui.ViewTradesUI;
@@ -25,6 +28,7 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.JsonToNBT;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraftforge.common.MinecraftForge;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -61,6 +65,8 @@ public class PokemonTrade extends ForgeTrade {
     public void collect(EnvyPlayer<?> player) {
         EntityPlayerMP parent = (EntityPlayerMP) player.getParent();
         GTSAttribute attribute = player.getAttribute(ReforgedGTSForge.class);
+
+        MinecraftForge.EVENT_BUS.post(new TradeCollectEvent((EnvyPlayer<EntityPlayerMP>) player, this));
 
         parent.closeScreen();
 
@@ -194,6 +200,11 @@ public class PokemonTrade extends ForgeTrade {
     @Override
     public TradeData toData() {
         return this.tradeData;
+    }
+
+    @Override
+    public DiscordWebHook getWebHook(DiscordEvent event) {
+        return null;
     }
 
     public static class Builder extends ForgeTrade.Builder {
