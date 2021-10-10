@@ -129,14 +129,19 @@ public class SelectPartyPokemonUI {
             } else {
                 final int slot = i;
                 pane.set(pos % 9, pos / 9, GuiFactory.displayableBuilder(ItemStack.class)
-                        .itemStack(UtilSprite.getPokemonElement(all[i],
-                                                                ReforgedGTSForge.getInstance().getGui().getPartyPokemonUIConfig().getSpriteConfig()))
+                        .itemStack(UtilSprite.getPokemonElement(
+                                all[i],
+                                ReforgedGTSForge.getInstance().getGui().getPartyPokemonUIConfig().getSpriteConfig()
+                        ))
                         .clickHandler((envyPlayer, clickType) -> {
                             GTSAttribute attribute = envyPlayer.getAttribute(ReforgedGTSForge.class);
                             attribute.setSelectedSlot(slot);
                             pane.set(config.getConfirmDisplay() % 9, config.getConfirmDisplay() / 9,
                                      GuiFactory.displayableBuilder(ItemStack.class)
-                                             .itemStack(new ItemBuilder(UtilSprite.getPokemonElement(all[slot]))
+                                             .itemStack(new ItemBuilder(UtilSprite.getPokemonElement(
+                                                     all[slot],
+                                                     ReforgedGTSForge.getInstance().getGui().getPartyPokemonUIConfig().getSpriteConfig()
+                                             ))
                                                                 .enchant(Enchantments.UNBREAKING, 1)
                                                                 .itemFlag(ItemFlag.HIDE_ENCHANTS)
                                                                 .build())
