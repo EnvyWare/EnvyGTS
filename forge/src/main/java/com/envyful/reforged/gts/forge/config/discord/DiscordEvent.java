@@ -1,27 +1,38 @@
 package com.envyful.reforged.gts.forge.config.discord;
 
-import com.envyful.api.discord.DiscordWebHook;
-
 public class DiscordEvent {
 
     private final boolean enabled;
-    private final DiscordWebHook webHook;
+    private final String pokemonJSON;
+    private final String itemJSON;
 
-    public DiscordEvent(DiscordWebHook webHook) {
-        this.enabled = true;
-        this.webHook = webHook;
-    }
-
-    public DiscordEvent(boolean enabled) {
+    public DiscordEvent(boolean enabled, String pokemonJSON, String itemJSON) {
         this.enabled = enabled;
-        this.webHook = null;
+        this.pokemonJSON = pokemonJSON;
+        this.itemJSON = itemJSON;
     }
 
-    public DiscordWebHook getWebHook() {
-        return this.webHook;
+    public DiscordEvent() {
+        this(false, "", "");
     }
 
     public boolean isEnabled() {
         return this.enabled;
+    }
+
+    public String getPokemonJSON() {
+        return this.pokemonJSON;
+    }
+
+    public String getItemJSON() {
+        return this.itemJSON;
+    }
+
+    public boolean isPokemonEnabled() {
+        return !this.pokemonJSON.isEmpty();
+    }
+
+    public boolean isItemEnabled() {
+        return !this.itemJSON.isEmpty();
     }
 }
