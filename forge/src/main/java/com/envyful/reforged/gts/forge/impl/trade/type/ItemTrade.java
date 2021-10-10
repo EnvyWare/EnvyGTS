@@ -207,7 +207,19 @@ public class ItemTrade extends ForgeTrade {
 
     @Override
     public DiscordWebHook getWebHook(DiscordEvent event) {
-        return null;
+        if (!event.isItemEnabled()) {
+            return null;
+        }
+
+        String newJSON = event.getItemJSON()
+                .replace("%seller%", this.ownerName)
+                .replace("%expires_in%", UtilTimeFormat.getFormattedDuration(this.expiry - System.currentTimeMillis()))
+                .replace("%price%", this.cost + "")
+                .replace("%item%", this.item.getDisplayName())
+                .replace("%amount%", this.item.getCount() + "");
+
+
+        return DiscordWebHook.fromJson(newJSON);
     }
 
     public static class Builder extends ForgeTrade.Builder {

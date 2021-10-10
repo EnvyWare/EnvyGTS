@@ -232,6 +232,9 @@ public class PokemonTrade extends ForgeTrade {
         ExtraStats extraStats = pokemon.getExtraStats();
 
         String newJSON = event.getPokemonJSON()
+                .replace("%seller%", this.ownerName)
+                .replace("%expires_in%", UtilTimeFormat.getFormattedDuration(this.expiry - System.currentTimeMillis()))
+                .replace("%price%", this.cost + "")
                 .replace("%level%", pokemon.getLevel() + "")
                 .replace("%gender%", pokemon.getGender().getLocalizedName())
                 .replace("%breedable%", pokemon.hasSpecFlag("unbreedable") ? "True" : "False")
