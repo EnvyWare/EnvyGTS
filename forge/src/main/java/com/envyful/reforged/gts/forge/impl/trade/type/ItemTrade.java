@@ -15,6 +15,7 @@ import com.envyful.reforged.gts.api.gui.SortType;
 import com.envyful.reforged.gts.api.sql.ReforgedGTSQueries;
 import com.envyful.reforged.gts.forge.ReforgedGTSForge;
 import com.envyful.reforged.gts.forge.event.TradeCollectEvent;
+import com.envyful.reforged.gts.forge.event.TradeRemoveEvent;
 import com.envyful.reforged.gts.forge.impl.trade.ForgeTrade;
 import com.envyful.reforged.gts.forge.player.GTSAttribute;
 import com.envyful.reforged.gts.forge.ui.ViewTradesUI;
@@ -107,6 +108,7 @@ public class ItemTrade extends ForgeTrade {
                 .clickHandler((envyPlayer, clickType) -> {
                     if (this.isOwner(envyPlayer) && Objects.equals(clickType,
                                                                    ReforgedGTSForge.getInstance().getConfig().getOwnerRemoveButton())) {
+                        MinecraftForge.EVENT_BUS.post(new TradeRemoveEvent(this));
                         this.setRemoved();
                         envyPlayer.message(UtilChatColour.translateColourCodes(
                                 '&',

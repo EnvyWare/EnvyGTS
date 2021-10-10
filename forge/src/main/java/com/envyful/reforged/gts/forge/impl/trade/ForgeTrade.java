@@ -9,12 +9,14 @@ import com.envyful.reforged.gts.api.gui.FilterType;
 import com.envyful.reforged.gts.api.sql.ReforgedGTSQueries;
 import com.envyful.reforged.gts.forge.ReforgedGTSForge;
 import com.envyful.reforged.gts.forge.config.ReforgedGTSConfig;
+import com.envyful.reforged.gts.forge.event.TradePurchaseEvent;
 import com.envyful.reforged.gts.forge.impl.trade.type.ItemTrade;
 import com.envyful.reforged.gts.forge.impl.trade.type.PokemonTrade;
 import com.pixelmonmod.pixelmon.Pixelmon;
 import com.pixelmonmod.pixelmon.api.economy.IPixelmonBankAccount;
 import com.pixelmonmod.pixelmon.storage.PlayerPartyStorage;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraftforge.common.MinecraftForge;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -87,6 +89,14 @@ public abstract class ForgeTrade implements Trade {
                     '&',
                     ReforgedGTSForge.getInstance().getLocale().getMessages().getInsufficientFunds()
             ));
+            return false;
+        }
+
+        TradePurchaseEvent event = new TradePurchaseEvent((EnvyPlayer<EntityPlayerMP>) player, this);
+
+        MinecraftForge.EVENT_BUS.post(event);
+
+        if (event.isCanceled()) {
             return false;
         }
 

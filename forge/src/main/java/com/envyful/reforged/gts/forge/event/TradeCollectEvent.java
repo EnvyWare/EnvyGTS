@@ -3,7 +3,6 @@ package com.envyful.reforged.gts.forge.event;
 import com.envyful.api.player.EnvyPlayer;
 import com.envyful.reforged.gts.api.Trade;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraftforge.fml.common.eventhandler.Cancelable;
 import net.minecraftforge.fml.common.eventhandler.Event;
 
 /**
@@ -11,7 +10,6 @@ import net.minecraftforge.fml.common.eventhandler.Event;
  * Represents when a player collects a purchased or expired trade from the GTS
  *
  */
-@Cancelable
 public class TradeCollectEvent extends Event {
 
     private final EnvyPlayer<EntityPlayerMP> collector;
