@@ -236,10 +236,11 @@ public class PokemonTrade extends ForgeTrade {
                 .replace("%expires_in%", UtilTimeFormat.getFormattedDuration(this.expiry - System.currentTimeMillis()))
                 .replace("%price%", this.cost + "")
                 .replace("%species%", pokemon.getSpecies().getLocalizedName())
+                .replace("%species_lower%", pokemon.getSpecies().getLocalizedName().toLowerCase())
                 .replace("%friendship%", pokemon.getFriendship() + "")
                 .replace("%level%", pokemon.getLevel() + "")
                 .replace("%gender%", pokemon.getGender().getLocalizedName())
-                .replace("%breedable%", pokemon.hasSpecFlag("unbreedable") ? "True" : "False")
+                .replace("%unbreedable%", pokemon.hasSpecFlag("unbreedable") ? "True" : "False")
                 .replace("%nature%", pokemon.getNature().getLocalizedName())
                 .replace("%ability%", pokemon.getAbility().getLocalizedName())
                 .replace("%untradeable%", pokemon.hasSpecFlag("untradeable") ? "True" : "False")
@@ -265,6 +266,8 @@ public class PokemonTrade extends ForgeTrade {
                 .replace("%shiny%", pokemon.isShiny() ? "True" : "False")
                 .replace("%form%", pokemon.getFormEnum().getLocalizedName())
                 .replace("%size%", pokemon.getGrowth().getLocalizedName());
+
+        System.out.println(newJSON);
 
         return DiscordWebHook.fromJson(newJSON);
     }
@@ -338,7 +341,7 @@ public class PokemonTrade extends ForgeTrade {
                 return this.contents(Pixelmon.pokemonFactory.create(tagCompound));
             } catch (Exception e) {
                 e.printStackTrace();
-                this.contents(Pixelmon.pokemonFactory.create(EnumSpecies.Magikarp));
+                this.contents(Pixelmon.pokemonFactory.create(EnumSpecies.Abomasnow));
             }
             return this;
         }

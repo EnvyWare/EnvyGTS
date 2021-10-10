@@ -10,16 +10,20 @@ import com.envyful.api.gui.pane.Pane;
 import com.envyful.api.player.EnvyPlayer;
 import com.envyful.api.reforged.pixelmon.sprite.UtilSprite;
 import com.envyful.api.reforged.pixelmon.storage.UtilPixelmonPlayer;
+import com.envyful.reforged.gts.api.Trade;
 import com.envyful.reforged.gts.forge.ReforgedGTSForge;
 import com.envyful.reforged.gts.forge.config.GuiConfig;
 import com.envyful.reforged.gts.forge.player.GTSAttribute;
 import com.envyful.reforged.gts.forge.util.UtilPokemonPrice;
+import com.google.common.collect.Lists;
 import com.pixelmonmod.pixelmon.api.pokemon.Pokemon;
 import com.pixelmonmod.pixelmon.api.storage.PCBox;
 import com.pixelmonmod.pixelmon.api.storage.PCStorage;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Enchantments;
 import net.minecraft.item.ItemStack;
+
+import java.util.List;
 
 public class SelectPCPokemonUI {
 
@@ -104,6 +108,18 @@ public class SelectPCPokemonUI {
                         GTSAttribute attribute = envyPlayer.getAttribute(ReforgedGTSForge.class);
 
                         if (attribute.getSelectedSlot() == -1) {
+                            return;
+                        }
+
+                        List<Trade> trades = Lists.newArrayList(attribute.getOwnedTrades());
+
+                        trades.removeIf(trade -> trade.hasExpired() || trade.wasPurchased() || trade.wasRemoved());
+
+                        if (trades.size() >= ReforgedGTSForge.getInstance().getConfig().getMaxListingsPerUser()) {
+                            player.message(UtilChatColour.translateColourCodes(
+                                    '&',
+                                    ReforgedGTSForge.getInstance().getLocale().getMessages().getMaxTradesAlreadyReached()
+                            ));
                             return;
                         }
 

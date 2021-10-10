@@ -72,7 +72,7 @@ public class SelectPartyPokemonUI {
 
                                  List<Trade> trades = Lists.newArrayList(attribute.getOwnedTrades());
 
-                                 trades.removeIf(trade -> trade.hasExpired() || trade.wasPurchased());
+                                 trades.removeIf(trade -> trade.hasExpired() || trade.wasPurchased() || trade.wasRemoved());
 
                                  if (trades.size() >= ReforgedGTSForge.getInstance().getConfig().getMaxListingsPerUser()) {
                                      player.message(UtilChatColour.translateColourCodes(

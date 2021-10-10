@@ -63,8 +63,6 @@ public class ReforgedGTSForge {
         UtilConcurrency.runAsync(() -> {
             this.database = new SimpleHikariDatabase(this.config.getDatabaseDetails());
             this.createTables();
-            this.tradeManager = new SQLGlobalTradeManager(this);
-            TradeManager.setPlatformTradeManager(this.tradeManager);
         });
     }
 
@@ -103,6 +101,11 @@ public class ReforgedGTSForge {
         new DiscordTradeCreateListener();
         new DiscordTradePurchaseListener();
         new DiscordTradeRemoveListener();
+
+        UtilConcurrency.runAsync(() -> {
+            this.tradeManager = new SQLGlobalTradeManager(this);
+            TradeManager.setPlatformTradeManager(this.tradeManager);
+        });
     }
 
     public static ReforgedGTSForge getInstance() {
