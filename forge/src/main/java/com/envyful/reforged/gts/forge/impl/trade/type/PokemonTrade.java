@@ -42,6 +42,7 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
+import java.util.function.Consumer;
 
 /**
  *
@@ -68,13 +69,17 @@ public class PokemonTrade extends ForgeTrade {
     }
 
     @Override
-    public void collect(EnvyPlayer<?> player) {
+    public void collect(EnvyPlayer<?> player, Consumer<EnvyPlayer<?>> returnGui) {
         EntityPlayerMP parent = (EntityPlayerMP) player.getParent();
         GTSAttribute attribute = player.getAttribute(ReforgedGTSForge.class);
 
         MinecraftForge.EVENT_BUS.post(new TradeCollectEvent((EnvyPlayer<EntityPlayerMP>) player, this));
 
-        parent.closeScreen();
+        if (returnGui == null) {
+            parent.closeScreen();
+        } else {
+            returnGui.accept(player);
+        }
 
         attribute.getOwnedTrades().remove(this);
         UtilPixelmonPlayer.getParty((EntityPlayerMP) player.getParent()).add(this.pokemon);
@@ -148,7 +153,7 @@ public class PokemonTrade extends ForgeTrade {
     }
 
     @Override
-    public void displayClaimable(int pos, Pane pane) {
+    public void displayClaimable(int pos, Consumer<EnvyPlayer<?>> returnGui, Pane pane) {
         int posX = pos % 9;
         int posY = pos / 9;
 
@@ -157,7 +162,7 @@ public class PokemonTrade extends ForgeTrade {
                                                                         ReforgedGTSForge.getInstance().getGui().getSearchUIConfig().getSpriteConfig()))
                                    .addLore(this.formatLore(ReforgedGTSForge.getInstance().getLocale().getListingBelowExpiredOrClaimableLore()))
                                    .build())
-                .clickHandler((envyPlayer, clickType) -> this.collect(envyPlayer))
+                .clickHandler((envyPlayer, clickType) -> this.collect(envyPlayer, returnGui))
                 .build());
     }
 

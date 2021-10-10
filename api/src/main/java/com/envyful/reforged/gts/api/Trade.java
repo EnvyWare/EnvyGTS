@@ -8,6 +8,7 @@ import com.envyful.reforged.gts.api.gui.FilterType;
 import com.envyful.reforged.gts.api.gui.SortType;
 
 import java.util.UUID;
+import java.util.function.Consumer;
 
 /**
  *
@@ -84,8 +85,9 @@ public interface Trade {
      * Method for collecting the item from the GUI
      *
      * @param player The player collecting the item
+     * @param returnGui The gui to return to upon claiming - null = close
      */
-    void collect(EnvyPlayer<?> player);
+    void collect(EnvyPlayer<?> player, Consumer<EnvyPlayer<?>> returnGui);
 
     /**
      *
@@ -130,9 +132,10 @@ public interface Trade {
      * Displays the trade when claimable or expired
      *
      * @param pos The position in the pane
+     * @param returnGui The gui to return to upon claiming - null = close
      * @param pane The pane to display in
      */
-    void displayClaimable(int pos, Pane pane);
+    void displayClaimable(int pos, Consumer<EnvyPlayer<?>> returnGui, Pane pane);
 
     /**
      *

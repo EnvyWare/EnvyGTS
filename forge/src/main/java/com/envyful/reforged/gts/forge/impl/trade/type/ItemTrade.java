@@ -33,6 +33,7 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
+import java.util.function.Consumer;
 
 public class ItemTrade extends ForgeTrade {
 
@@ -54,11 +55,15 @@ public class ItemTrade extends ForgeTrade {
     }
 
     @Override
-    public void collect(EnvyPlayer<?> player) {
+    public void collect(EnvyPlayer<?> player, Consumer<EnvyPlayer<?>> returnGui) {
         EntityPlayerMP parent = (EntityPlayerMP) player.getParent();
         GTSAttribute attribute = player.getAttribute(ReforgedGTSForge.class);
 
-        parent.closeScreen();
+        if (returnGui == null) {
+            parent.closeScreen();
+        } else {
+            returnGui.accept(player);
+        }
 
         if (!parent.inventory.addItemStackToInventory(this.item)) {
             player.message(UtilChatColour.translateColourCodes('&',
@@ -145,7 +150,7 @@ public class ItemTrade extends ForgeTrade {
     }
 
     @Override
-    public void displayClaimable(int pos, Pane pane) {
+    public void displayClaimable(int pos, Consumer<EnvyPlayer<?>> returnGui, Pane pane) {
         int posX = pos % 9;
         int posY = pos / 9;
 
@@ -153,7 +158,7 @@ public class ItemTrade extends ForgeTrade {
                 .itemStack(new ItemBuilder(this.item)
                                    .addLore(this.formatLore(ReforgedGTSForge.getInstance().getLocale().getListingBelowExpiredOrClaimableLore()))
                                    .build())
-                .clickHandler((envyPlayer, clickType) -> this.collect(envyPlayer))
+                .clickHandler((envyPlayer, clickType) -> this.collect(envyPlayer, returnGui))
                 .build());
     }
 
