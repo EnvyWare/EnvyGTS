@@ -20,7 +20,7 @@ public class DiscordTradePurchaseListener extends LazyListener {
     public void onTradeCreate(TradePurchaseEvent event) {
         DiscordEvent purchaseHandler = DiscordEventManager.getPurchaseHandler();
 
-        if (!purchaseHandler.isEnabled()) {
+        if (purchaseHandler == null || !purchaseHandler.isEnabled()) {
             return;
         }
 

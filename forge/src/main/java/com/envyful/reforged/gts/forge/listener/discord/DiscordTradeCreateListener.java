@@ -20,7 +20,7 @@ public class DiscordTradeCreateListener extends LazyListener {
     public void onTradeCreate(TradeCreateEvent event) {
         DiscordEvent publishHandler = DiscordEventManager.getPublishHandler();
 
-        if (!publishHandler.isEnabled()) {
+        if (publishHandler == null || !publishHandler.isEnabled()) {
             return;
         }
 

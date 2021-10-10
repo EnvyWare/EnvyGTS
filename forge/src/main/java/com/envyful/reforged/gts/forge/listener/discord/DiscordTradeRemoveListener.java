@@ -20,7 +20,7 @@ public class DiscordTradeRemoveListener extends LazyListener {
     public void onTradeCreate(TradeRemoveEvent event) {
         DiscordEvent removeHandler = DiscordEventManager.getRemoveHandler();
 
-        if (!removeHandler.isEnabled()) {
+        if (removeHandler == null || !removeHandler.isEnabled()) {
             return;
         }
 
