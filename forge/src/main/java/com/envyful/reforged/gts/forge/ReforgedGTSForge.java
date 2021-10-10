@@ -19,7 +19,6 @@ import com.envyful.reforged.gts.forge.config.ReforgedGTSConfig;
 import com.envyful.reforged.gts.forge.impl.storage.SQLGlobalTradeManager;
 import com.envyful.reforged.gts.forge.listener.TradeCreateListener;
 import com.envyful.reforged.gts.forge.listener.discord.DiscordTradeCreateListener;
-import com.envyful.reforged.gts.forge.listener.discord.DiscordTradeExpireListener;
 import com.envyful.reforged.gts.forge.listener.discord.DiscordTradePurchaseListener;
 import com.envyful.reforged.gts.forge.listener.discord.DiscordTradeRemoveListener;
 import com.envyful.reforged.gts.forge.player.GTSAttribute;
@@ -102,7 +101,6 @@ public class ReforgedGTSForge {
 
         new TradeCreateListener(this);
         new DiscordTradeCreateListener();
-        new DiscordTradeExpireListener();
         new DiscordTradePurchaseListener();
         new DiscordTradeRemoveListener();
     }

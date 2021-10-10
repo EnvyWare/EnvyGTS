@@ -8,14 +8,12 @@ public class DiscordEventManager {
 
     private static DiscordEvent publishHandler;
     private static DiscordEvent purchaseHandler;
-    private static DiscordEvent expireHandler;
     private static DiscordEvent removeHandler;
 
     public static void init() {
         try {
             publishHandler = loadHandler("config/ReforgedGTS/webhooks/publisher");
             purchaseHandler = loadHandler("config/ReforgedGTS/webhooks/purchaser");
-            expireHandler = loadHandler("config/ReforgedGTS/webhooks/expirer");
             removeHandler = loadHandler("config/ReforgedGTS/webhooks/remover");
         } catch (IOException e) {
             e.printStackTrace();
@@ -49,10 +47,6 @@ public class DiscordEventManager {
 
     public static DiscordEvent getPurchaseHandler() {
         return purchaseHandler;
-    }
-
-    public static DiscordEvent getExpireHandler() {
-        return expireHandler;
     }
 
     public static DiscordEvent getRemoveHandler() {
