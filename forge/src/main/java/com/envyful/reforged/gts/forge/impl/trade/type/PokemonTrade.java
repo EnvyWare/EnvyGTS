@@ -108,6 +108,10 @@ public class PokemonTrade extends ForgeTrade {
                         return;
                     }
 
+                    if (this.isOwner(envyPlayer)) {
+                        return;
+                    }
+
                     if (!this.attemptPurchase(envyPlayer)) {
                         ViewTradesUI.openUI((EnvyPlayer<EntityPlayerMP>) envyPlayer);
                         return;
