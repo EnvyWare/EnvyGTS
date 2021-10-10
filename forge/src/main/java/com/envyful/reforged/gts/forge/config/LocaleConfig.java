@@ -25,6 +25,8 @@ public class LocaleConfig extends AbstractYamlConfig {
             "&bCost: &a$%cost%"
     );
 
+    private String moneyFormat = "%.2f";
+
     private Messages messages = new Messages();
 
     public LocaleConfig() {
@@ -33,6 +35,10 @@ public class LocaleConfig extends AbstractYamlConfig {
 
     public Messages getMessages() {
         return this.messages;
+    }
+
+    public String getMoneyFormat() {
+        return this.moneyFormat;
     }
 
     public List<String> getListingBelowDataLore() {

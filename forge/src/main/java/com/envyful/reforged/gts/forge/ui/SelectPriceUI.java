@@ -165,12 +165,13 @@ public class SelectPriceUI {
 
     public static String formatName(GTSAttribute attribute, String name) {
         return UtilChatColour.translateColourCodes('&', name
-                .replace("%min_price%", attribute.getCurrentMinPrice() + "")
+                .replace("%min_price%", String.format(ReforgedGTSForge.getInstance().getLocale().getMoneyFormat(),
+                                                      attribute.getCurrentMinPrice()))
                 .replace(
                         "%time%",
                         UtilTimeFormat.getFormattedDuration(TimeUnit.SECONDS.toMillis(attribute.getCurrentDuration())) + ""
                 )
-                .replace("%price%", attribute.getCurrentPrice() + "")
+                .replace("%price%", String.format(ReforgedGTSForge.getInstance().getLocale().getMoneyFormat(), attribute.getCurrentPrice()))
                 .replace("%min_time%", UtilTimeFormat.getFormattedDuration(
                         TimeUnit.SECONDS.toMillis(ReforgedGTSForge.getInstance().getConfig().getMinTradeDuration())
                 ))
