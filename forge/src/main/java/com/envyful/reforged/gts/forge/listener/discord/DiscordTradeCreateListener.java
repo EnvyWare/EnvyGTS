@@ -1,6 +1,7 @@
 package com.envyful.reforged.gts.forge.listener.discord;
 
 import com.envyful.api.concurrency.UtilConcurrency;
+import com.envyful.api.discord.DiscordWebHook;
 import com.envyful.api.forge.listener.LazyListener;
 import com.envyful.reforged.gts.api.discord.DiscordEvent;
 import com.envyful.reforged.gts.api.discord.DiscordEventManager;
@@ -25,7 +26,11 @@ public class DiscordTradeCreateListener extends LazyListener {
 
         UtilConcurrency.runAsync(() -> {
             try {
-                event.getTrade().getWebHook(publishHandler).execute();
+                DiscordWebHook webHook = event.getTrade().getWebHook(publishHandler);
+
+                if (webHook != null) {
+                    webHook.execute();
+                }
             } catch (IOException e) {
                 e.printStackTrace();
             }

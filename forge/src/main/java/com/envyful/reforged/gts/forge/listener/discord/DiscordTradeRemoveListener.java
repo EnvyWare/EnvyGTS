@@ -1,6 +1,7 @@
 package com.envyful.reforged.gts.forge.listener.discord;
 
 import com.envyful.api.concurrency.UtilConcurrency;
+import com.envyful.api.discord.DiscordWebHook;
 import com.envyful.api.forge.listener.LazyListener;
 import com.envyful.reforged.gts.api.discord.DiscordEvent;
 import com.envyful.reforged.gts.api.discord.DiscordEventManager;
@@ -17,7 +18,7 @@ public class DiscordTradeRemoveListener extends LazyListener {
 
     @SubscribeEvent
     public void onTradeCreate(TradeRemoveEvent event) {
-        DiscordEvent removeHandler = DiscordEventManager.getExpireHandler();
+        DiscordEvent removeHandler = DiscordEventManager.getRemoveHandler();
 
         if (!removeHandler.isEnabled()) {
             return;
@@ -25,7 +26,11 @@ public class DiscordTradeRemoveListener extends LazyListener {
 
         UtilConcurrency.runAsync(() -> {
             try {
-                event.getTrade().getWebHook(removeHandler).execute();
+                DiscordWebHook webHook = event.getTrade().getWebHook(removeHandler);
+
+                if (webHook != null) {
+                    webHook.execute();
+                }
             } catch (IOException e) {
                 e.printStackTrace();
             }
