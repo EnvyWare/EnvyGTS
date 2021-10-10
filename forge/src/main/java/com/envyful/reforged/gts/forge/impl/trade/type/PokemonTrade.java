@@ -235,6 +235,8 @@ public class PokemonTrade extends ForgeTrade {
                 .replace("%seller%", this.ownerName)
                 .replace("%expires_in%", UtilTimeFormat.getFormattedDuration(this.expiry - System.currentTimeMillis()))
                 .replace("%price%", this.cost + "")
+                .replace("%species%", pokemon.getSpecies().getLocalizedName())
+                .replace("%friendship%", pokemon.getFriendship() + "")
                 .replace("%level%", pokemon.getLevel() + "")
                 .replace("%gender%", pokemon.getGender().getLocalizedName())
                 .replace("%breedable%", pokemon.hasSpecFlag("unbreedable") ? "True" : "False")
