@@ -113,7 +113,7 @@ public class ItemTrade extends ForgeTrade {
         int posY = pos / 9;
 
         pane.set(posX, posY, GuiFactory.displayableBuilder(ItemStack.class)
-                .itemStack(new ItemBuilder(this.item)
+                .itemStack(new ItemBuilder(this.item.copy())
                                    .addLore(this.formatLore(ReforgedGTSForge.getInstance().getLocale().getListingBelowDataLore()))
                                    .build())
                 .clickHandler((envyPlayer, clickType) -> {
@@ -161,7 +161,7 @@ public class ItemTrade extends ForgeTrade {
         int posY = pos / 9;
 
         pane.set(posX, posY, GuiFactory.displayableBuilder(ItemStack.class)
-                .itemStack(new ItemBuilder(this.item)
+                .itemStack(new ItemBuilder(this.item.copy())
                                    .addLore(this.formatLore(ReforgedGTSForge.getInstance().getLocale().getListingBelowExpiredOrClaimableLore()))
                                    .build())
                 .clickHandler((envyPlayer, clickType) -> this.collect(envyPlayer, returnGui))
