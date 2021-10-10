@@ -2,7 +2,7 @@ package com.envyful.reforged.gts.api.player;
 
 public class PlayerSettings {
 
-    private boolean toggledBroadcasts = false;
+    private boolean toggledBroadcasts = true;
 
     public PlayerSettings() {}
 
