@@ -91,9 +91,9 @@ public abstract class ForgeGlobalTradeManager implements GlobalTradeManager {
 
         List<Trade> purchased = Lists.newArrayList();
 
-        for (Trade ownedTrade : attribute.getOwnedTrades()) {
-            if (ownedTrade.wasPurchased()) {
-                purchased.add(ownedTrade);
+        for (Trade trade : this.activeTrades) {
+            if (trade.isOwner(player.getUuid()) && trade.wasPurchased()) {
+                purchased.add(trade);
             }
         }
 
