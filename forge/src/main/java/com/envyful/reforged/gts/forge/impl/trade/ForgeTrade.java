@@ -105,7 +105,8 @@ public abstract class ForgeTrade implements Trade {
         ReforgedGTSConfig config = ReforgedGTSForge.getInstance().getConfig();
         PlayerPartyStorage target = Pixelmon.storageManager.getParty(this.owner);
 
-        target.changeMoney((int) ((target.getMoney() + this.cost) * (config.isEnableTax() ? config.getTaxRate() : 1.0)));
+        target.changeMoney((int) ((target.getMoney()) + (this.cost * (config.isEnableTax() ? config.getTaxRate() :
+                1.0))));
 
         this.updateOwner(player.getUuid(), player.getName());
         this.purchased = true;
