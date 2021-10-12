@@ -22,7 +22,7 @@ public class SQLGlobalTradeManager extends ForgeGlobalTradeManager {
             ResultSet resultSet = preparedStatement.executeQuery();
 
             while (resultSet.next()) {
-                TradeFactory.fromResultSet(resultSet);
+                this.activeTrades.add(TradeFactory.fromResultSet(resultSet));
             }
         } catch (SQLException e) {
             e.printStackTrace();
