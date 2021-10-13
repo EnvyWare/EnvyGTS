@@ -14,7 +14,6 @@ import com.envyful.reforged.gts.forge.impl.trade.type.ItemTrade;
 import com.envyful.reforged.gts.forge.impl.trade.type.PokemonTrade;
 import com.pixelmonmod.pixelmon.Pixelmon;
 import com.pixelmonmod.pixelmon.api.economy.IPixelmonBankAccount;
-import com.pixelmonmod.pixelmon.storage.PlayerPartyStorage;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraftforge.common.MinecraftForge;
 
@@ -103,7 +102,12 @@ public abstract class ForgeTrade implements Trade {
         iPixelmonBankAccount.setMoney((int) (iPixelmonBankAccount.getMoney() - this.cost));
 
         ReforgedGTSConfig config = ReforgedGTSForge.getInstance().getConfig();
-        PlayerPartyStorage target = Pixelmon.storageManager.getParty(this.owner);
+        IPixelmonBankAccount target = Pixelmon.moneyManager.getBankAccount(this.owner).orElse(null);
+
+        if (target == null) {
+            System.out.println("ERROR LOADING SELLER's BANK " + this.owner.toString() + " (" +this.ownerName + ")");
+            return false;
+        }
 
         target.changeMoney((int) ((target.getMoney()) + (this.cost * (config.isEnableTax() ? config.getTaxRate() :
                 1.0))));
