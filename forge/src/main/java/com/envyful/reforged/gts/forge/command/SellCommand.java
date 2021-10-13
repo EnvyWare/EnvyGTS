@@ -39,28 +39,48 @@ public class SellCommand {
         }
 
         if (args.length != 2) {
-            sender.message(ReforgedGTSForge.getInstance().getLocale().getMessages().getSellInsuffucientArgs());
+            sender.message(UtilChatColour.translateColourCodes(
+                    '&',
+                    ReforgedGTSForge.getInstance().getLocale().getMessages().getSellInsuffucientArgs()
+            ));
             return;
         }
 
         ItemStack inHand = player.getHeldItemMainhand();
 
         if (Objects.equals(inHand.getItem(), Items.AIR)) {
-            sender.message(ReforgedGTSForge.getInstance().getLocale().getMessages().getSellNoItemInHand());
+            sender.message(UtilChatColour.translateColourCodes(
+                    '&',
+                    ReforgedGTSForge.getInstance().getLocale().getMessages().getSellNoItemInHand()
+            ));
+            return;
+        }
+
+        if (ReforgedGTSForge.getInstance().getConfig().isBlackListed(inHand)) {
+            sender.message(UtilChatColour.translateColourCodes(
+                    '&',
+                    ReforgedGTSForge.getInstance().getLocale().getMessages().getCannotSellBlacklisted())
+            );
             return;
         }
 
         int amount = UtilParse.parseInteger(args[0]).orElse(-1);
 
         if (amount <= 0) {
-            sender.message(ReforgedGTSForge.getInstance().getLocale().getMessages().getAmountMustBePositive());
+            sender.message(UtilChatColour.translateColourCodes(
+                    '&',
+                    ReforgedGTSForge.getInstance().getLocale().getMessages().getAmountMustBePositive()
+            ));
             return;
         }
 
         double price = UtilParse.parseDouble(args[1]).orElse(-1.0);
 
         if (price < 1.0) {
-            sender.message(ReforgedGTSForge.getInstance().getLocale().getMessages().getPriceMustBeMoreThanOne());
+            sender.message(UtilChatColour.translateColourCodes(
+                    '&',
+                    ReforgedGTSForge.getInstance().getLocale().getMessages().getPriceMustBeMoreThanOne()
+            ));
             return;
         }
 

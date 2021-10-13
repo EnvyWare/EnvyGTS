@@ -8,10 +8,13 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
 import com.pixelmonmod.pixelmon.api.pokemon.Pokemon;
 import com.pixelmonmod.pixelmon.api.pokemon.PokemonSpec;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import org.spongepowered.configurate.objectmapping.ConfigSerializable;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 @SuppressWarnings("FieldMayBeFinal")
 @ConfigPath("config/ReforgedGTS/config.yml")
@@ -35,7 +38,10 @@ public class ReforgedGTSConfig extends AbstractYamlConfig {
     private double maxPrice = 10_000_000;
 
     private List<String> blacklist = Lists.newArrayList("hoopa");
+    private List<String> itemBlackList = Lists.newArrayList("minecraft:stone");
+
     private transient List<PokemonSpec> blacklistCache = null;
+    private transient List<Item> itemBlacklistCache = null;
 
     private transient Displayable.ClickType cachedOwnerRemoveButton = null;
 
@@ -122,6 +128,26 @@ public class ReforgedGTSConfig extends AbstractYamlConfig {
 
         for (PokemonSpec pokemonSpec : this.blacklistCache) {
             if (pokemonSpec.matches(pokemon)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public boolean isBlackListed(ItemStack itemStack) {
+        if (this.itemBlacklistCache == null) {
+            List<Item> blacklist = Lists.newArrayList();
+
+            for (String s : this.itemBlackList) {
+                blacklist.add(Item.getByNameOrId(s));
+            }
+
+            this.itemBlacklistCache = blacklist;
+        }
+
+        for (Item item : this.itemBlacklistCache) {
+            if (Objects.equals(itemStack.getItem(), item)) {
                 return true;
             }
         }

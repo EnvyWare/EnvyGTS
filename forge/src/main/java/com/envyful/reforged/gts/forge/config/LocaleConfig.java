@@ -62,6 +62,7 @@ public class LocaleConfig extends AbstractYamlConfig {
         private String insufficientFunds = "&c&l(!) &cYou don't have enough money!";
         private String maxTradesAlreadyReached = "&c&l(!) &cYou cannot add anymore trades to the GTS";
         private String notEnoughItems = "&c&l(!) &cYou don't have enough in your hand to sell this amount!";
+        private String cannotSellBlacklisted = "&c&l(!) &cYou cannot sell this item as it's blacklisted!";
 
         private String addedItemToGts = "&e&l(!) &eSuccessfully listed item on GTS";
         private String adminRemoveTrade = "&e&l(!) &eYou successfully removed the trade from the GTS";
@@ -79,6 +80,10 @@ public class LocaleConfig extends AbstractYamlConfig {
         );
 
         public Messages() {}
+
+        public String getCannotSellBlacklisted() {
+            return this.cannotSellBlacklisted;
+        }
 
         public String getRemovedOwnTrade() {
             return this.removedOwnTrade;
