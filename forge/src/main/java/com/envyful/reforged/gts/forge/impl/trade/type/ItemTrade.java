@@ -146,7 +146,8 @@ public class ItemTrade extends ForgeTrade {
 
         for (String s : lore) {
             newLore.add(UtilChatColour.translateColourCodes('&', s
-                    .replace("%cost%", this.cost + "")
+                    .replace("%cost%",
+                             String.format(ReforgedGTSForge.getInstance().getLocale().getMoneyFormat(), this.cost))
                     .replace("%duration%", UtilTimeFormat.getFormattedDuration((this.expiry - System.currentTimeMillis())))
                     .replace("%owner%", this.ownerName)
                     .replace("%original_owner%", this.originalOwnerName)));
