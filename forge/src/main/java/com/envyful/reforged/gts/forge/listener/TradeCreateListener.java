@@ -38,6 +38,9 @@ public class TradeCreateListener extends LazyListener {
                             '&',
                             s.replace("%player%", event.getPlayer().getName())
                             .replace("%name%", event.getTrade().getDisplayName())
+                            .replace("%cost%",
+                                     String.format(ReforgedGTSForge.getInstance().getLocale().getMoneyFormat(),
+                                                   event.getTrade().getCost()))
                     ));
                 }
             }

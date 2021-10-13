@@ -27,6 +27,14 @@ public interface Trade {
 
     /**
      *
+     * Get the cost of the trade
+     *
+     * @return The cost
+     */
+    double getCost();
+
+    /**
+     *
      * Method for checking if the given player is the owner (the person selling) of the item on GTS
      *
      * @param player The player to check

@@ -55,6 +55,11 @@ public abstract class ForgeTrade implements Trade {
     }
 
     @Override
+    public double getCost() {
+        return this.cost;
+    }
+
+    @Override
     public boolean hasExpired() {
         return System.currentTimeMillis() >= this.expiry;
     }
