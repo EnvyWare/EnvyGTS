@@ -6,7 +6,8 @@ import com.envyful.api.config.yaml.AbstractYamlConfig;
 import com.envyful.api.gui.item.Displayable;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
-import com.pixelmonmod.pixelmon.enums.EnumSpecies;
+import com.pixelmonmod.pixelmon.api.pokemon.Pokemon;
+import com.pixelmonmod.pixelmon.api.pokemon.PokemonSpec;
 import org.spongepowered.configurate.objectmapping.ConfigSerializable;
 
 import java.util.List;
@@ -34,7 +35,7 @@ public class ReforgedGTSConfig extends AbstractYamlConfig {
     private double maxPrice = 10_000_000;
 
     private List<String> blacklist = Lists.newArrayList("hoopa");
-    private transient List<EnumSpecies> blacklistCache = null;
+    private transient List<PokemonSpec> blacklistCache = null;
 
     private transient Displayable.ClickType cachedOwnerRemoveButton = null;
 
@@ -108,17 +109,23 @@ public class ReforgedGTSConfig extends AbstractYamlConfig {
         return this.maxPrice;
     }
 
-    public List<EnumSpecies> getBlacklist() {
+    public boolean isBlackListed(Pokemon pokemon) {
         if (this.blacklistCache == null) {
-            List<EnumSpecies> blacklist = Lists.newArrayList();
+            List<PokemonSpec> blacklist = Lists.newArrayList();
 
             for (String s : this.blacklist) {
-                blacklist.add(EnumSpecies.getFromNameAnyCase(s));
+                blacklist.add(PokemonSpec.from(s));
             }
 
             this.blacklistCache = blacklist;
         }
 
-        return this.blacklistCache;
+        for (PokemonSpec pokemonSpec : this.blacklistCache) {
+            if (pokemonSpec.matches(pokemon)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

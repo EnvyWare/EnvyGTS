@@ -155,7 +155,7 @@ public class SelectPCPokemonUI {
             if (pokemon == null) {
                 pane.set(2 + posX, posY, GuiFactory.displayableBuilder(ItemStack.class)
                         .itemStack(UtilConfigItem.fromConfigItem(config.getNoPokemonItem())).build());
-            } else if (pokemon.hasSpecFlag("untradeable") || pokemon.isEgg() || ReforgedGTSForge.getInstance().getConfig().getBlacklist().contains(pokemon.getSpecies())) {
+            } else if (pokemon.hasSpecFlag("untradeable") || pokemon.isEgg() || ReforgedGTSForge.getInstance().getConfig().isBlackListed(pokemon)) {
                 pane.set(2 + posX, posY, GuiFactory.displayableBuilder(ItemStack.class)
                         .itemStack(UtilConfigItem.fromConfigItem(config.getUntradeablePokemonItem())).build());
             } else {
