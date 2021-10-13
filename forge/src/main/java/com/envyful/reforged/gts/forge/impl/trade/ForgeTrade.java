@@ -109,7 +109,7 @@ public abstract class ForgeTrade implements Trade {
             return false;
         }
 
-        target.changeMoney((int) ((target.getMoney()) + (this.cost * (config.isEnableTax() ? config.getTaxRate() :
+        target.setMoney((int) ((target.getMoney()) + (this.cost * (config.isEnableTax() ? config.getTaxRate() :
                 1.0))));
 
         this.updateOwner(player.getUuid(), player.getName());
