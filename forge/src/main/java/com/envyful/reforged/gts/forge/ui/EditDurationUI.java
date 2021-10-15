@@ -69,13 +69,15 @@ public class EditDurationUI {
                      GuiFactory.displayableBuilder(ItemStack.class)
                              .itemStack(UtilConfigItem.fromConfigItem(timeButton.getConfigItem()))
                              .clickHandler((envyPlayer, clickType) -> {
-                                 attribute.setCurrentDuration(Math.min(
-                                         ReforgedGTSForge.getInstance().getConfig().getMaxTradeDurationSeconds(),
-                                         Math.max(
-                                                 ReforgedGTSForge.getInstance().getConfig().getMinTradeDuration(),
-                                                 attribute.getCurrentDuration() + timeButton.getTimeModifier()
-                                         )
-                                 ));
+                                 long newDuration = attribute.getCurrentDuration() + timeButton.getTimeModifier();
+
+                                 if (newDuration < ReforgedGTSForge.getInstance().getConfig().getMinTradeDuration()) {
+                                     newDuration = ReforgedGTSForge.getInstance().getConfig().getMinTradeDuration();
+                                 } else if (newDuration > ReforgedGTSForge.getInstance().getConfig().getMaxTradeDurationSeconds()) {
+                                     newDuration = ReforgedGTSForge.getInstance().getConfig().getMaxTradeDurationSeconds();
+                                 }
+
+                                 attribute.setCurrentDuration(newDuration);
                                  openUI(player, page, position);
                              })
                              .build()
