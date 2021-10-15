@@ -72,8 +72,8 @@ public abstract class ForgeGlobalTradeManager implements GlobalTradeManager {
 
         List<Trade> expired = Lists.newArrayList();
 
-        for (Trade ownedTrade : attribute.getOwnedTrades()) {
-            if ((ownedTrade.hasExpired() || ownedTrade.wasRemoved()) && !ownedTrade.wasPurchased()) {
+        for (Trade ownedTrade : this.activeTrades) {
+            if ((ownedTrade.hasExpired() || ownedTrade.wasRemoved()) && !ownedTrade.wasPurchased() && ownedTrade.isOwner(player.getUuid())) {
                 expired.add(ownedTrade);
             }
         }
