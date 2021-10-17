@@ -5,6 +5,7 @@ import com.envyful.api.config.type.ConfigInterface;
 import com.envyful.api.config.type.ConfigItem;
 import com.envyful.api.config.type.PositionableConfigItem;
 import com.envyful.api.config.yaml.AbstractYamlConfig;
+import com.envyful.api.forge.gui.type.ConfirmationUI;
 import com.envyful.api.reforged.pixelmon.config.SpriteConfig;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
@@ -135,6 +136,8 @@ public class GuiConfig extends AbstractYamlConfig {
                 Lists.newArrayList(), Maps.newHashMap()
         )));
 
+        private ConfirmationUI.ConfirmConfig confirmGuiConfig = new ConfirmationUI.ConfirmConfig();
+
         private PositionableConfigItem nextPageItem = new PositionableConfigItem(
                 "pixelmon:trade_holder_right", 1, (byte) 0, "&aNext Page",
                 Lists.newArrayList(), 8, 5, Maps.newHashMap()
@@ -163,6 +166,10 @@ public class GuiConfig extends AbstractYamlConfig {
         private SpriteConfig spriteConfig = new SpriteConfig();
 
         public SearchTradesConfig() {
+        }
+
+        public ConfirmationUI.ConfirmConfig getConfirmGuiConfig() {
+            return this.confirmGuiConfig;
         }
 
         public SpriteConfig getSpriteConfig() {
