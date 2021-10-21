@@ -12,6 +12,7 @@ import com.envyful.reforged.gts.forge.config.ReforgedGTSConfig;
 import com.envyful.reforged.gts.forge.event.TradePurchaseEvent;
 import com.envyful.reforged.gts.forge.impl.trade.type.ItemTrade;
 import com.envyful.reforged.gts.forge.impl.trade.type.PokemonTrade;
+import com.envyful.reforged.gts.forge.player.GTSAttribute;
 import com.pixelmonmod.pixelmon.Pixelmon;
 import com.pixelmonmod.pixelmon.api.economy.IPixelmonBankAccount;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -117,6 +118,7 @@ public abstract class ForgeTrade implements Trade {
         target.setMoney((int) ((target.getMoney()) + (this.cost * (config.isEnableTax() ? config.getTaxRate() :
                 1.0))));
 
+        this.updateOwnership((EnvyPlayer<EntityPlayerMP>) player, this.owner);
         this.updateOwner(player.getUuid(), player.getName());
         this.purchased = true;
         this.setRemoved();
@@ -126,6 +128,21 @@ public abstract class ForgeTrade implements Trade {
                 ReforgedGTSForge.getInstance().getLocale().getMessages().getPurchasedTrade()
         ));
         return true;
+    }
+
+    private void updateOwnership(EnvyPlayer<EntityPlayerMP> purchaser, UUID oldOwner) {
+        GTSAttribute purchaserAttribute = purchaser.getAttribute(ReforgedGTSForge.class);
+
+        purchaserAttribute.getOwnedTrades().add(this);
+
+        EnvyPlayer<?> seller = ReforgedGTSForge.getInstance().getPlayerManager().getPlayer(oldOwner);
+
+        if (seller == null) {
+            return;
+        }
+
+        GTSAttribute sellerAttribute = seller.getAttribute(ReforgedGTSForge.class);
+        sellerAttribute.getOwnedTrades().remove(this);
     }
 
     protected void setRemoved() {

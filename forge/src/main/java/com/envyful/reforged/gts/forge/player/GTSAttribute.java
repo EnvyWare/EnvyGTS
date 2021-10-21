@@ -8,7 +8,6 @@ import com.envyful.reforged.gts.api.Trade;
 import com.envyful.reforged.gts.api.player.PlayerSettings;
 import com.envyful.reforged.gts.api.sql.ReforgedGTSQueries;
 import com.envyful.reforged.gts.forge.ReforgedGTSForge;
-import com.envyful.reforged.gts.forge.impl.TradeFactory;
 import com.google.common.collect.Lists;
 
 import java.sql.Connection;
@@ -72,17 +71,15 @@ public class GTSAttribute extends AbstractForgeAttribute<ReforgedGTSForge> {
 
     @Override
     public void load() {
-        try (Connection connection = this.manager.getDatabase().getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(ReforgedGTSQueries.GET_ALL_PLAYER);
-             PreparedStatement settingsStatement = connection.prepareStatement(ReforgedGTSQueries.GET_PLAYER_SETTINGS)) {
-            preparedStatement.setString(1, this.parent.getUuid().toString());
-            settingsStatement.setString(1, this.parent.getUuid().toString());
-
-            ResultSet resultSet = preparedStatement.executeQuery();
-
-            while (resultSet.next()) {
-                this.ownedTrades.add(TradeFactory.fromResultSet(resultSet));
+        for (Trade allTrade : this.manager.getTradeManager().getAllTrades()) {
+            if (allTrade.isOwner(this.parent.getUuid())) {
+                this.ownedTrades.add(allTrade);
             }
+        }
+
+        try (Connection connection = this.manager.getDatabase().getConnection();
+             PreparedStatement settingsStatement = connection.prepareStatement(ReforgedGTSQueries.GET_PLAYER_SETTINGS)) {
+            settingsStatement.setString(1, this.parent.getUuid().toString());
 
             ResultSet settingsSet = settingsStatement.executeQuery();
 

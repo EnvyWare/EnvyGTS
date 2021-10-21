@@ -3,6 +3,7 @@ package com.envyful.reforged.gts.forge.impl.trade.type;
 import com.envyful.api.concurrency.UtilConcurrency;
 import com.envyful.api.discord.DiscordWebHook;
 import com.envyful.api.forge.chat.UtilChatColour;
+import com.envyful.api.forge.concurrency.UtilForgeConcurrency;
 import com.envyful.api.forge.gui.type.ConfirmationUI;
 import com.envyful.api.forge.items.ItemBuilder;
 import com.envyful.api.gui.factory.GuiFactory;
@@ -128,7 +129,7 @@ public class ItemTrade extends ForgeTrade {
                                 '&',
                                 ReforgedGTSForge.getInstance().getLocale().getMessages().getRemovedOwnTrade()
                         ));
-                        ((EntityPlayerMP) envyPlayer.getParent()).closeScreen();
+                        UtilForgeConcurrency.runSync(() -> ((EntityPlayerMP) envyPlayer.getParent()).closeScreen());
                         return;
                     }
 
@@ -144,14 +145,16 @@ public class ItemTrade extends ForgeTrade {
                                                      .addLore(this.formatLore(ReforgedGTSForge.getInstance().getLocale().getListingBelowDataLore()))
                                                      .build())
                             .confirmHandler((clicker, clickType1) -> {
-                                if (this.purchased) {
-                                    ViewTradesUI.openUI((EnvyPlayer<EntityPlayerMP>) clicker);
-                                    return;
-                                }
+                                UtilForgeConcurrency.runSync(() -> {
+                                    if (this.purchased) {
+                                        ViewTradesUI.openUI((EnvyPlayer<EntityPlayerMP>) clicker);
+                                        return;
+                                    }
 
-                                if (!this.attemptPurchase(envyPlayer)) {
-                                    ViewTradesUI.openUI((EnvyPlayer<EntityPlayerMP>) envyPlayer);
-                                }
+                                    if (!this.attemptPurchase(envyPlayer)) {
+                                        ViewTradesUI.openUI((EnvyPlayer<EntityPlayerMP>) envyPlayer);
+                                    }
+                                });
                             })
                             .returnHandler((envyPlayer1, clickType1) -> ViewTradesUI.openUI((EnvyPlayer<EntityPlayerMP>) envyPlayer))
                             .open();

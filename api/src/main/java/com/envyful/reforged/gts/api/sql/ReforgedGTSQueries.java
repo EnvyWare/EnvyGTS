@@ -23,11 +23,10 @@ public class ReforgedGTSQueries {
             "UNIQUE(owner), " +
             "PRIMARY KEY(id));";
 
-    public static final String GET_ALL_ACTIVE = "SELECT owner, ownerName, originalOwner, expiry, cost, removed, type," +
+    public static final String GET_ALL_TRADES = "SELECT owner, ownerName, originalOwner, expiry, cost, removed, type," +
             " content_type, " +
             "contents, purchased " +
-            "FROM `reforged_gts_trade` " +
-            "WHERE expiry > ? AND removed = 0;";
+            "FROM `reforged_gts_trade`;";
 
     public static final String GET_ALL_PLAYER = "SELECT owner, ownerName, originalOwner, expiry, cost, removed, type," +
             " content_type, " +

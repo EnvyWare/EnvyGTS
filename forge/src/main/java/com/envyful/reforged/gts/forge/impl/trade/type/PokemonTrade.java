@@ -310,6 +310,21 @@ public class PokemonTrade extends ForgeTrade {
         return pokemon.getMoveset().attacks[pos].getActualMove().getLocalizedName();
     }
 
+    @Override
+    public String toString() {
+        return "PokemonTrade{" +
+                "cost=" + cost +
+                ", expiry=" + expiry +
+                ", originalOwnerName='" + originalOwnerName + '\'' +
+                ", owner=" + owner +
+                ", ownerName='" + ownerName + '\'' +
+                ", removed=" + removed +
+                ", purchased=" + purchased +
+                ", pokemon=" + pokemon +
+                ", tradeData=" + tradeData +
+                '}';
+    }
+
     public static class Builder extends ForgeTrade.Builder {
 
         private Pokemon pokemon = null;

@@ -51,15 +51,13 @@ public abstract class ForgeGlobalTradeManager implements GlobalTradeManager {
 
     @Override
     public List<Trade> getUserTrades(EnvyPlayer<?> player) {
-        List<Trade> trades = Lists.newArrayList();
+        GTSAttribute attribute = player.getAttribute(ReforgedGTSForge.class);
 
-        for (Trade activeTrade : this.activeTrades) {
-            if (activeTrade.isOwner(player)) {
-                trades.add(activeTrade);
-            }
+        if (attribute == null) {
+            return Collections.emptyList();
         }
 
-        return trades;
+        return attribute.getOwnedTrades();
     }
 
     @Override
@@ -72,8 +70,8 @@ public abstract class ForgeGlobalTradeManager implements GlobalTradeManager {
 
         List<Trade> expired = Lists.newArrayList();
 
-        for (Trade ownedTrade : this.activeTrades) {
-            if ((ownedTrade.hasExpired() || ownedTrade.wasRemoved()) && !ownedTrade.wasPurchased() && ownedTrade.isOwner(player.getUuid())) {
+        for (Trade ownedTrade : attribute.getOwnedTrades()) {
+            if ((ownedTrade.hasExpired() || ownedTrade.wasRemoved()) && !ownedTrade.wasPurchased()) {
                 expired.add(ownedTrade);
             }
         }
@@ -91,8 +89,8 @@ public abstract class ForgeGlobalTradeManager implements GlobalTradeManager {
 
         List<Trade> purchased = Lists.newArrayList();
 
-        for (Trade trade : this.activeTrades) {
-            if (trade.isOwner(player.getUuid()) && trade.wasPurchased()) {
+        for (Trade trade : attribute.getOwnedTrades()) {
+            if (trade.wasPurchased()) {
                 purchased.add(trade);
             }
         }
