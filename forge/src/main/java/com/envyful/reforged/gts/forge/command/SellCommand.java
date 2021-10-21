@@ -94,6 +94,7 @@ public class SellCommand {
 
         ItemTrade.Builder builder = (ItemTrade.Builder) ForgeTrade.builder()
                 .owner(sender)
+                .originalOwnerName(sender.getName())
                 .cost(price)
                 .expiry(System.currentTimeMillis()
                                 + TimeUnit.SECONDS.toMillis(ReforgedGTSForge.getInstance().getConfig().getDefaultTradeDurationSeconds()))

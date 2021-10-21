@@ -70,6 +70,7 @@ public class SelectPriceUI {
                                                  .cost(attribute.getCurrentPrice())
                                                  .expiry(System.currentTimeMillis() + TimeUnit.SECONDS.toMillis(attribute.getCurrentDuration()))
                                                  .owner(player)
+                                                 .originalOwnerName(player.getName())
                                                  .content("p"))
                                                  .contents(pixelmon)
                                          .build());
