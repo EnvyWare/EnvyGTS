@@ -75,7 +75,7 @@ public class SelectPCPokemonUI {
                      GuiFactory.displayableBuilder(ItemStack.class)
                              .itemStack(UtilConfigItem.fromConfigItem(config.getNextPageButton()))
                              .clickHandler((envyPlayer, clickType) -> {
-                                 if (page >= pc.getBoxCount()) {
+                                 if (page >= (pc.getBoxCount() - 1)) {
                                      openUI(player, 0);
                                  } else {
                                      openUI(player, page + 1);
@@ -91,7 +91,7 @@ public class SelectPCPokemonUI {
                              .itemStack(UtilConfigItem.fromConfigItem(config.getPreviousPageButton()))
                              .clickHandler((envyPlayer, clickType) -> {
                                  if (page <= 0) {
-                                     openUI(player, pc.getBoxCount());
+                                     openUI(player, pc.getBoxCount() - 1);
                                  } else {
                                      openUI(player, page - 1);
                                  }
