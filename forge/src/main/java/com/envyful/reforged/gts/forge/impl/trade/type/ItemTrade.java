@@ -255,6 +255,15 @@ public class ItemTrade extends ForgeTrade {
         return DiscordWebHook.fromJson(newJSON);
     }
 
+    @Override
+    public boolean matches(Object o) {
+        if (!(o instanceof ItemStack)) {
+            return false;
+        }
+
+        return Objects.equals(o, this.item);
+    }
+
     public static class Builder extends ForgeTrade.Builder {
 
         private ItemStack itemStack = null;

@@ -25,6 +25,7 @@ import com.envyful.reforged.gts.forge.ui.ViewTradesUI;
 import com.google.common.collect.Lists;
 import com.pixelmonmod.pixelmon.Pixelmon;
 import com.pixelmonmod.pixelmon.api.pokemon.Pokemon;
+import com.pixelmonmod.pixelmon.api.pokemon.PokemonSpec;
 import com.pixelmonmod.pixelmon.entities.pixelmon.stats.ExtraStats;
 import com.pixelmonmod.pixelmon.entities.pixelmon.stats.IVStore;
 import com.pixelmonmod.pixelmon.entities.pixelmon.stats.StatsType;
@@ -308,6 +309,19 @@ public class PokemonTrade extends ForgeTrade {
         }
 
         return pokemon.getMoveset().attacks[pos].getActualMove().getLocalizedName();
+    }
+
+    @Override
+    public boolean matches(Object o) {
+        if (o instanceof PokemonSpec) {
+            return ((PokemonSpec) o).matches(this.pokemon);
+        }
+
+        if (o instanceof Pokemon) {
+            return Objects.equals(o, this.pokemon);
+        }
+
+        return false;
     }
 
     @Override
