@@ -175,4 +175,13 @@ public interface Trade {
      */
     DiscordWebHook getWebHook(DiscordEvent event);
 
+    /**
+     *
+     * Check if the given object matches the traded object
+     *
+     * @param o The object being checked
+     * @return True if matching
+     */
+    boolean matches(Object o);
+
 }
