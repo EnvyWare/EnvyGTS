@@ -70,10 +70,10 @@ public class ViewTradesUI {
                      GuiFactory.displayableBuilder(ItemStack.class)
                              .itemStack(UtilConfigItem.fromConfigItem(config.getNextPageItem()))
                              .clickHandler((envyPlayer, clickType) -> {
-                                 if ((page + 1) >= (allTrades.size() / 45)) {
+                                 if ((page + 1) > (allTrades.size() / 45)) {
                                      openUI(player, 0, filter, sort);
                                  } else {
-                                     openUI(player, page - 1, filter, sort);
+                                     openUI(player, page + 1, filter, sort);
                                  }
                              })
                              .build()
