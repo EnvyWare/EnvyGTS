@@ -123,7 +123,7 @@ public class SelectPartyPokemonUI {
             if (i >= all.length || all[i] == null) {
                 pane.set(pos % 9, pos / 9, GuiFactory.displayableBuilder(ItemStack.class)
                         .itemStack(UtilConfigItem.fromConfigItem(config.getNoPokemonItem())).build());
-            } else if (all[i].hasSpecFlag("untradeable") || all[i].isEgg() || ReforgedGTSForge.getInstance().getConfig().isBlackListed(all[i])) {
+            } else if (all[i].hasSpecFlag("untradeable") || (!ReforgedGTSForge.getInstance().getConfig().isAllowEggs() && all[i].isEgg()) || ReforgedGTSForge.getInstance().getConfig().isBlackListed(all[i])) {
                 pane.set(pos % 9, pos / 9, GuiFactory.displayableBuilder(ItemStack.class)
                         .itemStack(UtilConfigItem.fromConfigItem(config.getUntradeablePokemonItem())).build());
             } else {
