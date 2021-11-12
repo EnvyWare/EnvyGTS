@@ -6,6 +6,7 @@ import com.envyful.api.command.annotate.executor.CommandProcessor;
 import com.envyful.api.command.annotate.executor.Sender;
 import com.envyful.api.forge.chat.UtilChatColour;
 import com.envyful.api.forge.player.ForgeEnvyPlayer;
+import com.envyful.api.time.UtilTimeFormat;
 import com.envyful.api.type.UtilParse;
 import com.envyful.reforged.gts.api.Trade;
 import com.envyful.reforged.gts.forge.ReforgedGTSForge;
@@ -130,7 +131,8 @@ public class SellCommand {
                 sender.message(UtilChatColour.translateColourCodes(
                         '&',
                         ReforgedGTSForge.getInstance().getLocale().getMessages().getCannotGoBelowMinTime()
-                        .replace("%min_time%", ReforgedGTSForge.getInstance().getConfig().getMinTradeDuration() + "")
+                                .replace("%min_duration%",
+                                         UtilTimeFormat.getFormattedDuration(ReforgedGTSForge.getInstance().getConfig().getMinTradeDuration()) + "")
                 ));
                 return;
             }
