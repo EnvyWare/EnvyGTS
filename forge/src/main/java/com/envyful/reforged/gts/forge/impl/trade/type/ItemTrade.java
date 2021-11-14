@@ -48,7 +48,7 @@ public class ItemTrade extends ForgeTrade {
         super(owner, ownerName, cost, expiry, originalOwnerName, removed, purchased);
 
         this.item = item;
-        this.tradeData = new TradeData(this.item.getDisplayName(), this.expiry);
+        this.tradeData = new TradeData(owner, this.item.getDisplayName(), this.expiry);
     }
 
     @Override

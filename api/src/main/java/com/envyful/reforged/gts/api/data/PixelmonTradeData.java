@@ -11,15 +11,15 @@ import java.util.UUID;
  */
 public class PixelmonTradeData extends TradeData {
 
-    private final String spec;
+    private final String nbt;
 
-    public PixelmonTradeData(UUID uuid, String name, long expiry, String spec) {
+    public PixelmonTradeData(UUID uuid, String name, long expiry, String nbt) {
         super(uuid, name, expiry);
 
-        this.spec = spec;
+        this.nbt = nbt;
     }
 
-    public String getSpec() {
-        return this.spec;
+    public String getNbt() {
+        return this.nbt;
     }
 }

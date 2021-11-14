@@ -13,6 +13,7 @@ import com.envyful.api.reforged.pixelmon.storage.UtilPixelmonPlayer;
 import com.envyful.api.time.UtilTimeFormat;
 import com.envyful.reforged.gts.api.Trade;
 import com.envyful.reforged.gts.api.TradeData;
+import com.envyful.reforged.gts.api.data.PixelmonTradeData;
 import com.envyful.reforged.gts.api.discord.DiscordEvent;
 import com.envyful.reforged.gts.api.gui.SortType;
 import com.envyful.reforged.gts.api.sql.ReforgedGTSQueries;
@@ -62,7 +63,8 @@ public class PokemonTrade extends ForgeTrade {
         super(owner, ownerName, cost, expiry, originalOwnerName, removed, purchased);
 
         this.pokemon = pokemon;
-        this.tradeData = new TradeData(this.pokemon.getDisplayName(), expiry);
+        this.tradeData = new PixelmonTradeData(owner, this.pokemon.getDisplayName(), expiry,
+                                               pokemon.writeToNBT(new NBTTagCompound()).toString());
     }
 
     @Override
