@@ -171,6 +171,7 @@ public class ItemTrade extends ForgeTrade {
                              String.format(ReforgedGTSForge.getInstance().getLocale().getMoneyFormat(), this.cost))
                     .replace("%duration%", UtilTimeFormat.getFormattedDuration((this.expiry - System.currentTimeMillis())))
                     .replace("%owner%", this.ownerName)
+                    .replace("%buyer%", this.ownerName)
                     .replace("%original_owner%", this.originalOwnerName)));
         }
 
