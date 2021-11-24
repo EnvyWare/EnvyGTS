@@ -2,6 +2,7 @@ package com.envyful.reforged.gts.forge.impl.trade;
 
 import com.envyful.api.concurrency.UtilConcurrency;
 import com.envyful.api.forge.chat.UtilChatColour;
+import com.envyful.api.forge.player.util.UtilPlayer;
 import com.envyful.api.player.EnvyPlayer;
 import com.envyful.api.reforged.pixelmon.storage.UtilPixelmonPlayer;
 import com.envyful.reforged.gts.api.Trade;
@@ -16,6 +17,7 @@ import com.envyful.reforged.gts.forge.player.GTSAttribute;
 import com.pixelmonmod.pixelmon.Pixelmon;
 import com.pixelmonmod.pixelmon.api.economy.IPixelmonBankAccount;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.util.text.TextComponentString;
 import net.minecraftforge.common.MinecraftForge;
 
 import java.sql.Connection;
@@ -97,11 +99,7 @@ public abstract class ForgeTrade implements Trade {
             return false;
         }
 
-        TradePurchaseEvent event = new TradePurchaseEvent((EnvyPlayer<EntityPlayerMP>) player, this);
-
-        MinecraftForge.EVENT_BUS.post(event);
-
-        if (event.isCanceled()) {
+        if (MinecraftForge.EVENT_BUS.post(new TradePurchaseEvent((EnvyPlayer<EntityPlayerMP>) player, this))) {
             return false;
         }
 
@@ -118,6 +116,9 @@ public abstract class ForgeTrade implements Trade {
         target.setMoney((int) ((target.getMoney()) + (this.cost * (config.isEnableTax() ? config.getTaxRate() :
                 1.0))));
 
+        this.attemptSendMessage(this.owner, player.getName(), (this.cost * (1 - (config.isEnableTax() ?
+                config.getTaxRate() : 1.0))));
+
         this.updateOwnership((EnvyPlayer<EntityPlayerMP>) player, this.owner);
         this.updateOwner(player.getUuid(), player.getName());
         this.purchased = true;
@@ -128,6 +129,23 @@ public abstract class ForgeTrade implements Trade {
                 ReforgedGTSForge.getInstance().getLocale().getMessages().getPurchasedTrade()
         ));
         return true;
+    }
+
+    private void attemptSendMessage(UUID owner, String buyerName, double taxTaken) {
+        EntityPlayerMP target = UtilPlayer.getOnlinePlayer(owner);
+
+        if (target == null) {
+            return;
+        }
+
+        target.sendMessage(new TextComponentString(UtilChatColour.translateColourCodes(
+                '&',
+                ReforgedGTSForge.getInstance().getLocale().getMessages().getItemWasPurchased()
+                .replace("%item%", this.getDisplayName())
+                .replace("%buyer%", buyerName)
+                .replace("%tax%", String.format("%.2f", taxTaken))
+                .replace("%price%", String.format("%.2f", this.getCost()))
+        )));
     }
 
     private void updateOwnership(EnvyPlayer<EntityPlayerMP> purchaser, UUID oldOwner) {

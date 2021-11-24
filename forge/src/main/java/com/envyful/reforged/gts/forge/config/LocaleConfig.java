@@ -74,6 +74,8 @@ public class LocaleConfig extends AbstractYamlConfig {
         private String toggledBroadcastsOn = "&e&l(!) &eToggled broadcasts &a&lON";
         private String toggledBroadcastsOff = "&e&l(!) &eToggled broadcasts &c&lOFF";
 
+        private String itemWasPurchased = "&e&l(!) &eYour %item% auction was purchased by %buyer% for %price% and &a$%tax%&e was taken!";
+
         private List<String> createTradeBroadcast = Lists.newArrayList(
                 " ",
                 "&a&lREFORGED GTS",
@@ -157,6 +159,10 @@ public class LocaleConfig extends AbstractYamlConfig {
 
         public String getCannotGoBelowMinTime() {
             return this.cannotGoBelowMinTime;
+        }
+
+        public String getItemWasPurchased() {
+            return this.itemWasPurchased;
         }
     }
 }
