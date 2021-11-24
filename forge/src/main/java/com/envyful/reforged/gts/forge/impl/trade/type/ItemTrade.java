@@ -246,7 +246,8 @@ public class ItemTrade extends ForgeTrade {
         }
 
         String newJSON = event.getItemJSON()
-                .replace("%seller%", this.ownerName)
+                .replace("%buyer%", this.ownerName)
+                .replace("%seller%", this.originalOwnerName)
                 .replace("%expires_in%", UtilTimeFormat.getFormattedDuration(this.expiry - System.currentTimeMillis()))
                 .replace("%price%", this.cost + "")
                 .replace("%item%", this.item.getDisplayName())
