@@ -80,7 +80,7 @@ public class LocaleConfig extends AbstractYamlConfig {
         private List<String> createTradeBroadcast = Lists.newArrayList(
                 " ",
                 "&a&lREFORGED GTS",
-                "&e%player%&7 added a new GTS listing for %name%",
+                "&e%player%&7 added a new GTS listing for %name% for $%cost%",
                 " "
         );
 
