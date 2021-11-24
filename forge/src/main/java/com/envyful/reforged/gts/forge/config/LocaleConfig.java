@@ -75,6 +75,7 @@ public class LocaleConfig extends AbstractYamlConfig {
         private String toggledBroadcastsOff = "&e&l(!) &eToggled broadcasts &c&lOFF";
 
         private String itemWasPurchased = "&e&l(!) &eYour %item% auction was purchased by %buyer% for %price% and &a$%tax%&e was taken!";
+        private String itemsToClaim = "&c&l(!) &cYou have auctions to claim in the GTS!";
 
         private List<String> createTradeBroadcast = Lists.newArrayList(
                 " ",
@@ -163,6 +164,10 @@ public class LocaleConfig extends AbstractYamlConfig {
 
         public String getItemWasPurchased() {
             return this.itemWasPurchased;
+        }
+
+        public String getItemsToClaim() {
+            return this.itemsToClaim;
         }
     }
 }

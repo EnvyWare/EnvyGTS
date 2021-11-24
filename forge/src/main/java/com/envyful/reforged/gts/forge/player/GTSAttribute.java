@@ -1,5 +1,6 @@
 package com.envyful.reforged.gts.forge.player;
 
+import com.envyful.api.forge.chat.UtilChatColour;
 import com.envyful.api.forge.player.ForgeEnvyPlayer;
 import com.envyful.api.forge.player.attribute.AbstractForgeAttribute;
 import com.envyful.api.json.UtilGson;
@@ -90,6 +91,16 @@ public class GTSAttribute extends AbstractForgeAttribute<ReforgedGTSForge> {
             this.settings = UtilGson.GSON.fromJson(settingsSet.getString("settings"), PlayerSettings.class);
         } catch (SQLException e) {
             e.printStackTrace();
+        }
+
+        for (Trade ownedTrade : this.ownedTrades) {
+            if (ownedTrade.hasExpired() || ownedTrade.wasPurchased() || ownedTrade.wasRemoved()) {
+                this.parent.message(UtilChatColour.translateColourCodes(
+                        '&',
+                        ReforgedGTSForge.getInstance().getLocale().getMessages().getItemsToClaim()
+                ));
+                break;
+            }
         }
     }
 
