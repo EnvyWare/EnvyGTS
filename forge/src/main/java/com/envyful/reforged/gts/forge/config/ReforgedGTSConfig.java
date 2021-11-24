@@ -37,6 +37,7 @@ public class ReforgedGTSConfig extends AbstractYamlConfig {
     private int maxListingsPerUser = 5;
     private double maxPrice = 10_000_000;
     private boolean allowEggs = false;
+    private boolean enableOpeningUIMessage = true;
 
     private List<String> blacklist = Lists.newArrayList("hoopa");
     private List<String> itemBlackList = Lists.newArrayList("minecraft:stone");
@@ -158,5 +159,9 @@ public class ReforgedGTSConfig extends AbstractYamlConfig {
 
     public boolean isAllowEggs() {
         return this.allowEggs;
+    }
+
+    public boolean isEnableOpeningUIMessage() {
+        return this.enableOpeningUIMessage;
     }
 }

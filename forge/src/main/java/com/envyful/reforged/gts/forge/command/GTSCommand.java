@@ -25,7 +25,10 @@ public class GTSCommand {
 
     @CommandProcessor
     public void onCommand(@Sender EntityPlayerMP player, String[] args) {
-        player.sendMessage(new TextComponentString(ReforgedGTSForge.getInstance().getLocale().getMessages().getOpeningUi()));
+        if (ReforgedGTSForge.getInstance().getConfig().isEnableOpeningUIMessage()) {
+            player.sendMessage(new TextComponentString(ReforgedGTSForge.getInstance().getLocale().getMessages().getOpeningUi()));
+        }
+
         MainUI.open(ReforgedGTSForge.getInstance().getPlayerManager().getPlayer(player));
     }
 }
