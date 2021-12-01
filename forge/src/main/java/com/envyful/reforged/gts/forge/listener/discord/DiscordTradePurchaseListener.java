@@ -5,7 +5,7 @@ import com.envyful.api.discord.DiscordWebHook;
 import com.envyful.api.forge.listener.LazyListener;
 import com.envyful.reforged.gts.api.discord.DiscordEvent;
 import com.envyful.reforged.gts.api.discord.DiscordEventManager;
-import com.envyful.reforged.gts.forge.event.TradePurchaseEvent;
+import com.envyful.reforged.gts.forge.event.PostTradePurchaseEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 import java.io.IOException;
@@ -17,7 +17,7 @@ public class DiscordTradePurchaseListener extends LazyListener {
     }
 
     @SubscribeEvent
-    public void onTradeCreate(TradePurchaseEvent event) {
+    public void onTradeCreate(PostTradePurchaseEvent event) {
         DiscordEvent purchaseHandler = DiscordEventManager.getPurchaseHandler();
 
         if (purchaseHandler == null || !purchaseHandler.isEnabled()) {

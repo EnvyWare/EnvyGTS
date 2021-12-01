@@ -10,6 +10,7 @@ import com.envyful.reforged.gts.api.gui.FilterType;
 import com.envyful.reforged.gts.api.sql.ReforgedGTSQueries;
 import com.envyful.reforged.gts.forge.ReforgedGTSForge;
 import com.envyful.reforged.gts.forge.config.ReforgedGTSConfig;
+import com.envyful.reforged.gts.forge.event.PostTradePurchaseEvent;
 import com.envyful.reforged.gts.forge.event.TradePurchaseEvent;
 import com.envyful.reforged.gts.forge.impl.trade.type.ItemTrade;
 import com.envyful.reforged.gts.forge.impl.trade.type.PokemonTrade;
@@ -123,6 +124,9 @@ public abstract class ForgeTrade implements Trade {
         this.updateOwner(player.getUuid(), player.getName());
         this.purchased = true;
         this.setRemoved();
+
+        MinecraftForge.EVENT_BUS.post(new PostTradePurchaseEvent((EnvyPlayer<EntityPlayerMP>) player, this));
+
         parent.closeScreen();
         player.message(UtilChatColour.translateColourCodes(
                 '&',
