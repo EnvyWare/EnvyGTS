@@ -83,7 +83,7 @@ public class ClaimTradesUI {
             }
 
             Trade trade = allTrades.get(i);
-            trade.displayClaimable(i % 45, clicker -> TimedOutTradesUI.openUI((EnvyPlayer<EntityPlayerMP>) clicker, page), pane);
+            trade.displayClaimable(i % 45, clicker -> openUI((EnvyPlayer<EntityPlayerMP>) clicker, page), pane);
         }
 
         GuiFactory.guiBuilder()
