@@ -148,7 +148,7 @@ public abstract class ForgeTrade implements Trade {
                 .replace("%item%", this.getDisplayName())
                 .replace("%buyer%", buyerName)
                 .replace("%tax%", String.format("%.2f", taxTaken))
-                .replace("%price%", String.format("%.2f", this.getCost()))
+                .replace("%price%", String.format(ReforgedGTSForge.getInstance().getLocale().getMoneyFormat(), this.getCost()))
         )));
     }
 
