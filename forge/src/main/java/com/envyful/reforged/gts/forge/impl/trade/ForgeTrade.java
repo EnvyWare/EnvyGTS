@@ -305,6 +305,7 @@ public abstract class ForgeTrade implements Trade {
             builder.removed(this.removed);
             builder.ownerName(this.ownerName);
             builder.purchased(this.purchased);
+            builder.originalOwnerName(this.originalOwnerName);
 
             return builder;
         }
