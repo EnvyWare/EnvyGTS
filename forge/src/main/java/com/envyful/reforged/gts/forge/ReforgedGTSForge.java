@@ -39,7 +39,7 @@ import java.sql.SQLException;
 )
 public class ReforgedGTSForge {
 
-    public static final String VERSION = "2.0.1";
+    public static final String VERSION = "2.0.2";
 
     private static ReforgedGTSForge instance;
 
