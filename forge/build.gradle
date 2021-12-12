@@ -39,13 +39,13 @@ dependencies {
     minecraft 'net.minecraftforge:forge:1.12.2-14.23.5.2854'
     compileOnly fg.deobf('com.pixelmonmod.pixelmon:Pixelmon-1.12.2-8.3.0-server:1.0')
 
-    compileOnly 'com.github.Pixelmon-Development.ForgePlaceholderAPI:api:0.0.1'
+    compileOnly 'com.github.Daniel-Forge-Development.ForgePlaceholderAPI:api:0.0.1'
 
     shadow group: 'org.spongepowered', name: 'configurate-yaml', version: '4.0.0'
 
-    shadow group: 'com.github.Pixelmon-Development.API', name: 'commons', version: '1.4.5'
-    shadow group: 'com.github.Pixelmon-Development.API', name: 'forge', version: '1.4.5'
-    shadow group: 'com.github.Pixelmon-Development.API', name: 'reforged', version: '1.4.5'
+    shadow group: 'com.github.Daniel-Forge-Development.API', name: 'commons', version: '1.4.6'
+    shadow group: 'com.github.Daniel-Forge-Development.API', name: 'forge', version: '1.4.6'
+    shadow group: 'com.github.Daniel-Forge-Development.API', name: 'reforged', version: '1.4.6'
 
     shadow project(':api')
 }
