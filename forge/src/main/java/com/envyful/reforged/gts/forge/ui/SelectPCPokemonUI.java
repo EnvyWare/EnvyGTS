@@ -158,7 +158,7 @@ public class SelectPCPokemonUI {
             } else if (pokemon.hasSpecFlag("untradeable") ||
                     (!ReforgedGTSForge.getInstance().getConfig().isAllowEggs() && pokemon.isEgg()) ||
                     ReforgedGTSForge.getInstance().getConfig().isBlackListed(pokemon) ||
-            pokemon.isInRanch()) {
+                    pokemon.isInRanch()) {
                 pane.set(2 + posX, posY, GuiFactory.displayableBuilder(ItemStack.class)
                         .itemStack(UtilConfigItem.fromConfigItem(config.getUntradeablePokemonItem())).build());
             } else {
@@ -172,15 +172,15 @@ public class SelectPCPokemonUI {
                             GTSAttribute attribute = envyPlayer.getAttribute(ReforgedGTSForge.class);
                             attribute.setSelectedSlot(slot);
                             pane.set(config.getConfirmSlot() % 9, config.getConfirmSlot() / 9,
-                                     GuiFactory.displayableBuilder(ItemStack.class)
-                                             .itemStack(new ItemBuilder(UtilSprite.getPokemonElement(
-                                                     box.get(slot),
-                                                     ReforgedGTSForge.getInstance().getGui().getPartyPokemonUIConfig().getSpriteConfig()
-                                             ))
-                                                                .enchant(Enchantments.UNBREAKING, 1)
-                                                                .itemFlag(ItemFlag.HIDE_ENCHANTS)
-                                                                .build())
-                                             .build()
+                                    GuiFactory.displayableBuilder(ItemStack.class)
+                                            .itemStack(new ItemBuilder(UtilSprite.getPokemonElement(
+                                                    box.get(slot),
+                                                    ReforgedGTSForge.getInstance().getGui().getPartyPokemonUIConfig().getSpriteConfig()
+                                            ))
+                                                    .enchant(Enchantments.UNBREAKING, 1)
+                                                    .itemFlag(ItemFlag.HIDE_ENCHANTS)
+                                                    .build())
+                                            .build()
                             );
                         }).build());
             }
