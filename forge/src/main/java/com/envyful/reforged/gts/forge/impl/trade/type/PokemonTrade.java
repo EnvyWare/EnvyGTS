@@ -3,6 +3,7 @@ package com.envyful.reforged.gts.forge.impl.trade.type;
 import com.envyful.api.concurrency.UtilConcurrency;
 import com.envyful.api.discord.DiscordWebHook;
 import com.envyful.api.forge.chat.UtilChatColour;
+import com.envyful.api.forge.concurrency.UtilForgeConcurrency;
 import com.envyful.api.forge.gui.type.ConfirmationUI;
 import com.envyful.api.forge.items.ItemBuilder;
 import com.envyful.api.gui.factory.GuiFactory;
@@ -126,7 +127,7 @@ public class PokemonTrade extends ForgeTrade {
                                 '&',
                                 ReforgedGTSForge.getInstance().getLocale().getMessages().getRemovedOwnTrade()
                         ));
-                        ((EntityPlayerMP) envyPlayer.getParent()).closeScreen();
+                        UtilForgeConcurrency.runSync(() -> ((EntityPlayerMP) envyPlayer.getParent()).closeScreen());
                         return;
                     }
 
@@ -184,7 +185,7 @@ public class PokemonTrade extends ForgeTrade {
                                                                         ReforgedGTSForge.getInstance().getGui().getSearchUIConfig().getSpriteConfig()))
                                    .addLore(this.formatLore(ReforgedGTSForge.getInstance().getLocale().getListingBelowExpiredOrClaimableLore()))
                                    .build())
-                .clickHandler((envyPlayer, clickType) -> this.collect(envyPlayer, returnGui))
+                .clickHandler((envyPlayer, clickType) -> UtilForgeConcurrency.runSync(() -> this.collect(envyPlayer, returnGui)))
                 .build());
     }
 

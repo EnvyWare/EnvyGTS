@@ -2,6 +2,7 @@ package com.envyful.reforged.gts.forge.ui;
 
 import com.envyful.api.config.type.ConfigItem;
 import com.envyful.api.forge.chat.UtilChatColour;
+import com.envyful.api.forge.concurrency.UtilForgeConcurrency;
 import com.envyful.api.forge.config.UtilConfigItem;
 import com.envyful.api.forge.items.ItemBuilder;
 import com.envyful.api.gui.factory.GuiFactory;
@@ -74,7 +75,7 @@ public class SelectPriceUI {
                                                  .content("p"))
                                                  .contents(pixelmon)
                                          .build());
-                                 ((EntityPlayerMP) envyPlayer.getParent()).closeScreen();
+                                 UtilForgeConcurrency.runSync(() -> ((EntityPlayerMP) envyPlayer.getParent()).closeScreen());
                              })
                              .build()
             );

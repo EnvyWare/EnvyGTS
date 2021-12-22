@@ -187,7 +187,7 @@ public class ItemTrade extends ForgeTrade {
                 .itemStack(new ItemBuilder(this.item.copy())
                                    .addLore(this.formatLore(ReforgedGTSForge.getInstance().getLocale().getListingBelowExpiredOrClaimableLore()))
                                    .build())
-                .clickHandler((envyPlayer, clickType) -> this.collect(envyPlayer, returnGui))
+                .clickHandler((envyPlayer, clickType) -> UtilForgeConcurrency.runSync(() -> this.collect(envyPlayer, returnGui)))
                 .build());
     }
 
