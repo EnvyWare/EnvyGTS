@@ -39,7 +39,7 @@ subprojects {
     }
 
     task versionedRelease(type: Copy, group: build) {
-        delete fileTree('../../release/') {
+        delete fileTree('../release/') {
             include '**/*.jar'
         }
         from("./build/libs/${rootProject.name}-Forge.jar")
