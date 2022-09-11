@@ -16,6 +16,8 @@ buildscript {
 
 apply plugin: 'net.minecraftforge.gradle'
 
+forgeVersion = "1.12.2"
+
 minecraft {
     mappings channel: 'snapshot', version: '20180814-1.12'
 }
