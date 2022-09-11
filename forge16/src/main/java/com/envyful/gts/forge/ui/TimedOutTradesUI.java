@@ -1,7 +1,7 @@
 package com.envyful.gts.forge.ui;
 
-import com.envyful.api.config.type.ConfigItem;
 import com.envyful.api.forge.chat.UtilChatColour;
+import com.envyful.api.forge.config.UtilConfigInterface;
 import com.envyful.api.forge.config.UtilConfigItem;
 import com.envyful.api.forge.player.ForgeEnvyPlayer;
 import com.envyful.api.gui.factory.GuiFactory;
@@ -9,7 +9,6 @@ import com.envyful.api.gui.pane.Pane;
 import com.envyful.gts.api.Trade;
 import com.envyful.gts.forge.EnvyGTSForge;
 import com.envyful.gts.forge.config.GuiConfig;
-import net.minecraft.item.ItemStack;
 
 import java.util.List;
 
@@ -29,11 +28,7 @@ public class TimedOutTradesUI {
                 .height(config.getGuiSettings().getHeight())
                 .build();
 
-        for (ConfigItem fillerItem : config.getGuiSettings().getFillerItems()) {
-            pane.add(GuiFactory.displayableBuilder(ItemStack.class)
-                             .itemStack(UtilConfigItem.fromConfigItem(fillerItem))
-                             .build());
-        }
+        UtilConfigInterface.fillBackground(pane, config.getGuiSettings());
 
         List<Trade> allTrades = EnvyGTSForge.getInstance().getTradeManager().getExpiredTrades(player);
 
