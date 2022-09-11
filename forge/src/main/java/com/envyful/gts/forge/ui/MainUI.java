@@ -29,41 +29,41 @@ public class MainUI {
                              .build());
         }
 
-        if (config.getSellItemButton().isEnabled()) {
-            pane.set(config.getSellItemButton().getXPos(), config.getSellItemButton().getYPos(),
-                     GuiFactory.displayableBuilder(ItemStack.class)
-                             .itemStack(UtilConfigItem.fromConfigItem(config.getSellItemButton()))
-                             .clickHandler((envyPlayer, clickType) -> SelectPartyPokemonUI.openUI(player))
-                             .build()
-            );
-        }
-
-        if (config.getViewClaimsButton().isEnabled()) {
-            pane.set(config.getViewClaimsButton().getXPos(), config.getViewClaimsButton().getYPos(),
-                     GuiFactory.displayableBuilder(ItemStack.class)
-                             .itemStack(UtilConfigItem.fromConfigItem(config.getViewClaimsButton()))
-                             .clickHandler((envyPlayer, clickType) -> ClaimTradesUI.openUI(player))
-                             .build()
-            );
-        }
-
-        if (config.getViewTimeoutButton().isEnabled()) {
-            pane.set(config.getViewTimeoutButton().getXPos(), config.getViewTimeoutButton().getYPos(),
-                     GuiFactory.displayableBuilder(ItemStack.class)
-                             .itemStack(UtilConfigItem.fromConfigItem(config.getViewTimeoutButton()))
-                             .clickHandler((envyPlayer, clickType) -> TimedOutTradesUI.openUI(player))
-                             .build()
-            );
-        }
-
-        if (config.getViewTradesButton().isEnabled()) {
-            pane.set(config.getViewTradesButton().getXPos(), config.getViewTradesButton().getYPos(),
-                     GuiFactory.displayableBuilder(ItemStack.class)
-                             .itemStack(UtilConfigItem.fromConfigItem(config.getViewTradesButton()))
-                             .clickHandler((envyPlayer, clickType) -> ViewTradesUI.openUI(player))
-                             .build()
-            );
-        }
+//        if (config.getSellItemButton().isEnabled()) {
+//            pane.set(config.getSellItemButton().getXPos(), config.getSellItemButton().getYPos(),
+//                     GuiFactory.displayableBuilder(ItemStack.class)
+//                             .itemStack(UtilConfigItem.fromConfigItem(config.getSellItemButton()))
+//                             .clickHandler((envyPlayer, clickType) -> SelectPartyPokemonUI.openUI(player))
+//                             .build()
+//            );
+//        }
+//
+//        if (config.getViewClaimsButton().isEnabled()) {
+//            pane.set(config.getViewClaimsButton().getXPos(), config.getViewClaimsButton().getYPos(),
+//                     GuiFactory.displayableBuilder(ItemStack.class)
+//                             .itemStack(UtilConfigItem.fromConfigItem(config.getViewClaimsButton()))
+//                             .clickHandler((envyPlayer, clickType) -> ClaimTradesUI.openUI(player))
+//                             .build()
+//            );
+//        }
+//
+//        if (config.getViewTimeoutButton().isEnabled()) {
+//            pane.set(config.getViewTimeoutButton().getXPos(), config.getViewTimeoutButton().getYPos(),
+//                     GuiFactory.displayableBuilder(ItemStack.class)
+//                             .itemStack(UtilConfigItem.fromConfigItem(config.getViewTimeoutButton()))
+//                             .clickHandler((envyPlayer, clickType) -> TimedOutTradesUI.openUI(player))
+//                             .build()
+//            );
+//        }
+//
+//        if (config.getViewTradesButton().isEnabled()) {
+//            pane.set(config.getViewTradesButton().getXPos(), config.getViewTradesButton().getYPos(),
+//                     GuiFactory.displayableBuilder(ItemStack.class)
+//                             .itemStack(UtilConfigItem.fromConfigItem(config.getViewTradesButton()))
+//                             .clickHandler((envyPlayer, clickType) -> ViewTradesUI.openUI(player))
+//                             .build()
+//            );
+//        }
 
         GuiFactory.guiBuilder()
                 .setPlayerManager(EnvyGTSForge.getInstance().getPlayerManager())

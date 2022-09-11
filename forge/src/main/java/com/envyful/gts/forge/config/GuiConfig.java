@@ -3,7 +3,7 @@ package com.envyful.gts.forge.config;
 import com.envyful.api.config.data.ConfigPath;
 import com.envyful.api.config.type.ConfigInterface;
 import com.envyful.api.config.type.ConfigItem;
-import com.envyful.api.config.type.PositionableConfigItem;
+import com.envyful.api.config.type.ExtendedConfigItem;
 import com.envyful.api.config.yaml.AbstractYamlConfig;
 import com.envyful.api.forge.gui.type.ConfirmationUI;
 import com.envyful.api.reforged.pixelmon.config.SpriteConfig;
@@ -79,25 +79,25 @@ public class GuiConfig extends AbstractYamlConfig {
                 Lists.newArrayList(), Maps.newHashMap()
         )));
 
-        private PositionableConfigItem viewTradesButton = new PositionableConfigItem(
+        private ExtendedConfigItem viewTradesButton = new ExtendedConfigItem(
                 "pixelmon:poke_ball",
                 1, (byte) 0, "&bView Trades",
                 Lists.newArrayList(), 1, 1, Maps.newHashMap()
         );
 
-        private PositionableConfigItem viewClaimsButton = new PositionableConfigItem(
+        private ExtendedConfigItem viewClaimsButton = new ExtendedConfigItem(
                 "pixelmon:protein",
                 1, (byte) 0, "&bClaim Trades",
                 Lists.newArrayList(), 3, 1, Maps.newHashMap()
         );
 
-        private PositionableConfigItem viewTimeoutButton = new PositionableConfigItem(
+        private ExtendedConfigItem viewTimeoutButton = new ExtendedConfigItem(
                 Item.getIdFromItem(Items.CLOCK) + "",
                 1, (byte) 0, "&bTimed out trades",
                 Lists.newArrayList(), 5, 1, Maps.newHashMap()
         );
 
-        private PositionableConfigItem sellItemButton = new PositionableConfigItem(
+        private ExtendedConfigItem sellItemButton = new ExtendedConfigItem(
                 "pixelmon:trade_machine",
                 1, (byte) 0, "&bSell Item",
                 Lists.newArrayList(), 7, 1, Maps.newHashMap()
@@ -110,19 +110,19 @@ public class GuiConfig extends AbstractYamlConfig {
             return this.guiSettings;
         }
 
-        public PositionableConfigItem getViewTradesButton() {
+        public ExtendedConfigItem getViewTradesButton() {
             return this.viewTradesButton;
         }
 
-        public PositionableConfigItem getViewClaimsButton() {
+        public ExtendedConfigItem getViewClaimsButton() {
             return this.viewClaimsButton;
         }
 
-        public PositionableConfigItem getViewTimeoutButton() {
+        public ExtendedConfigItem getViewTimeoutButton() {
             return this.viewTimeoutButton;
         }
 
-        public PositionableConfigItem getSellItemButton() {
+        public ExtendedConfigItem getSellItemButton() {
             return this.sellItemButton;
         }
     }
@@ -138,27 +138,27 @@ public class GuiConfig extends AbstractYamlConfig {
 
         private ConfirmationUI.ConfirmConfig confirmGuiConfig = new ConfirmationUI.ConfirmConfig();
 
-        private PositionableConfigItem nextPageItem = new PositionableConfigItem(
+        private ExtendedConfigItem nextPageItem = new ExtendedConfigItem(
                 "pixelmon:trade_holder_right", 1, (byte) 0, "&aNext Page",
                 Lists.newArrayList(), 8, 5, Maps.newHashMap()
         );
 
-        private PositionableConfigItem previousPageItem = new PositionableConfigItem(
+        private ExtendedConfigItem previousPageItem = new ExtendedConfigItem(
                 "pixelmon:trade_holder_left", 1, (byte) 0, "&aPrevious Page",
                 Lists.newArrayList(), 0, 5, Maps.newHashMap()
         );
 
-        private PositionableConfigItem backButton = new PositionableConfigItem(
+        private ExtendedConfigItem backButton = new ExtendedConfigItem(
                 "pixelmon:eject_button", 1, (byte) 0, "&cBack",
                 Lists.newArrayList(), 4, 5, Maps.newHashMap()
         );
 
-        private PositionableConfigItem filterButton = new PositionableConfigItem(
+        private ExtendedConfigItem filterButton = new ExtendedConfigItem(
                 "pixelmon:net_ball", 1, (byte) 0, "&bChange filter",
                 Lists.newArrayList("&aCurrent Filter: &f%filter%"), 2, 5, Maps.newHashMap()
         );
 
-        private PositionableConfigItem orderButton = new PositionableConfigItem(
+        private ExtendedConfigItem orderButton = new ExtendedConfigItem(
                 "pixelmon:blue_orb", 1, (byte) 0, "&bChange order",
                 Lists.newArrayList("&aCurrent order: &f%order%"), 6, 5, Maps.newHashMap()
         );
@@ -180,23 +180,23 @@ public class GuiConfig extends AbstractYamlConfig {
             return this.guiSettings;
         }
 
-        public PositionableConfigItem getNextPageItem() {
+        public ExtendedConfigItem getNextPageItem() {
             return this.nextPageItem;
         }
 
-        public PositionableConfigItem getPreviousPageItem() {
+        public ExtendedConfigItem getPreviousPageItem() {
             return this.previousPageItem;
         }
 
-        public PositionableConfigItem getBackButton() {
+        public ExtendedConfigItem getBackButton() {
             return this.backButton;
         }
 
-        public PositionableConfigItem getFilterButton() {
+        public ExtendedConfigItem getFilterButton() {
             return this.filterButton;
         }
 
-        public PositionableConfigItem getOrderButton() {
+        public ExtendedConfigItem getOrderButton() {
             return this.orderButton;
         }
     }
@@ -210,17 +210,17 @@ public class GuiConfig extends AbstractYamlConfig {
                 Lists.newArrayList(), Maps.newHashMap()
         )));
 
-        private PositionableConfigItem nextPageItem = new PositionableConfigItem(
+        private ExtendedConfigItem nextPageItem = new ExtendedConfigItem(
                 "pixelmon:trade_holder_right", 1, (byte) 0, "&aNext Page",
                 Lists.newArrayList(), 8, 5, Maps.newHashMap()
         );
 
-        private PositionableConfigItem previousPageItem = new PositionableConfigItem(
+        private ExtendedConfigItem previousPageItem = new ExtendedConfigItem(
                 "pixelmon:trade_holder_left", 1, (byte) 0, "&aPrevious Page",
                 Lists.newArrayList(), 0, 5, Maps.newHashMap()
         );
 
-        private PositionableConfigItem backButton = new PositionableConfigItem(
+        private ExtendedConfigItem backButton = new ExtendedConfigItem(
                 "pixelmon:eject_button", 1, (byte) 0, "&cBack",
                 Lists.newArrayList(), 4, 5, Maps.newHashMap()
         );
@@ -238,15 +238,15 @@ public class GuiConfig extends AbstractYamlConfig {
             return this.guiSettings;
         }
 
-        public PositionableConfigItem getNextPageItem() {
+        public ExtendedConfigItem getNextPageItem() {
             return this.nextPageItem;
         }
 
-        public PositionableConfigItem getPreviousPageItem() {
+        public ExtendedConfigItem getPreviousPageItem() {
             return this.previousPageItem;
         }
 
-        public PositionableConfigItem getBackButton() {
+        public ExtendedConfigItem getBackButton() {
             return this.backButton;
         }
     }
@@ -261,17 +261,17 @@ public class GuiConfig extends AbstractYamlConfig {
                 Lists.newArrayList(), Maps.newHashMap()
         )));
 
-        private PositionableConfigItem nextPageItem = new PositionableConfigItem(
+        private ExtendedConfigItem nextPageItem = new ExtendedConfigItem(
                 "pixelmon:trade_holder_right", 1, (byte) 0, "&aNext Page",
                 Lists.newArrayList(), 8, 5, Maps.newHashMap()
         );
 
-        private PositionableConfigItem previousPageItem = new PositionableConfigItem(
+        private ExtendedConfigItem previousPageItem = new ExtendedConfigItem(
                 "pixelmon:trade_holder_left", 1, (byte) 0, "&aPrevious Page",
                 Lists.newArrayList(), 0, 5, Maps.newHashMap()
         );
 
-        private PositionableConfigItem backButton = new PositionableConfigItem(
+        private ExtendedConfigItem backButton = new ExtendedConfigItem(
                 "pixelmon:eject_button", 1, (byte) 0, "&cBack",
                 Lists.newArrayList(), 4, 5, Maps.newHashMap()
         );
@@ -289,15 +289,15 @@ public class GuiConfig extends AbstractYamlConfig {
             return this.guiSettings;
         }
 
-        public PositionableConfigItem getNextPageItem() {
+        public ExtendedConfigItem getNextPageItem() {
             return this.nextPageItem;
         }
 
-        public PositionableConfigItem getPreviousPageItem() {
+        public ExtendedConfigItem getPreviousPageItem() {
             return this.previousPageItem;
         }
 
-        public PositionableConfigItem getBackButton() {
+        public ExtendedConfigItem getBackButton() {
             return this.backButton;
         }
     }
@@ -311,7 +311,7 @@ public class GuiConfig extends AbstractYamlConfig {
                 Lists.newArrayList(), Maps.newHashMap()
         )));
 
-        private PositionableConfigItem backButton = new PositionableConfigItem(
+        private ExtendedConfigItem backButton = new ExtendedConfigItem(
                 "pixelmon:eject_button", 1, (byte) 0, "&cBack",
                 Lists.newArrayList(), 0, 0, Maps.newHashMap()
         );
@@ -322,12 +322,12 @@ public class GuiConfig extends AbstractYamlConfig {
 
         private int confirmDisplay = 13;
 
-        private PositionableConfigItem confirmItem = new PositionableConfigItem(
+        private ExtendedConfigItem confirmItem = new ExtendedConfigItem(
                 "pixelmon:poke_ball", 1, (byte) 0, "&a&lCONFIRM",
                 Lists.newArrayList(), 4, 2, Maps.newHashMap()
         );
 
-        private PositionableConfigItem viewPCButton = new PositionableConfigItem(
+        private ExtendedConfigItem viewPCButton = new ExtendedConfigItem(
                 "pixelmon:pc", 1, (byte) 0, "&aYour PC",
                 Lists.newArrayList(), 4, 0, Maps.newHashMap()
         );
@@ -361,7 +361,7 @@ public class GuiConfig extends AbstractYamlConfig {
             return this.guiSettings;
         }
 
-        public PositionableConfigItem getBackButton() {
+        public ExtendedConfigItem getBackButton() {
             return this.backButton;
         }
 
@@ -373,11 +373,11 @@ public class GuiConfig extends AbstractYamlConfig {
             return this.confirmDisplay;
         }
 
-        public PositionableConfigItem getConfirmItem() {
+        public ExtendedConfigItem getConfirmItem() {
             return this.confirmItem;
         }
 
-        public PositionableConfigItem getViewPCButton() {
+        public ExtendedConfigItem getViewPCButton() {
             return this.viewPCButton;
         }
 
@@ -395,22 +395,22 @@ public class GuiConfig extends AbstractYamlConfig {
                 Lists.newArrayList(), Maps.newHashMap()
         )));
 
-        private PositionableConfigItem backButton = new PositionableConfigItem(
+        private ExtendedConfigItem backButton = new ExtendedConfigItem(
                 "pixelmon:eject_button", 1, (byte) 0, "&cBack",
                 Lists.newArrayList(), 0, 5, Maps.newHashMap()
         );
 
-        private PositionableConfigItem nextPageButton = new PositionableConfigItem(
+        private ExtendedConfigItem nextPageButton = new ExtendedConfigItem(
                 "pixelmon:trade_holder_right", 1, (byte) 0, "&aNext Page",
                 Lists.newArrayList(), 8, 0, Maps.newHashMap()
         );
 
-        private PositionableConfigItem previousPageButton = new PositionableConfigItem(
+        private ExtendedConfigItem previousPageButton = new ExtendedConfigItem(
                 "pixelmon:trade_holder_left", 1, (byte) 0, "&aPrevious Page",
                 Lists.newArrayList(), 0, 0, Maps.newHashMap()
         );
 
-        private PositionableConfigItem confirmButton = new PositionableConfigItem(
+        private ExtendedConfigItem confirmButton = new ExtendedConfigItem(
                 "pixelmon:poke_ball", 1, (byte) 0, "&a&lCONFIRM",
                 Lists.newArrayList(), 7, 3, Maps.newHashMap()
         );
@@ -447,15 +447,15 @@ public class GuiConfig extends AbstractYamlConfig {
             return this.guiSettings;
         }
 
-        public PositionableConfigItem getBackButton() {
+        public ExtendedConfigItem getBackButton() {
             return this.backButton;
         }
 
-        public PositionableConfigItem getNextPageButton() {
+        public ExtendedConfigItem getNextPageButton() {
             return this.nextPageButton;
         }
 
-        public PositionableConfigItem getPreviousPageButton() {
+        public ExtendedConfigItem getPreviousPageButton() {
             return this.previousPageButton;
         }
 
@@ -463,7 +463,7 @@ public class GuiConfig extends AbstractYamlConfig {
             return this.perPage;
         }
 
-        public PositionableConfigItem getConfirmButton() {
+        public ExtendedConfigItem getConfirmButton() {
             return this.confirmButton;
         }
 
@@ -487,27 +487,27 @@ public class GuiConfig extends AbstractYamlConfig {
 
         private int pokemonPosition = 10;
 
-        private PositionableConfigItem minPriceItem = new PositionableConfigItem(
+        private ExtendedConfigItem minPriceItem = new ExtendedConfigItem(
                 "pixelmon:relic_gold", 1, (byte) 0, "&bMin Price: &a$%min_price%",
                 Lists.newArrayList(), 2, 1, Maps.newHashMap()
         );
 
-        private PositionableConfigItem modifyPriceButton = new PositionableConfigItem(
+        private ExtendedConfigItem modifyPriceButton = new ExtendedConfigItem(
                 "pixelmon:relic_silver", 1, (byte) 0, "&bEdit Price",
                 Lists.newArrayList("&bCurrent Price: &e%price%"), 4, 1, Maps.newHashMap()
         );
 
-        private PositionableConfigItem modifyDurationButton = new PositionableConfigItem(
+        private ExtendedConfigItem modifyDurationButton = new ExtendedConfigItem(
                 "minecraft:clock", 1, (byte) 0, "&bEdit Duration",
                 Lists.newArrayList("&bDuration: &e%time%"), 5, 1, Maps.newHashMap()
         );
 
-        private PositionableConfigItem confirmItem = new PositionableConfigItem(
+        private ExtendedConfigItem confirmItem = new ExtendedConfigItem(
                 "pixelmon:poke_ball", 1, (byte) 0, "&a&lCONFIRM",
                 Lists.newArrayList(), 7, 1, Maps.newHashMap()
         );
 
-        private PositionableConfigItem backButton = new PositionableConfigItem(
+        private ExtendedConfigItem backButton = new ExtendedConfigItem(
                 "pixelmon:eject_button", 1, (byte) 0, "&cBack",
                 Lists.newArrayList(), 0, 0, Maps.newHashMap()
         );
@@ -529,23 +529,23 @@ public class GuiConfig extends AbstractYamlConfig {
             return this.pokemonPosition;
         }
 
-        public PositionableConfigItem getMinPriceItem() {
+        public ExtendedConfigItem getMinPriceItem() {
             return this.minPriceItem;
         }
 
-        public PositionableConfigItem getModifyPriceButton() {
+        public ExtendedConfigItem getModifyPriceButton() {
             return this.modifyPriceButton;
         }
 
-        public PositionableConfigItem getModifyDurationButton() {
+        public ExtendedConfigItem getModifyDurationButton() {
             return this.modifyDurationButton;
         }
 
-        public PositionableConfigItem getConfirmItem() {
+        public ExtendedConfigItem getConfirmItem() {
             return this.confirmItem;
         }
 
-        public PositionableConfigItem getBackButton() {
+        public ExtendedConfigItem getBackButton() {
             return this.backButton;
         }
     }

@@ -10,20 +10,15 @@ import com.envyful.api.gui.pane.Pane;
 import com.envyful.api.player.EnvyPlayer;
 import com.envyful.api.reforged.pixelmon.sprite.UtilSprite;
 import com.envyful.api.reforged.pixelmon.storage.UtilPixelmonPlayer;
-import com.envyful.gts.api.Trade;
 import com.envyful.gts.forge.EnvyGTSForge;
 import com.envyful.gts.forge.config.GuiConfig;
 import com.envyful.gts.forge.player.GTSAttribute;
-import com.envyful.gts.forge.util.UtilPokemonPrice;
-import com.google.common.collect.Lists;
 import com.pixelmonmod.pixelmon.api.pokemon.Pokemon;
 import com.pixelmonmod.pixelmon.api.storage.PCBox;
 import com.pixelmonmod.pixelmon.api.storage.PCStorage;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Enchantments;
 import net.minecraft.item.ItemStack;
-
-import java.util.List;
 
 public class SelectPCPokemonUI {
 
@@ -52,86 +47,86 @@ public class SelectPCPokemonUI {
 
         setPokemon(player, page, pane);
 
-        if (config.getConfirmButton().isEnabled()) {
-            pane.set(config.getConfirmButton().getXPos(), config.getConfirmButton().getYPos(),
-                     GuiFactory.displayableBuilder(ItemStack.class)
-                             .itemStack(UtilConfigItem.fromConfigItem(config.getConfirmButton()))
-                             .clickHandler((envyPlayer, clickType) -> {})
-                             .build()
-            );
-        }
-
-        if (config.getBackButton().isEnabled()) {
-            pane.set(config.getBackButton().getXPos(), config.getBackButton().getYPos(),
-                     GuiFactory.displayableBuilder(ItemStack.class)
-                             .itemStack(UtilConfigItem.fromConfigItem(config.getBackButton()))
-                             .clickHandler((envyPlayer, clickType) -> SelectPartyPokemonUI.openUI(player))
-                             .build()
-            );
-        }
-
-        if (config.getNextPageButton().isEnabled()) {
-            pane.set(config.getNextPageButton().getXPos(), config.getNextPageButton().getYPos(),
-                     GuiFactory.displayableBuilder(ItemStack.class)
-                             .itemStack(UtilConfigItem.fromConfigItem(config.getNextPageButton()))
-                             .clickHandler((envyPlayer, clickType) -> {
-                                 if (page >= (pc.getBoxCount() - 1)) {
-                                     openUI(player, 0);
-                                 } else {
-                                     openUI(player, page + 1);
-                                 }
-                             })
-                             .build()
-            );
-        }
-
-        if (config.getPreviousPageButton().isEnabled()) {
-            pane.set(config.getPreviousPageButton().getXPos(), config.getPreviousPageButton().getYPos(),
-                     GuiFactory.displayableBuilder(ItemStack.class)
-                             .itemStack(UtilConfigItem.fromConfigItem(config.getPreviousPageButton()))
-                             .clickHandler((envyPlayer, clickType) -> {
-                                 if (page <= 0) {
-                                     openUI(player, pc.getBoxCount() - 1);
-                                 } else {
-                                     openUI(player, page - 1);
-                                 }
-                             })
-                             .build()
-            );
-        }
-
-        if (config.getConfirmButton().isEnabled()) {
-            pane.set(config.getConfirmButton().getXPos(), config.getConfirmButton().getYPos(),
-                     GuiFactory.displayableBuilder(ItemStack.class)
-                    .itemStack(UtilConfigItem.fromConfigItem(config.getConfirmButton()))
-                    .clickHandler((envyPlayer, clickType) -> {
-                        GTSAttribute attribute = envyPlayer.getAttribute(EnvyGTSForge.class);
-
-                        if (attribute.getSelectedSlot() == -1) {
-                            return;
-                        }
-
-                        List<Trade> trades = Lists.newArrayList(attribute.getOwnedTrades());
-
-                        trades.removeIf(trade -> trade.hasExpired() || trade.wasPurchased() || trade.wasRemoved());
-
-                        if (trades.size() >= EnvyGTSForge.getInstance().getConfig().getMaxListingsPerUser()) {
-                            player.message(UtilChatColour.translateColourCodes(
-                                    '&',
-                                    EnvyGTSForge.getInstance().getLocale().getMessages().getMaxTradesAlreadyReached()
-                            ));
-                            return;
-                        }
-
-                        double price = UtilPokemonPrice.getMinPrice(pc.getBox(page).get(attribute.getSelectedSlot()));
-
-                        attribute.setCurrentPrice(price);
-                        attribute.setCurrentMinPrice(price);
-                        attribute.setCurrentDuration(EnvyGTSForge.getInstance().getConfig().getDefaultTradeDurationSeconds());
-                        SelectPriceUI.openUI(player, page, attribute.getSelectedSlot());
-                    })
-                    .build());
-        }
+//        if (config.getConfirmButton().isEnabled()) {
+//            pane.set(config.getConfirmButton().getXPos(), config.getConfirmButton().getYPos(),
+//                     GuiFactory.displayableBuilder(ItemStack.class)
+//                             .itemStack(UtilConfigItem.fromConfigItem(config.getConfirmButton()))
+//                             .clickHandler((envyPlayer, clickType) -> {})
+//                             .build()
+//            );
+//        }
+//
+//        if (config.getBackButton().isEnabled()) {
+//            pane.set(config.getBackButton().getXPos(), config.getBackButton().getYPos(),
+//                     GuiFactory.displayableBuilder(ItemStack.class)
+//                             .itemStack(UtilConfigItem.fromConfigItem(config.getBackButton()))
+//                             .clickHandler((envyPlayer, clickType) -> SelectPartyPokemonUI.openUI(player))
+//                             .build()
+//            );
+//        }
+//
+//        if (config.getNextPageButton().isEnabled()) {
+//            pane.set(config.getNextPageButton().getXPos(), config.getNextPageButton().getYPos(),
+//                     GuiFactory.displayableBuilder(ItemStack.class)
+//                             .itemStack(UtilConfigItem.fromConfigItem(config.getNextPageButton()))
+//                             .clickHandler((envyPlayer, clickType) -> {
+//                                 if (page >= (pc.getBoxCount() - 1)) {
+//                                     openUI(player, 0);
+//                                 } else {
+//                                     openUI(player, page + 1);
+//                                 }
+//                             })
+//                             .build()
+//            );
+//        }
+//
+//        if (config.getPreviousPageButton().isEnabled()) {
+//            pane.set(config.getPreviousPageButton().getXPos(), config.getPreviousPageButton().getYPos(),
+//                     GuiFactory.displayableBuilder(ItemStack.class)
+//                             .itemStack(UtilConfigItem.fromConfigItem(config.getPreviousPageButton()))
+//                             .clickHandler((envyPlayer, clickType) -> {
+//                                 if (page <= 0) {
+//                                     openUI(player, pc.getBoxCount() - 1);
+//                                 } else {
+//                                     openUI(player, page - 1);
+//                                 }
+//                             })
+//                             .build()
+//            );
+//        }
+//
+//        if (config.getConfirmButton().isEnabled()) {
+//            pane.set(config.getConfirmButton().getXPos(), config.getConfirmButton().getYPos(),
+//                     GuiFactory.displayableBuilder(ItemStack.class)
+//                    .itemStack(UtilConfigItem.fromConfigItem(config.getConfirmButton()))
+//                    .clickHandler((envyPlayer, clickType) -> {
+//                        GTSAttribute attribute = envyPlayer.getAttribute(EnvyGTSForge.class);
+//
+//                        if (attribute.getSelectedSlot() == -1) {
+//                            return;
+//                        }
+//
+//                        List<Trade> trades = Lists.newArrayList(attribute.getOwnedTrades());
+//
+//                        trades.removeIf(trade -> trade.hasExpired() || trade.wasPurchased() || trade.wasRemoved());
+//
+//                        if (trades.size() >= EnvyGTSForge.getInstance().getConfig().getMaxListingsPerUser()) {
+//                            player.message(UtilChatColour.translateColourCodes(
+//                                    '&',
+//                                    EnvyGTSForge.getInstance().getLocale().getMessages().getMaxTradesAlreadyReached()
+//                            ));
+//                            return;
+//                        }
+//
+//                        double price = UtilPokemonPrice.getMinPrice(pc.getBox(page).get(attribute.getSelectedSlot()));
+//
+//                        attribute.setCurrentPrice(price);
+//                        attribute.setCurrentMinPrice(price);
+//                        attribute.setCurrentDuration(EnvyGTSForge.getInstance().getConfig().getDefaultTradeDurationSeconds());
+//                        SelectPriceUI.openUI(player, page, attribute.getSelectedSlot());
+//                    })
+//                    .build());
+//        }
 
         GuiFactory.guiBuilder()
                 .setPlayerManager(EnvyGTSForge.getInstance().getPlayerManager())

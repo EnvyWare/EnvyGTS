@@ -3,7 +3,6 @@ package com.envyful.gts.forge.ui;
 import com.envyful.api.config.type.ConfigItem;
 import com.envyful.api.forge.chat.UtilChatColour;
 import com.envyful.api.forge.config.UtilConfigItem;
-import com.envyful.api.forge.items.ItemBuilder;
 import com.envyful.api.gui.factory.GuiFactory;
 import com.envyful.api.gui.pane.Pane;
 import com.envyful.api.player.EnvyPlayer;
@@ -55,67 +54,67 @@ public class ViewTradesUI {
         });
 
         allTrades.sort((o1, o2) -> o1.compare(o2, sort));
-
-        if (config.getBackButton().isEnabled()) {
-            pane.set(config.getBackButton().getXPos(), config.getBackButton().getYPos(),
-                     GuiFactory.displayableBuilder(ItemStack.class)
-                             .itemStack(UtilConfigItem.fromConfigItem(config.getBackButton()))
-                             .clickHandler((envyPlayer, clickType) -> MainUI.open(player))
-                             .build()
-            );
-        }
-
-        if (config.getNextPageItem().isEnabled()) {
-            pane.set(config.getNextPageItem().getXPos(), config.getNextPageItem().getYPos(),
-                     GuiFactory.displayableBuilder(ItemStack.class)
-                             .itemStack(UtilConfigItem.fromConfigItem(config.getNextPageItem()))
-                             .clickHandler((envyPlayer, clickType) -> {
-                                 if ((page + 1) > (allTrades.size() / 45)) {
-                                     openUI(player, 0, filter, sort);
-                                 } else {
-                                     openUI(player, page + 1, filter, sort);
-                                 }
-                             })
-                             .build()
-            );
-        }
-
-        if (config.getPreviousPageItem().isEnabled()) {
-            pane.set(config.getPreviousPageItem().getXPos(), config.getPreviousPageItem().getYPos(),
-                     GuiFactory.displayableBuilder(ItemStack.class)
-                             .itemStack(UtilConfigItem.fromConfigItem(config.getPreviousPageItem()))
-                             .clickHandler((envyPlayer, clickType) -> {
-                                 if (page == 0) {
-                                     openUI(player, (allTrades.size() / 45), filter, sort);
-                                 } else {
-                                     openUI(player, page - 1, filter, sort);
-                                 }
-                             })
-                             .build()
-            );
-        }
-
-        if (config.getOrderButton().isEnabled()) {
-            pane.set(config.getOrderButton().getXPos(), config.getOrderButton().getYPos(),
-                     GuiFactory.displayableBuilder(ItemStack.class)
-                             .itemStack(new ItemBuilder(UtilConfigItem.fromConfigItem(config.getOrderButton()))
-                                                .lore(formatButtonLores(config.getOrderButton().getLore(), filter, sort))
-                                                .build())
-                             .clickHandler((envyPlayer, clickType) -> openUI(player, page, filter, sort.getNext()))
-                             .build()
-            );
-        }
-
-        if (config.getFilterButton().isEnabled()) {
-            pane.set(config.getFilterButton().getXPos(), config.getFilterButton().getYPos(),
-                     GuiFactory.displayableBuilder(ItemStack.class)
-                             .itemStack(new ItemBuilder(UtilConfigItem.fromConfigItem(config.getFilterButton()))
-                                                .lore(formatButtonLores(config.getFilterButton().getLore(), filter, sort))
-                                                .build())
-                             .clickHandler((envyPlayer, clickType) -> openUI(player, page, filter.getNext(), sort))
-                             .build()
-            );
-        }
+//
+//        if (config.getBackButton().isEnabled()) {
+//            pane.set(config.getBackButton().getXPos(), config.getBackButton().getYPos(),
+//                     GuiFactory.displayableBuilder(ItemStack.class)
+//                             .itemStack(UtilConfigItem.fromConfigItem(config.getBackButton()))
+//                             .clickHandler((envyPlayer, clickType) -> MainUI.open(player))
+//                             .build()
+//            );
+//        }
+//
+//        if (config.getNextPageItem().isEnabled()) {
+//            pane.set(config.getNextPageItem().getXPos(), config.getNextPageItem().getYPos(),
+//                     GuiFactory.displayableBuilder(ItemStack.class)
+//                             .itemStack(UtilConfigItem.fromConfigItem(config.getNextPageItem()))
+//                             .clickHandler((envyPlayer, clickType) -> {
+//                                 if ((page + 1) > (allTrades.size() / 45)) {
+//                                     openUI(player, 0, filter, sort);
+//                                 } else {
+//                                     openUI(player, page + 1, filter, sort);
+//                                 }
+//                             })
+//                             .build()
+//            );
+//        }
+//
+//        if (config.getPreviousPageItem().isEnabled()) {
+//            pane.set(config.getPreviousPageItem().getXPos(), config.getPreviousPageItem().getYPos(),
+//                     GuiFactory.displayableBuilder(ItemStack.class)
+//                             .itemStack(UtilConfigItem.fromConfigItem(config.getPreviousPageItem()))
+//                             .clickHandler((envyPlayer, clickType) -> {
+//                                 if (page == 0) {
+//                                     openUI(player, (allTrades.size() / 45), filter, sort);
+//                                 } else {
+//                                     openUI(player, page - 1, filter, sort);
+//                                 }
+//                             })
+//                             .build()
+//            );
+//        }
+//
+//        if (config.getOrderButton().isEnabled()) {
+//            pane.set(config.getOrderButton().getXPos(), config.getOrderButton().getYPos(),
+//                     GuiFactory.displayableBuilder(ItemStack.class)
+//                             .itemStack(new ItemBuilder(UtilConfigItem.fromConfigItem(config.getOrderButton()))
+//                                                .lore(formatButtonLores(config.getOrderButton().getLore(), filter, sort))
+//                                                .build())
+//                             .clickHandler((envyPlayer, clickType) -> openUI(player, page, filter, sort.getNext()))
+//                             .build()
+//            );
+//        }
+//
+//        if (config.getFilterButton().isEnabled()) {
+//            pane.set(config.getFilterButton().getXPos(), config.getFilterButton().getYPos(),
+//                     GuiFactory.displayableBuilder(ItemStack.class)
+//                             .itemStack(new ItemBuilder(UtilConfigItem.fromConfigItem(config.getFilterButton()))
+//                                                .lore(formatButtonLores(config.getFilterButton().getLore(), filter, sort))
+//                                                .build())
+//                             .clickHandler((envyPlayer, clickType) -> openUI(player, page, filter.getNext(), sort))
+//                             .build()
+//            );
+//        }
 
         for (int i = (page * 45); i < ((page + 1) * 45); i++) {
             if (i >= allTrades.size()) {

@@ -2,7 +2,7 @@ package com.envyful.gts.forge.config;
 
 import com.envyful.api.config.type.ConfigInterface;
 import com.envyful.api.config.type.ConfigItem;
-import com.envyful.api.config.type.PositionableConfigItem;
+import com.envyful.api.config.type.ExtendedConfigItem;
 import com.envyful.api.reforged.pixelmon.config.SpriteConfig;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
@@ -22,17 +22,17 @@ public class EditDurationConfig {
             Lists.newArrayList(), Maps.newHashMap()
     )));
 
-    private PositionableConfigItem minTimeItem = new PositionableConfigItem(
+    private ExtendedConfigItem minTimeItem = new ExtendedConfigItem(
             "pixelmon:relic_gold", 1, (byte) 0, "&bMin Time: &e%min_time%",
             Lists.newArrayList(), 2, 1, Maps.newHashMap()
     );
 
-    private PositionableConfigItem currentTimeButton = new PositionableConfigItem(
+    private ExtendedConfigItem currentTimeButton = new ExtendedConfigItem(
             "pixelmon:relic_silver", 1, (byte) 0, "&bCurrent Time: &e%time%",
             Lists.newArrayList(), 1, 1, Maps.newHashMap()
     );
 
-    private PositionableConfigItem confirmItem = new PositionableConfigItem(
+    private ExtendedConfigItem confirmItem = new ExtendedConfigItem(
             "pixelmon:poke_ball", 1, (byte) 0, "&a&lCONFIRM",
             Lists.newArrayList(), 2, 2, Maps.newHashMap()
     );
@@ -43,42 +43,42 @@ public class EditDurationConfig {
 
     private Map<String, ModifyTimeButton> timeButtons = new HashMap<String, ModifyTimeButton>() {
         {
-            this.put("one", new ModifyTimeButton(new PositionableConfigItem(
+            this.put("one", new ModifyTimeButton(new ExtendedConfigItem(
                     "minecraft:stained_glass_pane", 1, (byte) 5, "&a&l+5 minutes",
                     Lists.newArrayList(), 4, 1, Maps.newHashMap()
             ), 300));
 
-            this.put("two", new ModifyTimeButton(new PositionableConfigItem(
+            this.put("two", new ModifyTimeButton(new ExtendedConfigItem(
                     "minecraft:stained_glass_pane", 1, (byte) 5, "&a&l+30 minutes",
                     Lists.newArrayList(), 5, 1, Maps.newHashMap()
             ), 1800));
 
-            this.put("three", new ModifyTimeButton(new PositionableConfigItem(
+            this.put("three", new ModifyTimeButton(new ExtendedConfigItem(
                     "minecraft:stained_glass_pane", 1, (byte) 5, "&a&l+1 hour",
                     Lists.newArrayList(), 6, 1, Maps.newHashMap()
             ), 3600));
 
-            this.put("four", new ModifyTimeButton(new PositionableConfigItem(
+            this.put("four", new ModifyTimeButton(new ExtendedConfigItem(
                     "minecraft:stained_glass_pane", 1, (byte) 5, "&a&l+6 hours",
                     Lists.newArrayList(), 7, 1, Maps.newHashMap()
             ), 21600));
 
-            this.put("five", new ModifyTimeButton(new PositionableConfigItem(
+            this.put("five", new ModifyTimeButton(new ExtendedConfigItem(
                     "minecraft:stained_glass_pane", 1, (byte) 14, "&c&l-5 minutes",
                     Lists.newArrayList(), 4, 2, Maps.newHashMap()
             ), -300));
 
-            this.put("six", new ModifyTimeButton(new PositionableConfigItem(
+            this.put("six", new ModifyTimeButton(new ExtendedConfigItem(
                     "minecraft:stained_glass_pane", 1, (byte) 14, "&c&l-30 minutes",
                     Lists.newArrayList(), 5, 2, Maps.newHashMap()
             ), -1800));
 
-            this.put("seven", new ModifyTimeButton(new PositionableConfigItem(
+            this.put("seven", new ModifyTimeButton(new ExtendedConfigItem(
                     "minecraft:stained_glass_pane", 1, (byte) 14, "&c&l-1 hour",
                     Lists.newArrayList(), 6, 2, Maps.newHashMap()
             ), -3600));
 
-            this.put("eight", new ModifyTimeButton(new PositionableConfigItem(
+            this.put("eight", new ModifyTimeButton(new ExtendedConfigItem(
                     "minecraft:stained_glass_pane", 1, (byte) 14, "&c&l-6 hours",
                     Lists.newArrayList(), 7, 2, Maps.newHashMap()
             ), -21600));
@@ -93,15 +93,15 @@ public class EditDurationConfig {
         return this.guiSettings;
     }
 
-    public PositionableConfigItem getMinTimeItem() {
+    public ExtendedConfigItem getMinTimeItem() {
         return this.minTimeItem;
     }
 
-    public PositionableConfigItem getCurrentTimeButton() {
+    public ExtendedConfigItem getCurrentTimeButton() {
         return this.currentTimeButton;
     }
 
-    public PositionableConfigItem getConfirmItem() {
+    public ExtendedConfigItem getConfirmItem() {
         return this.confirmItem;
     }
 
@@ -116,10 +116,10 @@ public class EditDurationConfig {
     @ConfigSerializable
     public static class ModifyTimeButton {
 
-        private PositionableConfigItem configItem;
+        private ExtendedConfigItem configItem;
         private long timeModifier;
 
-        public ModifyTimeButton(PositionableConfigItem configItem, long timeModifier) {
+        public ModifyTimeButton(ExtendedConfigItem configItem, long timeModifier) {
             this.configItem = configItem;
             this.timeModifier = timeModifier;
         }
@@ -127,7 +127,7 @@ public class EditDurationConfig {
         public ModifyTimeButton() {
         }
 
-        public PositionableConfigItem getConfigItem() {
+        public ExtendedConfigItem getConfigItem() {
             return this.configItem;
         }
 

@@ -2,7 +2,7 @@ package com.envyful.gts.forge.config;
 
 import com.envyful.api.config.type.ConfigInterface;
 import com.envyful.api.config.type.ConfigItem;
-import com.envyful.api.config.type.PositionableConfigItem;
+import com.envyful.api.config.type.ExtendedConfigItem;
 import com.envyful.api.reforged.pixelmon.config.SpriteConfig;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
@@ -22,17 +22,17 @@ public class EditPriceConfig {
             Lists.newArrayList(), Maps.newHashMap()
     )));
 
-    private PositionableConfigItem minPriceItem = new PositionableConfigItem(
+    private ExtendedConfigItem minPriceItem = new ExtendedConfigItem(
             "pixelmon:relic_gold", 1, (byte) 0, "&bMin Price: &a$%min_price%",
             Lists.newArrayList(), 2, 1, Maps.newHashMap()
     );
 
-    private PositionableConfigItem currentPriceButton = new PositionableConfigItem(
+    private ExtendedConfigItem currentPriceButton = new ExtendedConfigItem(
             "pixelmon:relic_silver", 1, (byte) 0, "&bCurrent Price: &a$%price%",
             Lists.newArrayList(), 1, 1, Maps.newHashMap()
     );
 
-    private PositionableConfigItem confirmItem = new PositionableConfigItem(
+    private ExtendedConfigItem confirmItem = new ExtendedConfigItem(
             "pixelmon:poke_ball", 1, (byte) 0, "&a&lCONFIRM",
             Lists.newArrayList(), 2, 2, Maps.newHashMap()
     );
@@ -43,42 +43,42 @@ public class EditPriceConfig {
 
     private Map<String, ModifyPriceButton> priceButtons = new HashMap<String, ModifyPriceButton>() {
         {
-            this.put("one", new ModifyPriceButton(new PositionableConfigItem(
+            this.put("one", new ModifyPriceButton(new ExtendedConfigItem(
                     "minecraft:stained_glass_pane", 1, (byte) 5, "&a&l+10",
                     Lists.newArrayList(), 4, 1, Maps.newHashMap()
             ), 10));
 
-            this.put("two", new ModifyPriceButton(new PositionableConfigItem(
+            this.put("two", new ModifyPriceButton(new ExtendedConfigItem(
                     "minecraft:stained_glass_pane", 1, (byte) 5, "&a&l+100",
                     Lists.newArrayList(), 5, 1, Maps.newHashMap()
             ), 100));
 
-            this.put("three", new ModifyPriceButton(new PositionableConfigItem(
+            this.put("three", new ModifyPriceButton(new ExtendedConfigItem(
                     "minecraft:stained_glass_pane", 1, (byte) 5, "&a&l+1,000",
                     Lists.newArrayList(), 6, 1, Maps.newHashMap()
             ), 1000));
 
-            this.put("four", new ModifyPriceButton(new PositionableConfigItem(
+            this.put("four", new ModifyPriceButton(new ExtendedConfigItem(
                     "minecraft:stained_glass_pane", 1, (byte) 5, "&a&l+10,000",
                     Lists.newArrayList(), 7, 1, Maps.newHashMap()
             ), 10000));
 
-            this.put("five", new ModifyPriceButton(new PositionableConfigItem(
+            this.put("five", new ModifyPriceButton(new ExtendedConfigItem(
                     "minecraft:stained_glass_pane", 1, (byte) 14, "&c&l-10",
                     Lists.newArrayList(), 4, 2, Maps.newHashMap()
             ), -10));
 
-            this.put("six", new ModifyPriceButton(new PositionableConfigItem(
+            this.put("six", new ModifyPriceButton(new ExtendedConfigItem(
                     "minecraft:stained_glass_pane", 1, (byte) 14, "&c&l-100",
                     Lists.newArrayList(), 5, 2, Maps.newHashMap()
             ), -100));
 
-            this.put("seven", new ModifyPriceButton(new PositionableConfigItem(
+            this.put("seven", new ModifyPriceButton(new ExtendedConfigItem(
                     "minecraft:stained_glass_pane", 1, (byte) 14, "&c&l-1,000",
                     Lists.newArrayList(), 6, 2, Maps.newHashMap()
             ), -1000));
 
-            this.put("eight", new ModifyPriceButton(new PositionableConfigItem(
+            this.put("eight", new ModifyPriceButton(new ExtendedConfigItem(
                     "minecraft:stained_glass_pane", 1, (byte) 14, "&c&l-10,000",
                     Lists.newArrayList(), 7, 2, Maps.newHashMap()
             ), -10000));
@@ -93,15 +93,15 @@ public class EditPriceConfig {
         return this.guiSettings;
     }
 
-    public PositionableConfigItem getMinPriceItem() {
+    public ExtendedConfigItem getMinPriceItem() {
         return this.minPriceItem;
     }
 
-    public PositionableConfigItem getCurrentPriceButton() {
+    public ExtendedConfigItem getCurrentPriceButton() {
         return this.currentPriceButton;
     }
 
-    public PositionableConfigItem getConfirmItem() {
+    public ExtendedConfigItem getConfirmItem() {
         return this.confirmItem;
     }
 
@@ -116,10 +116,10 @@ public class EditPriceConfig {
     @ConfigSerializable
     public static class ModifyPriceButton {
 
-        private PositionableConfigItem configItem;
+        private ExtendedConfigItem configItem;
         private double priceModifier;
 
-        public ModifyPriceButton(PositionableConfigItem configItem, double priceModifier) {
+        public ModifyPriceButton(ExtendedConfigItem configItem, double priceModifier) {
             this.configItem = configItem;
             this.priceModifier = priceModifier;
         }
@@ -127,7 +127,7 @@ public class EditPriceConfig {
         public ModifyPriceButton() {
         }
 
-        public PositionableConfigItem getConfigItem() {
+        public ExtendedConfigItem getConfigItem() {
             return this.configItem;
         }
 
