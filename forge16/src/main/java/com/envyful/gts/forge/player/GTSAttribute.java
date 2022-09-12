@@ -16,6 +16,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.UUID;
 
 public class GTSAttribute extends AbstractForgeAttribute<EnvyGTSForge> {
 
@@ -28,6 +29,10 @@ public class GTSAttribute extends AbstractForgeAttribute<EnvyGTSForge> {
 
     public GTSAttribute(EnvyGTSForge manager, EnvyPlayer<?> parent) {
         super(manager, (ForgeEnvyPlayer) parent);
+    }
+
+    public GTSAttribute(UUID uuid) {
+        super(uuid);
     }
 
     public List<Trade> getOwnedTrades() {
