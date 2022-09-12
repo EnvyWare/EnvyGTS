@@ -44,6 +44,7 @@ public class SelectPriceUI {
         UtilConfigInterface.fillBackground(pane, config.getGuiSettings());
 
         UtilConfigItem.builder()
+                .asyncClick(false)
                 .clickHandler((envyPlayer, clickType) -> {
                     Pokemon pixelmon = null;
 
