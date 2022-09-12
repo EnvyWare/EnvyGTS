@@ -186,7 +186,8 @@ public class PokemonTrade extends ForgeTrade {
                                                                         EnvyGTSForge.getInstance().getGui().getSearchUIConfig().getSpriteConfig()))
                                    .addLore(this.formatLore(EnvyGTSForge.getInstance().getLocale().getListingBelowExpiredOrClaimableLore()))
                                    .build())
-                .clickHandler((envyPlayer, clickType) -> UtilForgeConcurrency.runSync(() -> this.collect(envyPlayer, returnGui)))
+                .asyncClick(false)
+                .clickHandler((envyPlayer, clickType) -> this.collect(envyPlayer, returnGui))
                 .build());
     }
 
