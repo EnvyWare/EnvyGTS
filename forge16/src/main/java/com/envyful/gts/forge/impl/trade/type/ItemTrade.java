@@ -123,10 +123,7 @@ public class ItemTrade extends ForgeTrade {
                     )) {
                         MinecraftForge.EVENT_BUS.post(new TradeRemoveEvent(this));
                         this.setRemoved();
-                        envyPlayer.message(UtilChatColour.translateColourCodes(
-                                '&',
-                                EnvyGTSForge.getInstance().getLocale().getMessages().getRemovedOwnTrade()
-                        ));
+                        envyPlayer.message(UtilChatColour.colour(EnvyGTSForge.getInstance().getLocale().getMessages().getRemovedOwnTrade()));
                         UtilForgeConcurrency.runSync(() -> ((ServerPlayerEntity) envyPlayer.getParent()).closeContainer());
                         return;
                     }
