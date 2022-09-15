@@ -128,7 +128,6 @@ public class PokemonTrade extends ForgeTrade {
                                 '&',
                                 EnvyGTSForge.getInstance().getLocale().getMessages().getRemovedOwnTrade()
                         ));
-                        UtilForgeConcurrency.runSync(() -> ((ServerPlayerEntity) envyPlayer.getParent()).closeContainer());
                         return;
                     }
 
@@ -145,14 +144,16 @@ public class PokemonTrade extends ForgeTrade {
                                                      .addLore(this.formatLore(EnvyGTSForge.getInstance().getLocale().getListingBelowDataLore()))
                                                      .build())
                             .confirmHandler((clicker, clickType1) -> {
-                                if (this.purchased) {
-                                    ViewTradesUI.openUI((ForgeEnvyPlayer)clicker);
-                                    return;
-                                }
+                                UtilForgeConcurrency.runSync(() -> {
+                                    if (this.purchased) {
+                                        ViewTradesUI.openUI((ForgeEnvyPlayer)clicker);
+                                        return;
+                                    }
 
-                                if (!this.attemptPurchase(envyPlayer)) {
-                                    ViewTradesUI.openUI((ForgeEnvyPlayer)envyPlayer);
-                                }
+                                    if (!this.attemptPurchase(envyPlayer)) {
+                                        ViewTradesUI.openUI((ForgeEnvyPlayer)envyPlayer);
+                                    }
+                                });
                             })
                             .returnHandler((envyPlayer1, clickType1) -> ViewTradesUI.openUI((ForgeEnvyPlayer)envyPlayer))
                             .open();
