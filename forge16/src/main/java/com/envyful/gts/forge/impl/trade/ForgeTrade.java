@@ -103,7 +103,7 @@ public abstract class ForgeTrade implements Trade {
             return false;
         }
 
-        iPixelmonBankAccount.setBalance((int) (iPixelmonBankAccount.getBalance().doubleValue() - this.cost));
+        iPixelmonBankAccount.take(this.cost);
 
         EnvyGTSConfig config = EnvyGTSForge.getInstance().getConfig();
         BankAccount target = BankAccountProxy.getBankAccountUnsafe(this.owner);
@@ -113,8 +113,7 @@ public abstract class ForgeTrade implements Trade {
             return false;
         }
 
-        target.setBalance((int) ((target.getBalance().doubleValue()) + (this.cost * (config.isEnableTax() ? config.getTaxRate() :
-                1.0))));
+        target.add((this.cost * (config.isEnableTax() ? config.getTaxRate() : 1.0)));
 
         this.attemptSendMessage(this.owner, player.getName(), (this.cost * (1 - (config.isEnableTax() ?
                 config.getTaxRate() : 1.0))));
