@@ -28,8 +28,6 @@ public class SelectPartyPokemonUI {
     public static void openUI(ForgeEnvyPlayer player) {
         GuiConfig.PartyPokemonConfig config = EnvyGTSForge.getInstance().getGui().getPartyPokemonUIConfig();
 
-        ((GTSAttribute) player.getAttribute(EnvyGTSForge.class)).setSelectedSlot(-1);
-
         Pane pane = GuiFactory.paneBuilder()
                 .topLeftX(0).topLeftY(0)
                 .width(9)
@@ -109,25 +107,24 @@ public class SelectPartyPokemonUI {
                         .itemStack(UtilConfigItem.fromConfigItem(config.getUntradeablePokemonItem())).build());
             } else {
                 final int slot = i;
+                ItemBuilder builder = new ItemBuilder(UtilSprite.getPokemonElement(
+                        all[i],
+                        EnvyGTSForge.getInstance().getGui().getPartyPokemonUIConfig().getSpriteConfig()
+                ));
+
+                GTSAttribute gtsAttribute = player.getAttribute(EnvyGTSForge.class);
+
+                if (gtsAttribute.getSelectedSlot() == slot) {
+                    builder
+                            .enchant(Enchantments.UNBREAKING, 1)
+                            .itemFlag(ItemFlag.HIDE_ENCHANTS);
+                }
+
                 pane.set(pos % 9, pos / 9, GuiFactory.displayableBuilder(ItemStack.class)
-                        .itemStack(UtilSprite.getPokemonElement(
-                                all[i],
-                                EnvyGTSForge.getInstance().getGui().getPartyPokemonUIConfig().getSpriteConfig()
-                        ))
+                        .itemStack(builder.build())
                         .clickHandler((envyPlayer, clickType) -> {
-                            GTSAttribute attribute = envyPlayer.getAttribute(EnvyGTSForge.class);
-                            attribute.setSelectedSlot(slot);
-                            pane.set(config.getConfirmDisplay() % 9, config.getConfirmDisplay() / 9,
-                                     GuiFactory.displayableBuilder(ItemStack.class)
-                                             .itemStack(new ItemBuilder(UtilSprite.getPokemonElement(
-                                                     all[slot],
-                                                     EnvyGTSForge.getInstance().getGui().getPartyPokemonUIConfig().getSpriteConfig()
-                                             ))
-                                                                .enchant(Enchantments.UNBREAKING, 1)
-                                                                .itemFlag(ItemFlag.HIDE_ENCHANTS)
-                                                                .build())
-                                             .build()
-                            );
+                            gtsAttribute.setSelectedSlot(slot);
+                            openUI(player);
                         }).build());
             }
         }
