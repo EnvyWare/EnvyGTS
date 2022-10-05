@@ -13,7 +13,7 @@ subprojects {
     apply plugin: 'java'
 
     group = 'com.envyful.gts'
-    version = '3.0.3'
+    version = '3.0.4'
 
     ext {
         forgeVersion = "none"
