@@ -8,6 +8,7 @@ import com.envyful.api.command.annotate.executor.Sender;
 import com.envyful.api.forge.chat.UtilChatColour;
 import com.envyful.gts.forge.EnvyGTSForge;
 import com.envyful.gts.forge.ui.MainUI;
+import com.pixelmonmod.pixelmon.api.storage.StorageProxy;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.util.Util;
 
@@ -30,6 +31,7 @@ public class GTSCommand {
             player.sendMessage(UtilChatColour.colour(EnvyGTSForge.getInstance().getLocale().getMessages().getOpeningUi()), Util.NIL_UUID);
         }
 
+        StorageProxy.getParty(player).retrieveAll();
         MainUI.open(EnvyGTSForge.getInstance().getPlayerManager().getPlayer(player));
     }
 }

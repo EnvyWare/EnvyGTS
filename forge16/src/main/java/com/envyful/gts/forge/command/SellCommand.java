@@ -16,6 +16,7 @@ import com.envyful.gts.forge.impl.trade.type.ItemTrade;
 import com.envyful.gts.forge.player.GTSAttribute;
 import com.envyful.gts.forge.ui.SelectPartyPokemonUI;
 import com.google.common.collect.Lists;
+import com.pixelmonmod.pixelmon.api.storage.StorageProxy;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
@@ -43,6 +44,7 @@ public class SellCommand {
         GTSAttribute attribute = sender.getAttribute(EnvyGTSForge.class);
 
         if (args.length == 0) {
+            StorageProxy.getParty(player).retrieveAll();
             SelectPartyPokemonUI.openUI(sender);
             return;
         }
