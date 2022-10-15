@@ -38,6 +38,8 @@ public class PokeSpecPricing {
                 return currentValue * this.minPrice.getValue();
             case "divide" : case "division" : case "/" :
                 return currentValue / Math.max(0.00001, this.minPrice.getValue());
+            case "set" :
+                return this.minPrice.getValue();
         }
     }
 
