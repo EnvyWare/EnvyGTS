@@ -265,6 +265,7 @@ public class PokemonTrade extends ForgeTrade {
         String newJSON = event.getPokemonJSON()
                 .replace("%buyer%", this.ownerName)
                 .replace("%seller%", this.originalOwnerName)
+                .replace("%held_item%", pokemon.getHeldItem().getDisplayName().getString())
                 .replace("%expires_in%", UtilTimeFormat.getFormattedDuration(this.expiry - System.currentTimeMillis()))
                 .replace("%price%", this.cost + "")
                 .replace("%species%", pokemon.getSpecies().getLocalizedName())
