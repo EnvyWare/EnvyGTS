@@ -11,11 +11,14 @@ import com.envyful.api.gui.factory.GuiFactory;
 import com.envyful.gts.api.GlobalTradeManager;
 import com.envyful.gts.api.TradeManager;
 import com.envyful.gts.api.discord.DiscordEventManager;
+import com.envyful.gts.api.gui.FilterTypeFactory;
 import com.envyful.gts.api.sql.EnvyGTSQueries;
 import com.envyful.gts.forge.command.GTSCommand;
 import com.envyful.gts.forge.config.EnvyGTSConfig;
 import com.envyful.gts.forge.config.GuiConfig;
 import com.envyful.gts.forge.config.LocaleConfig;
+import com.envyful.gts.forge.impl.filter.ItemFilterType;
+import com.envyful.gts.forge.impl.filter.PokemonFilterType;
 import com.envyful.gts.forge.impl.storage.SQLGlobalTradeManager;
 import com.envyful.gts.forge.listener.TradeCreateListener;
 import com.envyful.gts.forge.listener.discord.DiscordTradeCreateListener;
@@ -59,6 +62,11 @@ public class EnvyGTSForge {
     @SubscribeEvent
     public void onServerStarting(FMLServerAboutToStartEvent event) {
         GuiFactory.setPlatformFactory(new ForgeGuiFactory());
+
+        FilterTypeFactory.init();
+        FilterTypeFactory.register(new ItemFilterType());
+        FilterTypeFactory.register(new PokemonFilterType());
+
         this.playerManager.registerAttribute(this, GTSAttribute.class);
 
         this.loadConfig();
