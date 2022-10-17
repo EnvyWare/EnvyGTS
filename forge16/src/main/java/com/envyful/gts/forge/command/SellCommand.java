@@ -50,8 +50,7 @@ public class SellCommand {
         }
 
         if (args.length < 2) {
-            sender.message(UtilChatColour.translateColourCodes(
-                    '&',
+            sender.message(UtilChatColour.colour(
                     EnvyGTSForge.getInstance().getLocale().getMessages().getSellInsuffucientArgs()
             ));
             return;
@@ -60,16 +59,14 @@ public class SellCommand {
         ItemStack inHand = player.getItemInHand(Hand.MAIN_HAND);
 
         if (Objects.equals(inHand.getItem(), Items.AIR)) {
-            sender.message(UtilChatColour.translateColourCodes(
-                    '&',
+            sender.message(UtilChatColour.colour(
                     EnvyGTSForge.getInstance().getLocale().getMessages().getSellNoItemInHand()
             ));
             return;
         }
 
         if (EnvyGTSForge.getInstance().getConfig().isBlackListed(inHand)) {
-            sender.message(UtilChatColour.translateColourCodes(
-                    '&',
+            sender.message(UtilChatColour.colour(
                     EnvyGTSForge.getInstance().getLocale().getMessages().getCannotSellBlacklisted())
             );
             return;
@@ -78,8 +75,7 @@ public class SellCommand {
         int amount = UtilParse.parseInteger(args[0]).orElse(-1);
 
         if (amount <= 0) {
-            sender.message(UtilChatColour.translateColourCodes(
-                    '&',
+            sender.message(UtilChatColour.colour(
                     EnvyGTSForge.getInstance().getLocale().getMessages().getAmountMustBePositive()
             ));
             return;
@@ -88,16 +84,14 @@ public class SellCommand {
         double price = UtilParse.parseDouble(args[1]).orElse(-1.0);
 
         if (price < 1.0) {
-            sender.message(UtilChatColour.translateColourCodes(
-                    '&',
+            sender.message(UtilChatColour.colour(
                     EnvyGTSForge.getInstance().getLocale().getMessages().getPriceMustBeMoreThanOne()
             ));
             return;
         }
 
         if (price > EnvyGTSForge.getInstance().getConfig().getMaxPrice()) {
-            sender.message(UtilChatColour.translateColourCodes(
-                    '&',
+            sender.message(UtilChatColour.colour(
                     EnvyGTSForge.getInstance().getLocale().getMessages().getCannotGoAboveMaxPrice()
                             .replace("%max_price%",
                                      String.format(EnvyGTSForge.getInstance().getLocale().getMoneyFormat(),
@@ -118,8 +112,7 @@ public class SellCommand {
         trades.removeIf(trade -> trade.hasExpired() || trade.wasPurchased() || trade.wasRemoved());
 
         if (trades.size() >= EnvyGTSForge.getInstance().getConfig().getMaxListingsPerUser()) {
-            sender.message(UtilChatColour.translateColourCodes(
-                    '&',
+            sender.message(UtilChatColour.colour(
                     EnvyGTSForge.getInstance().getLocale().getMessages().getMaxTradesAlreadyReached()
             ));
             return;
@@ -132,8 +125,7 @@ public class SellCommand {
             int integer = UtilParse.parseInteger(args[1]).orElse(-1);
 
             if (integer <= EnvyGTSForge.getInstance().getConfig().getMinTradeDuration()) {
-                sender.message(UtilChatColour.translateColourCodes(
-                        '&',
+                sender.message(UtilChatColour.colour(
                         EnvyGTSForge.getInstance().getLocale().getMessages().getCannotGoBelowMinTime()
                                 .replace("%min_duration%",
                                          UtilTimeFormat.getFormattedDuration(EnvyGTSForge.getInstance().getConfig().getMinTradeDuration()) + "")

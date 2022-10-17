@@ -26,6 +26,7 @@ public class GuiConfig extends AbstractYamlConfig {
     private SelectFromPCConfig pcConfig = new SelectFromPCConfig();
     private PokemonPriceConfig priceConfig = new PokemonPriceConfig();
     private EditPriceConfig editPriceUIConfig = new EditPriceConfig();
+    private EditItemPriceConfig editItemPriceUIConfig = new EditItemPriceConfig();
     private EditDurationConfig editDurationUIConfig = new EditDurationConfig();
 
     public GuiConfig() {
@@ -66,6 +67,10 @@ public class GuiConfig extends AbstractYamlConfig {
 
     public EditDurationConfig getEditDurationUIConfig() {
         return this.editDurationUIConfig;
+    }
+
+    public EditItemPriceConfig getEditItemPriceUIConfig() {
+        return this.editItemPriceUIConfig;
     }
 
     @ConfigSerializable
