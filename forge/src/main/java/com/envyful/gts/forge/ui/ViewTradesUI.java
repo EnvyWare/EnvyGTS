@@ -8,6 +8,7 @@ import com.envyful.api.gui.pane.Pane;
 import com.envyful.api.player.EnvyPlayer;
 import com.envyful.gts.api.Trade;
 import com.envyful.gts.api.gui.FilterType;
+import com.envyful.gts.api.gui.FilterTypeFactory;
 import com.envyful.gts.api.gui.SortType;
 import com.envyful.gts.forge.EnvyGTSForge;
 import com.envyful.gts.forge.config.GuiConfig;
@@ -20,7 +21,7 @@ import java.util.List;
 public class ViewTradesUI {
 
     public static void openUI(EnvyPlayer<EntityPlayerMP> player) {
-        openUI(player, 0, FilterType.ALL, SortType.MOST_RECENT);
+        openUI(player, 0, FilterTypeFactory.getDefault(), SortType.MOST_RECENT);
     }
 
     public static void openUI(EnvyPlayer<EntityPlayerMP> player, int page, FilterType filter, SortType sort) {
