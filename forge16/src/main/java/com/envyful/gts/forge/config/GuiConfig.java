@@ -28,6 +28,7 @@ public class GuiConfig extends AbstractYamlConfig {
     private EditPriceConfig editPriceUIConfig = new EditPriceConfig();
     private EditItemPriceConfig editItemPriceUIConfig = new EditItemPriceConfig();
     private EditDurationConfig editDurationUIConfig = new EditDurationConfig();
+    private SellHandOrParty sellHandOrParty = new SellHandOrParty();
 
     public GuiConfig() {
         super();
@@ -71,6 +72,10 @@ public class GuiConfig extends AbstractYamlConfig {
 
     public EditItemPriceConfig getEditItemPriceUIConfig() {
         return this.editItemPriceUIConfig;
+    }
+
+    public SellHandOrParty getSellHandOrParty() {
+        return this.sellHandOrParty;
     }
 
     @ConfigSerializable
@@ -127,6 +132,43 @@ public class GuiConfig extends AbstractYamlConfig {
 
         public ExtendedConfigItem getSellItemButton() {
             return this.sellItemButton;
+        }
+    }
+
+    @ConfigSerializable
+    public static class SellHandOrParty {
+
+        private ConfigInterface guiSettings = new ConfigInterface(
+                "EnvyGTS", 3, "BLOCK", ImmutableMap.of("one", new ConfigItem(
+                "minecraft:black_stained_glass_pane", 1, (byte) 15, " ",
+                Lists.newArrayList(), Maps.newHashMap()
+        )));
+
+        private ExtendedConfigItem selectParty = new ExtendedConfigItem(
+                "pixelmon:poke_ball",
+                1, (byte) 0, "&bSelect Party Member",
+                Lists.newArrayList(), 1, 1, Maps.newHashMap()
+        );
+
+        private ExtendedConfigItem sellHand = new ExtendedConfigItem(
+                "pixelmon:protein",
+                1, (byte) 0, "&bSell Hand",
+                Lists.newArrayList(), 3, 1, Maps.newHashMap()
+        );
+
+        public SellHandOrParty() {
+        }
+
+        public ConfigInterface getGuiSettings() {
+            return this.guiSettings;
+        }
+
+        public ExtendedConfigItem getSelectParty() {
+            return this.selectParty;
+        }
+
+        public ExtendedConfigItem getSellHand() {
+            return this.sellHand;
         }
     }
 

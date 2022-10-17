@@ -15,6 +15,7 @@ import com.envyful.gts.forge.impl.trade.ForgeTrade;
 import com.envyful.gts.forge.impl.trade.type.ItemTrade;
 import com.envyful.gts.forge.player.GTSAttribute;
 import com.envyful.gts.forge.ui.SelectPartyPokemonUI;
+import com.envyful.gts.forge.ui.SellHandOrParty;
 import com.google.common.collect.Lists;
 import com.pixelmonmod.pixelmon.api.storage.StorageProxy;
 import net.minecraft.entity.player.ServerPlayerEntity;
@@ -42,10 +43,16 @@ public class SellCommand {
     public void onSellCommand(@Sender ServerPlayerEntity player, String[] args) {
         ForgeEnvyPlayer sender = EnvyGTSForge.getInstance().getPlayerManager().getPlayer(player);
         GTSAttribute attribute = sender.getAttribute(EnvyGTSForge.class);
+        ItemStack inHand = player.getItemInHand(Hand.MAIN_HAND);
 
         if (args.length == 0) {
             StorageProxy.getParty(player).retrieveAll();
-            SelectPartyPokemonUI.openUI(sender);
+
+            if (Objects.equals(inHand.getItem(), Items.AIR) || EnvyGTSForge.getInstance().getConfig().isBlackListed(inHand)) {
+                SelectPartyPokemonUI.openUI(sender);
+            } else {
+                SellHandOrParty.open(sender);
+            }
             return;
         }
 
@@ -55,8 +62,6 @@ public class SellCommand {
             ));
             return;
         }
-
-        ItemStack inHand = player.getItemInHand(Hand.MAIN_HAND);
 
         if (Objects.equals(inHand.getItem(), Items.AIR)) {
             sender.message(UtilChatColour.colour(
