@@ -122,6 +122,8 @@ public class PokemonTrade extends ForgeTrade {
                 .clickHandler((envyPlayer, clickType) -> {
                     if (this.isOwner(envyPlayer) && Objects.equals(clickType,
                                                                    EnvyGTSForge.getInstance().getConfig().getOwnerRemoveButton())) {
+                        UtilForgeConcurrency.runSync(() -> ((ServerPlayerEntity) envyPlayer.getParent()).closeContainer());
+
                         MinecraftForge.EVENT_BUS.post(new TradeRemoveEvent(this));
                         this.setRemoved();
                         envyPlayer.message(UtilChatColour.translateColourCodes(
