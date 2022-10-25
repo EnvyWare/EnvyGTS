@@ -3,10 +3,15 @@ package com.envyful.gts.forge.config;
 import com.envyful.api.config.data.ConfigPath;
 import com.envyful.api.config.yaml.AbstractYamlConfig;
 import com.envyful.api.forge.chat.UtilChatColour;
+import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
+import com.pixelmonmod.api.pokemon.PokemonSpecification;
+import com.pixelmonmod.api.pokemon.PokemonSpecificationProxy;
+import com.pixelmonmod.pixelmon.api.pokemon.Pokemon;
 import org.spongepowered.configurate.objectmapping.ConfigSerializable;
 
 import java.util.List;
+import java.util.Map;
 
 @ConfigPath("config/EnvyGTS/locale.yml")
 @ConfigSerializable
@@ -84,6 +89,13 @@ public class LocaleConfig extends AbstractYamlConfig {
                 " "
         );
 
+        private Map<String, SpecBasedBroadcast> createTradeBroadcasts = ImmutableMap.of("example", new SpecBasedBroadcast("", Lists.newArrayList(
+                " ",
+                "&a&lENVY GTS",
+                "&e%player%&7 added a new GTS listing for %name% for $%cost%",
+                " "
+        )));
+
         public Messages() {}
 
         public String getCannotSellBlacklisted() {
@@ -142,7 +154,15 @@ public class LocaleConfig extends AbstractYamlConfig {
             return this.toggledBroadcastsOff;
         }
 
-        public List<String> getCreateTradeBroadcast() {
+        public List<String> getCreateTradeBroadcast(Pokemon pokemon) {
+            if (pokemon != null) {
+                for (SpecBasedBroadcast value : this.createTradeBroadcasts.values()) {
+                    if (value.getSpec() != null && value.getSpec().matches(pokemon)) {
+                        return value.getBroadcast();
+                    }
+                }
+            }
+
             return this.createTradeBroadcast;
         }
 
@@ -168,6 +188,30 @@ public class LocaleConfig extends AbstractYamlConfig {
 
         public String getItemsToClaim() {
             return this.itemsToClaim;
+        }
+    }
+
+    public static class SpecBasedBroadcast {
+
+        private String spec;
+        private transient PokemonSpecification cachedSpec = null;
+        private List<String> broadcast;
+
+        public SpecBasedBroadcast(String spec, List<String> broadcast) {
+            this.spec = spec;
+            this.broadcast = broadcast;
+        }
+
+        public PokemonSpecification getSpec() {
+            if (this.cachedSpec == null) {
+                this.cachedSpec = PokemonSpecificationProxy.create(this.spec);
+            }
+
+            return this.cachedSpec;
+        }
+
+        public List<String> getBroadcast() {
+            return this.broadcast;
         }
     }
 }

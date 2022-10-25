@@ -69,6 +69,10 @@ public class PokemonTrade extends ForgeTrade {
                                                pokemon.writeToNBT(new CompoundNBT()).toString());
     }
 
+    public Pokemon getPokemon() {
+        return this.pokemon;
+    }
+
     @Override
     public String getDisplayName() {
         return this.pokemon.getLocalizedName();
