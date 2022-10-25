@@ -51,7 +51,7 @@ public class EnvyGTSConfig extends AbstractYamlConfig {
     private transient Displayable.ClickType cachedOwnerRemoveButton = null;
 
     private Map<String, PokeSpecPricing> minPriceModifiers = ImmutableMap.of(
-            "example", new PokeSpecPricing("shiny:1", new PokeSpecPricing.MathHandler("*", 2.0))
+            "example", new PokeSpecPricing("shiny:1", new PokeSpecPricing.MathHandler("*", 2.0, 1))
     );
 
     private List<String> unbreedableConditions = Lists.newArrayList("abs:2");

@@ -28,6 +28,10 @@ public class PokeSpecPricing {
         return this.cachedSpec;
     }
 
+    public int getPriority() {
+        return this.minPrice.priority;
+    }
+
     public double apply(double currentValue) {
         switch (this.minPrice.getType().toLowerCase()) {
             default : case "add" : case "addition" : case "+" :
@@ -48,10 +52,12 @@ public class PokeSpecPricing {
 
         private String type;
         private double value;
+        private int priority = 1;
 
-        public MathHandler(String type, double value) {
+        public MathHandler(String type, double value, int priority) {
             this.type = type;
             this.value = value;
+            this.priority = priority;
         }
 
         public MathHandler() {
@@ -63,6 +69,10 @@ public class PokeSpecPricing {
 
         public double getValue() {
             return this.value;
+        }
+
+        public int getPriority() {
+            return this.priority;
         }
     }
 }
