@@ -127,7 +127,7 @@ public class SellCommand {
                 TimeUnit.SECONDS.toMillis(EnvyGTSForge.getInstance().getConfig().getDefaultTradeDurationSeconds());
 
         if (args.length > 2) {
-            int integer = UtilParse.parseInteger(args[1]).orElse(-1);
+            int integer = UtilParse.parseInteger(args[2]).orElse(-1);
 
             if (integer <= EnvyGTSForge.getInstance().getConfig().getMinTradeDuration()) {
                 sender.message(UtilChatColour.colour(
