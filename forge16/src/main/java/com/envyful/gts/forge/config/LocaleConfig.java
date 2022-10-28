@@ -191,6 +191,7 @@ public class LocaleConfig extends AbstractYamlConfig {
         }
     }
 
+    @ConfigSerializable
     public static class SpecBasedBroadcast {
 
         private String spec;
@@ -200,6 +201,9 @@ public class LocaleConfig extends AbstractYamlConfig {
         public SpecBasedBroadcast(String spec, List<String> broadcast) {
             this.spec = spec;
             this.broadcast = broadcast;
+        }
+
+        public SpecBasedBroadcast() {
         }
 
         public PokemonSpecification getSpec() {
