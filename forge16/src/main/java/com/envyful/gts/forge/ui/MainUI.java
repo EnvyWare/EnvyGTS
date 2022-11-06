@@ -24,7 +24,7 @@ public class MainUI {
         UtilConfigInterface.fillBackground(pane, config.getGuiSettings());
 
         UtilConfigItem.builder()
-                .clickHandler((envyPlayer, clickType) -> SelectPartyPokemonUI.openUI(player))
+                .clickHandler((envyPlayer, clickType) -> SellHandOrParty.open(player))
                 .extendedConfigItem(player, pane, config.getSellItemButton());
 
         UtilConfigItem.builder()
