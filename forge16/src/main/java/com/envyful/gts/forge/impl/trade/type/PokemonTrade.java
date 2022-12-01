@@ -130,10 +130,7 @@ public class PokemonTrade extends ForgeTrade {
 
                         MinecraftForge.EVENT_BUS.post(new TradeRemoveEvent(this));
                         this.setRemoved();
-                        envyPlayer.message(UtilChatColour.translateColourCodes(
-                                '&',
-                                EnvyGTSForge.getInstance().getLocale().getMessages().getRemovedOwnTrade()
-                        ));
+                        envyPlayer.message(UtilChatColour.colour(EnvyGTSForge.getInstance().getLocale().getMessages().getRemovedOwnTrade()));
                         return;
                     }
 
@@ -149,18 +146,16 @@ public class PokemonTrade extends ForgeTrade {
                                                                                           EnvyGTSForge.getInstance().getGui().getSearchUIConfig().getSpriteConfig()))
                                                      .addLore(this.formatLore(EnvyGTSForge.getInstance().getLocale().getListingBelowDataLore()))
                                                      .build())
-                            .confirmHandler((clicker, clickType1) -> {
-                                UtilForgeConcurrency.runSync(() -> {
-                                    if (this.purchased) {
-                                        ViewTradesUI.openUI((ForgeEnvyPlayer)clicker);
-                                        return;
-                                    }
+                            .confirmHandler((clicker, clickType1) -> UtilForgeConcurrency.runSync(() -> {
+                                if (this.purchased) {
+                                    ViewTradesUI.openUI((ForgeEnvyPlayer)clicker);
+                                    return;
+                                }
 
-                                    if (!this.attemptPurchase(envyPlayer)) {
-                                        ViewTradesUI.openUI((ForgeEnvyPlayer)envyPlayer);
-                                    }
-                                });
-                            })
+                                if (!this.attemptPurchase(envyPlayer)) {
+                                    ViewTradesUI.openUI((ForgeEnvyPlayer)envyPlayer);
+                                }
+                            }))
                             .returnHandler((envyPlayer1, clickType1) -> ViewTradesUI.openUI((ForgeEnvyPlayer)envyPlayer))
                             .open();
                 })

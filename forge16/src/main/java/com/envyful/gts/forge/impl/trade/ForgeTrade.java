@@ -109,7 +109,6 @@ public abstract class ForgeTrade implements Trade {
         BankAccount target = BankAccountProxy.getBankAccountUnsafe(this.owner);
 
         if (target == null) {
-            System.out.println("ERROR LOADING SELLER's BANK " + this.owner.toString() + " (" +this.ownerName + ")");
             return false;
         }
 
@@ -119,17 +118,13 @@ public abstract class ForgeTrade implements Trade {
                 config.getTaxRate() : 1.0))));
 
         this.updateOwnership((EnvyPlayer<ServerPlayerEntity>) player, this.owner);
-        this.updateOwner(player.getUuid(), player.getName());
         this.purchased = true;
         this.setRemoved();
+        this.collect(player, null);
 
         MinecraftForge.EVENT_BUS.post(new PostTradePurchaseEvent((ForgeEnvyPlayer) player, this));
 
-        parent.closeContainer();
-        player.message(UtilChatColour.translateColourCodes(
-                '&',
-                EnvyGTSForge.getInstance().getLocale().getMessages().getPurchasedTrade()
-        ));
+        player.message(UtilChatColour.colour(EnvyGTSForge.getInstance().getLocale().getMessages().getPurchasedTrade()));
         return true;
     }
 

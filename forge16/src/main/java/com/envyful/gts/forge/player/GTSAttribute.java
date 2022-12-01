@@ -98,14 +98,17 @@ public class GTSAttribute extends AbstractForgeAttribute<EnvyGTSForge> {
             e.printStackTrace();
         }
 
+        boolean returnMessage = false;
+
         for (Trade ownedTrade : this.ownedTrades) {
             if (ownedTrade.hasExpired() || ownedTrade.wasPurchased() || ownedTrade.wasRemoved()) {
-                this.parent.message(UtilChatColour.translateColourCodes(
-                        '&',
-                        EnvyGTSForge.getInstance().getLocale().getMessages().getItemsToClaim()
-                ));
-                break;
+                returnMessage = true;
+                ownedTrade.collect(this.parent, null);
             }
+        }
+
+        if (returnMessage) {
+            this.parent.message(UtilChatColour.colour(EnvyGTSForge.getInstance().getLocale().getMessages().getItemsToClaim()));
         }
     }
 
