@@ -56,8 +56,7 @@ public class SelectPartyPokemonUI {
                     trades.removeIf(trade -> trade.hasExpired() || trade.wasPurchased() || trade.wasRemoved());
 
                     if (trades.size() >= EnvyGTSForge.getInstance().getConfig().getMaxListingsPerUser()) {
-                        player.message(UtilChatColour.translateColourCodes(
-                                '&',
+                        player.message(UtilChatColour.colour(
                                 EnvyGTSForge.getInstance().getLocale().getMessages().getMaxTradesAlreadyReached()
                         ));
                         return;
@@ -99,13 +98,11 @@ public class SelectPartyPokemonUI {
             int pos = config.getPartySelectionPositions().get(i);
 
             if (i >= all.length || all[i] == null) {
-                pane.set(pos % 9, pos / 9, GuiFactory.displayableBuilder(ItemStack.class)
-                        .itemStack(UtilConfigItem.fromConfigItem(config.getNoPokemonItem())).build());
+                pane.set(pos % 9, pos / 9, GuiFactory.displayable(UtilConfigItem.fromConfigItem(config.getNoPokemonItem())));
             } else if (all[i].isUntradeable() ||
                     (!EnvyGTSForge.getInstance().getConfig().isAllowEggs() && all[i].isEgg()) ||
                     EnvyGTSForge.getInstance().getConfig().isBlackListed(all[i])) {
-                pane.set(pos % 9, pos / 9, GuiFactory.displayableBuilder(ItemStack.class)
-                        .itemStack(UtilConfigItem.fromConfigItem(config.getUntradeablePokemonItem())).build());
+                pane.set(pos % 9, pos / 9, GuiFactory.displayable(UtilConfigItem.fromConfigItem(config.getUntradeablePokemonItem())));
             } else {
                 final int slot = i;
                 ItemBuilder builder = new ItemBuilder(UtilSprite.getPokemonElement(

@@ -25,10 +25,12 @@ public class SellHandOrParty {
         UtilConfigInterface.fillBackground(pane, config.getGuiSettings());
 
         UtilConfigItem.builder()
+                .asyncClick(false)
                 .clickHandler((envyPlayer, clickType) -> SelectPartyPokemonUI.openUI(player))
                 .extendedConfigItem(player, pane, config.getSelectParty());
 
         UtilConfigItem.builder()
+                .asyncClick(false)
                 .clickHandler((envyPlayer, clickType) -> EditItemPriceUI.openUI(player, player.getParent().getItemInHand(Hand.MAIN_HAND), false))
                 .extendedConfigItem(player, pane, config.getSellHand());
 

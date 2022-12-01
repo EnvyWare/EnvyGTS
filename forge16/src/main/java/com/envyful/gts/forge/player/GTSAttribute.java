@@ -1,6 +1,7 @@
 package com.envyful.gts.forge.player;
 
 import com.envyful.api.forge.chat.UtilChatColour;
+import com.envyful.api.forge.concurrency.UtilForgeConcurrency;
 import com.envyful.api.forge.player.ForgeEnvyPlayer;
 import com.envyful.api.forge.player.attribute.AbstractForgeAttribute;
 import com.envyful.api.json.UtilGson;
@@ -98,18 +99,20 @@ public class GTSAttribute extends AbstractForgeAttribute<EnvyGTSForge> {
             e.printStackTrace();
         }
 
-        boolean returnMessage = false;
+        UtilForgeConcurrency.runSync(() -> {
+            boolean returnMessage = false;
 
-        for (Trade ownedTrade : this.ownedTrades) {
-            if (ownedTrade.hasExpired() || ownedTrade.wasPurchased() || ownedTrade.wasRemoved()) {
-                returnMessage = true;
-                ownedTrade.collect(this.parent, null);
+            for (Trade ownedTrade : this.ownedTrades) {
+                if (ownedTrade.hasExpired() || ownedTrade.wasPurchased() || ownedTrade.wasRemoved()) {
+                    returnMessage = true;
+                    ownedTrade.collect(this.parent, null);
+                }
             }
-        }
 
-        if (returnMessage) {
-            this.parent.message(UtilChatColour.colour(EnvyGTSForge.getInstance().getLocale().getMessages().getItemsToClaim()));
-        }
+            if (returnMessage) {
+                this.parent.message(UtilChatColour.colour(EnvyGTSForge.getInstance().getLocale().getMessages().getItemsToClaim()));
+            }
+        });
     }
 
     @Override
