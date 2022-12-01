@@ -6,6 +6,7 @@ import com.envyful.api.forge.chat.UtilChatColour;
 import com.envyful.api.forge.concurrency.UtilForgeConcurrency;
 import com.envyful.api.forge.gui.type.ConfirmationUI;
 import com.envyful.api.forge.items.ItemBuilder;
+import com.envyful.api.forge.items.UtilItemStack;
 import com.envyful.api.forge.player.ForgeEnvyPlayer;
 import com.envyful.api.gui.factory.GuiFactory;
 import com.envyful.api.gui.pane.Pane;
@@ -24,6 +25,7 @@ import com.envyful.gts.forge.player.GTSAttribute;
 import com.envyful.gts.forge.ui.ViewTradesUI;
 import com.google.common.collect.Lists;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
+import com.pixelmonmod.pixelmon.api.util.helpers.StringHelper;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
@@ -124,7 +126,7 @@ public class ItemTrade extends ForgeTrade {
                         MinecraftForge.EVENT_BUS.post(new TradeRemoveEvent(this));
                         this.setRemoved();
                         envyPlayer.message(UtilChatColour.colour(EnvyGTSForge.getInstance().getLocale().getMessages().getRemovedOwnTrade()));
-                        UtilForgeConcurrency.runSync(() -> ((ServerPlayerEntity) envyPlayer.getParent()).closeContainer());
+                        UtilForgeConcurrency.runSync(((ServerPlayerEntity) envyPlayer.getParent())::closeContainer);
                         return;
                     }
 
@@ -139,7 +141,7 @@ public class ItemTrade extends ForgeTrade {
                             .descriptionItem(new ItemBuilder(this.item.copy())
                                                      .addLore(this.formatLore(EnvyGTSForge.getInstance().getLocale().getListingBelowDataLore()))
                                                      .build())
-                            .confirmHandler((clicker, clickType1) -> {
+                            .confirmHandler((clicker, clickType1) ->
                                 UtilForgeConcurrency.runSync(() -> {
                                     if (this.purchased) {
                                         ViewTradesUI.openUI((ForgeEnvyPlayer)clicker);
@@ -149,8 +151,7 @@ public class ItemTrade extends ForgeTrade {
                                     if (!this.attemptPurchase(envyPlayer)) {
                                         ViewTradesUI.openUI((ForgeEnvyPlayer)envyPlayer);
                                     }
-                                });
-                            })
+                                }))
                             .returnHandler((envyPlayer1, clickType1) -> ViewTradesUI.openUI((ForgeEnvyPlayer)envyPlayer))
                             .open();
                 })
@@ -240,16 +241,38 @@ public class ItemTrade extends ForgeTrade {
             return null;
         }
 
-        String newJSON = event.getItemJSON()
+        String newJSON = event.getItemJSON();
+
+
+        if (!this.item.getOrCreateTag().contains("CustomModelData")) {
+            newJSON = newJSON.replace("%item_url%", EnvyGTSForge.getInstance().getConfig().getItemUrl(this.item));
+        } else {
+            newJSON = newJSON.replace("%item_url%", EnvyGTSForge.getInstance().getConfig().getNoUrl());
+        }
+
+        newJSON = newJSON.replace("%item_id%", this.capitalizeAfterUnderscoreAndStart(item.getItem().getRegistryName().getPath()))
+                .replace("%lore%", String.join("\n", UtilItemStack.getLore(item)))
+                .replace("%date%", String.valueOf(System.currentTimeMillis()))
+                .replace("%namespace%", item.getItem().getRegistryName().getNamespace())
                 .replace("%buyer%", this.ownerName)
                 .replace("%seller%", this.originalOwnerName)
                 .replace("%expires_in%", UtilTimeFormat.getFormattedDuration(this.expiry - System.currentTimeMillis()))
                 .replace("%price%", this.cost + "")
-                .replace("%item%", this.item.getDisplayName().getString())
-                .replace("%amount%", this.item.getCount() + "");
-
+                .replace("%item%", this.item.getHoverName().getString())
+                .replace("%amount%", String.valueOf(this.item.getCount()));
 
         return DiscordWebHook.fromJson(newJSON);
+    }
+
+    private String capitalizeAfterUnderscoreAndStart(String word) {
+        String[] s = word.split("_");
+        List<String> words = Lists.newArrayList();
+
+        for (String s1 : s) {
+            words.add(StringHelper.capitalizeString(s1));
+        }
+
+        return String.join("_", words);
     }
 
     @Override
@@ -263,9 +286,11 @@ public class ItemTrade extends ForgeTrade {
 
     public static class Builder extends ForgeTrade.Builder {
 
-        private ItemStack itemStack = null;
+        private ItemStack itemStack;
 
-        public Builder() {}
+        public Builder() {
+            this.itemStack = null;
+        }
 
         @Override
         public Builder owner(EnvyPlayer<?> player) {

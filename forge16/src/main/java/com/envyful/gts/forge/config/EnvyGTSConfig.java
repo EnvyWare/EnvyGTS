@@ -28,6 +28,13 @@ public class EnvyGTSConfig extends AbstractYamlConfig {
                                                                         "password", "database"
     );
 
+    private Map<String, String> itemUrlFormats = ImmutableMap.of(
+            "minecraft", "https://minecraft.fandom.com/wiki/Special:FilePath/%item_id%.png"
+    );
+
+    private String fallback = "https://minecraft.fandom.com/wiki/Special:FilePath/%item_id%.png";
+    private String noURL = "https://minecraft.fandom.com/wiki/Special:FilePath/%item_id%.png";
+
     private long minTradeDuration = 300;
     private long defaultTradeDurationSeconds = 300;
     private long maxTradeDurationSeconds = 172800;
@@ -55,6 +62,10 @@ public class EnvyGTSConfig extends AbstractYamlConfig {
     );
 
     private List<String> unbreedableConditions = Lists.newArrayList("abs:2");
+
+    private Map<String, String> itemReplacementURLs = ImmutableMap.of(
+            "pixelmon:gracedia", "https://google.com"
+    );
 
     public EnvyGTSConfig() {
         super();
@@ -166,5 +177,34 @@ public class EnvyGTSConfig extends AbstractYamlConfig {
 
     public boolean isEnableOpeningUIMessage() {
         return this.enableOpeningUIMessage;
+    }
+
+    public String getItemUrl(ItemStack itemStack) {
+        String format = this.getFormat(itemStack);
+
+        if (format != null) {
+            return format;
+        }
+
+        return this.itemUrlFormats.getOrDefault(itemStack.getItem().getRegistryName().getNamespace(), this.fallback);
+    }
+
+    private String getFormat(ItemStack itemStack) {
+        String key = itemStack.getItem().getRegistryName().toString();
+
+        if (itemStack.hasTag() && itemStack.getTag().contains("CustomModelData")) {
+            key += ":" + itemStack.getTag().getInt("CustomModelData");
+            String found = this.itemUrlFormats.get(key);
+
+            if (found != null) {
+                return found;
+            }
+        }
+
+        return this.itemUrlFormats.get(key);
+    }
+
+    public String getNoUrl() {
+        return this.noURL;
     }
 }
