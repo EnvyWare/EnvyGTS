@@ -43,7 +43,7 @@ public class SelectPartyPokemonUI {
                 .extendedConfigItem(player, pane, config.getViewPCButton());
 
         UtilConfigItem.builder()
-                .clickHandler((envyPlayer, clickType) -> MainUI.open(player))
+                .clickHandler((envyPlayer, clickType) -> ViewTradesUI.openUI(player))
                 .extendedConfigItem(player, pane, config.getBackButton());
 
         UtilConfigItem.builder()

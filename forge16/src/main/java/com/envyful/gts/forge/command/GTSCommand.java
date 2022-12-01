@@ -7,7 +7,7 @@ import com.envyful.api.command.annotate.executor.CommandProcessor;
 import com.envyful.api.command.annotate.executor.Sender;
 import com.envyful.api.forge.chat.UtilChatColour;
 import com.envyful.gts.forge.EnvyGTSForge;
-import com.envyful.gts.forge.ui.MainUI;
+import com.envyful.gts.forge.ui.ViewTradesUI;
 import com.pixelmonmod.pixelmon.api.storage.StorageProxy;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.util.Util;
@@ -32,6 +32,6 @@ public class GTSCommand {
         }
 
         StorageProxy.getParty(player).retrieveAll();
-        MainUI.open(EnvyGTSForge.getInstance().getPlayerManager().getPlayer(player));
+        ViewTradesUI.openUI(EnvyGTSForge.getInstance().getPlayerManager().getPlayer(player));
     }
 }

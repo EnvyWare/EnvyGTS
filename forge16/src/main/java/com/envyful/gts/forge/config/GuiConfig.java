@@ -7,6 +7,7 @@ import com.envyful.api.config.type.ExtendedConfigItem;
 import com.envyful.api.config.yaml.AbstractYamlConfig;
 import com.envyful.api.forge.gui.type.ConfirmationUI;
 import com.envyful.api.reforged.pixelmon.config.SpriteConfig;
+import com.envyful.api.type.Pair;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
@@ -18,10 +19,7 @@ import java.util.List;
 @ConfigPath("config/EnvyGTS/guis.yml")
 public class GuiConfig extends AbstractYamlConfig {
 
-    private MainUIConfig mainUIConfig = new MainUIConfig();
     private SearchTradesConfig searchUIConfig = new SearchTradesConfig();
-    private TimedOutTradesConfig timedOutUIConfig = new TimedOutTradesConfig();
-    private ClaimTradesConfig claimTradesUIConfig = new ClaimTradesConfig();
     private PartyPokemonConfig partyPokemonUIConfig = new PartyPokemonConfig();
     private SelectFromPCConfig pcConfig = new SelectFromPCConfig();
     private PokemonPriceConfig priceConfig = new PokemonPriceConfig();
@@ -34,20 +32,8 @@ public class GuiConfig extends AbstractYamlConfig {
         super();
     }
 
-    public MainUIConfig getMainUIConfig() {
-        return this.mainUIConfig;
-    }
-
     public SearchTradesConfig getSearchUIConfig() {
         return this.searchUIConfig;
-    }
-
-    public TimedOutTradesConfig getTimedOutUIConfig() {
-        return this.timedOutUIConfig;
-    }
-
-    public ClaimTradesConfig getClaimTradesUIConfig() {
-        return this.claimTradesUIConfig;
     }
 
     public PartyPokemonConfig getPartyPokemonUIConfig() {
@@ -79,82 +65,30 @@ public class GuiConfig extends AbstractYamlConfig {
     }
 
     @ConfigSerializable
-    public static class MainUIConfig {
-
-        private ConfigInterface guiSettings = new ConfigInterface(
-                "EnvyGTS", 3, "BLOCK", ImmutableMap.of("one", new ConfigItem(
-                "minecraft:black_stained_glass_pane", 1, (byte) 15, " ",
-                Lists.newArrayList(), Maps.newHashMap()
-        )));
-
-        private ExtendedConfigItem viewTradesButton = new ExtendedConfigItem(
-                "pixelmon:poke_ball",
-                1, (byte) 0, "&bView Trades",
-                Lists.newArrayList(), 1, 1, Maps.newHashMap()
-        );
-
-        private ExtendedConfigItem viewClaimsButton = new ExtendedConfigItem(
-                "pixelmon:protein",
-                1, (byte) 0, "&bClaim Trades",
-                Lists.newArrayList(), 3, 1, Maps.newHashMap()
-        );
-
-        private ExtendedConfigItem viewTimeoutButton = new ExtendedConfigItem(
-                 "minecraft:clock",
-                1, (byte) 0, "&bTimed out trades",
-                Lists.newArrayList(), 5, 1, Maps.newHashMap()
-        );
-
-        private ExtendedConfigItem sellItemButton = new ExtendedConfigItem(
-                "pixelmon:trade_machine",
-                1, (byte) 0, "&bSell Item",
-                Lists.newArrayList(), 7, 1, Maps.newHashMap()
-        );
-
-        public MainUIConfig() {
-        }
-
-        public ConfigInterface getGuiSettings() {
-            return this.guiSettings;
-        }
-
-        public ExtendedConfigItem getViewTradesButton() {
-            return this.viewTradesButton;
-        }
-
-        public ExtendedConfigItem getViewClaimsButton() {
-            return this.viewClaimsButton;
-        }
-
-        public ExtendedConfigItem getViewTimeoutButton() {
-            return this.viewTimeoutButton;
-        }
-
-        public ExtendedConfigItem getSellItemButton() {
-            return this.sellItemButton;
-        }
-    }
-
-    @ConfigSerializable
     public static class SellHandOrParty {
 
         private ConfigInterface guiSettings = new ConfigInterface(
-                "EnvyGTS", 3, "BLOCK", ImmutableMap.of("one", new ConfigItem(
-                "minecraft:black_stained_glass_pane", 1, (byte) 15, " ",
-                Lists.newArrayList(), Maps.newHashMap()
-        )));
+                "EnvyGTS", 3, "BLOCK", ImmutableMap.of("one",
+                ConfigItem.builder()
+                        .type("minecraft:black_stained_glass_pane")
+                        .name(" ")
+                        .amount(1)
+                        .build()
+        ));
 
-        private ExtendedConfigItem selectParty = new ExtendedConfigItem(
-                "pixelmon:poke_ball",
-                1, (byte) 0, "&bSelect Party Member",
-                Lists.newArrayList(), 1, 1, Maps.newHashMap()
-        );
+        private ExtendedConfigItem selectParty = ExtendedConfigItem.builder()
+                .type("pixelmon:poke_ball")
+                .amount(1)
+                .name("&bSelect Party Member")
+                .positions(Pair.of(1, 1))
+                .build();
 
-        private ExtendedConfigItem sellHand = new ExtendedConfigItem(
-                "pixelmon:protein",
-                1, (byte) 0, "&bSell Hand",
-                Lists.newArrayList(), 3, 1, Maps.newHashMap()
-        );
+        private ExtendedConfigItem sellHand = ExtendedConfigItem.builder()
+                .type("pixelmon:protein")
+                .amount(1)
+                .name("&bSell Hand")
+                .positions(Pair.of(3, 1))
+                .build();
 
         public SellHandOrParty() {
         }
@@ -176,27 +110,34 @@ public class GuiConfig extends AbstractYamlConfig {
     public static class SearchTradesConfig {
 
         private ConfigInterface guiSettings = new ConfigInterface(
-                "EnvyGTS", 6, "BLOCK", ImmutableMap.of("one", new ConfigItem(
-                "minecraft:black_stained_glass_pane", 1, (byte) 15, " ",
-                Lists.newArrayList(), Maps.newHashMap()
-        )));
+                "EnvyGTS", 6, "BLOCK", ImmutableMap.of("one", ConfigItem.builder()
+                .type("minecraft:black_stained_glass_pane")
+                .name(" ")
+                .amount(1)
+                .build()));
 
         private ConfirmationUI.ConfirmConfig confirmGuiConfig = new ConfirmationUI.ConfirmConfig();
 
-        private ExtendedConfigItem nextPageItem = new ExtendedConfigItem(
-                "pixelmon:trade_holder_right", 1, (byte) 0, "&aNext Page",
-                Lists.newArrayList(), 8, 5, Maps.newHashMap()
-        );
+        private ExtendedConfigItem nextPageItem = ExtendedConfigItem.builder()
+                .type("pixelmon:trade_holder_right")
+                .amount(1)
+                .name("&aNext Page")
+                .positions(Pair.of(8, 5))
+                .build();
 
-        private ExtendedConfigItem previousPageItem = new ExtendedConfigItem(
-                "pixelmon:trade_holder_left", 1, (byte) 0, "&aPrevious Page",
-                Lists.newArrayList(), 0, 5, Maps.newHashMap()
-        );
+        private ExtendedConfigItem previousPageItem = ExtendedConfigItem.builder()
+                .type("pixelmon:trade_holder_left")
+                .amount(1)
+                .name("&aPrevious Page")
+                .positions(Pair.of(0, 5))
+                .build();
 
-        private ExtendedConfigItem backButton = new ExtendedConfigItem(
-                "pixelmon:eject_button", 1, (byte) 0, "&cBack",
-                Lists.newArrayList(), 4, 5, Maps.newHashMap()
-        );
+        private ExtendedConfigItem sellButton = ExtendedConfigItem.builder()
+                .type("pixelmon:eject_button")
+                .amount(1)
+                .name("&aSell Stuff")
+                .positions(Pair.of(4, 5))
+                .build();
 
         private ExtendedConfigItem filterButton = new ExtendedConfigItem(
                 "pixelmon:net_ball", 1, (byte) 0, "&bChange filter",
@@ -233,8 +174,8 @@ public class GuiConfig extends AbstractYamlConfig {
             return this.previousPageItem;
         }
 
-        public ExtendedConfigItem getBackButton() {
-            return this.backButton;
+        public ExtendedConfigItem getSellButton() {
+            return this.sellButton;
         }
 
         public ExtendedConfigItem getFilterButton() {
@@ -247,114 +188,14 @@ public class GuiConfig extends AbstractYamlConfig {
     }
 
     @ConfigSerializable
-    public static class TimedOutTradesConfig {
-
-        private ConfigInterface guiSettings = new ConfigInterface(
-                "EnvyGTS", 6, "BLOCK", ImmutableMap.of("one", new ConfigItem(
-                "minecraft:black_stained_glass_pane", 1, (byte) 15, " ",
-                Lists.newArrayList(), Maps.newHashMap()
-        )));
-
-        private ExtendedConfigItem nextPageItem = new ExtendedConfigItem(
-                "pixelmon:trade_holder_right", 1, (byte) 0, "&aNext Page",
-                Lists.newArrayList(), 8, 5, Maps.newHashMap()
-        );
-
-        private ExtendedConfigItem previousPageItem = new ExtendedConfigItem(
-                "pixelmon:trade_holder_left", 1, (byte) 0, "&aPrevious Page",
-                Lists.newArrayList(), 0, 5, Maps.newHashMap()
-        );
-
-        private ExtendedConfigItem backButton = new ExtendedConfigItem(
-                "pixelmon:eject_button", 1, (byte) 0, "&cBack",
-                Lists.newArrayList(), 4, 5, Maps.newHashMap()
-        );
-
-        private SpriteConfig spriteConfig = new SpriteConfig();
-
-        public TimedOutTradesConfig() {
-        }
-
-        public SpriteConfig getSpriteConfig() {
-            return this.spriteConfig;
-        }
-
-        public ConfigInterface getGuiSettings() {
-            return this.guiSettings;
-        }
-
-        public ExtendedConfigItem getNextPageItem() {
-            return this.nextPageItem;
-        }
-
-        public ExtendedConfigItem getPreviousPageItem() {
-            return this.previousPageItem;
-        }
-
-        public ExtendedConfigItem getBackButton() {
-            return this.backButton;
-        }
-    }
-
-
-    @ConfigSerializable
-    public static class ClaimTradesConfig {
-
-        private ConfigInterface guiSettings = new ConfigInterface(
-                "EnvyGTS", 6, "BLOCK", ImmutableMap.of("one", new ConfigItem(
-                "minecraft:black_stained_glass_pane", 1, (byte) 15, " ",
-                Lists.newArrayList(), Maps.newHashMap()
-        )));
-
-        private ExtendedConfigItem nextPageItem = new ExtendedConfigItem(
-                "pixelmon:trade_holder_right", 1, (byte) 0, "&aNext Page",
-                Lists.newArrayList(), 8, 5, Maps.newHashMap()
-        );
-
-        private ExtendedConfigItem previousPageItem = new ExtendedConfigItem(
-                "pixelmon:trade_holder_left", 1, (byte) 0, "&aPrevious Page",
-                Lists.newArrayList(), 0, 5, Maps.newHashMap()
-        );
-
-        private ExtendedConfigItem backButton = new ExtendedConfigItem(
-                "pixelmon:eject_button", 1, (byte) 0, "&cBack",
-                Lists.newArrayList(), 4, 5, Maps.newHashMap()
-        );
-
-        private SpriteConfig spriteConfig = new SpriteConfig();
-
-        public ClaimTradesConfig() {
-        }
-
-        public SpriteConfig getSpriteConfig() {
-            return this.spriteConfig;
-        }
-
-        public ConfigInterface getGuiSettings() {
-            return this.guiSettings;
-        }
-
-        public ExtendedConfigItem getNextPageItem() {
-            return this.nextPageItem;
-        }
-
-        public ExtendedConfigItem getPreviousPageItem() {
-            return this.previousPageItem;
-        }
-
-        public ExtendedConfigItem getBackButton() {
-            return this.backButton;
-        }
-    }
-
-    @ConfigSerializable
     public static class PartyPokemonConfig {
 
         private ConfigInterface guiSettings = new ConfigInterface(
-                "EnvyGTS", 3, "BLOCK", ImmutableMap.of("one", new ConfigItem(
-                "minecraft:black_stained_glass_pane", 1, (byte) 15, " ",
-                Lists.newArrayList(), Maps.newHashMap()
-        )));
+                "EnvyGTS", 3, "BLOCK", ImmutableMap.of("one", ConfigItem.builder()
+                .type("minecraft:black_stained_glass_pane")
+                .name(" ")
+                .amount(1)
+                .build()));
 
         private ExtendedConfigItem backButton = new ExtendedConfigItem(
                 "pixelmon:eject_button", 1, (byte) 0, "&cBack",
@@ -364,8 +205,6 @@ public class GuiConfig extends AbstractYamlConfig {
         private List<Integer> partySelectionPositions = Lists.newArrayList(
                 10, 11, 12, 14, 15, 16
         );
-
-        private int confirmDisplay = 13;
 
         private ExtendedConfigItem confirmItem = new ExtendedConfigItem(
                 "pixelmon:poke_ball", 1, (byte) 0, "&a&lCONFIRM",
@@ -414,10 +253,6 @@ public class GuiConfig extends AbstractYamlConfig {
             return this.partySelectionPositions;
         }
 
-        public int getConfirmDisplay() {
-            return this.confirmDisplay;
-        }
-
         public ExtendedConfigItem getConfirmItem() {
             return this.confirmItem;
         }
@@ -435,10 +270,11 @@ public class GuiConfig extends AbstractYamlConfig {
     public static class SelectFromPCConfig {
 
         private ConfigInterface guiSettings = new ConfigInterface(
-                "EnvyGTS", 6, "BLOCK", ImmutableMap.of("one", new ConfigItem(
-                "minecraft:black_stained_glass_pane", 1, (byte) 15, " ",
-                Lists.newArrayList(), Maps.newHashMap()
-        )));
+                "EnvyGTS", 6, "BLOCK", ImmutableMap.of("one", ConfigItem.builder()
+                .type("minecraft:black_stained_glass_pane")
+                .name(" ")
+                .amount(1)
+                .build()));
 
         private ExtendedConfigItem backButton = new ExtendedConfigItem(
                 "pixelmon:eject_button", 1, (byte) 0, "&cBack",
@@ -525,10 +361,11 @@ public class GuiConfig extends AbstractYamlConfig {
     public static class PokemonPriceConfig {
 
         private ConfigInterface guiSettings = new ConfigInterface(
-                "EnvyGTS", 3, "BLOCK", ImmutableMap.of("one", new ConfigItem(
-                "minecraft:black_stained_glass_pane", 1, (byte) 15, " ",
-                Lists.newArrayList(), Maps.newHashMap()
-        )));
+                "EnvyGTS", 3, "BLOCK", ImmutableMap.of("one", ConfigItem.builder()
+                .type("minecraft:black_stained_glass_pane")
+                .name(" ")
+                .amount(1)
+                .build()));
 
         private int pokemonPosition = 10;
 

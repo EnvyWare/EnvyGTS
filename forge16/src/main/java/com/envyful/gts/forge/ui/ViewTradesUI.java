@@ -50,8 +50,8 @@ public class ViewTradesUI {
         allTrades.sort((o1, o2) -> o1.compare(o2, sort));
 
         UtilConfigItem.builder()
-                .clickHandler((envyPlayer, clickType) -> MainUI.open(player))
-                .extendedConfigItem(player, pane, config.getBackButton());
+                .clickHandler((envyPlayer, clickType) -> SellHandOrParty.open(player))
+                .extendedConfigItem(player, pane, config.getSellButton());
 
         UtilConfigItem.builder()
                 .clickHandler((envyPlayer, clickType) -> {
