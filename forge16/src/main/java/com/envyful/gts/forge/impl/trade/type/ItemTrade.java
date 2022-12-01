@@ -118,15 +118,20 @@ public class ItemTrade extends ForgeTrade {
                 .itemStack(new ItemBuilder(this.item.copy())
                                    .addLore(this.formatLore(EnvyGTSForge.getInstance().getLocale().getListingBelowDataLore()))
                                    .build())
+                .asyncClick(false)
                 .clickHandler((envyPlayer, clickType) -> {
+                    if (this.removed) {
+                        return;
+                    }
+
                     if (this.isOwner(envyPlayer) && Objects.equals(
                             clickType,
                             EnvyGTSForge.getInstance().getConfig().getOwnerRemoveButton()
                     )) {
+                        this.removed = true;
                         MinecraftForge.EVENT_BUS.post(new TradeRemoveEvent(this));
-                        this.setRemoved();
+                        this.collect(envyPlayer, null);
                         envyPlayer.message(UtilChatColour.colour(EnvyGTSForge.getInstance().getLocale().getMessages().getRemovedOwnTrade()));
-                        UtilForgeConcurrency.runSync(((ServerPlayerEntity) envyPlayer.getParent())::closeContainer);
                         return;
                     }
 

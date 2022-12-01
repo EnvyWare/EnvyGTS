@@ -97,7 +97,7 @@ public class SelectPCPokemonUI {
                     attribute.setCurrentPrice(price);
                     attribute.setCurrentMinPrice(price);
                     attribute.setCurrentDuration(EnvyGTSForge.getInstance().getConfig().getDefaultTradeDurationSeconds());
-                    SelectPriceUI.openUI(player, page, attribute.getSelectedSlot());
+                    SelectPriceUI.openUI(player, page, attribute.getSelectedSlot(), false);
                 })
                 .extendedConfigItem(player, pane, config.getConfirmButton());
 

@@ -43,10 +43,11 @@ public class SelectPartyPokemonUI {
                 .extendedConfigItem(player, pane, config.getViewPCButton());
 
         UtilConfigItem.builder()
-                .clickHandler((envyPlayer, clickType) -> ViewTradesUI.openUI(player))
+                .clickHandler((envyPlayer, clickType) -> SellHandOrParty.open(player))
                 .extendedConfigItem(player, pane, config.getBackButton());
 
         UtilConfigItem.builder()
+                .asyncClick(false)
                 .clickHandler((envyPlayer, clickType) -> {
                     GTSAttribute attribute = envyPlayer.getAttribute(EnvyGTSForge.class);
 

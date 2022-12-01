@@ -32,6 +32,14 @@ public class LocaleConfig extends AbstractYamlConfig {
 
     private String moneyFormat = "%.2f";
 
+    private String sellPriceInputDialogueTitle = "Enter price";
+    private String sellPriceInputDialogueText = "Enter the price you wish to sell %pokemon% for";
+    private String sellPriceInputDialogueErrorText = "Enter the price you wish to sell %pokemon% for. &cError:&r The value you entered was below the minimum sell price (%min_price%)";
+
+    private String durationInputDialogueTitle = "Enter duration in minutes";
+    private String durationInputDialogueText = "Enter the number of minutes you wish %pokemon% to be listed for";
+    private String durationInputDialogueErrorText = "Enter the number of minutes you wish %pokemon% to be listed for. &cError:&r The value you entered was below the minimum duration (%min_duration%)";
+
     private Messages messages = new Messages();
 
     public LocaleConfig() {
@@ -52,6 +60,30 @@ public class LocaleConfig extends AbstractYamlConfig {
 
     public List<String> getListingBelowExpiredOrClaimableLore() {
         return this.listingBelowExpiredOrClaimableLore;
+    }
+
+    public String getSellPriceInputDialogueTitle() {
+        return this.sellPriceInputDialogueTitle;
+    }
+
+    public String getSellPriceInputDialogueErrorText() {
+        return this.sellPriceInputDialogueErrorText;
+    }
+
+    public String getSellPriceInputDialogueText() {
+        return this.sellPriceInputDialogueText;
+    }
+
+    public String getDurationInputDialogueTitle() {
+        return this.durationInputDialogueTitle;
+    }
+
+    public String getDurationInputDialogueText() {
+        return this.durationInputDialogueText;
+    }
+
+    public String getDurationInputDialogueErrorText() {
+        return this.durationInputDialogueErrorText;
     }
 
     @ConfigSerializable

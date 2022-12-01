@@ -29,7 +29,7 @@ public class SellHandOrParty {
                 .extendedConfigItem(player, pane, config.getSelectParty());
 
         UtilConfigItem.builder()
-                .clickHandler((envyPlayer, clickType) -> EditItemPriceUI.openUI(player, player.getParent().getItemInHand(Hand.MAIN_HAND)))
+                .clickHandler((envyPlayer, clickType) -> EditItemPriceUI.openUI(player, player.getParent().getItemInHand(Hand.MAIN_HAND), false))
                 .extendedConfigItem(player, pane, config.getSellHand());
 
         GuiFactory.guiBuilder()
