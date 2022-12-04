@@ -24,7 +24,7 @@ public class SelectPriceUI {
         UtilForgeConcurrency.runLater(() -> {
             DialogueInputRegistry.builder()
                     .title(UtilChatColour.colour(EnvyGTSForge.getInstance().getLocale().getSellPriceInputDialogueTitle()))
-                    .text(UtilChatColour.colour((error ?
+                    .text(UtilChatColour.colour((!error ?
                             EnvyGTSForge.getInstance().getLocale().getSellPriceInputDialogueText() :
                             EnvyGTSForge.getInstance().getLocale().getSellPriceInputDialogueErrorText())
                             .replace("%min_price%", String.format(EnvyGTSForge.getInstance().getLocale().getMoneyFormat(), attribute.getCurrentPrice()))

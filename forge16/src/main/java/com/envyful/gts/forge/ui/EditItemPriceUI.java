@@ -19,7 +19,7 @@ public class EditItemPriceUI {
         UtilForgeConcurrency.runLater(() -> {
             DialogueInputRegistry.builder()
                     .title(UtilChatColour.colour(EnvyGTSForge.getInstance().getLocale().getSellPriceInputDialogueTitle()))
-                    .text(UtilChatColour.colour((error ?
+                    .text(UtilChatColour.colour((!error ?
                             EnvyGTSForge.getInstance().getLocale().getSellPriceInputDialogueText() :
                             EnvyGTSForge.getInstance().getLocale().getSellPriceInputDialogueErrorText())
                             .replace("%min_price%", String.format(EnvyGTSForge.getInstance().getLocale().getMoneyFormat(), attribute.getCurrentPrice()))
@@ -27,16 +27,9 @@ public class EditItemPriceUI {
                     .defaultInputValue(String.valueOf(0))
                     .closeOnEscape()
                     .closeHandler(closedScreen -> SellHandOrParty.open(player))
-                    .submitHandler(submitted -> {
-                        double inputtedValue = UtilParse.parseDouble(submitted.getInput()).orElse(-1.0);
-
-                        if (inputtedValue < attribute.getCurrentMinPrice() || inputtedValue < 0) {
-                            openUI(player, itemStack, true);
-                            return;
-                        }
-
-                        UtilPlayer.runCommand(player.getParent(), "gts sell " + itemStack.getCount() + " " + attribute.getCurrentPrice());
-                    })
+                    .submitHandler(submitted ->
+                        UtilPlayer.runCommand(player.getParent(), "gts sell " + itemStack.getCount() + " " +
+                                UtilParse.parseDouble(submitted.getInput()).orElse(-1.0)))
                     .open(player.getParent());
         }, 5);
     }

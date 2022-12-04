@@ -26,7 +26,7 @@ public class EditDurationUI {
         UtilForgeConcurrency.runLater(() -> {
             DialogueInputRegistry.builder()
                     .title(UtilChatColour.colour(EnvyGTSForge.getInstance().getLocale().getDurationInputDialogueTitle()))
-                    .text(UtilChatColour.colour((error ?
+                    .text(UtilChatColour.colour((!error ?
                             EnvyGTSForge.getInstance().getLocale().getDurationInputDialogueText() :
                             EnvyGTSForge.getInstance().getLocale().getDurationInputDialogueErrorText())
                             .replace("%min_price%", String.format(EnvyGTSForge.getInstance().getLocale().getMoneyFormat(), attribute.getCurrentPrice()))
@@ -72,6 +72,10 @@ public class EditDurationUI {
                                         .content("p"))
                                         .contents(pixelmon)
                                         .build());
+                        attribute.setCurrentDuration(0);
+                        attribute.setCurrentMinPrice(0);
+                        attribute.setCurrentPrice(0);
+                        attribute.setSelectedSlot(-1);
                     })
                     .open(player.getParent());
         }, 5);
