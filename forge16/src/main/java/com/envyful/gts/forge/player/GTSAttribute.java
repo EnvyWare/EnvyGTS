@@ -102,7 +102,7 @@ public class GTSAttribute extends AbstractForgeAttribute<EnvyGTSForge> {
         UtilForgeConcurrency.runSync(() -> {
             boolean returnMessage = false;
 
-            for (Trade ownedTrade : this.ownedTrades) {
+            for (Trade ownedTrade : Lists.newArrayList(this.ownedTrades)) {
                 if (ownedTrade.hasExpired() || ownedTrade.wasPurchased() || ownedTrade.wasRemoved()) {
                     returnMessage = true;
                     ownedTrade.collect(this.parent, null);
