@@ -34,6 +34,11 @@ public class SellHandOrParty {
                 .clickHandler((envyPlayer, clickType) -> EditItemPriceUI.openUI(player, player.getParent().getItemInHand(Hand.MAIN_HAND), false))
                 .extendedConfigItem(player, pane, config.getSellHand());
 
+        UtilConfigItem.builder()
+                .asyncClick(false)
+                .clickHandler((envyPlayer, clickType) -> ViewTradesUI.openUI(player))
+                .extendedConfigItem(player, pane, config.getBackButton());
+
         GuiFactory.guiBuilder()
                 .setPlayerManager(EnvyGTSForge.getInstance().getPlayerManager())
                 .addPane(pane)

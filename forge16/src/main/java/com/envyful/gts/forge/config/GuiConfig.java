@@ -90,6 +90,13 @@ public class GuiConfig extends AbstractYamlConfig {
                 .positions(Pair.of(3, 1))
                 .build();
 
+        private ExtendedConfigItem backButton = ExtendedConfigItem.builder()
+                .type("pixelmon:eject_button")
+                .amount(1)
+                .name("&cBack")
+                .positions(Pair.of(2, 1))
+                .build();
+
         public SellHandOrParty() {
         }
 
@@ -103,6 +110,10 @@ public class GuiConfig extends AbstractYamlConfig {
 
         public ExtendedConfigItem getSellHand() {
             return this.sellHand;
+        }
+
+        public ExtendedConfigItem getBackButton() {
+            return this.backButton;
         }
     }
 
