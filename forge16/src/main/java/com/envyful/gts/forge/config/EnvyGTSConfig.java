@@ -194,7 +194,7 @@ public class EnvyGTSConfig extends AbstractYamlConfig {
 
         if (itemStack.hasTag() && itemStack.getTag().contains("CustomModelData")) {
             key += ":" + itemStack.getTag().getInt("CustomModelData");
-            String found = this.itemUrlFormats.get(key);
+            String found = this.itemReplacementURLs.get(key);
 
             if (found != null) {
                 return found;
