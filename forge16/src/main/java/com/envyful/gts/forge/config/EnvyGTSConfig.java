@@ -201,7 +201,7 @@ public class EnvyGTSConfig extends AbstractYamlConfig {
             }
         }
 
-        return this.itemUrlFormats.get(key);
+        return this.itemReplacementURLs.get(key);
     }
 
     public String getNoUrl() {
