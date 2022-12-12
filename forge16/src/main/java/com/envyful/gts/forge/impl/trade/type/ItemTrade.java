@@ -247,12 +247,7 @@ public class ItemTrade extends ForgeTrade {
         }
 
         String newJSON = event.getItemJSON();
-
-        if (!this.item.getOrCreateTag().contains("CustomModelData")) {
-            newJSON = newJSON.replace("%item_url%", EnvyGTSForge.getInstance().getConfig().getItemUrl(this.item));
-        } else {
-            newJSON = newJSON.replace("%item_url%", EnvyGTSForge.getInstance().getConfig().getNoUrl());
-        }
+        newJSON = newJSON.replace("%item_url%", EnvyGTSForge.getInstance().getConfig().getItemUrl(this.item));
 
         newJSON = newJSON.replace("%item_id%", this.capitalizeAfterUnderscoreAndStart(item.getItem().getRegistryName().getPath()))
                 .replace("%lore%", String.join("\n", UtilItemStack.getLore(item)))

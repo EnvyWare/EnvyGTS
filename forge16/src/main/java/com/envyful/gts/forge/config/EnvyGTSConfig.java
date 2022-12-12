@@ -193,8 +193,8 @@ public class EnvyGTSConfig extends AbstractYamlConfig {
         String key = itemStack.getItem().getRegistryName().toString();
 
         if (itemStack.hasTag() && itemStack.getTag().contains("CustomModelData")) {
-            key += ":" + itemStack.getTag().getInt("CustomModelData");
-            String found = this.itemReplacementURLs.get(key);
+            String newKey = key + ":" + itemStack.getTag().getInt("CustomModelData");
+            String found = this.itemReplacementURLs.get(newKey);
 
             if (found != null) {
                 return found;
