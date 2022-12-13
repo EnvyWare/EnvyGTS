@@ -34,7 +34,7 @@ public class EditDurationUI {
                                 TimeUnit.SECONDS.toMillis(EnvyGTSForge.getConfig().getMinTradeDuration())
                         ))
                         .replace("%pokemon%", pokemon.getDisplayName())))
-                .defaultInputValue(String.valueOf(TimeUnit.SECONDS.toMinutes(EnvyGTSForge.getConfig().getMinTradeDuration())))
+                .defaultInputValue(TimeUnit.SECONDS.toMinutes(EnvyGTSForge.getConfig().getMinTradeDuration()) + "m")
                 .closeOnEscape()
                 .closeHandler(closedScreen -> {
                     if (page == -1) {
