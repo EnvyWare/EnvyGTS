@@ -2,6 +2,7 @@ package com.envyful.gts.forge.ui;
 
 import com.envyful.api.forge.chat.UtilChatColour;
 import com.envyful.api.forge.config.UtilConfigInterface;
+import com.envyful.api.forge.config.UtilConfigItem;
 import com.envyful.api.forge.player.ForgeEnvyPlayer;
 import com.envyful.api.gui.factory.GuiFactory;
 import com.envyful.api.gui.pane.Pane;
@@ -39,6 +40,10 @@ public class ReturnsUI {
             Trade trade = collect.get(i);
             trade.displayClaimable(returnPositions.get(i), envyPlayer -> openUI(player), pane);
         }
+
+        UtilConfigItem.builder()
+                .clickHandler((envyPlayer, clickType) -> ViewTradesUI.openUI(player))
+                .extendedConfigItem(player, pane, config.getBackButton());
 
         GuiFactory.guiBuilder()
                 .setPlayerManager(EnvyGTSForge.getPlayerManager())
