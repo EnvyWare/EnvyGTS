@@ -4,8 +4,8 @@ import com.envyful.api.forge.chat.UtilChatColour;
 import com.envyful.api.forge.concurrency.UtilForgeConcurrency;
 import com.envyful.api.forge.player.ForgeEnvyPlayer;
 import com.envyful.api.reforged.dialogue.DialogueInputRegistry;
+import com.envyful.api.time.UtilTime;
 import com.envyful.api.time.UtilTimeFormat;
-import com.envyful.api.type.UtilParse;
 import com.envyful.gts.forge.EnvyGTSForge;
 import com.envyful.gts.forge.impl.trade.ForgeTrade;
 import com.envyful.gts.forge.impl.trade.type.PokemonTrade;
@@ -44,7 +44,7 @@ public class EditDurationUI {
                     }
                 })
                 .submitHandler(submitted -> {
-                    int inputtedValue = UtilParse.parseInteger(submitted.getInput()).orElse(-1);
+                    long inputtedValue = UtilTime.attemptParseTime(submitted.getInput()).orElse(-1L);
 
                     if (inputtedValue < TimeUnit.SECONDS.toMinutes(EnvyGTSForge.getConfig().getMinTradeDuration()) || inputtedValue < 0) {
                         openUI(player, page, position, true);
