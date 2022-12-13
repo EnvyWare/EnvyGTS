@@ -66,7 +66,7 @@ public class EditDurationUI {
                     EnvyGTSForge.getTradeManager()
                             .addTrade(player, ((PokemonTrade.Builder) ForgeTrade.builder()
                                     .cost(attribute.getCurrentPrice())
-                                    .expiry(System.currentTimeMillis() + TimeUnit.SECONDS.toMillis(attribute.getCurrentDuration()))
+                                    .expiry(System.currentTimeMillis() + inputtedValue)
                                     .owner(player)
                                     .originalOwnerName(player.getName())
                                     .content("p"))
