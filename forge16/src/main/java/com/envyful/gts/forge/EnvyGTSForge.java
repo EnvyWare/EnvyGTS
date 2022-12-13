@@ -121,7 +121,7 @@ public class EnvyGTSForge {
         this.commandFactory.registerCommand(event.getDispatcher(), new GTSCommand());
     }
 
-    public static EnvyGTSForge getInstreance() {
+    public static EnvyGTSForge getInstance() {
         return instance;
     }
 
