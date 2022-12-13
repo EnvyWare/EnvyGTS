@@ -79,7 +79,7 @@ public class EnvyGTSForge {
 
     @SubscribeEvent
     public void onServerStarted(FMLServerStartedEvent event) {
-        new TradeCreateListener(this);
+        new TradeCreateListener();
         new DiscordTradeCreateListener();
         new DiscordTradePurchaseListener();
         new DiscordTradeRemoveListener();
@@ -121,7 +121,7 @@ public class EnvyGTSForge {
         this.commandFactory.registerCommand(event.getDispatcher(), new GTSCommand());
     }
 
-    public static EnvyGTSForge getInstance() {
+    public static EnvyGTSForge getInstreance() {
         return instance;
     }
 

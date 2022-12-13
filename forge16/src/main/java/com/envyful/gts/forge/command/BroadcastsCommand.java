@@ -24,7 +24,7 @@ public class BroadcastsCommand {
 
     @CommandProcessor
     public void onCommand(@Sender ServerPlayerEntity player, String[] args) {
-        ForgeEnvyPlayer sender = EnvyGTSForge.getInstance().getPlayerManager().getPlayer(player);
+        ForgeEnvyPlayer sender = EnvyGTSForge.getPlayerManager().getPlayer(player);
         GTSAttribute attribute = sender.getAttribute(EnvyGTSForge.class);
 
         if (attribute == null) {
@@ -35,14 +35,12 @@ public class BroadcastsCommand {
             attribute.getSettings().setToggledBroadcasts(!attribute.getSettings().isToggledBroadcasts());
 
             if (attribute.getSettings().isToggledBroadcasts()) {
-                sender.message(UtilChatColour.translateColourCodes(
-                        '&',
-                        EnvyGTSForge.getInstance().getLocale().getMessages().getToggledBroadcastsOn()
+                sender.message(UtilChatColour.colour(
+                        EnvyGTSForge.getLocale().getMessages().getToggledBroadcastsOn()
                 ));
             } else {
-                sender.message(UtilChatColour.translateColourCodes(
-                        '&',
-                        EnvyGTSForge.getInstance().getLocale().getMessages().getToggledBroadcastsOff()
+                sender.message(UtilChatColour.colour(
+                        EnvyGTSForge.getLocale().getMessages().getToggledBroadcastsOff()
                 ));
             }
 
@@ -51,15 +49,13 @@ public class BroadcastsCommand {
 
         if (args[0].equalsIgnoreCase("on")) {
             attribute.getSettings().setToggledBroadcasts(true);
-            sender.message(UtilChatColour.translateColourCodes(
-                    '&',
-                    EnvyGTSForge.getInstance().getLocale().getMessages().getToggledBroadcastsOn()
+            sender.message(UtilChatColour.colour(
+                    EnvyGTSForge.getLocale().getMessages().getToggledBroadcastsOn()
             ));
         } else {
             attribute.getSettings().setToggledBroadcasts(false);
-            sender.message(UtilChatColour.translateColourCodes(
-                    '&',
-                    EnvyGTSForge.getInstance().getLocale().getMessages().getToggledBroadcastsOff()
+            sender.message(UtilChatColour.colour(
+                    EnvyGTSForge.getLocale().getMessages().getToggledBroadcastsOff()
             ));
         }
     }

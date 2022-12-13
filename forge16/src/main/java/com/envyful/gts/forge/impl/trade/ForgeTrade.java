@@ -94,7 +94,7 @@ public abstract class ForgeTrade implements Trade {
 
         if (iPixelmonBankAccount.getBalance().doubleValue() < this.cost) {
             player.message(UtilChatColour.colour(
-                    EnvyGTSForge.getInstance().getLocale().getMessages().getInsufficientFunds()
+                    EnvyGTSForge.getLocale().getMessages().getInsufficientFunds()
             ));
             return false;
         }
@@ -105,7 +105,7 @@ public abstract class ForgeTrade implements Trade {
 
         iPixelmonBankAccount.take(this.cost);
 
-        EnvyGTSConfig config = EnvyGTSForge.getInstance().getConfig();
+        EnvyGTSConfig config = EnvyGTSForge.getConfig();
         BankAccount target = BankAccountProxy.getBankAccountUnsafe(this.owner);
 
         if (target == null) {
@@ -124,7 +124,7 @@ public abstract class ForgeTrade implements Trade {
 
         MinecraftForge.EVENT_BUS.post(new PostTradePurchaseEvent((ForgeEnvyPlayer) player, this));
 
-        player.message(UtilChatColour.colour(EnvyGTSForge.getInstance().getLocale().getMessages().getPurchasedTrade()));
+        player.message(UtilChatColour.colour(EnvyGTSForge.getLocale().getMessages().getPurchasedTrade()));
         return true;
     }
 
@@ -136,11 +136,11 @@ public abstract class ForgeTrade implements Trade {
         }
 
         target.sendMessage(UtilChatColour.colour(
-                EnvyGTSForge.getInstance().getLocale().getMessages().getItemWasPurchased()
+                EnvyGTSForge.getLocale().getMessages().getItemWasPurchased()
                 .replace("%item%", this.getDisplayName())
                 .replace("%buyer%", buyerName)
                 .replace("%tax%", String.format("%.2f", taxTaken))
-                .replace("%price%", String.format(EnvyGTSForge.getInstance().getLocale().getMoneyFormat(), this.getCost()))
+                .replace("%price%", String.format(EnvyGTSForge.getLocale().getMoneyFormat(), this.getCost()))
         ), Util.NIL_UUID);
     }
 
@@ -149,7 +149,7 @@ public abstract class ForgeTrade implements Trade {
 
         purchaserAttribute.getOwnedTrades().add(this);
 
-        EnvyPlayer<?> seller = EnvyGTSForge.getInstance().getPlayerManager().getPlayer(oldOwner);
+        EnvyPlayer<?> seller = EnvyGTSForge.getPlayerManager().getPlayer(oldOwner);
 
         if (seller == null) {
             return;
@@ -163,7 +163,7 @@ public abstract class ForgeTrade implements Trade {
         this.removed = true;
 
         UtilConcurrency.runAsync(() -> {
-            try (Connection connection = EnvyGTSForge.getInstance().getDatabase().getConnection();
+            try (Connection connection = EnvyGTSForge.getDatabase().getConnection();
                  PreparedStatement preparedStatement = connection.prepareStatement(EnvyGTSQueries.UPDATE_REMOVED)) {
                 preparedStatement.setInt(1, 1);
                 preparedStatement.setInt(2, this.purchased ? 1 : 0);
@@ -191,7 +191,7 @@ public abstract class ForgeTrade implements Trade {
         this.ownerName = newOwnerName;
 
         UtilConcurrency.runAsync(() -> {
-            try (Connection connection = EnvyGTSForge.getInstance().getDatabase().getConnection();
+            try (Connection connection = EnvyGTSForge.getDatabase().getConnection();
                  PreparedStatement preparedStatement = connection.prepareStatement(EnvyGTSQueries.UPDATE_OWNER)) {
                 preparedStatement.setString(1, newOwner.toString());
                 preparedStatement.setString(2, newOwnerName);

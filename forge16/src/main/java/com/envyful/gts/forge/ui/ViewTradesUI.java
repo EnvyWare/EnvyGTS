@@ -22,7 +22,7 @@ public class ViewTradesUI {
     }
 
     public static void openUI(ForgeEnvyPlayer player, int page, FilterType filter, SortType sort) {
-        GuiConfig.SearchTradesConfig config = EnvyGTSForge.getInstance().getGui().getSearchUIConfig();
+        GuiConfig.SearchTradesConfig config = EnvyGTSForge.getGui().getSearchUIConfig();
 
         Pane pane = GuiFactory.paneBuilder()
                 .topLeftX(0)
@@ -33,7 +33,7 @@ public class ViewTradesUI {
 
         UtilConfigInterface.fillBackground(pane, config.getGuiSettings());
 
-        List<Trade> allTrades = EnvyGTSForge.getInstance().getTradeManager().getAllTrades();
+        List<Trade> allTrades = EnvyGTSForge.getTradeManager().getAllTrades();
 
         allTrades.removeIf(trade -> {
             if (trade.wasPurchased()) {
@@ -101,7 +101,7 @@ public class ViewTradesUI {
         }
 
         GuiFactory.guiBuilder()
-                .setPlayerManager(EnvyGTSForge.getInstance().getPlayerManager())
+                .setPlayerManager(EnvyGTSForge.getPlayerManager())
                 .addPane(pane)
                 .height(config.getGuiSettings().getHeight())
                 .title(UtilChatColour.colour(config.getGuiSettings().getTitle()))

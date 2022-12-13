@@ -13,7 +13,7 @@ import net.minecraft.util.Hand;
 public class SellHandOrParty {
 
     public static void open(ForgeEnvyPlayer player) {
-        GuiConfig.SellHandOrParty config = EnvyGTSForge.getInstance().getGui().getSellHandOrParty();
+        GuiConfig.SellHandOrParty config = EnvyGTSForge.getGui().getSellHandOrParty();
 
         Pane pane = GuiFactory.paneBuilder()
                 .topLeftX(0)
@@ -40,7 +40,7 @@ public class SellHandOrParty {
                 .extendedConfigItem(player, pane, config.getBackButton());
 
         GuiFactory.guiBuilder()
-                .setPlayerManager(EnvyGTSForge.getInstance().getPlayerManager())
+                .setPlayerManager(EnvyGTSForge.getPlayerManager())
                 .addPane(pane)
                 .height(config.getGuiSettings().getHeight())
                 .title(UtilChatColour.colour(config.getGuiSettings().getTitle()))

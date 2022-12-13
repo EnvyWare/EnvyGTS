@@ -78,13 +78,13 @@ public class GTSAttribute extends AbstractForgeAttribute<EnvyGTSForge> {
 
     @Override
     public void load() {
-        for (Trade allTrade : this.manager.getTradeManager().getAllTrades()) {
+        for (Trade allTrade : EnvyGTSForge.getTradeManager().getAllTrades()) {
             if (allTrade.isOwner(this.parent.getUuid())) {
                 this.ownedTrades.add(allTrade);
             }
         }
 
-        try (Connection connection = this.manager.getDatabase().getConnection();
+        try (Connection connection = EnvyGTSForge.getDatabase().getConnection();
              PreparedStatement settingsStatement = connection.prepareStatement(EnvyGTSQueries.GET_PLAYER_SETTINGS)) {
             settingsStatement.setString(1, this.parent.getUuid().toString());
 
@@ -110,14 +110,14 @@ public class GTSAttribute extends AbstractForgeAttribute<EnvyGTSForge> {
             }
 
             if (returnMessage) {
-                this.parent.message(UtilChatColour.colour(EnvyGTSForge.getInstance().getLocale().getMessages().getItemsToClaim()));
+                this.parent.message(UtilChatColour.colour(EnvyGTSForge.getLocale().getMessages().getItemsToClaim()));
             }
         });
     }
 
     @Override
     public void save() {
-        try (Connection connection = this.manager.getDatabase().getConnection();
+        try (Connection connection = EnvyGTSForge.getDatabase().getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(EnvyGTSQueries.UPDATE_PLAYER_NAME);
              PreparedStatement settingsStatement = connection.prepareStatement(EnvyGTSQueries.UPDATE_OR_CREATE_SETTINGS)) {
             preparedStatement.setString(1, this.parent.getParent().getName().getString());

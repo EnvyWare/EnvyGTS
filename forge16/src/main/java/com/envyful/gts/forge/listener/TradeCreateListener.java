@@ -14,33 +14,29 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public class TradeCreateListener extends LazyListener {
 
-    private final EnvyGTSForge mod;
-
-    public TradeCreateListener(EnvyGTSForge mod) {
+    public TradeCreateListener() {
         super();
-
-        this.mod = mod;
     }
 
     @SubscribeEvent
     public void onTradeCreate(TradeCreateEvent event) {
-        if (!this.mod.getConfig().isEnableNewListingBroadcasts()) {
+        if (!EnvyGTSForge.getConfig().isEnableNewListingBroadcasts()) {
             return;
         }
 
         UtilConcurrency.runAsync(() -> {
-            for (ForgeEnvyPlayer onlinePlayer : this.mod.getPlayerManager().getOnlinePlayers()) {
+            for (ForgeEnvyPlayer onlinePlayer : EnvyGTSForge.getPlayerManager().getOnlinePlayers()) {
                 GTSAttribute attribute = onlinePlayer.getAttribute(EnvyGTSForge.class);
 
                 if (attribute == null || !attribute.getSettings().isToggledBroadcasts()) {
                     continue;
                 }
 
-                for (String s : this.mod.getLocale().getMessages().getCreateTradeBroadcast(this.getPokemon(event.getTrade()))) {
+                for (String s : EnvyGTSForge.getLocale().getMessages().getCreateTradeBroadcast(this.getPokemon(event.getTrade()))) {
                     s = s.replace("%player%", event.getPlayer().getName())
                             .replace("%name%", event.getTrade().getDisplayName())
                             .replace("%cost%",
-                                    String.format(EnvyGTSForge.getInstance().getLocale().getMoneyFormat(),
+                                    String.format(EnvyGTSForge.getLocale().getMoneyFormat(),
                                             event.getTrade().getCost()));
 
                     onlinePlayer.message(UtilChatColour.colour(s));

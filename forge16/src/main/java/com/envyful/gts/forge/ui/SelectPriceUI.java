@@ -21,36 +21,34 @@ public class SelectPriceUI {
         GTSAttribute attribute = player.getAttribute(EnvyGTSForge.class);
         Pokemon pokemon = getPokemon(player, page, slot);
 
-        UtilForgeConcurrency.runLater(() -> {
-            DialogueInputRegistry.builder()
-                    .title(UtilChatColour.colour(EnvyGTSForge.getInstance().getLocale().getSellPriceInputDialogueTitle()))
-                    .text(UtilChatColour.colour((!error ?
-                            EnvyGTSForge.getInstance().getLocale().getSellPriceInputDialogueText() :
-                            EnvyGTSForge.getInstance().getLocale().getSellPriceInputDialogueErrorText())
-                            .replace("%min_price%", String.format(EnvyGTSForge.getInstance().getLocale().getMoneyFormat(), attribute.getCurrentPrice()))
-                            .replace("%pokemon%", pokemon.getDisplayName())))
-                    .defaultInputValue(String.valueOf(attribute.getCurrentPrice()))
-                    .closeOnEscape()
-                    .closeHandler(closedScreen -> {
-                        if (page == -1) {
-                            SelectPartyPokemonUI.openUI(player);
-                        } else {
-                            SelectPCPokemonUI.openUI(player, page);
-                        }
-                    })
-                    .submitHandler(submitted -> {
-                        double inputtedValue = UtilParse.parseDouble(submitted.getInput()).orElse(-1.0);
+        UtilForgeConcurrency.runLater(() -> DialogueInputRegistry.builder()
+                .title(UtilChatColour.colour(EnvyGTSForge.getLocale().getSellPriceInputDialogueTitle()))
+                .text(UtilChatColour.colour((!error ?
+                        EnvyGTSForge.getLocale().getSellPriceInputDialogueText() :
+                        EnvyGTSForge.getLocale().getSellPriceInputDialogueErrorText())
+                        .replace("%min_price%", String.format(EnvyGTSForge.getLocale().getMoneyFormat(), attribute.getCurrentPrice()))
+                        .replace("%pokemon%", pokemon.getDisplayName())))
+                .defaultInputValue(String.valueOf(attribute.getCurrentPrice()))
+                .closeOnEscape()
+                .closeHandler(closedScreen -> {
+                    if (page == -1) {
+                        SelectPartyPokemonUI.openUI(player);
+                    } else {
+                        SelectPCPokemonUI.openUI(player, page);
+                    }
+                })
+                .submitHandler(submitted -> {
+                    double inputtedValue = UtilParse.parseDouble(submitted.getInput()).orElse(-1.0);
 
-                        if (inputtedValue < attribute.getCurrentMinPrice() || inputtedValue < 0) {
-                            openUI(player, page, slot, true);
-                            return;
-                        }
+                    if (inputtedValue < attribute.getCurrentMinPrice() || inputtedValue < 0) {
+                        openUI(player, page, slot, true);
+                        return;
+                    }
 
-                        attribute.setCurrentPrice(inputtedValue);
-                        EditDurationUI.openUI(player, page, slot, false);
-                    })
-                    .open(player.getParent());
-        }, 5);
+                    attribute.setCurrentPrice(inputtedValue);
+                    EditDurationUI.openUI(player, page, slot, false);
+                })
+                .open(player.getParent()), 5);
     }
 
     public static Pokemon getPokemon(ForgeEnvyPlayer player, int page, int slot) {

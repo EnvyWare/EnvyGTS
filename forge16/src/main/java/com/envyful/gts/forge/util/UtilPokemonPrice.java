@@ -11,10 +11,10 @@ import java.util.List;
 public class UtilPokemonPrice {
 
     public static double getMinPrice(Pokemon pokemon) {
-        double defaultPrice = EnvyGTSForge.getInstance().getConfig().getMinPokemonPrice();
+        double defaultPrice = EnvyGTSForge.getConfig().getMinPokemonPrice();
         List<PokeSpecPricing> applicable = Lists.newArrayList();
 
-        for (PokeSpecPricing minPriceModifier : EnvyGTSForge.getInstance().getConfig().getMinPriceModifiers()) {
+        for (PokeSpecPricing minPriceModifier : EnvyGTSForge.getConfig().getMinPriceModifiers()) {
             if (minPriceModifier.getSpec().matches(pokemon)) {
                 applicable.add(minPriceModifier);
             }

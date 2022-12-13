@@ -31,7 +31,7 @@ public class SelectPCPokemonUI {
     }
 
     public static void openUI(ForgeEnvyPlayer player, int page) {
-        GuiConfig.SelectFromPCConfig config = EnvyGTSForge.getInstance().getGui().getPcConfig();
+        GuiConfig.SelectFromPCConfig config = EnvyGTSForge.getGui().getPcConfig();
 
         ((GTSAttribute) player.getAttribute(EnvyGTSForge.class)).setSelectedSlot(-1);
 
@@ -84,10 +84,9 @@ public class SelectPCPokemonUI {
 
                     trades.removeIf(trade -> trade.hasExpired() || trade.wasPurchased() || trade.wasRemoved());
 
-                    if (trades.size() >= EnvyGTSForge.getInstance().getConfig().getMaxListingsPerUser()) {
-                        player.message(UtilChatColour.translateColourCodes(
-                                '&',
-                                EnvyGTSForge.getInstance().getLocale().getMessages().getMaxTradesAlreadyReached()
+                    if (trades.size() >= EnvyGTSForge.getConfig().getMaxListingsPerUser()) {
+                        player.message(UtilChatColour.colour(
+                                EnvyGTSForge.getLocale().getMessages().getMaxTradesAlreadyReached()
                         ));
                         return;
                     }
@@ -96,13 +95,13 @@ public class SelectPCPokemonUI {
 
                     attribute.setCurrentPrice(price);
                     attribute.setCurrentMinPrice(price);
-                    attribute.setCurrentDuration(EnvyGTSForge.getInstance().getConfig().getDefaultTradeDurationSeconds());
+                    attribute.setCurrentDuration(EnvyGTSForge.getConfig().getDefaultTradeDurationSeconds());
                     SelectPriceUI.openUI(player, page, attribute.getSelectedSlot(), false);
                 })
                 .extendedConfigItem(player, pane, config.getConfirmButton());
 
         GuiFactory.guiBuilder()
-                .setPlayerManager(EnvyGTSForge.getInstance().getPlayerManager())
+                .setPlayerManager(EnvyGTSForge.getPlayerManager())
                 .addPane(pane)
                 .height(config.getGuiSettings().getHeight())
                 .title(UtilChatColour.colour(config.getGuiSettings().getTitle()))
@@ -112,7 +111,7 @@ public class SelectPCPokemonUI {
     private static void setPokemon(ForgeEnvyPlayer player, int page, Pane pane) {
         PCStorage pc = StorageProxy.getPCForPlayer(player.getParent());
         PCBox box = pc.getBox(page);
-        GuiConfig.SelectFromPCConfig config = EnvyGTSForge.getInstance().getGui().getPcConfig();
+        GuiConfig.SelectFromPCConfig config = EnvyGTSForge.getGui().getPcConfig();
 
         for (int i = 0; i < config.getPerPage(); i++) {
             int posX = i % 5;
@@ -122,15 +121,15 @@ public class SelectPCPokemonUI {
             if (pokemon == null) {
                 pane.set(2 + posX, posY, GuiFactory.displayable((UtilConfigItem.fromConfigItem(config.getNoPokemonItem()))));
             } else if (pokemon.isUntradeable() ||
-                    (!EnvyGTSForge.getInstance().getConfig().isAllowEggs() && pokemon.isEgg()) ||
-                    EnvyGTSForge.getInstance().getConfig().isBlackListed(pokemon)) {
+                    (!EnvyGTSForge.getConfig().isAllowEggs() && pokemon.isEgg()) ||
+                    EnvyGTSForge.getConfig().isBlackListed(pokemon)) {
                 pane.set(2 + posX, posY, GuiFactory.displayable(UtilConfigItem.fromConfigItem(config.getUntradeablePokemonItem())));
             } else {
                 final int slot = i;
                 pane.set(2 + posX, posY, GuiFactory.displayableBuilder(ItemStack.class)
                         .itemStack(UtilSprite.getPokemonElement(
                                 pokemon,
-                                EnvyGTSForge.getInstance().getGui().getPcConfig().getSpriteConfig()
+                                EnvyGTSForge.getGui().getPcConfig().getSpriteConfig()
                         ))
                         .clickHandler((envyPlayer, clickType) -> {
                             GTSAttribute attribute = envyPlayer.getAttribute(EnvyGTSForge.class);
@@ -139,7 +138,7 @@ public class SelectPCPokemonUI {
                                     GuiFactory.displayableBuilder(ItemStack.class)
                                             .itemStack(new ItemBuilder(UtilSprite.getPokemonElement(
                                                     box.get(slot),
-                                                    EnvyGTSForge.getInstance().getGui().getPartyPokemonUIConfig().getSpriteConfig()
+                                                    EnvyGTSForge.getGui().getPartyPokemonUIConfig().getSpriteConfig()
                                             ))
                                                     .enchant(Enchantments.UNBREAKING, 1)
                                                     .itemFlag(ItemFlag.HIDE_ENCHANTS)

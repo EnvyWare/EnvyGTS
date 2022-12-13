@@ -26,7 +26,7 @@ import java.util.List;
 public class SelectPartyPokemonUI {
 
     public static void openUI(ForgeEnvyPlayer player) {
-        GuiConfig.PartyPokemonConfig config = EnvyGTSForge.getInstance().getGui().getPartyPokemonUIConfig();
+        GuiConfig.PartyPokemonConfig config = EnvyGTSForge.getGui().getPartyPokemonUIConfig();
 
         Pane pane = GuiFactory.paneBuilder()
                 .topLeftX(0).topLeftY(0)
@@ -55,9 +55,9 @@ public class SelectPartyPokemonUI {
 
                     trades.removeIf(trade -> trade.hasExpired() || trade.wasPurchased() || trade.wasRemoved());
 
-                    if (trades.size() >= EnvyGTSForge.getInstance().getConfig().getMaxListingsPerUser()) {
+                    if (trades.size() >= EnvyGTSForge.getConfig().getMaxListingsPerUser()) {
                         player.message(UtilChatColour.colour(
-                                EnvyGTSForge.getInstance().getLocale().getMessages().getMaxTradesAlreadyReached()
+                                EnvyGTSForge.getLocale().getMessages().getMaxTradesAlreadyReached()
                         ));
                         return;
                     }
@@ -76,13 +76,13 @@ public class SelectPartyPokemonUI {
 
                     attribute.setCurrentPrice(price);
                     attribute.setCurrentMinPrice(price);
-                    attribute.setCurrentDuration(EnvyGTSForge.getInstance().getConfig().getDefaultTradeDurationSeconds());
+                    attribute.setCurrentDuration(EnvyGTSForge.getConfig().getDefaultTradeDurationSeconds());
                     SelectPriceUI.openUI(player, attribute.getSelectedSlot());
                 })
                 .extendedConfigItem(player, pane, config.getConfirmItem());
 
         GuiFactory.guiBuilder()
-                .setPlayerManager(EnvyGTSForge.getInstance().getPlayerManager())
+                .setPlayerManager(EnvyGTSForge.getPlayerManager())
                 .addPane(pane)
                 .height(config.getGuiSettings().getHeight())
                 .title(UtilChatColour.colour(config.getGuiSettings().getTitle()))
@@ -92,7 +92,7 @@ public class SelectPartyPokemonUI {
     private static void setPokemon(ForgeEnvyPlayer player, Pane pane) {
         PlayerPartyStorage party = StorageProxy.getParty(player.getParent());
         Pokemon[] all = party.getAll();
-        GuiConfig.PartyPokemonConfig config = EnvyGTSForge.getInstance().getGui().getPartyPokemonUIConfig();
+        GuiConfig.PartyPokemonConfig config = EnvyGTSForge.getGui().getPartyPokemonUIConfig();
 
         for (int i = 0; i < 6; i++) {
             int pos = config.getPartySelectionPositions().get(i);
@@ -100,14 +100,14 @@ public class SelectPartyPokemonUI {
             if (i >= all.length || all[i] == null) {
                 pane.set(pos % 9, pos / 9, GuiFactory.displayable(UtilConfigItem.fromConfigItem(config.getNoPokemonItem())));
             } else if (all[i].isUntradeable() ||
-                    (!EnvyGTSForge.getInstance().getConfig().isAllowEggs() && all[i].isEgg()) ||
-                    EnvyGTSForge.getInstance().getConfig().isBlackListed(all[i])) {
+                    (!EnvyGTSForge.getConfig().isAllowEggs() && all[i].isEgg()) ||
+                    EnvyGTSForge.getConfig().isBlackListed(all[i])) {
                 pane.set(pos % 9, pos / 9, GuiFactory.displayable(UtilConfigItem.fromConfigItem(config.getUntradeablePokemonItem())));
             } else {
                 final int slot = i;
                 ItemBuilder builder = new ItemBuilder(UtilSprite.getPokemonElement(
                         all[i],
-                        EnvyGTSForge.getInstance().getGui().getPartyPokemonUIConfig().getSpriteConfig()
+                        EnvyGTSForge.getGui().getPartyPokemonUIConfig().getSpriteConfig()
                 ));
 
                 GTSAttribute gtsAttribute = player.getAttribute(EnvyGTSForge.class);

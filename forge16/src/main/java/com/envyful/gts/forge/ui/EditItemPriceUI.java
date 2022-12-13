@@ -18,11 +18,11 @@ public class EditItemPriceUI {
 
         UtilForgeConcurrency.runLater(() -> {
             DialogueInputRegistry.builder()
-                    .title(UtilChatColour.colour(EnvyGTSForge.getInstance().getLocale().getSellPriceInputDialogueTitle()))
+                    .title(UtilChatColour.colour(EnvyGTSForge.getLocale().getSellPriceInputDialogueTitle()))
                     .text(UtilChatColour.colour((!error ?
-                            EnvyGTSForge.getInstance().getLocale().getSellPriceInputDialogueText() :
-                            EnvyGTSForge.getInstance().getLocale().getSellPriceInputDialogueErrorText())
-                            .replace("%min_price%", String.format(EnvyGTSForge.getInstance().getLocale().getMoneyFormat(), attribute.getCurrentPrice()))
+                            EnvyGTSForge.getLocale().getSellPriceInputDialogueText() :
+                            EnvyGTSForge.getLocale().getSellPriceInputDialogueErrorText())
+                            .replace("%min_price%", String.format(EnvyGTSForge.getLocale().getMoneyFormat(), attribute.getCurrentPrice()))
                             .replace("%pokemon%", itemStack.getHoverName().getString())))
                     .defaultInputValue(String.valueOf(0))
                     .closeOnEscape()

@@ -41,14 +41,14 @@ public class SellCommand {
 
     @CommandProcessor
     public void onSellCommand(@Sender ServerPlayerEntity player, String[] args) {
-        ForgeEnvyPlayer sender = EnvyGTSForge.getInstance().getPlayerManager().getPlayer(player);
+        ForgeEnvyPlayer sender = EnvyGTSForge.getPlayerManager().getPlayer(player);
         GTSAttribute attribute = sender.getAttribute(EnvyGTSForge.class);
         ItemStack inHand = player.getItemInHand(Hand.MAIN_HAND);
 
         if (args.length == 0) {
             StorageProxy.getParty(player).retrieveAll();
 
-            if (Objects.equals(inHand.getItem(), Items.AIR) || EnvyGTSForge.getInstance().getConfig().isBlackListed(inHand)) {
+            if (Objects.equals(inHand.getItem(), Items.AIR) || EnvyGTSForge.getConfig().isBlackListed(inHand)) {
                 SelectPartyPokemonUI.openUI(sender);
             } else {
                 SellHandOrParty.open(sender);
@@ -58,21 +58,21 @@ public class SellCommand {
 
         if (args.length < 2) {
             sender.message(UtilChatColour.colour(
-                    EnvyGTSForge.getInstance().getLocale().getMessages().getSellInsuffucientArgs()
+                    EnvyGTSForge.getLocale().getMessages().getSellInsuffucientArgs()
             ));
             return;
         }
 
         if (Objects.equals(inHand.getItem(), Items.AIR)) {
             sender.message(UtilChatColour.colour(
-                    EnvyGTSForge.getInstance().getLocale().getMessages().getSellNoItemInHand()
+                    EnvyGTSForge.getLocale().getMessages().getSellNoItemInHand()
             ));
             return;
         }
 
-        if (EnvyGTSForge.getInstance().getConfig().isBlackListed(inHand)) {
+        if (EnvyGTSForge.getConfig().isBlackListed(inHand)) {
             sender.message(UtilChatColour.colour(
-                    EnvyGTSForge.getInstance().getLocale().getMessages().getCannotSellBlacklisted())
+                    EnvyGTSForge.getLocale().getMessages().getCannotSellBlacklisted())
             );
             return;
         }
@@ -81,7 +81,7 @@ public class SellCommand {
 
         if (amount <= 0) {
             sender.message(UtilChatColour.colour(
-                    EnvyGTSForge.getInstance().getLocale().getMessages().getAmountMustBePositive()
+                    EnvyGTSForge.getLocale().getMessages().getAmountMustBePositive()
             ));
             return;
         }
@@ -90,24 +90,24 @@ public class SellCommand {
 
         if (price < 1.0) {
             sender.message(UtilChatColour.colour(
-                    EnvyGTSForge.getInstance().getLocale().getMessages().getPriceMustBeMoreThanOne()
+                    EnvyGTSForge.getLocale().getMessages().getPriceMustBeMoreThanOne()
             ));
             return;
         }
 
-        if (price > EnvyGTSForge.getInstance().getConfig().getMaxPrice()) {
+        if (price > EnvyGTSForge.getConfig().getMaxPrice()) {
             sender.message(UtilChatColour.colour(
-                    EnvyGTSForge.getInstance().getLocale().getMessages().getCannotGoAboveMaxPrice()
+                    EnvyGTSForge.getLocale().getMessages().getCannotGoAboveMaxPrice()
                             .replace("%max_price%",
-                                     String.format(EnvyGTSForge.getInstance().getLocale().getMoneyFormat(),
-                                     EnvyGTSForge.getInstance().getConfig().getMaxPrice()))
+                                     String.format(EnvyGTSForge.getLocale().getMoneyFormat(),
+                                             EnvyGTSForge.getConfig().getMaxPrice()))
             ));
             return;
         }
 
         if (amount > inHand.getCount()) {
             player.sendMessage(UtilChatColour.colour(
-                    EnvyGTSForge.getInstance().getLocale().getMessages().getNotEnoughItems()
+                    EnvyGTSForge.getLocale().getMessages().getNotEnoughItems()
             ), Util.NIL_UUID);
             return;
         }
@@ -116,24 +116,23 @@ public class SellCommand {
 
         trades.removeIf(trade -> trade.hasExpired() || trade.wasPurchased() || trade.wasRemoved());
 
-        if (trades.size() >= EnvyGTSForge.getInstance().getConfig().getMaxListingsPerUser()) {
+        if (trades.size() >= EnvyGTSForge.getConfig().getMaxListingsPerUser()) {
             sender.message(UtilChatColour.colour(
-                    EnvyGTSForge.getInstance().getLocale().getMessages().getMaxTradesAlreadyReached()
+                    EnvyGTSForge.getLocale().getMessages().getMaxTradesAlreadyReached()
             ));
             return;
         }
 
-        long duration =
-                TimeUnit.SECONDS.toMillis(EnvyGTSForge.getInstance().getConfig().getDefaultTradeDurationSeconds());
+        long duration = TimeUnit.SECONDS.toMillis(EnvyGTSForge.getConfig().getDefaultTradeDurationSeconds());
 
         if (args.length > 2) {
             int integer = UtilParse.parseInteger(args[2]).orElse(-1);
 
-            if (integer <= EnvyGTSForge.getInstance().getConfig().getMinTradeDuration()) {
+            if (integer <= EnvyGTSForge.getConfig().getMinTradeDuration()) {
                 sender.message(UtilChatColour.colour(
-                        EnvyGTSForge.getInstance().getLocale().getMessages().getCannotGoBelowMinTime()
+                        EnvyGTSForge.getLocale().getMessages().getCannotGoBelowMinTime()
                                 .replace("%min_duration%",
-                                         UtilTimeFormat.getFormattedDuration(EnvyGTSForge.getInstance().getConfig().getMinTradeDuration()) + "")
+                                         UtilTimeFormat.getFormattedDuration(EnvyGTSForge.getConfig().getMinTradeDuration()) + "")
                 ));
                 return;
             }
@@ -154,8 +153,8 @@ public class SellCommand {
         inHand.shrink(amount);
 
         player.sendMessage(UtilChatColour.colour(
-                EnvyGTSForge.getInstance().getLocale().getMessages().getAddedItemToGts()
+                EnvyGTSForge.getLocale().getMessages().getAddedItemToGts()
         ), Util.NIL_UUID);
-        EnvyGTSForge.getInstance().getTradeManager().addTrade(sender, builder.build());
+        EnvyGTSForge.getTradeManager().addTrade(sender, builder.build());
     }
 }

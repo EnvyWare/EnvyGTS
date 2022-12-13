@@ -87,7 +87,7 @@ public class PokemonTrade extends ForgeTrade {
 
         attribute.getOwnedTrades().remove(this);
         StorageProxy.getParty((ServerPlayerEntity) player.getParent()).add(this.pokemon);
-        EnvyGTSForge.getInstance().getTradeManager().removeTrade(this);
+        EnvyGTSForge.getTradeManager().removeTrade(this);
         UtilConcurrency.runAsync(this::delete);
 
         if (returnGui == null) {
@@ -104,7 +104,7 @@ public class PokemonTrade extends ForgeTrade {
         parent.closeContainer();
 
         StorageProxy.getParty((ServerPlayerEntity) admin.getParent()).add(this.pokemon);
-        EnvyGTSForge.getInstance().getTradeManager().removeTrade(this);
+        EnvyGTSForge.getTradeManager().removeTrade(this);
         UtilConcurrency.runAsync(this::delete);
     }
 
@@ -120,8 +120,8 @@ public class PokemonTrade extends ForgeTrade {
 
         pane.set(posX, posY, GuiFactory.displayableBuilder(ItemStack.class)
                 .itemStack(new ItemBuilder(UtilSprite.getPokemonElement(pokemon,
-                                                                        EnvyGTSForge.getInstance().getGui().getSearchUIConfig().getSpriteConfig()))
-                                   .addLore(this.formatLore(EnvyGTSForge.getInstance().getLocale().getListingBelowDataLore()))
+                                                                        EnvyGTSForge.getGui().getSearchUIConfig().getSpriteConfig()))
+                                   .addLore(this.formatLore(EnvyGTSForge.getLocale().getListingBelowDataLore()))
                                    .build())
                 .asyncClick(false)
                 .clickHandler((envyPlayer, clickType) -> {
@@ -130,11 +130,11 @@ public class PokemonTrade extends ForgeTrade {
                     }
 
                     if (this.isOwner(envyPlayer) && Objects.equals(clickType,
-                                                                   EnvyGTSForge.getInstance().getConfig().getOwnerRemoveButton())) {
+                                                                   EnvyGTSForge.getConfig().getOwnerRemoveButton())) {
                         this.removed = true;
                         MinecraftForge.EVENT_BUS.post(new TradeRemoveEvent(this));
                         this.collect(envyPlayer, null);
-                        envyPlayer.message(UtilChatColour.colour(EnvyGTSForge.getInstance().getLocale().getMessages().getRemovedOwnTrade()));
+                        envyPlayer.message(UtilChatColour.colour(EnvyGTSForge.getLocale().getMessages().getRemovedOwnTrade()));
                         return;
                     }
 
@@ -144,11 +144,11 @@ public class PokemonTrade extends ForgeTrade {
 
                     ConfirmationUI.builder()
                             .player(envyPlayer)
-                            .playerManager(EnvyGTSForge.getInstance().getPlayerManager())
-                            .config(EnvyGTSForge.getInstance().getGui().getSearchUIConfig().getConfirmGuiConfig())
+                            .playerManager(EnvyGTSForge.getPlayerManager())
+                            .config(EnvyGTSForge.getGui().getSearchUIConfig().getConfirmGuiConfig())
                             .descriptionItem(new ItemBuilder(UtilSprite.getPokemonElement(pokemon,
-                                                                                          EnvyGTSForge.getInstance().getGui().getSearchUIConfig().getSpriteConfig()))
-                                                     .addLore(this.formatLore(EnvyGTSForge.getInstance().getLocale().getListingBelowDataLore()))
+                                    EnvyGTSForge.getGui().getSearchUIConfig().getSpriteConfig()))
+                                                     .addLore(this.formatLore(EnvyGTSForge.getLocale().getListingBelowDataLore()))
                                                      .build())
                             .confirmHandler((clicker, clickType1) -> UtilForgeConcurrency.runSync(() -> {
                                 if (this.purchased) {
@@ -172,7 +172,7 @@ public class PokemonTrade extends ForgeTrade {
         for (String s : lore) {
             newLore.add(UtilChatColour.translateColourCodes('&', s
                     .replace("%cost%",
-                             String.format(EnvyGTSForge.getInstance().getLocale().getMoneyFormat(), this.cost))
+                             String.format(EnvyGTSForge.getLocale().getMoneyFormat(), this.cost))
                     .replace("%duration%", UtilTimeFormat.getFormattedDuration((this.expiry - System.currentTimeMillis())))
                     .replace("%owner%", this.ownerName)
                     .replace("%buyer%", this.ownerName)
@@ -189,8 +189,8 @@ public class PokemonTrade extends ForgeTrade {
 
         pane.set(posX, posY, GuiFactory.displayableBuilder(ItemStack.class)
                 .itemStack(new ItemBuilder(UtilSprite.getPokemonElement(pokemon,
-                                                                        EnvyGTSForge.getInstance().getGui().getSearchUIConfig().getSpriteConfig()))
-                                   .addLore(this.formatLore(EnvyGTSForge.getInstance().getLocale().getListingBelowExpiredOrClaimableLore()))
+                        EnvyGTSForge.getGui().getSearchUIConfig().getSpriteConfig()))
+                                   .addLore(this.formatLore(EnvyGTSForge.getLocale().getListingBelowExpiredOrClaimableLore()))
                                    .build())
                 .asyncClick(false)
                 .clickHandler((envyPlayer, clickType) -> this.collect(envyPlayer, returnGui))
@@ -199,7 +199,7 @@ public class PokemonTrade extends ForgeTrade {
 
     @Override
     public void delete() {
-        try (Connection connection = EnvyGTSForge.getInstance().getDatabase().getConnection();
+        try (Connection connection = EnvyGTSForge.getDatabase().getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(EnvyGTSQueries.REMOVE_TRADE)) {
             preparedStatement.setString(1, this.owner.toString());
             preparedStatement.setLong(2, this.expiry);
@@ -215,7 +215,7 @@ public class PokemonTrade extends ForgeTrade {
 
     @Override
     public void save() {
-        try (Connection connection = EnvyGTSForge.getInstance().getDatabase().getConnection();
+        try (Connection connection = EnvyGTSForge.getDatabase().getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(EnvyGTSQueries.ADD_TRADE)) {
             preparedStatement.setString(1, this.owner.toString());
             preparedStatement.setString(2, this.ownerName);

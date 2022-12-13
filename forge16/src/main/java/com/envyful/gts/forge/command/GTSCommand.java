@@ -27,11 +27,11 @@ public class GTSCommand {
 
     @CommandProcessor
     public void onCommand(@Sender ServerPlayerEntity player, String[] args) {
-        if (EnvyGTSForge.getInstance().getConfig().isEnableOpeningUIMessage()) {
-            player.sendMessage(UtilChatColour.colour(EnvyGTSForge.getInstance().getLocale().getMessages().getOpeningUi()), Util.NIL_UUID);
+        if (EnvyGTSForge.getConfig().isEnableOpeningUIMessage()) {
+            player.sendMessage(UtilChatColour.colour(EnvyGTSForge.getLocale().getMessages().getOpeningUi()), Util.NIL_UUID);
         }
 
         StorageProxy.getParty(player).retrieveAll();
-        ViewTradesUI.openUI(EnvyGTSForge.getInstance().getPlayerManager().getPlayer(player));
+        ViewTradesUI.openUI(EnvyGTSForge.getPlayerManager().getPlayer(player));
     }
 }
