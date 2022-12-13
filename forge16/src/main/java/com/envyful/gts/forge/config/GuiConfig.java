@@ -22,11 +22,8 @@ public class GuiConfig extends AbstractYamlConfig {
     private SearchTradesConfig searchUIConfig = new SearchTradesConfig();
     private PartyPokemonConfig partyPokemonUIConfig = new PartyPokemonConfig();
     private SelectFromPCConfig pcConfig = new SelectFromPCConfig();
-    private PokemonPriceConfig priceConfig = new PokemonPriceConfig();
-    private EditPriceConfig editPriceUIConfig = new EditPriceConfig();
-    private EditItemPriceConfig editItemPriceUIConfig = new EditItemPriceConfig();
-    private EditDurationConfig editDurationUIConfig = new EditDurationConfig();
     private SellHandOrParty sellHandOrParty = new SellHandOrParty();
+    private Returns returnsGui = new Returns();
 
     public GuiConfig() {
         super();
@@ -44,24 +41,52 @@ public class GuiConfig extends AbstractYamlConfig {
         return this.pcConfig;
     }
 
-    public PokemonPriceConfig getPriceConfig() {
-        return this.priceConfig;
-    }
-
-    public EditPriceConfig getEditPriceUIConfig() {
-        return this.editPriceUIConfig;
-    }
-
-    public EditDurationConfig getEditDurationUIConfig() {
-        return this.editDurationUIConfig;
-    }
-
-    public EditItemPriceConfig getEditItemPriceUIConfig() {
-        return this.editItemPriceUIConfig;
-    }
-
     public SellHandOrParty getSellHandOrParty() {
         return this.sellHandOrParty;
+    }
+
+    public Returns getReturnsGui() {
+        return this.returnsGui;
+    }
+
+    @ConfigSerializable
+    public static class Returns {
+
+        private ConfigInterface guiSettings = new ConfigInterface(
+                "EnvyGTS", 6, "BLOCK", ImmutableMap.of("one",
+                ConfigItem.builder()
+                        .type("minecraft:black_stained_glass_pane")
+                        .name(" ")
+                        .amount(1)
+                        .build()
+        ));
+
+        private ExtendedConfigItem backButton = ExtendedConfigItem.builder()
+                .type("pixelmon:eject_button")
+                .amount(1)
+                .name("&cBack")
+                .positions(Pair.of(4, 5))
+                .build();
+
+        private List<Integer> returnPositions = Lists.newArrayList(
+                1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22,
+                23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37
+        );
+
+        public Returns() {
+        }
+
+        public ConfigInterface getGuiSettings() {
+            return this.guiSettings;
+        }
+
+        public ExtendedConfigItem getBackButton() {
+            return this.backButton;
+        }
+
+        public List<Integer> getReturnPositions() {
+            return this.returnPositions;
+        }
     }
 
     @ConfigSerializable
@@ -150,6 +175,13 @@ public class GuiConfig extends AbstractYamlConfig {
                 .positions(Pair.of(4, 5))
                 .build();
 
+        private ExtendedConfigItem returnsButton = ExtendedConfigItem.builder()
+                .type("minecraft:diamond")
+                .amount(1)
+                .name("&aCollect your returns")
+                .positions(Pair.of(5, 5))
+                .build();
+
         private ExtendedConfigItem filterButton = new ExtendedConfigItem(
                 "pixelmon:net_ball", 1, (byte) 0, "&bChange filter",
                 Lists.newArrayList("&aCurrent Filter: &f%filter%"), 2, 5, Maps.newHashMap()
@@ -195,6 +227,10 @@ public class GuiConfig extends AbstractYamlConfig {
 
         public ExtendedConfigItem getOrderButton() {
             return this.orderButton;
+        }
+
+        public ExtendedConfigItem getReturnsButton() {
+            return this.returnsButton;
         }
     }
 
@@ -365,81 +401,6 @@ public class GuiConfig extends AbstractYamlConfig {
 
         public ConfigItem getNoPokemonItem() {
             return this.noPokemonItem;
-        }
-    }
-
-    @ConfigSerializable
-    public static class PokemonPriceConfig {
-
-        private ConfigInterface guiSettings = new ConfigInterface(
-                "EnvyGTS", 3, "BLOCK", ImmutableMap.of("one", ConfigItem.builder()
-                .type("minecraft:black_stained_glass_pane")
-                .name(" ")
-                .amount(1)
-                .build()));
-
-        private int pokemonPosition = 10;
-
-        private ExtendedConfigItem minPriceItem = new ExtendedConfigItem(
-                "pixelmon:relic_gold", 1, (byte) 0, "&bMin Price: &a$%min_price%",
-                Lists.newArrayList(), 2, 1, Maps.newHashMap()
-        );
-
-        private ExtendedConfigItem modifyPriceButton = new ExtendedConfigItem(
-                "pixelmon:relic_silver", 1, (byte) 0, "&bEdit Price",
-                Lists.newArrayList("&bCurrent Price: &e%price%"), 4, 1, Maps.newHashMap()
-        );
-
-        private ExtendedConfigItem modifyDurationButton = new ExtendedConfigItem(
-                "minecraft:clock", 1, (byte) 0, "&bEdit Duration",
-                Lists.newArrayList("&bDuration: &e%time%"), 5, 1, Maps.newHashMap()
-        );
-
-        private ExtendedConfigItem confirmItem = new ExtendedConfigItem(
-                "pixelmon:poke_ball", 1, (byte) 0, "&a&lCONFIRM",
-                Lists.newArrayList(), 7, 1, Maps.newHashMap()
-        );
-
-        private ExtendedConfigItem backButton = new ExtendedConfigItem(
-                "pixelmon:eject_button", 1, (byte) 0, "&cBack",
-                Lists.newArrayList(), 0, 0, Maps.newHashMap()
-        );
-
-        private SpriteConfig spriteConfig = new SpriteConfig();
-
-        public PokemonPriceConfig() {
-        }
-
-        public SpriteConfig getSpriteConfig() {
-            return this.spriteConfig;
-        }
-
-        public ConfigInterface getGuiSettings() {
-            return this.guiSettings;
-        }
-
-        public int getPokemonPosition() {
-            return this.pokemonPosition;
-        }
-
-        public ExtendedConfigItem getMinPriceItem() {
-            return this.minPriceItem;
-        }
-
-        public ExtendedConfigItem getModifyPriceButton() {
-            return this.modifyPriceButton;
-        }
-
-        public ExtendedConfigItem getModifyDurationButton() {
-            return this.modifyDurationButton;
-        }
-
-        public ExtendedConfigItem getConfirmItem() {
-            return this.confirmItem;
-        }
-
-        public ExtendedConfigItem getBackButton() {
-            return this.backButton;
         }
     }
 }

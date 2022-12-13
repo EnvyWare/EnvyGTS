@@ -125,27 +125,27 @@ public class EnvyGTSForge {
         return instance;
     }
 
-    public EnvyGTSConfig getConfig() {
-        return this.config;
+    public static EnvyGTSConfig getConfig() {
+        return instance.config;
     }
 
-    public Database getDatabase() {
-        return this.database;
+    public static Database getDatabase() {
+        return instance.database;
     }
 
-    public ForgePlayerManager getPlayerManager() {
-        return this.playerManager;
+    public static ForgePlayerManager getPlayerManager() {
+        return instance.playerManager;
     }
 
-    public GlobalTradeManager getTradeManager() {
-        return this.tradeManager;
+    public static GlobalTradeManager getTradeManager() {
+        return instance.tradeManager;
     }
 
-    public LocaleConfig getLocale() {
-        return this.locale;
+    public static LocaleConfig getLocale() {
+        return instance.locale;
     }
 
-    public GuiConfig getGui() {
-        return this.gui;
+    public static GuiConfig getGui() {
+        return instance.gui;
     }
 }

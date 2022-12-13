@@ -54,6 +54,10 @@ public class ViewTradesUI {
                 .extendedConfigItem(player, pane, config.getSellButton());
 
         UtilConfigItem.builder()
+                .clickHandler((envyPlayer, clickType) -> ReturnsUI.openUI(player))
+                .extendedConfigItem(player, pane, config.getReturnsButton());
+
+        UtilConfigItem.builder()
                 .clickHandler((envyPlayer, clickType) -> {
                     if ((page + 1) > (allTrades.size() / 45)) {
                         openUI(player, 0, filter, sort);
