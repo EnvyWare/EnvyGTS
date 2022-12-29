@@ -7,6 +7,7 @@ import com.envyful.api.command.annotate.executor.CommandProcessor;
 import com.envyful.api.command.annotate.executor.Sender;
 import com.envyful.api.forge.chat.UtilChatColour;
 import com.envyful.api.forge.player.ForgeEnvyPlayer;
+import com.envyful.api.time.UtilTime;
 import com.envyful.api.time.UtilTimeFormat;
 import com.envyful.api.type.UtilParse;
 import com.envyful.gts.api.Trade;
@@ -126,17 +127,18 @@ public class SellCommand {
         long duration = TimeUnit.SECONDS.toMillis(EnvyGTSForge.getConfig().getDefaultTradeDurationSeconds());
 
         if (args.length > 2) {
-            int integer = UtilParse.parseInteger(args[2]).orElse(-1);
+            duration = UtilTime.attemptParseTime(args[2]).orElse(-1L);
 
-            if (integer <= EnvyGTSForge.getConfig().getMinTradeDuration()) {
+            if (duration < TimeUnit.SECONDS.toMillis(EnvyGTSForge.getConfig().getMinTradeDuration()) || duration < 0) {
                 sender.message(UtilChatColour.colour(
                         EnvyGTSForge.getLocale().getMessages().getCannotGoBelowMinTime()
                                 .replace("%min_duration%",
-                                         UtilTimeFormat.getFormattedDuration(EnvyGTSForge.getConfig().getMinTradeDuration()))
+                                        UtilTimeFormat.getFormattedDuration(EnvyGTSForge.getConfig().getMinTradeDuration()))
                 ));
                 return;
             }
-            if (duration > EnvyGTSForge.getConfig().getMaxTradeDurationSeconds()) {
+
+            if (duration > TimeUnit.SECONDS.toMillis(EnvyGTSForge.getConfig().getMaxTradeDurationSeconds())) {
                 sender.message(UtilChatColour.colour(
                         EnvyGTSForge.getLocale().getMessages().getCannotGoAboveMaxTime()
                                 .replace("%max_duration%",
@@ -144,9 +146,6 @@ public class SellCommand {
                 ));
                 return;
             }
-
-            duration = TimeUnit.SECONDS.toMillis(integer);
-
         }
 
         ItemTrade.Builder builder = (ItemTrade.Builder) ForgeTrade.builder()
