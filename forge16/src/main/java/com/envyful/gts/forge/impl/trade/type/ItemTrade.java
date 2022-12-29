@@ -241,15 +241,10 @@ public class ItemTrade extends ForgeTrade {
     }
 
     @Override
-    public DiscordWebHook getWebHook(DiscordEvent event) {
-        if (!event.isItemEnabled()) {
-            return null;
-        }
-
-        String newJSON = event.getItemJSON();
-        newJSON = newJSON.replace("%item_url%", EnvyGTSForge.getConfig().getItemUrl(this.item));
-
-        newJSON = newJSON.replace("%item_id%", this.capitalizeAfterUnderscoreAndStart(item.getItem().getRegistryName().getPath()))
+    public String transformName(String name) {
+        return name
+                .replace("%item_url%", EnvyGTSForge.getConfig().getItemUrl(this.item))
+                .replace("%item_id%", this.capitalizeAfterUnderscoreAndStart(item.getItem().getRegistryName().getPath()))
                 .replace("%lore%", String.join("\n", UtilItemStack.getLore(item)))
                 .replace("%date%", String.valueOf(System.currentTimeMillis()))
                 .replace("%namespace%", item.getItem().getRegistryName().getNamespace())
@@ -259,8 +254,15 @@ public class ItemTrade extends ForgeTrade {
                 .replace("%price%", this.cost + "")
                 .replace("%item%", this.item.getHoverName().getString())
                 .replace("%amount%", String.valueOf(this.item.getCount()));
+    }
 
-        return DiscordWebHook.fromJson(newJSON);
+    @Override
+    public DiscordWebHook getWebHook(DiscordEvent event) {
+        if (!event.isItemEnabled()) {
+            return null;
+        }
+
+        return DiscordWebHook.fromJson(this.transformName(event.getItemJSON()));
     }
 
     private String capitalizeAfterUnderscoreAndStart(String word) {

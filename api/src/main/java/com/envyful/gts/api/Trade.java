@@ -1,6 +1,7 @@
 package com.envyful.gts.api;
 
 import com.envyful.api.discord.DiscordWebHook;
+import com.envyful.api.gui.Transformer;
 import com.envyful.api.gui.pane.Pane;
 import com.envyful.api.player.EnvyPlayer;
 import com.envyful.gts.api.discord.DiscordEvent;
@@ -15,7 +16,7 @@ import java.util.function.Consumer;
  * This interface represents an item that exists on GTS.
  *
  */
-public interface Trade {
+public interface Trade extends Transformer {
 
     /**
      *

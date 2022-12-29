@@ -238,11 +238,7 @@ public class PokemonTrade extends ForgeTrade {
     }
 
     @Override
-    public DiscordWebHook getWebHook(DiscordEvent event) {
-        if (!event.isPokemonEnabled()) {
-            return null;
-        }
-
+    public String transformName(String name) {
         IVStore iVs = pokemon.getIVs();
         float ivHP = iVs.get(StatsType.HP);
         float ivAtk = iVs.get(StatsType.Attack);
@@ -259,8 +255,7 @@ public class PokemonTrade extends ForgeTrade {
         float evSDef = pokemon.getEVs().get(StatsType.SpecialDefence);
         ExtraStats extraStats = pokemon.getExtraStats();
 
-        String newJSON = event.getPokemonJSON()
-                .replace("%buyer%", this.ownerName)
+        return name.replace("%buyer%", this.ownerName)
                 .replace("%seller%", this.originalOwnerName)
                 .replace("%expires_in%", UtilTimeFormat.getFormattedDuration(this.expiry - System.currentTimeMillis()))
                 .replace("%price%", this.cost + "")
@@ -296,6 +291,15 @@ public class PokemonTrade extends ForgeTrade {
                 .replace("%form%", pokemon.getFormEnum().getLocalizedName())
                 .replace("%size%", pokemon.getGrowth().getLocalizedName())
                 .replace("%custom_texture%", pokemon.getCustomTexture());
+    }
+
+    @Override
+    public DiscordWebHook getWebHook(DiscordEvent event) {
+        if (!event.isPokemonEnabled()) {
+            return null;
+        }
+
+        String newJSON = this.transformName(event.getPokemonJSON());
 
         return DiscordWebHook.fromJson(newJSON);
     }
