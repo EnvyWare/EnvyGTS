@@ -73,6 +73,7 @@ public class SelectPCPokemonUI {
                 .extendedConfigItem(player, pane, config.getPreviousPageButton());
 
         UtilConfigItem.builder()
+                .asyncClick(false)
                 .clickHandler((envyPlayer, clickType) -> {
                     GTSAttribute attribute = envyPlayer.getAttribute(EnvyGTSForge.class);
 
