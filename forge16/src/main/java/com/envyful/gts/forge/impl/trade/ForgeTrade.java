@@ -155,6 +155,8 @@ public abstract class ForgeTrade implements Trade {
             return;
         }
 
+        this.owner = purchaser.getUuid();
+        this.ownerName = purchaser.getName();
         GTSAttribute sellerAttribute = seller.getAttribute(EnvyGTSForge.class);
         sellerAttribute.getOwnedTrades().remove(this);
     }
