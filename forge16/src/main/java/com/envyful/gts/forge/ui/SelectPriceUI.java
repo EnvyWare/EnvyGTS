@@ -27,6 +27,7 @@ public class SelectPriceUI {
                         EnvyGTSForge.getLocale().getSellPriceInputDialogueText() :
                         EnvyGTSForge.getLocale().getSellPriceInputDialogueErrorText())
                         .replace("%min_price%", String.format(EnvyGTSForge.getLocale().getMoneyFormat(), attribute.getCurrentPrice()))
+                        .replace("%max_price%", String.format(EnvyGTSForge.getLocale().getMoneyFormat(), EnvyGTSForge.getConfig().getMaxPrice()))
                         .replace("%pokemon%", pokemon.getDisplayName())))
                 .defaultInputValue(String.valueOf(attribute.getCurrentPrice()))
                 .closeOnEscape()
@@ -41,6 +42,11 @@ public class SelectPriceUI {
                     double inputtedValue = UtilParse.parseDouble(submitted.getInput()).orElse(-1.0);
 
                     if (inputtedValue < attribute.getCurrentMinPrice() || inputtedValue < 0) {
+                        openUI(player, page, slot, true);
+                        return;
+                    }
+
+                    if (inputtedValue > EnvyGTSForge.getConfig().getMaxPrice()) {
                         openUI(player, page, slot, true);
                         return;
                     }
