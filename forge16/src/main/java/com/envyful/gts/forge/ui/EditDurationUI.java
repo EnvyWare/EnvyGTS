@@ -33,6 +33,9 @@ public class EditDurationUI {
                         .replace("%min_duration%", UtilTimeFormat.getFormattedDuration(
                                 TimeUnit.SECONDS.toMillis(EnvyGTSForge.getConfig().getMinTradeDuration())
                         ))
+                        .replace("%max_duration%", UtilTimeFormat.getFormattedDuration(
+                                TimeUnit.SECONDS.toMillis(EnvyGTSForge.getConfig().getMinTradeDuration())
+                        ))
                         .replace("%pokemon%", pokemon.getDisplayName())))
                 .defaultInputValue(TimeUnit.SECONDS.toMinutes(EnvyGTSForge.getConfig().getMinTradeDuration()) + "m")
                 .closeOnEscape()
@@ -47,6 +50,11 @@ public class EditDurationUI {
                     long inputtedValue = UtilTime.attemptParseTime(submitted.getInput()).orElse(-1L);
 
                     if (inputtedValue < TimeUnit.SECONDS.toMinutes(EnvyGTSForge.getConfig().getMinTradeDuration()) || inputtedValue < 0) {
+                        openUI(player, page, position, true);
+                        return;
+                    }
+
+                    if (inputtedValue > TimeUnit.SECONDS.toMinutes(EnvyGTSForge.getConfig().getMaxTradeDurationSeconds())) {
                         openUI(player, page, position, true);
                         return;
                     }

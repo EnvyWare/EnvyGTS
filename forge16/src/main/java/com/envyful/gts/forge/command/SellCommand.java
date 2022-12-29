@@ -132,12 +132,21 @@ public class SellCommand {
                 sender.message(UtilChatColour.colour(
                         EnvyGTSForge.getLocale().getMessages().getCannotGoBelowMinTime()
                                 .replace("%min_duration%",
-                                         UtilTimeFormat.getFormattedDuration(EnvyGTSForge.getConfig().getMinTradeDuration()) + "")
+                                         UtilTimeFormat.getFormattedDuration(EnvyGTSForge.getConfig().getMinTradeDuration()))
+                ));
+                return;
+            }
+            if (duration > EnvyGTSForge.getConfig().getMaxTradeDurationSeconds()) {
+                sender.message(UtilChatColour.colour(
+                        EnvyGTSForge.getLocale().getMessages().getCannotGoAboveMaxTime()
+                                .replace("%max_duration%",
+                                        UtilTimeFormat.getFormattedDuration(EnvyGTSForge.getConfig().getMaxTradeDurationSeconds()))
                 ));
                 return;
             }
 
             duration = TimeUnit.SECONDS.toMillis(integer);
+
         }
 
         ItemTrade.Builder builder = (ItemTrade.Builder) ForgeTrade.builder()

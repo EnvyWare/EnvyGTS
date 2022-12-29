@@ -102,6 +102,7 @@ public class LocaleConfig extends AbstractYamlConfig {
         private String cannotSellBlacklisted = "&c&l(!) &cYou cannot sell this item as it's blacklisted!";
         private String cannotGoAboveMaxPrice = "&c&l(!) &cYou cannot sell for more than $%max_price%";
         private String cannotGoBelowMinTime = "&c&l(!) &cYou cannot sell for less than %min_duration% seconds";
+        private String cannotGoAboveMaxTime = "&c&l(!) &cYou cannot sell for more than %max_duration% seconds";
 
         private String addedItemToGts = "&e&l(!) &eSuccessfully listed item on GTS";
         private String adminRemoveTrade = "&e&l(!) &eYou successfully removed the trade from the GTS";
@@ -220,6 +221,10 @@ public class LocaleConfig extends AbstractYamlConfig {
 
         public String getItemsToClaim() {
             return this.itemsToClaim;
+        }
+
+        public String getCannotGoAboveMaxTime() {
+            return this.cannotGoAboveMaxTime;
         }
     }
 
