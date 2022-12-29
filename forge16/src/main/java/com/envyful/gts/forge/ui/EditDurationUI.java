@@ -49,12 +49,12 @@ public class EditDurationUI {
                 .submitHandler(submitted -> {
                     long inputtedValue = UtilTime.attemptParseTime(submitted.getInput()).orElse(-1L);
 
-                    if (inputtedValue < TimeUnit.SECONDS.toMinutes(EnvyGTSForge.getConfig().getMinTradeDuration()) || inputtedValue < 0) {
+                    if (inputtedValue < TimeUnit.SECONDS.toMillis(EnvyGTSForge.getConfig().getMinTradeDuration()) || inputtedValue < 0) {
                         openUI(player, page, position, true);
                         return;
                     }
 
-                    if (inputtedValue > TimeUnit.SECONDS.toMinutes(EnvyGTSForge.getConfig().getMaxTradeDurationSeconds())) {
+                    if (inputtedValue > TimeUnit.SECONDS.toMillis(EnvyGTSForge.getConfig().getMaxTradeDurationSeconds())) {
                         openUI(player, page, position, true);
                         return;
                     }
