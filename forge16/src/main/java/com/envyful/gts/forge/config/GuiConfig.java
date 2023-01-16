@@ -263,17 +263,17 @@ public class GuiConfig extends AbstractYamlConfig {
                 Lists.newArrayList(), 4, 0, Maps.newHashMap()
         );
 
-        private ConfigItem noPokemonItem = new ConfigItem(
-                "minecraft:barrier",
-                1, (byte) 0, "&cNo pokemon in this position",
-                Lists.newArrayList(), Maps.newHashMap()
-        );
+        private ConfigItem noPokemonItem = ConfigItem.builder()
+                        .type("minecraft:barrier")
+                        .name("&cNo pokemon in this position")
+                        .amount(1)
+                        .build();
 
-        private ConfigItem untradeablePokemonItem = new ConfigItem(
-                "minecraft:barrier",
-                1, (byte) 0, "&c&lUNTRADEABLE",
-                Lists.newArrayList(), Maps.newHashMap()
-        );
+        private ConfigItem untradeablePokemonItem = ConfigItem.builder()
+                .type("minecraft:barrier")
+                .name("&c&lUNTRADEABLE")
+                .amount(1)
+                .build();
 
         private SpriteConfig spriteConfig = new SpriteConfig();
 
@@ -343,17 +343,17 @@ public class GuiConfig extends AbstractYamlConfig {
                 Lists.newArrayList(), 7, 3, Maps.newHashMap()
         );
 
-        private ConfigItem noPokemonItem = new ConfigItem(
-                "minecraft:barrier",
-                1, (byte) 0, "&cNo pokemon in this position",
-                Lists.newArrayList(), Maps.newHashMap()
-        );
+        private ConfigItem noPokemonItem = ConfigItem.builder()
+                .type("minecraft:barrier")
+                .name("&cNo pokemon in this position")
+                .amount(1)
+                .build();
 
-        private ConfigItem untradeablePokemonItem = new ConfigItem(
-                "minecraft:barrier",
-                1, (byte) 0, "&c&lUNTRADEABLE",
-                Lists.newArrayList(), Maps.newHashMap()
-        );
+        private ConfigItem untradeablePokemonItem = ConfigItem.builder()
+                .type("minecraft:barrier")
+                .name("&c&lUNTRADEABLE")
+                .amount(1)
+                .build();
 
         private SpriteConfig spriteConfig = new SpriteConfig();
 

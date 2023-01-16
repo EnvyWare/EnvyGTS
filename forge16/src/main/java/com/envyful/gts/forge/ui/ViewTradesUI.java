@@ -6,6 +6,7 @@ import com.envyful.api.forge.config.UtilConfigItem;
 import com.envyful.api.forge.player.ForgeEnvyPlayer;
 import com.envyful.api.gui.factory.GuiFactory;
 import com.envyful.api.gui.pane.Pane;
+import com.envyful.api.text.parse.SimplePlaceholder;
 import com.envyful.gts.api.Trade;
 import com.envyful.gts.api.gui.FilterType;
 import com.envyful.gts.api.gui.FilterTypeFactory;
@@ -80,14 +81,14 @@ public class ViewTradesUI {
         UtilConfigItem.builder()
                 .clickHandler((envyPlayer, clickType) -> openUI(player, page, filter, sort.getNext()))
                 .extendedConfigItem(player, pane, config.getOrderButton(),
-                        name -> name
+                        (SimplePlaceholder) name -> name
                                 .replace("%filter%", filter.getDisplayName())
                                 .replace("%order%", sort.getDisplayName()));
 
         UtilConfigItem.builder()
                 .clickHandler((envyPlayer, clickType) -> openUI(player, page, filter.getNext(), sort))
                 .extendedConfigItem(player, pane, config.getFilterButton(),
-                        name -> name
+                        (SimplePlaceholder) name -> name
                                 .replace("%filter%", filter.getDisplayName())
                                 .replace("%order%", sort.getDisplayName()));
 
