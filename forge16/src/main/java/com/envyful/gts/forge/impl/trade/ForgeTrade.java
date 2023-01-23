@@ -20,12 +20,14 @@ import com.pixelmonmod.pixelmon.api.economy.BankAccountProxy;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.util.Util;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.fml.server.ServerLifecycleHooks;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.Objects;
 import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
 
 /**
  *
@@ -116,13 +118,14 @@ public abstract class ForgeTrade implements Trade {
                 config.getTaxRate() : 1.0))));
 
         this.purchased = true;
-        this.setRemoved();
-        this.collect(player, null);
-        this.updateOwnership((EnvyPlayer<ServerPlayerEntity>) player, this.owner);
+        this.setRemoved().whenCompleteAsync((unused, throwable) -> {
+            this.collect(player, null);
+            this.updateOwnership((EnvyPlayer<ServerPlayerEntity>) player, this.owner);
 
-        MinecraftForge.EVENT_BUS.post(new PostTradePurchaseEvent((ForgeEnvyPlayer) player, this));
+            MinecraftForge.EVENT_BUS.post(new PostTradePurchaseEvent((ForgeEnvyPlayer) player, this));
 
-        player.message(UtilChatColour.colour(EnvyGTSForge.getLocale().getMessages().getPurchasedTrade()));
+            player.message(UtilChatColour.colour(EnvyGTSForge.getLocale().getMessages().getPurchasedTrade()));
+        }, ServerLifecycleHooks.getCurrentServer());
         return true;
     }
 
@@ -159,10 +162,10 @@ public abstract class ForgeTrade implements Trade {
         sellerAttribute.getOwnedTrades().remove(this);
     }
 
-    protected void setRemoved() {
+    protected CompletableFuture<Void> setRemoved() {
         this.removed = true;
 
-        UtilConcurrency.runAsync(() -> {
+        return CompletableFuture.runAsync(() -> {
             try (Connection connection = EnvyGTSForge.getDatabase().getConnection();
                  PreparedStatement preparedStatement = connection.prepareStatement(EnvyGTSQueries.UPDATE_REMOVED)) {
                 preparedStatement.setInt(1, 1);
@@ -182,7 +185,7 @@ public abstract class ForgeTrade implements Trade {
             } catch (SQLException e) {
                 e.printStackTrace();
             }
-        });
+        }, UtilConcurrency.SCHEDULED_EXECUTOR_SERVICE);
     }
 
     protected void updateOwner(UUID newOwner, String newOwnerName) {
