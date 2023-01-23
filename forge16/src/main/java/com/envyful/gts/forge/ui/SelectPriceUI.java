@@ -21,6 +21,10 @@ public class SelectPriceUI {
         GTSAttribute attribute = player.getAttribute(EnvyGTSForge.class);
         Pokemon pokemon = getPokemon(player, page, slot);
 
+        if (pokemon == null) {
+            return;
+        }
+
         UtilForgeConcurrency.runLater(() -> DialogueInputRegistry.builder()
                 .title(UtilChatColour.colour(EnvyGTSForge.getLocale().getSellPriceInputDialogueTitle()))
                 .text(UtilChatColour.colour((!error ?

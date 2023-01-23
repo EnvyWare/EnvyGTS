@@ -93,9 +93,7 @@ public abstract class ForgeTrade implements Trade {
         BankAccount iPixelmonBankAccount = BankAccountProxy.getBankAccountUnsafe(parent);
 
         if (iPixelmonBankAccount.getBalance().doubleValue() < this.cost) {
-            player.message(UtilChatColour.colour(
-                    EnvyGTSForge.getLocale().getMessages().getInsufficientFunds()
-            ));
+            player.message(UtilChatColour.colour(EnvyGTSForge.getLocale().getMessages().getInsufficientFunds()));
             return false;
         }
 
@@ -117,10 +115,10 @@ public abstract class ForgeTrade implements Trade {
         this.attemptSendMessage(this.owner, player.getName(), (this.cost * (1 - (config.isEnableTax() ?
                 config.getTaxRate() : 1.0))));
 
-        this.updateOwnership((EnvyPlayer<ServerPlayerEntity>) player, this.owner);
         this.purchased = true;
         this.setRemoved();
         this.collect(player, null);
+        this.updateOwnership((EnvyPlayer<ServerPlayerEntity>) player, this.owner);
 
         MinecraftForge.EVENT_BUS.post(new PostTradePurchaseEvent((ForgeEnvyPlayer) player, this));
 
