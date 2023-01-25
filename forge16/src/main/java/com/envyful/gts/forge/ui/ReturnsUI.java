@@ -30,7 +30,7 @@ public class ReturnsUI {
         UtilConfigInterface.fillBackground(pane, config.getGuiSettings());
 
         List<Integer> returnPositions = config.getReturnPositions();
-        System.out.println(attribute.getParent().getUuid() + " PENIS");
+
         List<Trade> collect = attribute.getOwnedTrades().stream().filter(trade -> trade.hasExpired() || trade.wasRemoved() || trade.wasPurchased()).collect(Collectors.toList());
 
         for (int i = 0; i < returnPositions.size(); i++) {
