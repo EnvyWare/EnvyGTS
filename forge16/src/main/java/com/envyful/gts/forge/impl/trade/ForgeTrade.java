@@ -146,9 +146,8 @@ public abstract class ForgeTrade implements Trade {
     }
 
     private void updateOwnership(EnvyPlayer<ServerPlayerEntity> purchaser, UUID oldOwner) {
-        GTSAttribute purchaserAttribute = purchaser.getAttribute(EnvyGTSForge.class);
-
-        purchaserAttribute.getOwnedTrades().add(this);
+        this.owner = purchaser.getUuid();
+        this.ownerName = purchaser.getName();
 
         EnvyPlayer<?> seller = EnvyGTSForge.getPlayerManager().getPlayer(oldOwner);
 
@@ -156,8 +155,6 @@ public abstract class ForgeTrade implements Trade {
             return;
         }
 
-        this.owner = purchaser.getUuid();
-        this.ownerName = purchaser.getName();
         GTSAttribute sellerAttribute = seller.getAttribute(EnvyGTSForge.class);
         sellerAttribute.getOwnedTrades().remove(this);
     }

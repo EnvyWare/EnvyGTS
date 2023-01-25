@@ -22,7 +22,6 @@ import com.envyful.gts.forge.EnvyGTSForge;
 import com.envyful.gts.forge.event.TradeCollectEvent;
 import com.envyful.gts.forge.event.TradeRemoveEvent;
 import com.envyful.gts.forge.impl.trade.ForgeTrade;
-import com.envyful.gts.forge.player.GTSAttribute;
 import com.envyful.gts.forge.ui.ViewTradesUI;
 import com.google.common.collect.Lists;
 import com.pixelmonmod.api.pokemon.PokemonSpecification;
@@ -81,11 +80,9 @@ public class PokemonTrade extends ForgeTrade {
     @Override
     public void collect(EnvyPlayer<?> player, Consumer<EnvyPlayer<?>> returnGui) {
         ServerPlayerEntity parent = (ServerPlayerEntity) player.getParent();
-        GTSAttribute attribute = player.getAttribute(EnvyGTSForge.class);
 
         MinecraftForge.EVENT_BUS.post(new TradeCollectEvent((ForgeEnvyPlayer) player, this));
 
-        attribute.getOwnedTrades().remove(this);
         StorageProxy.getParty((ServerPlayerEntity) player.getParent()).add(this.pokemon);
         EnvyGTSForge.getTradeManager().removeTrade(this);
         UtilConcurrency.runAsync(this::delete);
