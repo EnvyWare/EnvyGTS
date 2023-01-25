@@ -5,12 +5,15 @@ repositories {
     }
 
     maven { url 'https://jitpack.io' }
+    maven {
+        url "https://maven.envyware.co.uk/releases"
+    }
 }
 
 dependencies {
     shadow group: 'org.spongepowered', name: 'configurate-yaml', version: '4.0.0'
 
-    compileOnly group: 'com.github.EnvyWare.API', name: 'commons', version: '3.9.1'
+    shadow group: 'com.envyful.api', name: 'commons', version: '4.1.5'
 }
 
 shadowJar {
