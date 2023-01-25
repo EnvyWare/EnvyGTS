@@ -64,7 +64,7 @@ public class ItemTrade extends ForgeTrade {
         ServerPlayerEntity parent = (ServerPlayerEntity) player.getParent();
         GTSAttribute attribute = player.getAttribute(EnvyGTSForge.class);
 
-        if (!parent.inventory.add(this.item)) {
+        if (!parent.inventory.add(this.item.copy())) {
             player.message(UtilChatColour.colour(EnvyGTSForge.getLocale().getMessages().getInventoryFull()));
 
             if (returnGui == null) {
@@ -94,7 +94,7 @@ public class ItemTrade extends ForgeTrade {
 
         parent.closeContainer();
 
-        if (!parent.inventory.add(this.item)) {
+        if (!parent.inventory.add(this.item.copy())) {
             admin.message(UtilChatColour.colour(EnvyGTSForge.getLocale().getMessages().getInventoryFull()));
             return;
         }
