@@ -130,6 +130,10 @@ public class ItemTrade extends ForgeTrade {
                     )) {
                         this.removed = true;
                         MinecraftForge.EVENT_BUS.post(new TradeRemoveEvent(this));
+
+                        GTSAttribute attribute = envyPlayer.getAttribute(EnvyGTSForge.class);
+                        attribute.getOwnedTrades().remove(this);
+
                         this.collect(envyPlayer, null);
                         envyPlayer.message(UtilChatColour.colour(EnvyGTSForge.getLocale().getMessages().getRemovedOwnTrade()));
                         return;
@@ -188,7 +192,11 @@ public class ItemTrade extends ForgeTrade {
                 .itemStack(new ItemBuilder(this.item.copy())
                                    .addLore(this.formatLore(EnvyGTSForge.getLocale().getListingBelowExpiredOrClaimableLore()))
                                    .build())
-                .clickHandler((envyPlayer, clickType) -> UtilForgeConcurrency.runSync(() -> this.collect(envyPlayer, returnGui)))
+                .clickHandler((envyPlayer, clickType) -> UtilForgeConcurrency.runSync(() -> {
+                    this.collect(envyPlayer, returnGui);
+                    GTSAttribute attribute = envyPlayer.getAttribute(EnvyGTSForge.class);
+                    attribute.getOwnedTrades().remove(this);
+                }))
                 .build());
     }
 

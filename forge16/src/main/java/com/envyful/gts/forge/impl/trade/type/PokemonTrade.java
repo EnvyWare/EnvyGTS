@@ -22,6 +22,7 @@ import com.envyful.gts.forge.EnvyGTSForge;
 import com.envyful.gts.forge.event.TradeCollectEvent;
 import com.envyful.gts.forge.event.TradeRemoveEvent;
 import com.envyful.gts.forge.impl.trade.ForgeTrade;
+import com.envyful.gts.forge.player.GTSAttribute;
 import com.envyful.gts.forge.ui.ViewTradesUI;
 import com.google.common.collect.Lists;
 import com.pixelmonmod.api.pokemon.PokemonSpecification;
@@ -130,6 +131,10 @@ public class PokemonTrade extends ForgeTrade {
                                                                    EnvyGTSForge.getConfig().getOwnerRemoveButton())) {
                         this.removed = true;
                         MinecraftForge.EVENT_BUS.post(new TradeRemoveEvent(this));
+
+                        GTSAttribute attribute = envyPlayer.getAttribute(EnvyGTSForge.class);
+                        attribute.getOwnedTrades().remove(this);
+
                         this.collect(envyPlayer, null);
                         envyPlayer.message(UtilChatColour.colour(EnvyGTSForge.getLocale().getMessages().getRemovedOwnTrade()));
                         return;
@@ -190,7 +195,11 @@ public class PokemonTrade extends ForgeTrade {
                                    .addLore(this.formatLore(EnvyGTSForge.getLocale().getListingBelowExpiredOrClaimableLore()))
                                    .build())
                 .asyncClick(false)
-                .clickHandler((envyPlayer, clickType) -> this.collect(envyPlayer, returnGui))
+                .clickHandler((envyPlayer, clickType) -> {
+                    this.collect(envyPlayer, returnGui);
+                    GTSAttribute attribute = envyPlayer.getAttribute(EnvyGTSForge.class);
+                    attribute.getOwnedTrades().remove(this);
+                })
                 .build());
     }
 
