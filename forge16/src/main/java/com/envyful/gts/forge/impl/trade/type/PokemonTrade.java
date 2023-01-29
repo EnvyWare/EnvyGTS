@@ -117,6 +117,7 @@ public class PokemonTrade extends ForgeTrade {
         int posY = pos / 9;
 
         pane.set(posX, posY, GuiFactory.displayableBuilder(ItemStack.class)
+                .singleClick()
                 .itemStack(new ItemBuilder(UtilSprite.getPokemonElement(pokemon,
                                                                         EnvyGTSForge.getGui().getSearchUIConfig().getSpriteConfig()))
                                    .addLore(this.formatLore(EnvyGTSForge.getLocale().getListingBelowDataLore()))
@@ -124,6 +125,7 @@ public class PokemonTrade extends ForgeTrade {
                 .asyncClick(false)
                 .clickHandler((envyPlayer, clickType) -> {
                     if (this.removed) {
+                        ((ForgeEnvyPlayer) envyPlayer).getParent().closeContainer();
                         return;
                     }
 

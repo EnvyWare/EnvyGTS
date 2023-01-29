@@ -118,9 +118,11 @@ public class ItemTrade extends ForgeTrade {
                 .itemStack(new ItemBuilder(this.item.copy())
                                    .addLore(this.formatLore(EnvyGTSForge.getLocale().getListingBelowDataLore()))
                                    .build())
+                .singleClick()
                 .asyncClick(false)
                 .clickHandler((envyPlayer, clickType) -> {
                     if (this.removed) {
+                        ((ForgeEnvyPlayer) envyPlayer).getParent().closeContainer();
                         return;
                     }
 
