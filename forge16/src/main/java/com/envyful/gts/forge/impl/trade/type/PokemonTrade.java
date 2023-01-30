@@ -197,6 +197,7 @@ public class PokemonTrade extends ForgeTrade {
                                    .addLore(this.formatLore(EnvyGTSForge.getLocale().getListingBelowExpiredOrClaimableLore()))
                                    .build())
                 .asyncClick(false)
+                .singleClick()
                 .clickHandler((envyPlayer, clickType) -> {
                     this.collect(envyPlayer, returnGui);
                     GTSAttribute attribute = envyPlayer.getAttribute(EnvyGTSForge.class);

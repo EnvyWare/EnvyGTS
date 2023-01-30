@@ -194,6 +194,7 @@ public class ItemTrade extends ForgeTrade {
                 .itemStack(new ItemBuilder(this.item.copy())
                                    .addLore(this.formatLore(EnvyGTSForge.getLocale().getListingBelowExpiredOrClaimableLore()))
                                    .build())
+                .singleClick()
                 .clickHandler((envyPlayer, clickType) -> UtilForgeConcurrency.runSync(() -> {
                     this.collect(envyPlayer, returnGui);
                     GTSAttribute attribute = envyPlayer.getAttribute(EnvyGTSForge.class);
