@@ -196,9 +196,9 @@ public class ItemTrade extends ForgeTrade {
                                    .build())
                 .singleClick()
                 .clickHandler((envyPlayer, clickType) -> UtilForgeConcurrency.runSync(() -> {
-                    this.collect(envyPlayer, returnGui);
                     GTSAttribute attribute = envyPlayer.getAttribute(EnvyGTSForge.class);
                     attribute.getOwnedTrades().remove(this);
+                    this.collect(envyPlayer, returnGui);
                 }))
                 .build());
     }
