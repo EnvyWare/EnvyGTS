@@ -119,12 +119,14 @@ public abstract class ForgeTrade implements Trade {
 
         this.purchased = true;
         this.setRemoved().whenCompleteAsync((unused, throwable) -> {
-            this.collect(player, null);
-            this.updateOwnership((EnvyPlayer<ServerPlayerEntity>) player, this.owner);
+            this.collect(player, null).thenApply(unused1 -> {
+                this.updateOwnership((EnvyPlayer<ServerPlayerEntity>) player, this.owner);
 
-            MinecraftForge.EVENT_BUS.post(new PostTradePurchaseEvent((ForgeEnvyPlayer) player, this));
+                MinecraftForge.EVENT_BUS.post(new PostTradePurchaseEvent((ForgeEnvyPlayer) player, this));
 
-            player.message(UtilChatColour.colour(EnvyGTSForge.getLocale().getMessages().getPurchasedTrade()));
+                player.message(UtilChatColour.colour(EnvyGTSForge.getLocale().getMessages().getPurchasedTrade()));
+                return null;
+            });
         }, ServerLifecycleHooks.getCurrentServer());
         return true;
     }

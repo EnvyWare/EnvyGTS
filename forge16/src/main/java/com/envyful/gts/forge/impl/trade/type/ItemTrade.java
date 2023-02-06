@@ -38,6 +38,7 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
 
 public class ItemTrade extends ForgeTrade {
@@ -60,9 +61,8 @@ public class ItemTrade extends ForgeTrade {
     }
 
     @Override
-    public void collect(EnvyPlayer<?> player, Consumer<EnvyPlayer<?>> returnGui) {
+    public CompletableFuture<Void> collect(EnvyPlayer<?> player, Consumer<EnvyPlayer<?>> returnGui) {
         ServerPlayerEntity parent = (ServerPlayerEntity) player.getParent();
-        GTSAttribute attribute = player.getAttribute(EnvyGTSForge.class);
 
         if (!parent.inventory.add(this.item.copy())) {
             player.message(UtilChatColour.colour(EnvyGTSForge.getLocale().getMessages().getInventoryFull()));
@@ -72,20 +72,20 @@ public class ItemTrade extends ForgeTrade {
             } else {
                 returnGui.accept(player);
             }
-            return;
+            return CompletableFuture.completedFuture(null);
         }
 
         MinecraftForge.EVENT_BUS.post(new TradeCollectEvent((ForgeEnvyPlayer) player, this));
 
-        attribute.getOwnedTrades().remove(this);
         EnvyGTSForge.getTradeManager().removeTrade(this);
-        UtilConcurrency.runAsync(this::delete);
 
         if (returnGui == null) {
             parent.closeContainer();
         } else {
             returnGui.accept(player);
         }
+
+        return CompletableFuture.runAsync(this::delete, UtilConcurrency.SCHEDULED_EXECUTOR_SERVICE);
     }
 
     @Override

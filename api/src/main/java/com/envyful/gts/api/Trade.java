@@ -9,6 +9,7 @@ import com.envyful.gts.api.gui.FilterType;
 import com.envyful.gts.api.gui.SortType;
 
 import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
 
 /**
@@ -96,7 +97,7 @@ public interface Trade extends Transformer {
      * @param player The player collecting the item
      * @param returnGui The gui to return to upon claiming - null = close
      */
-    void collect(EnvyPlayer<?> player, Consumer<EnvyPlayer<?>> returnGui);
+    CompletableFuture<Void> collect(EnvyPlayer<?> player, Consumer<EnvyPlayer<?>> returnGui);
 
     /**
      *
