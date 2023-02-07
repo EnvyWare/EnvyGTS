@@ -106,6 +106,7 @@ public class GTSAttribute extends AbstractForgeAttribute<EnvyGTSForge> {
                 if (ownedTrade.hasExpired() || ownedTrade.wasPurchased() || ownedTrade.wasRemoved()) {
                     returnMessage = true;
                     ownedTrade.collect(this.parent, null);
+                    this.ownedTrades.remove(ownedTrade);
                 }
             }
 
