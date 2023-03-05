@@ -27,9 +27,7 @@ public class EditItemPriceUI {
                     .defaultInputValue(String.valueOf(0))
                     .closeOnEscape()
                     .closeHandler(closedScreen -> SellHandOrParty.open(player))
-                    .submitHandler(submitted ->
-                        UtilPlayer.runCommand(player.getParent(), "gts sell " + itemStack.getCount() + " " +
-                                UtilParse.parseDouble(submitted.getInput()).orElse(-1.0)))
+                    .submitHandler(submitted -> EditItemDurationUI.openUI(player, UtilParse.parseDouble(submitted.getInput()).orElse(-1.0), false))
                     .open(player.getParent());
         }, 5);
     }
