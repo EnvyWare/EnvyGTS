@@ -31,5 +31,4 @@ public class EditItemPriceUI {
                     .open(player.getParent());
         }, 5);
     }
-
 }

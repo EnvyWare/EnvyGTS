@@ -73,6 +73,10 @@ public class ItemTrade extends ForgeTrade {
             } else {
                 returnGui.accept(player);
             }
+
+            GTSAttribute attribute = player.getAttribute(EnvyGTSForge.class);
+            attribute.getOwnedTrades().add(this);
+
             return CompletableFuture.completedFuture(null);
         }
 
