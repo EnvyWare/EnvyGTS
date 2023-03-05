@@ -57,8 +57,7 @@ public class EditItemDurationUI {
                         return;
                     }
 
-                    UtilPlayer.runCommand(player.getParent(), "gts sell " + itemInHand.getCount() + " " +
-                            time + " " +  UtilParse.parseDouble(submitted.getInput()).orElse(-1.0));
+                    UtilPlayer.runCommand(player.getParent(), "gts sell " + itemInHand.getCount() + " " + time + " " + submitted.getInput());
                 })
                 .open(player.getParent()), 5);
     }

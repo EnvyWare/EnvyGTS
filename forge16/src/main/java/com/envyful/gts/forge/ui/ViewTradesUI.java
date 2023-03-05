@@ -1,5 +1,6 @@
 package com.envyful.gts.forge.ui;
 
+import com.envyful.api.forge.concurrency.UtilForgeConcurrency;
 import com.envyful.api.forge.config.UtilConfigInterface;
 import com.envyful.api.forge.config.UtilConfigItem;
 import com.envyful.api.forge.player.ForgeEnvyPlayer;
@@ -21,37 +22,39 @@ public class ViewTradesUI {
     }
 
     public static void openUI(ForgeEnvyPlayer player, int page, FilterType filter, SortType sort) {
-        GuiConfig.SearchTradesConfig config = EnvyGTSForge.getGui().getSearchUIConfig();
-        List<Trade> allTrades = getAllVisibleTrades(player, filter, sort);
+        UtilForgeConcurrency.runSync(() -> {
+            GuiConfig.SearchTradesConfig config = EnvyGTSForge.getGui().getSearchUIConfig();
+            List<Trade> allTrades = getAllVisibleTrades(player, filter, sort);
 
-        UtilConfigInterface.paginatedBuilder(allTrades)
-                .itemConversion(Trade::display)
-                .playerManager(EnvyGTSForge.getPlayerManager())
-                .configSettings(config.getGuiSettings())
-                .extraItems((pane, currentPage) -> {
-                    UtilConfigItem.builder()
-                            .clickHandler((envyPlayer, clickType) -> SellHandOrParty.open(player))
-                            .extendedConfigItem(player, pane, config.getSellButton());
+            UtilConfigInterface.paginatedBuilder(allTrades)
+                    .itemConversion(Trade::display)
+                    .playerManager(EnvyGTSForge.getPlayerManager())
+                    .configSettings(config.getGuiSettings())
+                    .extraItems((pane, currentPage) -> {
+                        UtilConfigItem.builder()
+                                .clickHandler((envyPlayer, clickType) -> SellHandOrParty.open(player))
+                                .extendedConfigItem(player, pane, config.getSellButton());
 
-                    UtilConfigItem.builder()
-                            .clickHandler((envyPlayer, clickType) -> ReturnsUI.openUI(player))
-                            .extendedConfigItem(player, pane, config.getReturnsButton());
+                        UtilConfigItem.builder()
+                                .clickHandler((envyPlayer, clickType) -> ReturnsUI.openUI(player))
+                                .extendedConfigItem(player, pane, config.getReturnsButton());
 
-                    UtilConfigItem.builder()
-                            .clickHandler((envyPlayer, clickType) -> openUI(player, page, filter, sort.getNext()))
-                            .extendedConfigItem(player, pane, config.getOrderButton(),
-                                    (SimplePlaceholder) name -> name
-                                            .replace("%filter%", filter.getDisplayName())
-                                            .replace("%order%", sort.getDisplayName()));
+                        UtilConfigItem.builder()
+                                .clickHandler((envyPlayer, clickType) -> openUI(player, page, filter, sort.getNext()))
+                                .extendedConfigItem(player, pane, config.getOrderButton(),
+                                        (SimplePlaceholder) name -> name
+                                                .replace("%filter%", filter.getDisplayName())
+                                                .replace("%order%", sort.getDisplayName()));
 
-                    UtilConfigItem.builder()
-                            .clickHandler((envyPlayer, clickType) -> openUI(player, page, filter.getNext(), sort))
-                            .extendedConfigItem(player, pane, config.getFilterButton(),
-                                    (SimplePlaceholder) name -> name
-                                            .replace("%filter%", filter.getDisplayName())
-                                            .replace("%order%", sort.getDisplayName()));
-                })
-                .open(player, page);
+                        UtilConfigItem.builder()
+                                .clickHandler((envyPlayer, clickType) -> openUI(player, page, filter.getNext(), sort))
+                                .extendedConfigItem(player, pane, config.getFilterButton(),
+                                        (SimplePlaceholder) name -> name
+                                                .replace("%filter%", filter.getDisplayName())
+                                                .replace("%order%", sort.getDisplayName()));
+                    })
+                    .open(player, page);
+        });
     }
 
     private static List<Trade> getAllVisibleTrades(ForgeEnvyPlayer player, FilterType filter, SortType sortType) {

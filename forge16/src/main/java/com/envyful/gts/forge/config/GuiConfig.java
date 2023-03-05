@@ -157,10 +157,10 @@ public class GuiConfig extends AbstractYamlConfig {
                         .positions(Pair.of(8, 5))
                         .build())
                 .previousPageButton(ExtendedConfigItem.builder()
-                        .type("pixelmon:eject_button")
+                        .type("pixelmon:trade_holder_left")
                         .amount(1)
-                        .name("&aSell Stuff")
-                        .positions(Pair.of(4, 5))
+                        .name("&aPrevious Page")
+                        .positions(Pair.of(0, 5))
                         .build())
                 .build();
 
