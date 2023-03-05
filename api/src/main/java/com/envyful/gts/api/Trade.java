@@ -2,6 +2,7 @@ package com.envyful.gts.api;
 
 import com.envyful.api.discord.DiscordWebHook;
 import com.envyful.api.gui.Transformer;
+import com.envyful.api.gui.item.Displayable;
 import com.envyful.api.gui.pane.Pane;
 import com.envyful.api.player.EnvyPlayer;
 import com.envyful.gts.api.discord.DiscordEvent;
@@ -129,13 +130,9 @@ public interface Trade extends Transformer {
     boolean filter(EnvyPlayer<?> filterer, FilterType filterType);
 
     /**
-     *
      * Displays the Trade in the GUI
-     *
-     * @param pos The position in the pane
-     * @param pane The pane to display in
      */
-    void display(int pos, Pane pane);
+    Displayable display();
 
     /**
      *

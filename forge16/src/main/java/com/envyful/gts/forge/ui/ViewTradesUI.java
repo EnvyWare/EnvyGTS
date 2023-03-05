@@ -1,11 +1,9 @@
 package com.envyful.gts.forge.ui;
 
-import com.envyful.api.forge.chat.UtilChatColour;
 import com.envyful.api.forge.config.UtilConfigInterface;
 import com.envyful.api.forge.config.UtilConfigItem;
 import com.envyful.api.forge.player.ForgeEnvyPlayer;
-import com.envyful.api.gui.factory.GuiFactory;
-import com.envyful.api.gui.pane.Pane;
+import com.envyful.api.text.Placeholder;
 import com.envyful.api.text.parse.SimplePlaceholder;
 import com.envyful.gts.api.Trade;
 import com.envyful.gts.api.gui.FilterType;
@@ -19,21 +17,44 @@ import java.util.List;
 public class ViewTradesUI {
 
     public static void openUI(ForgeEnvyPlayer player) {
-        openUI(player, 0, FilterTypeFactory.getDefault(), SortType.MOST_RECENT);
+        openUI(player, 1, FilterTypeFactory.getDefault(), SortType.MOST_RECENT);
     }
 
     public static void openUI(ForgeEnvyPlayer player, int page, FilterType filter, SortType sort) {
         GuiConfig.SearchTradesConfig config = EnvyGTSForge.getGui().getSearchUIConfig();
+        List<Trade> allTrades = getAllVisibleTrades(player, filter, sort);
 
-        Pane pane = GuiFactory.paneBuilder()
-                .topLeftX(0)
-                .topLeftY(0)
-                .width(9)
-                .height(config.getGuiSettings().getHeight())
-                .build();
+        UtilConfigInterface.paginatedBuilder(allTrades)
+                .itemConversion(Trade::display)
+                .playerManager(EnvyGTSForge.getPlayerManager())
+                .configSettings(config.getGuiSettings())
+                .extraItems((pane, currentPage) -> {
+                    UtilConfigItem.builder()
+                            .clickHandler((envyPlayer, clickType) -> SellHandOrParty.open(player))
+                            .extendedConfigItem(player, pane, config.getSellButton());
 
-        UtilConfigInterface.fillBackground(pane, config.getGuiSettings());
+                    UtilConfigItem.builder()
+                            .clickHandler((envyPlayer, clickType) -> ReturnsUI.openUI(player))
+                            .extendedConfigItem(player, pane, config.getReturnsButton());
 
+                    UtilConfigItem.builder()
+                            .clickHandler((envyPlayer, clickType) -> openUI(player, page, filter, sort.getNext()))
+                            .extendedConfigItem(player, pane, config.getOrderButton(),
+                                    (SimplePlaceholder) name -> name
+                                            .replace("%filter%", filter.getDisplayName())
+                                            .replace("%order%", sort.getDisplayName()));
+
+                    UtilConfigItem.builder()
+                            .clickHandler((envyPlayer, clickType) -> openUI(player, page, filter.getNext(), sort))
+                            .extendedConfigItem(player, pane, config.getFilterButton(),
+                                    (SimplePlaceholder) name -> name
+                                            .replace("%filter%", filter.getDisplayName())
+                                            .replace("%order%", sort.getDisplayName()));
+                })
+                .open(player, page);
+    }
+
+    private static List<Trade> getAllVisibleTrades(ForgeEnvyPlayer player, FilterType filter, SortType sortType) {
         List<Trade> allTrades = EnvyGTSForge.getTradeManager().getAllTrades();
 
         allTrades.removeIf(trade -> {
@@ -48,64 +69,8 @@ public class ViewTradesUI {
             return !trade.filter(player, filter);
         });
 
-        allTrades.sort((o1, o2) -> o1.compare(o2, sort));
+        allTrades.sort((o1, o2) -> o1.compare(o2, sortType));
 
-        UtilConfigItem.builder()
-                .clickHandler((envyPlayer, clickType) -> SellHandOrParty.open(player))
-                .extendedConfigItem(player, pane, config.getSellButton());
-
-        UtilConfigItem.builder()
-                .clickHandler((envyPlayer, clickType) -> ReturnsUI.openUI(player))
-                .extendedConfigItem(player, pane, config.getReturnsButton());
-
-        UtilConfigItem.builder()
-                .clickHandler((envyPlayer, clickType) -> {
-                    if ((page + 1) > (allTrades.size() / 45)) {
-                        openUI(player, 0, filter, sort);
-                    } else {
-                        openUI(player, page + 1, filter, sort);
-                    }
-                })
-                .extendedConfigItem(player, pane, config.getNextPageItem());
-
-        UtilConfigItem.builder()
-                .clickHandler((envyPlayer, clickType) -> {
-                    if (page == 0) {
-                        openUI(player, (allTrades.size() / 45), filter, sort);
-                    } else {
-                        openUI(player, page - 1, filter, sort);
-                    }
-                })
-                .extendedConfigItem(player, pane, config.getPreviousPageItem());
-
-        UtilConfigItem.builder()
-                .clickHandler((envyPlayer, clickType) -> openUI(player, page, filter, sort.getNext()))
-                .extendedConfigItem(player, pane, config.getOrderButton(),
-                        (SimplePlaceholder) name -> name
-                                .replace("%filter%", filter.getDisplayName())
-                                .replace("%order%", sort.getDisplayName()));
-
-        UtilConfigItem.builder()
-                .clickHandler((envyPlayer, clickType) -> openUI(player, page, filter.getNext(), sort))
-                .extendedConfigItem(player, pane, config.getFilterButton(),
-                        (SimplePlaceholder) name -> name
-                                .replace("%filter%", filter.getDisplayName())
-                                .replace("%order%", sort.getDisplayName()));
-
-        for (int i = (page * 45); i < ((page + 1) * 45); i++) {
-            if (i >= allTrades.size()) {
-                continue;
-            }
-
-            Trade trade = allTrades.get(i);
-            trade.display(i % 45, pane);
-        }
-
-        GuiFactory.guiBuilder()
-                .setPlayerManager(EnvyGTSForge.getPlayerManager())
-                .addPane(pane)
-                .height(config.getGuiSettings().getHeight())
-                .title(UtilChatColour.colour(config.getGuiSettings().getTitle()))
-                .build().open(player);
+        return allTrades;
     }
 }

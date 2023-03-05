@@ -9,6 +9,7 @@ import com.envyful.api.forge.items.ItemBuilder;
 import com.envyful.api.forge.items.UtilItemStack;
 import com.envyful.api.forge.player.ForgeEnvyPlayer;
 import com.envyful.api.gui.factory.GuiFactory;
+import com.envyful.api.gui.item.Displayable;
 import com.envyful.api.gui.pane.Pane;
 import com.envyful.api.player.EnvyPlayer;
 import com.envyful.api.time.UtilTimeFormat;
@@ -110,11 +111,8 @@ public class ItemTrade extends ForgeTrade {
     }
 
     @Override
-    public void display(int pos, Pane pane) {
-        int posX = pos % 9;
-        int posY = pos / 9;
-
-        pane.set(posX, posY, GuiFactory.displayableBuilder(ItemStack.class)
+    public Displayable display() {
+        return GuiFactory.displayableBuilder(ItemStack.class)
                 .itemStack(new ItemBuilder(this.item.copy())
                                    .addLore(this.formatLore(EnvyGTSForge.getLocale().getListingBelowDataLore()))
                                    .build())
@@ -165,8 +163,7 @@ public class ItemTrade extends ForgeTrade {
                                 }))
                             .returnHandler((envyPlayer1, clickType1) -> ViewTradesUI.openUI((ForgeEnvyPlayer)envyPlayer))
                             .open();
-                })
-                .build());
+                }).build();
     }
 
     private String[] formatLore(List<String> lore) {

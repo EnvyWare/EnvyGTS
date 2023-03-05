@@ -8,6 +8,7 @@ import com.envyful.api.forge.gui.type.ConfirmationUI;
 import com.envyful.api.forge.items.ItemBuilder;
 import com.envyful.api.forge.player.ForgeEnvyPlayer;
 import com.envyful.api.gui.factory.GuiFactory;
+import com.envyful.api.gui.item.Displayable;
 import com.envyful.api.gui.pane.Pane;
 import com.envyful.api.player.EnvyPlayer;
 import com.envyful.api.reforged.pixelmon.sprite.UtilSprite;
@@ -114,16 +115,13 @@ public class PokemonTrade extends ForgeTrade {
     }
 
     @Override
-    public void display(int pos, Pane pane) {
-        int posX = pos % 9;
-        int posY = pos / 9;
-
-        pane.set(posX, posY, GuiFactory.displayableBuilder(ItemStack.class)
+    public Displayable display() {
+        return GuiFactory.displayableBuilder(ItemStack.class)
                 .singleClick()
                 .itemStack(new ItemBuilder(UtilSprite.getPokemonElement(pokemon,
-                                                                        EnvyGTSForge.getGui().getSearchUIConfig().getSpriteConfig()))
-                                   .addLore(this.formatLore(EnvyGTSForge.getLocale().getListingBelowDataLore()))
-                                   .build())
+                        EnvyGTSForge.getGui().getSearchUIConfig().getSpriteConfig()))
+                        .addLore(this.formatLore(EnvyGTSForge.getLocale().getListingBelowDataLore()))
+                        .build())
                 .asyncClick(false)
                 .clickHandler((envyPlayer, clickType) -> {
                     if (this.removed) {
@@ -132,7 +130,7 @@ public class PokemonTrade extends ForgeTrade {
                     }
 
                     if (this.isOwner(envyPlayer) && Objects.equals(clickType,
-                                                                   EnvyGTSForge.getConfig().getOwnerRemoveButton())) {
+                            EnvyGTSForge.getConfig().getOwnerRemoveButton())) {
                         this.removed = true;
                         MinecraftForge.EVENT_BUS.post(new TradeRemoveEvent(this));
 
@@ -154,22 +152,21 @@ public class PokemonTrade extends ForgeTrade {
                             .config(EnvyGTSForge.getGui().getSearchUIConfig().getConfirmGuiConfig())
                             .descriptionItem(new ItemBuilder(UtilSprite.getPokemonElement(pokemon,
                                     EnvyGTSForge.getGui().getSearchUIConfig().getSpriteConfig()))
-                                                     .addLore(this.formatLore(EnvyGTSForge.getLocale().getListingBelowDataLore()))
-                                                     .build())
+                                    .addLore(this.formatLore(EnvyGTSForge.getLocale().getListingBelowDataLore()))
+                                    .build())
                             .confirmHandler((clicker, clickType1) -> UtilForgeConcurrency.runSync(() -> {
                                 if (this.purchased) {
-                                    ViewTradesUI.openUI((ForgeEnvyPlayer)clicker);
+                                    ViewTradesUI.openUI((ForgeEnvyPlayer) clicker);
                                     return;
                                 }
 
                                 if (!this.attemptPurchase(envyPlayer)) {
-                                    ViewTradesUI.openUI((ForgeEnvyPlayer)envyPlayer);
+                                    ViewTradesUI.openUI((ForgeEnvyPlayer) envyPlayer);
                                 }
                             }))
-                            .returnHandler((envyPlayer1, clickType1) -> ViewTradesUI.openUI((ForgeEnvyPlayer)envyPlayer))
+                            .returnHandler((envyPlayer1, clickType1) -> ViewTradesUI.openUI((ForgeEnvyPlayer) envyPlayer))
                             .open();
-                })
-                .build());
+                }).build();
     }
 
     private String[] formatLore(List<String> lore) {
