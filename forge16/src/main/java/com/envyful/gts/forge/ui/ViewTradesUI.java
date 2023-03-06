@@ -1,10 +1,8 @@
 package com.envyful.gts.forge.ui;
 
-import com.envyful.api.forge.concurrency.UtilForgeConcurrency;
 import com.envyful.api.forge.config.UtilConfigInterface;
 import com.envyful.api.forge.config.UtilConfigItem;
 import com.envyful.api.forge.player.ForgeEnvyPlayer;
-import com.envyful.api.text.Placeholder;
 import com.envyful.api.text.parse.SimplePlaceholder;
 import com.envyful.gts.api.Trade;
 import com.envyful.gts.api.gui.FilterType;
@@ -55,7 +53,7 @@ public class ViewTradesUI {
                                             .replace("%filter%", filter.getDisplayName())
                                             .replace("%order%", sort.getDisplayName()));
 
-                    MinecraftForge.EVENT_BUS.post(new TradesGUISetupEvent(pane, page, filter, sort));
+                    MinecraftForge.EVENT_BUS.post(new TradesGUISetupEvent(player, pane, page, filter, sort));
                 })
                 .open(player, page);
     }
@@ -75,7 +73,7 @@ public class ViewTradesUI {
             return !trade.filter(player, filter);
         });
 
-        TradeViewFilterEvent filterEvent = new TradeViewFilterEvent(allTrades, filter);
+        TradeViewFilterEvent filterEvent = new TradeViewFilterEvent(player, allTrades, filter);
 
         MinecraftForge.EVENT_BUS.post(filterEvent);
 
