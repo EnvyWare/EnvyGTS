@@ -13,6 +13,7 @@ import com.envyful.gts.api.gui.SortType;
 import com.envyful.gts.forge.EnvyGTSForge;
 import com.envyful.gts.forge.config.GuiConfig;
 import com.envyful.gts.forge.event.TradeViewFilterEvent;
+import com.envyful.gts.forge.event.TradesGUISetupEvent;
 import net.minecraftforge.common.MinecraftForge;
 
 import java.util.List;
@@ -53,6 +54,8 @@ public class ViewTradesUI {
                                     (SimplePlaceholder) name -> name
                                             .replace("%filter%", filter.getDisplayName())
                                             .replace("%order%", sort.getDisplayName()));
+
+                    MinecraftForge.EVENT_BUS.post(new TradesGUISetupEvent(pane, page, filter, sort));
                 })
                 .open(player, page);
     }
