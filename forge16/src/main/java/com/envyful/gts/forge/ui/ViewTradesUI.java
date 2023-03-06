@@ -48,7 +48,7 @@ public class ViewTradesUI {
 
                         UtilConfigItem.builder()
                                 .clickHandler((envyPlayer, clickType) -> openUI(player, page, filter.getNext(), sort))
-                                .extendedConfigItem(player, pane, config.getFilterButton(),
+                                .extendedConfigItem(player, pane, filter.getDisplay(),
                                         (SimplePlaceholder) name -> name
                                                 .replace("%filter%", filter.getDisplayName())
                                                 .replace("%order%", sort.getDisplayName()));
