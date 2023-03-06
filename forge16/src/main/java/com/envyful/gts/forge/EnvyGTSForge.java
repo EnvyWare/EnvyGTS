@@ -17,6 +17,7 @@ import com.envyful.gts.forge.command.GTSCommand;
 import com.envyful.gts.forge.config.EnvyGTSConfig;
 import com.envyful.gts.forge.config.GuiConfig;
 import com.envyful.gts.forge.config.LocaleConfig;
+import com.envyful.gts.forge.impl.filter.ForgeAllFilterType;
 import com.envyful.gts.forge.impl.filter.ItemFilterType;
 import com.envyful.gts.forge.impl.filter.PokemonFilterType;
 import com.envyful.gts.forge.impl.storage.SQLGlobalTradeManager;
@@ -64,6 +65,7 @@ public class EnvyGTSForge {
         GuiFactory.setPlatformFactory(new ForgeGuiFactory());
 
         FilterTypeFactory.init();
+        FilterTypeFactory.register(new ForgeAllFilterType());
         FilterTypeFactory.register(new ItemFilterType());
         FilterTypeFactory.register(new PokemonFilterType());
 

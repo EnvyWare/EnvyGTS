@@ -5,7 +5,7 @@ import com.envyful.gts.api.Trade;
 import com.envyful.gts.api.gui.FilterType;
 import com.envyful.gts.api.gui.FilterTypeFactory;
 
-public class AllFilterType implements FilterType {
+public abstract class AllFilterType implements FilterType {
     @Override
     public String getDisplayName() {
         return "All";
@@ -20,4 +20,5 @@ public class AllFilterType implements FilterType {
     public FilterType getNext() {
         return FilterTypeFactory.getNext(this);
     }
+
 }
