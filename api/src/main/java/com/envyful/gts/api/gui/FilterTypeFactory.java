@@ -12,9 +12,7 @@ public class FilterTypeFactory {
     private static final List<FilterType> FILTER_TYPES = new ArrayList<>();
 
     public static void init() {
-//        register(new AllFilterType());
-        register(new InstantBuyFilterType());
-        register(new OwnFilterType());
+
     }
 
     public static void register(FilterType filterType) {

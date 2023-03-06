@@ -5,7 +5,7 @@ import com.envyful.gts.api.Trade;
 import com.envyful.gts.api.gui.FilterType;
 import com.envyful.gts.api.gui.FilterTypeFactory;
 
-public class OwnFilterType implements FilterType {
+public abstract class OwnFilterType implements FilterType {
     @Override
     public String getDisplayName() {
         return "Own";
