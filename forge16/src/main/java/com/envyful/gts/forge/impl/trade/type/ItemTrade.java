@@ -28,6 +28,7 @@ import com.google.common.collect.Lists;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.pixelmonmod.pixelmon.api.util.helpers.StringHelper;
 import net.minecraft.enchantment.Enchantment;
+import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
@@ -38,9 +39,7 @@ import net.minecraftforge.common.MinecraftForge;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.util.List;
-import java.util.Objects;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
@@ -265,14 +264,30 @@ public class ItemTrade extends ForgeTrade {
                 .replace("%namespace%", item.getItem().getRegistryName().getNamespace())
                 .replace("%buyer%", this.ownerName)
                 .replace("%seller%", this.originalOwnerName)
-                .replace("%enchantments%", item.getEnchantmentTags().stream().map(inbt -> {
-                    CompoundNBT nbt = (CompoundNBT) inbt;
-                    return nbt.getString("id") + " " + nbt.getShort("lvl");
-                }).collect(Collectors.joining("\n")))
+                .replace("%enchantments%", this.handleEnchantmentText(this.item))
                 .replace("%expires_in%", UtilTimeFormat.getFormattedDuration(this.expiry - System.currentTimeMillis()))
                 .replace("%price%", String.valueOf(this.cost))
                 .replace("%item%", this.item.getHoverName().getString())
                 .replace("%amount%", String.valueOf(this.item.getCount()));
+    }
+
+    private String handleEnchantmentText(ItemStack itemStack) {
+        Map<Enchantment, Integer> enchantments = EnchantmentHelper.getEnchantments(itemStack);
+
+        if (enchantments.isEmpty()) {
+            return EnvyGTSForge.getLocale().getNoEnchantsText();
+        }
+
+        StringBuilder builder = new StringBuilder(EnvyGTSForge.getLocale().getEnchantHeader());
+        StringJoiner joiner = new StringJoiner(EnvyGTSForge.getLocale().getEnchantSeperator());
+
+        for (Map.Entry<Enchantment, Integer> entry : enchantments.entrySet()) {
+            joiner.add(EnvyGTSForge.getLocale().getEnchantFormat().replace("%enchant%", entry.getKey().getFullname(entry.getValue()).getString()).replace("%level%", String.valueOf(entry.getValue())));
+        }
+
+        builder.append(joiner);
+        builder.append(EnvyGTSForge.getLocale().getEnchantFooter());
+        return builder.toString();
     }
 
     @Override

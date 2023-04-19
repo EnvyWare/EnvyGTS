@@ -40,6 +40,12 @@ public class LocaleConfig extends AbstractYamlConfig {
     private String durationInputDialogueText = "Enter the number of minutes you wish %pokemon% to be listed for";
     private String durationInputDialogueErrorText = "Enter the number of minutes you wish %pokemon% to be listed for. &cError:&r The value you entered was below the minimum duration (%min_duration%)";
 
+    private String noEnchantsText = "NO ENCHANTS!";
+    private String enchantHeader = "ENCHANTS:";
+    private String enchantFooter = "WOW!";
+    private String enchantSeperator = "\n";
+    private String enchantFormat = "%enchant% - %level%";
+
     private Messages messages = new Messages();
 
     public LocaleConfig() {
@@ -84,6 +90,26 @@ public class LocaleConfig extends AbstractYamlConfig {
 
     public String getDurationInputDialogueErrorText() {
         return this.durationInputDialogueErrorText;
+    }
+
+    public String getNoEnchantsText() {
+        return this.noEnchantsText;
+    }
+
+    public String getEnchantHeader() {
+        return this.enchantHeader;
+    }
+
+    public String getEnchantFooter() {
+        return this.enchantFooter;
+    }
+
+    public String getEnchantSeperator() {
+        return this.enchantSeperator;
+    }
+
+    public String getEnchantFormat() {
+        return this.enchantFormat;
     }
 
     @ConfigSerializable
