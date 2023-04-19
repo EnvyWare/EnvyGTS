@@ -1,6 +1,7 @@
 package com.envyful.gts.forge.config;
 
 import com.envyful.api.config.data.ConfigPath;
+import com.envyful.api.config.type.ConfigItem;
 import com.envyful.api.config.type.SQLDatabaseDetails;
 import com.envyful.api.config.yaml.AbstractYamlConfig;
 import com.envyful.api.gui.item.Displayable;
@@ -12,6 +13,7 @@ import com.pixelmonmod.pixelmon.api.pokemon.Pokemon;
 import com.pixelmonmod.pixelmon.api.util.helpers.ResourceLocationHelper;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.*;
 import net.minecraftforge.registries.ForgeRegistries;
 import org.spongepowered.configurate.objectmapping.ConfigSerializable;
 
@@ -51,6 +53,9 @@ public class EnvyGTSConfig extends AbstractYamlConfig {
 
     private List<String> blacklist = Lists.newArrayList("hoopa");
     private List<String> itemBlackList = Lists.newArrayList("minecraft:stone");
+    private Map<String, ConfigItem.NBTValue> nbtBlacklist = ImmutableMap.of(
+            "example", new ConfigItem.NBTValue("string", "example_text")
+    );
 
     private transient List<PokemonSpecification> blacklistCache = null;
     private transient List<Item> itemBlacklistCache = null;
@@ -168,7 +173,52 @@ public class EnvyGTSConfig extends AbstractYamlConfig {
             }
         }
 
+        if (!itemStack.hasTag()) {
+            return false;
+        }
+
+        return this.hasBlacklistedNbt(this.nbtBlacklist, itemStack.getTag());
+    }
+
+    private boolean hasBlacklistedNbt(Map<String, ConfigItem.NBTValue> nbtBlacklist, CompoundNBT tag) {
+        for (Map.Entry<String, ConfigItem.NBTValue> entry : nbtBlacklist.entrySet()) {
+            if (!tag.contains(entry.getKey())) {
+                continue;
+            }
+
+            if (entry.getKey().equalsIgnoreCase("nbt")) {
+                return this.hasBlacklistedNbt(entry.getValue().getSubData(), tag);
+            } else {
+                if (this.basicNbtMatch(entry.getValue(), tag.get(entry.getKey()))) {
+                    return true;
+                }
+            }
+        }
+
         return false;
+    }
+
+    public boolean basicNbtMatch(ConfigItem.NBTValue value, INBT nbt) {
+        String data = value.getData();
+
+        switch (value.getType().toLowerCase()) {
+            case "int":
+            case "integer":
+                return ((IntNBT) nbt).getAsInt() == Integer.parseInt(data);
+            case "long":
+                return ((LongNBT) nbt).getAsLong() == Long.parseLong(data);
+            case "byte":
+                return ((ByteNBT) nbt).getAsByte() == Byte.parseByte(data);
+            case "double":
+                return ((DoubleNBT) nbt).getAsDouble() == Double.parseDouble(data);
+            case "float":
+                return ((FloatNBT) nbt).getAsFloat() == Float.parseFloat(data);
+            case "short":
+                return ((ShortNBT) nbt).getAsShort() == Short.parseShort(data);
+            default:
+            case "string":
+                return nbt.getAsString().equals(data);
+        }
     }
 
     public boolean isAllowEggs() {
