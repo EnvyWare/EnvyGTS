@@ -242,7 +242,11 @@ public class EnvyGTSConfig extends AbstractYamlConfig {
     private String getFormat(ItemStack itemStack) {
         String key = itemStack.getItem().getRegistryName().toString();
 
-        if (itemStack.hasTag() && itemStack.getTag().contains("CustomModelData")) {
+        if (!itemStack.hasTag()) {
+            return this.itemReplacementURLs.get(key);
+        }
+
+        if (itemStack.getTag().contains("CustomModelData")) {
             String newKey = key + ":" + itemStack.getTag().getInt("CustomModelData");
             String found = this.itemReplacementURLs.get(newKey);
 
@@ -250,6 +254,14 @@ public class EnvyGTSConfig extends AbstractYamlConfig {
                 return found;
             }
         }
+
+        CompoundNBT save = itemStack.save(new CompoundNBT());
+        String jsonifiedItemUrl = this.itemReplacementURLs.get(save.getAsString());
+
+        if (jsonifiedItemUrl != null) {
+            return jsonifiedItemUrl;
+        }
+
 
         return this.itemReplacementURLs.get(key);
     }
