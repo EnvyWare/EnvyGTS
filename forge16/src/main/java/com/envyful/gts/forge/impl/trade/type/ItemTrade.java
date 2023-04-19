@@ -53,12 +53,12 @@ public class ItemTrade extends ForgeTrade {
         super(owner, ownerName, cost, expiry, originalOwnerName, removed, purchased);
 
         this.item = item;
-        this.tradeData = new TradeData(owner, this.item.getDisplayName().getString(), this.expiry);
+        this.tradeData = new TradeData(owner, this.item.copy().getDisplayName().getString(), this.expiry);
     }
 
     @Override
     public String getDisplayName() {
-        return this.item.getDisplayName().getString();
+        return this.item.copy().getDisplayName().getString();
     }
 
     @Override
@@ -257,7 +257,7 @@ public class ItemTrade extends ForgeTrade {
         return name
                 .replace("%item_url%", EnvyGTSForge.getConfig().getItemUrl(this.item))
                 .replace("%item_id%", this.capitalizeAfterUnderscoreAndStart(item.getItem().getRegistryName().getPath()))
-                .replace("%lore%", String.join("\n", UtilItemStack.getLore(item)))
+                .replace("%lore%", String.join("\n", UtilItemStack.getLore(item.copy())))
                 .replace("%date%", String.valueOf(System.currentTimeMillis()))
                 .replace("%namespace%", item.getItem().getRegistryName().getNamespace())
                 .replace("%buyer%", this.ownerName)
