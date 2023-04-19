@@ -27,10 +27,12 @@ import com.envyful.gts.forge.ui.ViewTradesUI;
 import com.google.common.collect.Lists;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.pixelmonmod.pixelmon.api.util.helpers.StringHelper;
+import net.minecraft.enchantment.Enchantment;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.JsonToNBT;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.common.MinecraftForge;
 
 import java.sql.Connection;
@@ -41,6 +43,7 @@ import java.util.Objects;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
 
 public class ItemTrade extends ForgeTrade {
 
@@ -257,13 +260,17 @@ public class ItemTrade extends ForgeTrade {
         return name
                 .replace("%item_url%", EnvyGTSForge.getConfig().getItemUrl(this.item))
                 .replace("%item_id%", this.capitalizeAfterUnderscoreAndStart(item.getItem().getRegistryName().getPath()))
-                .replace("%lore%", String.join("\n", UtilItemStack.getLore(item.copy())))
+                .replace("%lore%", UtilItemStack.getRealLore(item.copy()).stream().map(ITextComponent::getString).collect(Collectors.joining("\n")))
                 .replace("%date%", String.valueOf(System.currentTimeMillis()))
                 .replace("%namespace%", item.getItem().getRegistryName().getNamespace())
                 .replace("%buyer%", this.ownerName)
                 .replace("%seller%", this.originalOwnerName)
+                .replace("%enchantments%", item.getEnchantmentTags().stream().map(inbt -> {
+                    CompoundNBT nbt = (CompoundNBT) inbt;
+                    return nbt.getString("id") + " " + nbt.getShort("lvl");
+                }).collect(Collectors.joining("\n")))
                 .replace("%expires_in%", UtilTimeFormat.getFormattedDuration(this.expiry - System.currentTimeMillis()))
-                .replace("%price%", this.cost + "")
+                .replace("%price%", String.valueOf(this.cost))
                 .replace("%item%", this.item.getHoverName().getString())
                 .replace("%amount%", String.valueOf(this.item.getCount()));
     }
