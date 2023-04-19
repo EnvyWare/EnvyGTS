@@ -90,7 +90,7 @@ public class LocaleConfig extends AbstractYamlConfig {
     public static class Messages {
 
         private String openingUi = "&e&l(!) &eOpening GTS...";
-        private String sellInsuffucientArgs = "&c&l(!) &cInsufficient args! /gts s <amount> <price> [duration (seconds)]";
+        private String sellInsuffucientArgs = "&c&l(!) &cInsufficient args! /gts s <amount> <price> [duration]";
         private String sellNoItemInHand = "&c&l(!) &cYou must have an item in your hand to sell!";
 
         private String amountMustBePositive = "&c&l(!) &cAmount must be a positive number!";

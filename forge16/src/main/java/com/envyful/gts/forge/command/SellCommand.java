@@ -132,8 +132,7 @@ public class SellCommand {
             if (duration < TimeUnit.SECONDS.toMillis(EnvyGTSForge.getConfig().getMinTradeDuration()) || duration < 0) {
                 sender.message(UtilChatColour.colour(
                         EnvyGTSForge.getLocale().getMessages().getCannotGoBelowMinTime()
-                                .replace("%min_duration%",
-                                        UtilTimeFormat.getFormattedDuration(EnvyGTSForge.getConfig().getMinTradeDuration()))
+                                .replace("%min_duration%", String.valueOf(EnvyGTSForge.getConfig().getMinTradeDuration()))
                 ));
                 return;
             }
