@@ -39,7 +39,7 @@ import java.sql.SQLException;
 @Mod("envygts")
 public class EnvyGTSForge {
 
-    public static final String VERSION = "4.1.2";
+    public static final String VERSION = "4.1.3";
 
     private static EnvyGTSForge instance;
 
