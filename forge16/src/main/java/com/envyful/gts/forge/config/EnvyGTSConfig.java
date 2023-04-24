@@ -230,13 +230,15 @@ public class EnvyGTSConfig extends AbstractYamlConfig {
     }
 
     public String getItemUrl(ItemStack itemStack) {
-        String format = this.getFormat(itemStack);
+        ItemStack isnocount = itemStack.copy();
+        isnocount.setCount(1);
+        String format = this.getFormat(isnocount);
 
         if (format != null) {
             return format;
         }
 
-        return this.itemUrlFormats.getOrDefault(itemStack.getItem().getRegistryName().getNamespace(), this.fallback);
+        return this.itemUrlFormats.getOrDefault(isnocount.getItem().getRegistryName().getNamespace(), this.fallback);
     }
 
     private String getFormat(ItemStack itemStack) {
