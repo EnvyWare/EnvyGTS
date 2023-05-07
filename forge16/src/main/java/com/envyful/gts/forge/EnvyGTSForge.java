@@ -13,6 +13,8 @@ import com.envyful.gts.api.TradeManager;
 import com.envyful.gts.api.discord.DiscordEventManager;
 import com.envyful.gts.api.gui.FilterTypeFactory;
 import com.envyful.gts.api.sql.EnvyGTSQueries;
+import com.envyful.gts.forge.api.DataSaveMode;
+import com.envyful.gts.forge.api.SimpleHikariSQLiteDatabase;
 import com.envyful.gts.forge.command.GTSCommand;
 import com.envyful.gts.forge.config.EnvyGTSConfig;
 import com.envyful.gts.forge.config.GuiConfig;
@@ -31,6 +33,7 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.server.FMLServerAboutToStartEvent;
 import net.minecraftforge.fml.event.server.FMLServerStartedEvent;
 
+import java.io.File;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -73,10 +76,18 @@ public class EnvyGTSForge {
 
         this.loadConfig();
 
-        UtilConcurrency.runAsync(() -> {
-            this.database = new SimpleHikariDatabase(this.config.getDatabaseDetails());
-            this.createTables();
-        });
+        if (this.config.getSaveMode() == DataSaveMode.SQLITE) {
+            this.loadSQLiteDatabase();
+            UtilConcurrency.runAsync(() -> {
+                this.database = new SimpleHikariSQLiteDatabase(this.config.getDatabaseDetails());
+                this.createTablesSQLite();
+            });
+        } else {
+            UtilConcurrency.runAsync(() -> {
+                this.database = new SimpleHikariDatabase(this.config.getDatabaseDetails());
+                this.createTablesMySQL();
+            });
+        }
     }
 
     @SubscribeEvent
@@ -90,6 +101,17 @@ public class EnvyGTSForge {
             this.tradeManager = new SQLGlobalTradeManager(this);
             TradeManager.setPlatformTradeManager(this.tradeManager);
         });
+    }
+
+    private void loadSQLiteDatabase() {
+        File databaseFile = new File("config/EnvyGTS/gts.sqlite");
+        if(!databaseFile.exists()) {
+            try {
+                databaseFile.createNewFile();
+            } catch (IOException exception) {
+
+            }
+        }
     }
 
     public void loadConfig() {
@@ -106,11 +128,23 @@ public class EnvyGTSForge {
         }
     }
 
-    private void createTables() {
+    private void createTablesMySQL() {
         try (Connection connection = this.database.getConnection();
              PreparedStatement preparedStatement =
                      connection.prepareStatement(EnvyGTSQueries.CREATE_MAIN_TABLE);
              PreparedStatement settingsStatement = connection.prepareStatement(EnvyGTSQueries.CREATE_SETTINGS_TABLE)) {
+            preparedStatement.executeUpdate();
+            settingsStatement.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void createTablesSQLite() {
+        try (Connection connection = this.database.getConnection();
+             PreparedStatement preparedStatement =
+                     connection.prepareStatement(EnvyGTSQueries.CREATE_MAIN_TABLE_SQLITE);
+             PreparedStatement settingsStatement = connection.prepareStatement(EnvyGTSQueries.CREATE_SETTINGS_TABLE_SQLITE)) {
             preparedStatement.executeUpdate();
             settingsStatement.executeUpdate();
         } catch (SQLException e) {
