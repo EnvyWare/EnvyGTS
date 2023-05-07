@@ -3,14 +3,17 @@ package com.envyful.gts.forge.player;
 import com.envyful.api.forge.chat.UtilChatColour;
 import com.envyful.api.forge.concurrency.UtilForgeConcurrency;
 import com.envyful.api.forge.player.ForgeEnvyPlayer;
+import com.envyful.api.forge.player.ForgePlayerManager;
 import com.envyful.api.forge.player.attribute.AbstractForgeAttribute;
 import com.envyful.api.json.UtilGson;
 import com.envyful.api.player.EnvyPlayer;
+import com.envyful.api.player.PlayerManager;
 import com.envyful.gts.api.Trade;
 import com.envyful.gts.api.player.PlayerSettings;
 import com.envyful.gts.api.sql.EnvyGTSQueries;
 import com.envyful.gts.forge.EnvyGTSForge;
 import com.google.common.collect.Lists;
+import net.minecraft.entity.player.ServerPlayerEntity;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -28,12 +31,8 @@ public class GTSAttribute extends AbstractForgeAttribute<EnvyGTSForge> {
     private long currentDuration = -1;
     private PlayerSettings settings = new PlayerSettings();
 
-    public GTSAttribute(EnvyGTSForge manager, EnvyPlayer<?> parent) {
-        super(manager, (ForgeEnvyPlayer) parent);
-    }
-
-    public GTSAttribute(UUID uuid) {
-        super(uuid);
+    public GTSAttribute(EnvyGTSForge manager, ForgePlayerManager playerManager) {
+        super(manager, playerManager);
     }
 
     public List<Trade> getOwnedTrades() {
