@@ -14,7 +14,10 @@ import com.envyful.gts.forge.event.TradeViewFilterEvent;
 import com.envyful.gts.forge.event.TradesGUISetupEvent;
 import net.minecraftforge.common.MinecraftForge;
 
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class ViewTradesUI {
 
@@ -24,7 +27,7 @@ public class ViewTradesUI {
 
     public static void openUI(ForgeEnvyPlayer player, int page, FilterType filter, SortType sort) {
         GuiConfig.SearchTradesConfig config = EnvyGTSForge.getGui().getSearchUIConfig();
-        List<Trade> allTrades = getAllVisibleTrades(player, filter, sort);
+        List<Trade> allTrades = new ArrayList<>(getAllVisibleTrades(player, filter, sort));
 
         UtilConfigInterface.paginatedBuilder(allTrades)
                 .itemConversion(Trade::display)
@@ -58,8 +61,8 @@ public class ViewTradesUI {
                 .open(player, page);
     }
 
-    private static List<Trade> getAllVisibleTrades(ForgeEnvyPlayer player, FilterType filter, SortType sortType) {
-        List<Trade> allTrades = EnvyGTSForge.getTradeManager().getAllTrades();
+    private static Set<Trade> getAllVisibleTrades(ForgeEnvyPlayer player, FilterType filter, SortType sortType) {
+        List<Trade> allTrades = new ArrayList<>(EnvyGTSForge.getTradeManager().getAllTrades());
 
         allTrades.removeIf(trade -> {
             if (trade.wasPurchased()) {
@@ -80,6 +83,6 @@ public class ViewTradesUI {
         allTrades = filterEvent.getTrades();
         allTrades.sort((o1, o2) -> o1.compare(o2, sortType));
 
-        return allTrades;
+        return new HashSet<>(allTrades);
     }
 }

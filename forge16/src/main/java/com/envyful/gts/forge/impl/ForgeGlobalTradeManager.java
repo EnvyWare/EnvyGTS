@@ -8,14 +8,16 @@ import com.envyful.gts.forge.EnvyGTSForge;
 import com.envyful.gts.forge.event.TradeCreateEvent;
 import com.envyful.gts.forge.player.GTSAttribute;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Sets;
 import net.minecraftforge.common.MinecraftForge;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 
 public abstract class ForgeGlobalTradeManager implements GlobalTradeManager {
 
-    protected final List<Trade> activeTrades = Lists.newArrayList();
+    protected final Set<Trade> activeTrades = Sets.newHashSet();
 
     public ForgeGlobalTradeManager() {}
 
@@ -45,16 +47,16 @@ public abstract class ForgeGlobalTradeManager implements GlobalTradeManager {
     }
 
     @Override
-    public List<Trade> getAllTrades() {
-        return Lists.newArrayList(this.activeTrades);
+    public Set<Trade> getAllTrades() {
+        return Sets.newHashSet(this.activeTrades);
     }
 
     @Override
-    public List<Trade> getUserTrades(EnvyPlayer<?> player) {
+    public Set<Trade> getUserTrades(EnvyPlayer<?> player) {
         GTSAttribute attribute = player.getAttribute(EnvyGTSForge.class);
 
         if (attribute == null) {
-            return Collections.emptyList();
+            return Collections.emptySet();
         }
 
         return attribute.getOwnedTrades();

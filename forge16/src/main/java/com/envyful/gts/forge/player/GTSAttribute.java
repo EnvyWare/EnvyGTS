@@ -13,17 +13,19 @@ import com.envyful.gts.api.sql.EnvyGTSQueries;
 import com.envyful.gts.forge.EnvyGTSForge;
 import com.envyful.gts.forge.api.DataSaveMode;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Sets;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 public class GTSAttribute extends AbstractForgeAttribute<EnvyGTSForge> {
 
-    private List<Trade> ownedTrades = Lists.newArrayList();
+    private Set<Trade> ownedTrades = Sets.newHashSet();
     private int selectedSlot = -1;
     private double currentPrice = -1;
     private double currentMinPrice = -1;
@@ -34,7 +36,7 @@ public class GTSAttribute extends AbstractForgeAttribute<EnvyGTSForge> {
         super(manager, playerManager);
     }
 
-    public List<Trade> getOwnedTrades() {
+    public Set<Trade> getOwnedTrades() {
         return this.ownedTrades;
     }
 

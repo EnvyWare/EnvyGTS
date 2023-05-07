@@ -41,6 +41,20 @@ public abstract class ForgeTrade implements Trade {
     protected final String originalOwnerName;
 
     protected UUID owner;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        ForgeTrade that = (ForgeTrade) o;
+        return expiry == that.expiry && originalOwnerName.equals(that.originalOwnerName) && owner.equals(that.owner) && ownerName.equals(that.ownerName);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(expiry, originalOwnerName, owner, ownerName);
+    }
+
     protected String ownerName;
     protected boolean removed;
     protected boolean purchased;

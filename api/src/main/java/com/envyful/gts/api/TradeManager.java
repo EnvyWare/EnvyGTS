@@ -3,6 +3,7 @@ package com.envyful.gts.api;
 import com.envyful.api.player.EnvyPlayer;
 
 import java.util.List;
+import java.util.Set;
 
 public class TradeManager {
 
@@ -20,11 +21,11 @@ public class TradeManager {
         platformTradeManager.removeTrade(trade);
     }
 
-    public static List<Trade> getAllTrades() {
+    public static Set<Trade> getAllTrades() {
         return platformTradeManager.getAllTrades();
     }
 
-    public static List<Trade> getUserTrades(EnvyPlayer<?> player) {
+    public static Set<Trade> getUserTrades(EnvyPlayer<?> player) {
         return platformTradeManager.getUserTrades(player);
     }
 

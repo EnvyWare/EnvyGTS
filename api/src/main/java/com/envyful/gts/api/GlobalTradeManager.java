@@ -3,6 +3,7 @@ package com.envyful.gts.api;
 import com.envyful.api.player.EnvyPlayer;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  *
@@ -34,7 +35,7 @@ public interface GlobalTradeManager {
      *
      * @return The list of all active trades
      */
-    List<Trade> getAllTrades();
+    Set<Trade> getAllTrades();
 
     /**
      *
@@ -43,7 +44,7 @@ public interface GlobalTradeManager {
      * @param player The player
      * @return The player's active trades
      */
-    List<Trade> getUserTrades(EnvyPlayer<?> player);
+    Set<Trade> getUserTrades(EnvyPlayer<?> player);
 
 
     /**
