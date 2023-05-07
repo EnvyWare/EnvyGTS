@@ -3,6 +3,7 @@ package com.envyful.gts.forge.player;
 import com.envyful.api.forge.chat.UtilChatColour;
 import com.envyful.api.forge.concurrency.UtilForgeConcurrency;
 import com.envyful.api.forge.player.ForgeEnvyPlayer;
+import com.envyful.api.forge.player.ForgePlayerManager;
 import com.envyful.api.forge.player.attribute.AbstractForgeAttribute;
 import com.envyful.api.json.UtilGson;
 import com.envyful.api.player.EnvyPlayer;
@@ -10,6 +11,7 @@ import com.envyful.gts.api.Trade;
 import com.envyful.gts.api.player.PlayerSettings;
 import com.envyful.gts.api.sql.EnvyGTSQueries;
 import com.envyful.gts.forge.EnvyGTSForge;
+import com.envyful.gts.forge.api.DataSaveMode;
 import com.google.common.collect.Lists;
 
 import java.sql.Connection;
@@ -28,12 +30,8 @@ public class GTSAttribute extends AbstractForgeAttribute<EnvyGTSForge> {
     private long currentDuration = -1;
     private PlayerSettings settings = new PlayerSettings();
 
-    public GTSAttribute(EnvyGTSForge manager, EnvyPlayer<?> parent) {
-        super(manager, (ForgeEnvyPlayer) parent);
-    }
-
-    public GTSAttribute(UUID uuid) {
-        super(uuid);
+    public GTSAttribute(EnvyGTSForge manager, ForgePlayerManager playerManager) {
+        super(manager, playerManager);
     }
 
     public List<Trade> getOwnedTrades() {
@@ -118,9 +116,16 @@ public class GTSAttribute extends AbstractForgeAttribute<EnvyGTSForge> {
 
     @Override
     public void save() {
+
+        String settingsQuery;
+        if (EnvyGTSForge.getConfig().getSaveMode() == DataSaveMode.SQLITE) {
+            settingsQuery = EnvyGTSQueries.UPDATE_OR_CREATE_SETTINGS_SQLITE;
+        } else {
+            settingsQuery = EnvyGTSQueries.UPDATE_OR_CREATE_SETTINGS;
+        }
         try (Connection connection = EnvyGTSForge.getDatabase().getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(EnvyGTSQueries.UPDATE_PLAYER_NAME);
-             PreparedStatement settingsStatement = connection.prepareStatement(EnvyGTSQueries.UPDATE_OR_CREATE_SETTINGS)) {
+             PreparedStatement settingsStatement = connection.prepareStatement(settingsQuery)) {
             preparedStatement.setString(1, this.parent.getParent().getName().getString());
             preparedStatement.setString(2, this.parent.getUuid().toString());
             settingsStatement.setString(1, this.parent.getUuid().toString());
