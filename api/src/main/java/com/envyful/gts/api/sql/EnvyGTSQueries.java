@@ -16,12 +16,30 @@ public class EnvyGTSQueries {
             "contents   BLOB            NOT NULL, " +
             "PRIMARY KEY(id));";
 
+    public static final String CREATE_MAIN_TABLE_SQLITE = "CREATE TABLE IF NOT EXISTS `envygts_trade`(" +
+            "id             INTEGER         PRIMARY KEY AUTOINCREMENT, " +
+            "owner          TEXT            NOT NULL, " +
+            "ownerName      TEXT            NOT NULL, " +
+            "originalOwner  TEXT            NOT NULL, " +
+            "expiry         BIGINT          UNSIGNED    NOT NULL, " +
+            "cost           DOUBLE          UNSIGNED    NOT NULL, " +
+            "removed        INT             UNSIGNED    NOT NULL, " +
+            "purchased      INT             UNSIGNED    NOT NULL, " +
+            "type           TEXT            NOT NULL, " +
+            "content_type  TEXT            NOT NULL, " +
+            "contents   BLOB            NOT NULL);";
+
     public static final String CREATE_SETTINGS_TABLE = "CREATE TABLE IF NOT EXISTS `envygts_settings`(" +
             "id             INT         UNSIGNED        NOT NULL        AUTO_INCREMENT, " +
             "owner          VARCHAR(64) NOT NULL, " +
             "settings       BLOB        NOT NULL, " +
             "UNIQUE(owner), " +
             "PRIMARY KEY(id));";
+
+    public static final String CREATE_SETTINGS_TABLE_SQLITE = "CREATE TABLE IF NOT EXISTS `envygts_settings`(" +
+            "owner          TEXT        NOT NULL, " +
+            "settings       BLOB        NOT NULL, " +
+            "UNIQUE(owner));";
 
     public static final String GET_ALL_TRADES = "SELECT owner, ownerName, originalOwner, expiry, cost, removed, type," +
             " content_type, " +
@@ -55,5 +73,8 @@ public class EnvyGTSQueries {
 
     public static final String UPDATE_OR_CREATE_SETTINGS = "INSERT INTO `envygts_settings`(owner, settings) " +
             "VALUES (?, ?) ON DUPLICATE KEY UPDATE settings = VALUES(`settings`);";
+
+    public static final String UPDATE_OR_CREATE_SETTINGS_SQLITE = "REPLACE INTO `envygts_settings`(owner, settings) " +
+            "VALUES (?, ?);";
 
 }
