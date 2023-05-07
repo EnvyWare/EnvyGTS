@@ -5,6 +5,8 @@ import com.envyful.api.config.type.ConfigItem;
 import com.envyful.api.config.type.SQLDatabaseDetails;
 import com.envyful.api.config.yaml.AbstractYamlConfig;
 import com.envyful.api.gui.item.Displayable;
+import com.envyful.api.player.SaveMode;
+import com.envyful.gts.forge.api.DataSaveMode;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
 import com.pixelmonmod.api.pokemon.PokemonSpecification;
@@ -25,6 +27,8 @@ import java.util.Objects;
 @ConfigPath("config/EnvyGTS/config.yml")
 @ConfigSerializable
 public class EnvyGTSConfig extends AbstractYamlConfig {
+
+    private DataSaveMode saveMode = DataSaveMode.SQLITE;
 
     private SQLDatabaseDetails databaseDetails = new SQLDatabaseDetails("EnvyGTS", "0.0.0.0", 3306, "admin",
                                                                         "password", "database"
@@ -74,6 +78,10 @@ public class EnvyGTSConfig extends AbstractYamlConfig {
 
     public EnvyGTSConfig() {
         super();
+    }
+
+    public DataSaveMode getSaveMode() {
+        return this.saveMode;
     }
 
     public SQLDatabaseDetails getDatabaseDetails() {
