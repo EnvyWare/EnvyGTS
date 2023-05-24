@@ -42,6 +42,11 @@ public class SellCommand {
 
     @CommandProcessor
     public void onSellCommand(@Sender ServerPlayerEntity player, String[] args) {
+        if (player.isPassenger()) {
+            player.sendMessage(UtilChatColour.colour(EnvyGTSForge.getLocale().getMessages().getCannotRideAndGts()), Util.NIL_UUID);
+            return;
+        }
+
         ForgeEnvyPlayer sender = EnvyGTSForge.getPlayerManager().getPlayer(player);
         GTSAttribute attribute = sender.getAttribute(EnvyGTSForge.class);
         ItemStack inHand = player.getItemInHand(Hand.MAIN_HAND);

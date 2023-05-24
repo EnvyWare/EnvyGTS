@@ -27,6 +27,11 @@ public class GTSCommand {
 
     @CommandProcessor
     public void onCommand(@Sender ServerPlayerEntity player, String[] args) {
+        if (player.isPassenger()) {
+            player.sendMessage(UtilChatColour.colour(EnvyGTSForge.getLocale().getMessages().getCannotRideAndGts()), Util.NIL_UUID);
+            return;
+        }
+
         if (EnvyGTSForge.getConfig().isEnableOpeningUIMessage()) {
             player.sendMessage(UtilChatColour.colour(EnvyGTSForge.getLocale().getMessages().getOpeningUi()), Util.NIL_UUID);
         }

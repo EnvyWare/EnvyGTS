@@ -115,6 +115,7 @@ public class LocaleConfig extends AbstractYamlConfig {
     @ConfigSerializable
     public static class Messages {
 
+        private String cannotRideAndGts = "&c&l(!) Please stop riding whilst trying to open the GTS";
         private String openingUi = "&e&l(!) &eOpening GTS...";
         private String sellInsuffucientArgs = "&c&l(!) &cInsufficient args! /gts s <amount> <price> [duration]";
         private String sellNoItemInHand = "&c&l(!) &cYou must have an item in your hand to sell!";
@@ -182,23 +183,23 @@ public class LocaleConfig extends AbstractYamlConfig {
         }
 
         public String getOpeningUi() {
-            return UtilChatColour.translateColourCodes('&', this.openingUi);
+            return this.openingUi;
         }
 
         public String getSellInsuffucientArgs() {
-            return UtilChatColour.translateColourCodes('&', this.sellInsuffucientArgs);
+            return this.sellInsuffucientArgs;
         }
 
         public String getSellNoItemInHand() {
-            return UtilChatColour.translateColourCodes('&', this.sellNoItemInHand);
+            return this.sellNoItemInHand;
         }
 
         public String getAmountMustBePositive() {
-            return UtilChatColour.translateColourCodes('&', this.amountMustBePositive);
+            return this.amountMustBePositive;
         }
 
         public String getPriceMustBeMoreThanOne() {
-            return UtilChatColour.translateColourCodes('&', this.priceMustBeMoreThanOne);
+            return this.priceMustBeMoreThanOne;
         }
 
         public String getAddedItemToGts() {
@@ -251,6 +252,10 @@ public class LocaleConfig extends AbstractYamlConfig {
 
         public String getCannotGoAboveMaxTime() {
             return this.cannotGoAboveMaxTime;
+        }
+
+        public String getCannotRideAndGts() {
+            return this.cannotRideAndGts;
         }
     }
 
