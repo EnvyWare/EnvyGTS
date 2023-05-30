@@ -52,7 +52,7 @@ public class SellCommand {
         ItemStack inHand = player.getItemInHand(Hand.MAIN_HAND);
 
         if (args.length == 0) {
-            StorageProxy.getParty(player).retrieveAll();
+            StorageProxy.getParty(player).retrieveAll("GTS");
 
             if (Objects.equals(inHand.getItem(), Items.AIR) || EnvyGTSForge.getConfig().isBlackListed(inHand)) {
                 SelectPartyPokemonUI.openUI(sender);

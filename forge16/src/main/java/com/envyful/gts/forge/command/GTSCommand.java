@@ -36,7 +36,7 @@ public class GTSCommand {
             player.sendMessage(UtilChatColour.colour(EnvyGTSForge.getLocale().getMessages().getOpeningUi()), Util.NIL_UUID);
         }
 
-        StorageProxy.getParty(player).retrieveAll();
+        StorageProxy.getParty(player).retrieveAll("GTS");
         ViewTradesUI.openUI(EnvyGTSForge.getPlayerManager().getPlayer(player));
     }
 }
