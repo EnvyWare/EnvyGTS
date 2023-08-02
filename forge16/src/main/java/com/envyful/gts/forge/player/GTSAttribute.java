@@ -2,25 +2,20 @@ package com.envyful.gts.forge.player;
 
 import com.envyful.api.forge.chat.UtilChatColour;
 import com.envyful.api.forge.concurrency.UtilForgeConcurrency;
-import com.envyful.api.forge.player.ForgeEnvyPlayer;
 import com.envyful.api.forge.player.ForgePlayerManager;
 import com.envyful.api.forge.player.attribute.AbstractForgeAttribute;
 import com.envyful.api.json.UtilGson;
-import com.envyful.api.player.EnvyPlayer;
-import com.envyful.api.player.PlayerManager;
 import com.envyful.gts.api.Trade;
 import com.envyful.gts.api.player.PlayerSettings;
 import com.envyful.gts.api.sql.EnvyGTSQueries;
 import com.envyful.gts.forge.EnvyGTSForge;
 import com.google.common.collect.Lists;
-import net.minecraft.entity.player.ServerPlayerEntity;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
-import java.util.UUID;
 
 public class GTSAttribute extends AbstractForgeAttribute<EnvyGTSForge> {
 
