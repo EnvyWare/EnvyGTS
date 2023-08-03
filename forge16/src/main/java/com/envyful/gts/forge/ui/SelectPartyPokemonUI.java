@@ -27,6 +27,11 @@ public class SelectPartyPokemonUI {
 
     public static void openUI(ForgeEnvyPlayer player) {
         GuiConfig.PartyPokemonConfig config = EnvyGTSForge.getGui().getPartyPokemonUIConfig();
+        GTSAttribute playerAttribute = player.getAttribute(EnvyGTSForge.class);
+
+        if (playerAttribute.getSelectedSlot() > 6) {
+            playerAttribute.setSelectedSlot(-1);
+        }
 
         Pane pane = GuiFactory.paneBuilder()
                 .topLeftX(0).topLeftY(0)
