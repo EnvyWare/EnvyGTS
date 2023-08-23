@@ -7,6 +7,7 @@ forgeVersion = "1.20.1"
 
 minecraft {
     mappings channel: 'official', version: '1.20.1'
+    copyIdeResources = true
 }
 
 sourceSets.main.resources { srcDir 'src/generated/resources' }
@@ -55,8 +56,11 @@ dependencies {
 }
 
 shadowJar {
+    finalizedBy('reobfJar')
+    zip64 = true
     configurations = [project.configurations.shadow]
-    setArchivesBaseName(rootProject.name + '-Forge')
+    setArchiveClassifier('')
+    setArchiveBaseName(rootProject.name + "-Forge")
 
     relocate('org.spongepowered.configurate', 'com.envyful.gts.forge.shade.configurate')
     relocate('org.yaml.snakeyaml', 'com.envyful.gts.forge.shade.snakeyaml')
@@ -69,5 +73,5 @@ shadowJar {
     exclude "**/module-info.class"
 }
 
-jar.finalizedBy('reobfJar')
+jar.finalizedBy('shadowJar')
 build.finalizedBy('versionedRelease')
