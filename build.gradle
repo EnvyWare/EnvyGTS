@@ -1,15 +1,4 @@
-buildscript {
-    repositories {
-        maven { url 'https://plugins.gradle.org/m2' }
-    }
-
-    dependencies {
-        classpath "com.github.jengelman.gradle.plugins:shadow:6.1.0"
-    }
-}
-
 subprojects {
-    apply plugin: 'com.github.johnrengelman.shadow'
     apply plugin: 'java'
 
     group = 'com.envyful.gts'
@@ -17,13 +6,6 @@ subprojects {
 
     ext {
         forgeVersion = "none"
-    }
-
-    sourceCompatibility = 1.8
-    targetCompatibility = 1.8
-
-    tasks.withType(JavaCompile) {
-        options.encoding = 'UTF-8'
     }
 
     repositories {
@@ -36,6 +18,10 @@ subprojects {
         	name = 'sponge'
         	url = 'https://repo.spongepowered.org/maven'
     	}
+        maven {
+            name = 'MinecraftForge'
+            url = 'https://maven.minecraftforge.net/'
+        }
     }
 
     task versionedRelease(type: Copy, group: build) {

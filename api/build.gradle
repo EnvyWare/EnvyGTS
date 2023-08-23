@@ -1,3 +1,7 @@
+plugins {
+    id("com.github.johnrengelman.shadow") version "8.1.1"
+}
+
 repositories {
     maven {
         name = 'spongepowered-repo'
@@ -18,7 +22,7 @@ dependencies {
 
 shadowJar {
     configurations = [project.configurations.shadow]
-    archiveName = rootProject.name + '-API.jar'
+    setArchivesBaseName(rootProject.name + '-API')
 
     relocate('org.spongepowered.configurate', 'com.envyful.api.commons.shade.configurate')
     relocate('org.yaml.snakeyaml', 'com.envyful.api.commons.shade.snakeyaml')
