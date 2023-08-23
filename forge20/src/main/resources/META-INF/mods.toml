@@ -1,5 +1,5 @@
 modLoader="javafml"
-loaderVersion="[36,)"
+loaderVersion="[47.1.28,)"
 license="All rights reserved"
 issueTrackerURL="https://github.com/EnvyWare/EnvyGTS"
 
@@ -17,13 +17,13 @@ EnvyGTS
 [[dependencies.envygts]]
 modId="forge"
 mandatory=true
-versionRange="[36,)"
+versionRange="[47.1.28,)"
 ordering="NONE"
 side="BOTH"
 
 [[dependencies.envygts]]
 modId="minecraft"
 mandatory=true
-versionRange="[1.16.5,1.17)"
+versionRange="[1.20.1,1.21)"
 ordering="NONE"
 side="BOTH"
