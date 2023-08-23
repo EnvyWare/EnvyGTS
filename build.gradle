@@ -24,11 +24,12 @@ subprojects {
         }
     }
 
+
     task versionedRelease(type: Copy, group: build) {
         delete fileTree('../release/') {
             include '**/*.jar'
         }
-        from("./build/libs/${rootProject.name}-Forge.jar")
+        from("./build/libs/${rootProject.name}-Forge-${version}.jar")
         into('../release/')
         include '*.jar'
         rename { String filename ->
