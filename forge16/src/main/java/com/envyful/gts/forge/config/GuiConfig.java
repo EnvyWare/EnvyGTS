@@ -107,6 +107,7 @@ public class GuiConfig extends AbstractYamlConfig {
                 .amount(1)
                 .name("&bSelect Party Member")
                 .positions(Pair.of(1, 1))
+                .nbt("PokeBallID", new ConfigItem.NBTValue("string", "poke_ball"))
                 .build();
 
         private ExtendedConfigItem sellHand = ExtendedConfigItem.builder()
