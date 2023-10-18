@@ -27,7 +27,7 @@ public class SelectPartyPokemonUI {
 
     public static void openUI(ForgeEnvyPlayer player) {
         GuiConfig.PartyPokemonConfig config = EnvyGTSForge.getGui().getPartyPokemonUIConfig();
-        GTSAttribute playerAttribute = player.getAttribute(EnvyGTSForge.class);
+        GTSAttribute playerAttribute = player.getAttribute(GTSAttribute.class);
 
         if (playerAttribute.getSelectedSlot() > 6) {
             playerAttribute.setSelectedSlot(-1);
@@ -54,7 +54,7 @@ public class SelectPartyPokemonUI {
         UtilConfigItem.builder()
                 .asyncClick(false)
                 .clickHandler((envyPlayer, clickType) -> {
-                    GTSAttribute attribute = envyPlayer.getAttribute(EnvyGTSForge.class);
+                    GTSAttribute attribute = envyPlayer.getAttribute(GTSAttribute.class);
 
                     List<Trade> trades = Lists.newArrayList(attribute.getOwnedTrades());
 
@@ -71,7 +71,7 @@ public class SelectPartyPokemonUI {
                         return;
                     }
 
-                    PlayerPartyStorage party = StorageProxy.getParty(player.getParent());
+                    PlayerPartyStorage party = StorageProxy.getPartyNow(player.getParent());
 
                     if (party.countAblePokemon() <= 1) {
                         return;
@@ -95,7 +95,7 @@ public class SelectPartyPokemonUI {
     }
 
     private static void setPokemon(ForgeEnvyPlayer player, Pane pane) {
-        PlayerPartyStorage party = StorageProxy.getParty(player.getParent());
+        PlayerPartyStorage party = StorageProxy.getPartyNow(player.getParent());
         Pokemon[] all = party.getAll();
         GuiConfig.PartyPokemonConfig config = EnvyGTSForge.getGui().getPartyPokemonUIConfig();
 
@@ -115,7 +115,7 @@ public class SelectPartyPokemonUI {
                         EnvyGTSForge.getGui().getPartyPokemonUIConfig().getSpriteConfig()
                 ));
 
-                GTSAttribute gtsAttribute = player.getAttribute(EnvyGTSForge.class);
+                GTSAttribute gtsAttribute = player.getAttribute(GTSAttribute.class);
 
                 if (gtsAttribute.getSelectedSlot() == slot) {
                     builder

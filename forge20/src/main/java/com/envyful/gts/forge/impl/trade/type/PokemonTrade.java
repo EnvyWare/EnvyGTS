@@ -38,6 +38,7 @@ import com.pixelmonmod.pixelmon.api.registries.PixelmonSpecies;
 import com.pixelmonmod.pixelmon.api.storage.StorageProxy;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.TagParser;
+import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.common.MinecraftForge;
@@ -86,7 +87,7 @@ public class PokemonTrade extends ForgeTrade {
 
         MinecraftForge.EVENT_BUS.post(new TradeCollectEvent((ForgeEnvyPlayer) player, this));
 
-        StorageProxy.getParty((ServerPlayer) player.getParent()).add(this.pokemon);
+        StorageProxy.getPartyNow((ServerPlayer) player.getParent()).add(this.pokemon);
         EnvyGTSForge.getTradeManager().removeTrade(this);
 
         if (returnGui == null) {
@@ -104,7 +105,7 @@ public class PokemonTrade extends ForgeTrade {
 
         parent.closeContainer();
 
-        StorageProxy.getParty((ServerPlayer) admin.getParent()).add(this.pokemon);
+        StorageProxy.getPartyNow((ServerPlayer) admin.getParent()).add(this.pokemon);
         EnvyGTSForge.getTradeManager().removeTrade(this);
         UtilConcurrency.runAsync(this::delete);
     }
@@ -134,7 +135,7 @@ public class PokemonTrade extends ForgeTrade {
                         this.removed = true;
                         MinecraftForge.EVENT_BUS.post(new TradeRemoveEvent(this));
 
-                        GTSAttribute attribute = envyPlayer.getAttribute(EnvyGTSForge.class);
+                        GTSAttribute attribute = envyPlayer.getAttribute(GTSAttribute.class);
                         attribute.getOwnedTrades().remove(this);
 
                         this.collect(envyPlayer, null);
@@ -169,11 +170,11 @@ public class PokemonTrade extends ForgeTrade {
                 }).build();
     }
 
-    private String[] formatLore(List<String> lore) {
-        List<String> newLore = Lists.newArrayList();
+    private Component[] formatLore(List<String> lore) {
+        List<Component> newLore = Lists.newArrayList();
 
         for (String s : lore) {
-            newLore.add(UtilChatColour.translateColourCodes('&', s
+            newLore.add(UtilChatColour.colour(s
                     .replace("%cost%",
                              String.format(EnvyGTSForge.getLocale().getMoneyFormat(), this.cost))
                     .replace("%duration%", UtilTimeFormat.getFormattedDuration((this.expiry - System.currentTimeMillis())))
@@ -182,7 +183,7 @@ public class PokemonTrade extends ForgeTrade {
                     .replace("%original_owner%", this.originalOwnerName)));
         }
 
-        return newLore.toArray(new String[0]);
+        return newLore.toArray(new Component[0]);
     }
 
     @Override
@@ -198,7 +199,7 @@ public class PokemonTrade extends ForgeTrade {
                 .asyncClick(false)
                 .singleClick()
                 .clickHandler((envyPlayer, clickType) -> {
-                    GTSAttribute attribute = envyPlayer.getAttribute(EnvyGTSForge.class);
+                    GTSAttribute attribute = envyPlayer.getAttribute(GTSAttribute.class);
                     attribute.getOwnedTrades().remove(this);
                     this.collect(envyPlayer, returnGui);
                 })
@@ -254,7 +255,7 @@ public class PokemonTrade extends ForgeTrade {
     }
 
     @Override
-    public String transformName(String name) {
+    public String replace(String name) {
         IVStore iVs = pokemon.getIVs();
         float ivHP = iVs.getStat(BattleStatsType.HP);
         float ivAtk = iVs.getStat(BattleStatsType.ATTACK);
@@ -316,7 +317,7 @@ public class PokemonTrade extends ForgeTrade {
             return null;
         }
 
-        String newJSON = this.transformName(event.getPokemonJSON());
+        String newJSON = this.replace(event.getPokemonJSON());
 
         return DiscordWebHook.fromJson(newJSON);
     }

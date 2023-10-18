@@ -3,7 +3,7 @@ package com.envyful.gts.forge.player;
 import com.envyful.api.forge.chat.UtilChatColour;
 import com.envyful.api.forge.concurrency.UtilForgeConcurrency;
 import com.envyful.api.forge.player.ForgePlayerManager;
-import com.envyful.api.forge.player.attribute.AbstractForgeAttribute;
+import com.envyful.api.forge.player.attribute.ManagedForgeAttribute;
 import com.envyful.api.json.UtilGson;
 import com.envyful.gts.api.Trade;
 import com.envyful.gts.api.player.PlayerSettings;
@@ -17,7 +17,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 
-public class GTSAttribute extends AbstractForgeAttribute<EnvyGTSForge> {
+public class GTSAttribute extends ManagedForgeAttribute<EnvyGTSForge> {
 
     private List<Trade> ownedTrades = Lists.newArrayList();
     private int selectedSlot = -1;
@@ -26,8 +26,8 @@ public class GTSAttribute extends AbstractForgeAttribute<EnvyGTSForge> {
     private long currentDuration = -1;
     private PlayerSettings settings = new PlayerSettings();
 
-    public GTSAttribute(EnvyGTSForge manager, ForgePlayerManager playerManager) {
-        super(manager, playerManager);
+    public GTSAttribute(ForgePlayerManager playerManager) {
+        super(EnvyGTSForge.getInstance(), playerManager);
     }
 
     public List<Trade> getOwnedTrades() {

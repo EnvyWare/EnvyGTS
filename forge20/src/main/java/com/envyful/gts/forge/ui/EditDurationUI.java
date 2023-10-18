@@ -21,7 +21,7 @@ public class EditDurationUI {
 
     public static void openUI(ForgeEnvyPlayer player, int page, int position, boolean error) {
         player.getParent().closeContainer();
-        GTSAttribute attribute = player.getAttribute(EnvyGTSForge.class);
+        GTSAttribute attribute = player.getAttribute(GTSAttribute.class);
         Pokemon pokemon = SelectPriceUI.getPokemon(player, page, position);
 
         UtilForgeConcurrency.runLater(() -> DialogueInputRegistry.builder()
@@ -62,11 +62,11 @@ public class EditDurationUI {
                     Pokemon pixelmon;
 
                     if (page == -1) {
-                        PlayerPartyStorage party = StorageProxy.getParty(player.getParent());
+                        PlayerPartyStorage party = StorageProxy.getPartyNow(player.getParent());
                         pixelmon = party.get(position);
                         party.set(position, null);
                     } else {
-                        PCBox box = StorageProxy.getPCForPlayer(player.getParent()).getBox(page);
+                        PCBox box = StorageProxy.getPCForPlayerNow(player.getParent()).getBox(page);
                         pixelmon = box.get(position);
                         box.set(position, null);
                     }

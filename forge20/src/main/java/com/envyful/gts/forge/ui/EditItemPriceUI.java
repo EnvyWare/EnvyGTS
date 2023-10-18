@@ -13,7 +13,7 @@ public class EditItemPriceUI {
 
     public static void openUI(ForgeEnvyPlayer player, ItemStack itemStack, boolean error) {
         player.getParent().closeContainer();
-        GTSAttribute attribute = player.getAttribute(EnvyGTSForge.class);
+        GTSAttribute attribute = player.getAttribute(GTSAttribute.class);
 
         UtilForgeConcurrency.runLater(() -> {
             DialogueInputRegistry.builder()

@@ -1,10 +1,9 @@
 package com.envyful.gts.forge.command;
 
-import com.envyful.api.command.annotate.Child;
 import com.envyful.api.command.annotate.Command;
-import com.envyful.api.command.annotate.Permissible;
 import com.envyful.api.command.annotate.executor.CommandProcessor;
 import com.envyful.api.command.annotate.executor.Sender;
+import com.envyful.api.command.annotate.permission.Permissible;
 import com.envyful.api.forge.chat.UtilChatColour;
 import com.envyful.api.forge.player.ForgeEnvyPlayer;
 import com.envyful.api.time.UtilTime;
@@ -29,14 +28,12 @@ import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
 @Command(
-        value = "sell",
-        description = "For selling items to the GTS",
-        aliases = {
+        value = {
+                "sell",
                 "s"
         }
 )
 @Permissible("com.envyful.gts.command.sell")
-@Child
 public class SellCommand {
 
     @CommandProcessor
@@ -47,11 +44,11 @@ public class SellCommand {
         }
 
         ForgeEnvyPlayer sender = EnvyGTSForge.getPlayerManager().getPlayer(player);
-        GTSAttribute attribute = sender.getAttribute(EnvyGTSForge.class);
+        GTSAttribute attribute = sender.getAttribute(GTSAttribute.class);
         ItemStack inHand = player.getItemInHand(InteractionHand.MAIN_HAND);
 
         if (args.length == 0) {
-            StorageProxy.getParty(player).retrieveAll("GTS");
+            StorageProxy.getPartyNow(player).retrieveAll("GTS");
 
             if (Objects.equals(inHand.getItem(), Items.AIR) || EnvyGTSForge.getConfig().isBlackListed(inHand)) {
                 SelectPartyPokemonUI.openUI(sender);

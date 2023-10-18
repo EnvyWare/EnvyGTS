@@ -77,7 +77,7 @@ public class ItemTrade extends ForgeTrade {
                 returnGui.accept(player);
             }
 
-            GTSAttribute attribute = player.getAttribute(EnvyGTSForge.class);
+            GTSAttribute attribute = player.getAttribute(GTSAttribute.class);
             attribute.getOwnedTrades().add(this);
 
             return CompletableFuture.completedFuture(null);
@@ -138,7 +138,7 @@ public class ItemTrade extends ForgeTrade {
                         this.removed = true;
                         MinecraftForge.EVENT_BUS.post(new TradeRemoveEvent(this));
 
-                        GTSAttribute attribute = envyPlayer.getAttribute(EnvyGTSForge.class);
+                        GTSAttribute attribute = envyPlayer.getAttribute(GTSAttribute.class);
                         attribute.getOwnedTrades().remove(this);
 
                         this.collect(envyPlayer, null);
@@ -173,11 +173,11 @@ public class ItemTrade extends ForgeTrade {
                 }).build();
     }
 
-    private String[] formatLore(List<String> lore) {
-        List<String> newLore = Lists.newArrayList();
+    private Component[] formatLore(List<String> lore) {
+        List<Component> newLore = Lists.newArrayList();
 
         for (String s : lore) {
-            newLore.add(UtilChatColour.translateColourCodes('&', s
+            newLore.add(UtilChatColour.colour(s
                     .replace("%cost%",
                              String.format(EnvyGTSForge.getLocale().getMoneyFormat(), this.cost))
                     .replace("%duration%", UtilTimeFormat.getFormattedDuration((this.expiry - System.currentTimeMillis())))
@@ -186,7 +186,7 @@ public class ItemTrade extends ForgeTrade {
                     .replace("%original_owner%", this.originalOwnerName)));
         }
 
-        return newLore.toArray(new String[0]);
+        return newLore.toArray(new Component[0]);
     }
 
     @Override
@@ -200,7 +200,7 @@ public class ItemTrade extends ForgeTrade {
                                    .build())
                 .singleClick()
                 .clickHandler((envyPlayer, clickType) -> UtilForgeConcurrency.runSync(() -> {
-                    GTSAttribute attribute = envyPlayer.getAttribute(EnvyGTSForge.class);
+                    GTSAttribute attribute = envyPlayer.getAttribute(GTSAttribute.class);
                     attribute.getOwnedTrades().remove(this);
                     this.collect(envyPlayer, returnGui);
                 }))
@@ -256,7 +256,7 @@ public class ItemTrade extends ForgeTrade {
     }
 
     @Override
-    public String transformName(String name) {
+    public String replace(String name) {
         return name
                 .replace("%item_url%", EnvyGTSForge.getConfig().getItemUrl(this.item))
                 .replace("%item_id%", this.capitalizeAfterUnderscoreAndStart(ForgeRegistries.ITEMS.getKey(item.getItem()).getPath()))
@@ -297,7 +297,7 @@ public class ItemTrade extends ForgeTrade {
             return null;
         }
 
-        return DiscordWebHook.fromJson(this.transformName(event.getItemJSON()));
+        return DiscordWebHook.fromJson(this.replace(event.getItemJSON()));
     }
 
     private String capitalizeAfterUnderscoreAndStart(String word) {

@@ -254,7 +254,7 @@ public class PokemonTrade extends ForgeTrade {
     }
 
     @Override
-    public String transformName(String name) {
+    public String replace(String name) {
         IVStore iVs = pokemon.getIVs();
         float ivHP = iVs.getStat(BattleStatsType.HP);
         float ivAtk = iVs.getStat(BattleStatsType.ATTACK);
@@ -316,7 +316,7 @@ public class PokemonTrade extends ForgeTrade {
             return null;
         }
 
-        String newJSON = this.transformName(event.getPokemonJSON());
+        String newJSON = this.replace(event.getPokemonJSON());
 
         return DiscordWebHook.fromJson(newJSON);
     }

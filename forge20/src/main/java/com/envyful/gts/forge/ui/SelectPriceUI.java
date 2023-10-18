@@ -18,7 +18,7 @@ public class SelectPriceUI {
 
     public static void openUI(ForgeEnvyPlayer player, int page, int slot, boolean error) {
         player.getParent().closeContainer();
-        GTSAttribute attribute = player.getAttribute(EnvyGTSForge.class);
+        GTSAttribute attribute = player.getAttribute(GTSAttribute.class);
         Pokemon pokemon = getPokemon(player, page, slot);
 
         if (pokemon == null) {
@@ -63,9 +63,9 @@ public class SelectPriceUI {
 
     public static Pokemon getPokemon(ForgeEnvyPlayer player, int page, int slot) {
         if (page == -1) {
-            return StorageProxy.getParty(player.getParent()).get(slot);
+            return StorageProxy.getPartyNow(player.getParent()).get(slot);
         } else {
-            return StorageProxy.getPCForPlayer(player.getParent()).getBox(page).get(slot);
+            return StorageProxy.getPCForPlayerNow(player.getParent()).getBox(page).get(slot);
         }
     }
 }

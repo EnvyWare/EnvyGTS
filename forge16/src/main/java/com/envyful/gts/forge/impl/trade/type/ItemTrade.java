@@ -255,7 +255,7 @@ public class ItemTrade extends ForgeTrade {
     }
 
     @Override
-    public String transformName(String name) {
+    public String replace(String name) {
         return name
                 .replace("%item_url%", EnvyGTSForge.getConfig().getItemUrl(this.item))
                 .replace("%item_id%", this.capitalizeAfterUnderscoreAndStart(item.getItem().getRegistryName().getPath()))
@@ -296,7 +296,7 @@ public class ItemTrade extends ForgeTrade {
             return null;
         }
 
-        return DiscordWebHook.fromJson(this.transformName(event.getItemJSON()));
+        return DiscordWebHook.fromJson(this.replace(event.getItemJSON()));
     }
 
     private String capitalizeAfterUnderscoreAndStart(String word) {

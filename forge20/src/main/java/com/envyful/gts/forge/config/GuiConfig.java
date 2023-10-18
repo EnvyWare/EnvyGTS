@@ -146,7 +146,7 @@ public class GuiConfig extends AbstractYamlConfig {
     @ConfigSerializable
     public static class SearchTradesConfig {
 
-        private PaginatedConfigInterface guiSettings = PaginatedConfigInterface.builder()
+        private PaginatedConfigInterface guiSettings = PaginatedConfigInterface.paginatedBuilder()
                 .title("EnvyGTS")
                 .height(6)
                 .fillType(ConfigInterface.FillType.BLOCK)

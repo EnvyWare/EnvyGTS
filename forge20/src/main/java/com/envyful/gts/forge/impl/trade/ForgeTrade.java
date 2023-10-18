@@ -91,7 +91,7 @@ public abstract class ForgeTrade implements Trade {
         }
 
         ServerPlayer parent = (ServerPlayer) player.getParent();
-        BankAccount iPixelmonBankAccount = BankAccountProxy.getBankAccountUnsafe(parent);
+        BankAccount iPixelmonBankAccount = BankAccountProxy.getBankAccountNow(parent);
 
         if (iPixelmonBankAccount.getBalance().doubleValue() < this.cost) {
             player.message(UtilChatColour.colour(EnvyGTSForge.getLocale().getMessages().getInsufficientFunds()));
@@ -105,7 +105,7 @@ public abstract class ForgeTrade implements Trade {
         iPixelmonBankAccount.take(this.cost);
 
         EnvyGTSConfig config = EnvyGTSForge.getConfig();
-        BankAccount target = BankAccountProxy.getBankAccountUnsafe(this.owner);
+        BankAccount target = BankAccountProxy.getBankAccountNow(this.owner);
 
         if (target == null) {
             return false;
@@ -156,7 +156,7 @@ public abstract class ForgeTrade implements Trade {
             return;
         }
 
-        GTSAttribute sellerAttribute = seller.getAttribute(EnvyGTSForge.class);
+        GTSAttribute sellerAttribute = seller.getAttribute(GTSAttribute.class);
         sellerAttribute.getOwnedTrades().remove(this);
     }
 

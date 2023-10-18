@@ -141,7 +141,7 @@ public class EnvyGTSConfig extends AbstractYamlConfig {
             List<PokemonSpecification> blacklist = Lists.newArrayList();
 
             for (String s : this.blacklist) {
-                blacklist.add(PokemonSpecificationProxy.create(s));
+                blacklist.add(PokemonSpecificationProxy.create(s).get());
             }
 
             this.blacklistCache = blacklist;

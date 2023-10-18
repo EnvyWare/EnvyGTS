@@ -26,14 +26,14 @@ public class TradeCreateListener extends LazyListener {
 
         UtilConcurrency.runAsync(() -> {
             for (ForgeEnvyPlayer onlinePlayer : EnvyGTSForge.getPlayerManager().getOnlinePlayers()) {
-                GTSAttribute attribute = onlinePlayer.getAttribute(EnvyGTSForge.class);
+                GTSAttribute attribute = onlinePlayer.getAttribute(GTSAttribute.class);
 
                 if (attribute == null || !attribute.getSettings().isToggledBroadcasts()) {
                     continue;
                 }
 
                 for (String s : EnvyGTSForge.getLocale().getMessages().getCreateTradeBroadcast(this.getPokemon(event.getTrade()))) {
-                    s = event.getTrade().transformName(s);
+                    s = event.getTrade().replace(s);
                     s = s.replace("%player%", event.getPlayer().getName())
                             .replace("%name%", event.getTrade().getDisplayName())
                             .replace("%cost%",

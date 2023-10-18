@@ -5,6 +5,7 @@ import com.envyful.api.config.yaml.YamlConfigFactory;
 import com.envyful.api.database.Database;
 import com.envyful.api.database.impl.SimpleHikariDatabase;
 import com.envyful.api.forge.command.ForgeCommandFactory;
+import com.envyful.api.forge.command.parser.ForgeAnnotationCommandParser;
 import com.envyful.api.forge.gui.factory.ForgeGuiFactory;
 import com.envyful.api.forge.player.ForgePlayerManager;
 import com.envyful.api.gui.factory.GuiFactory;
@@ -44,7 +45,7 @@ public class EnvyGTSForge {
     private static EnvyGTSForge instance;
 
     private ForgePlayerManager playerManager = new ForgePlayerManager();
-    private ForgeCommandFactory commandFactory = new ForgeCommandFactory();
+    private ForgeCommandFactory commandFactory = new ForgeCommandFactory(ForgeAnnotationCommandParser::new, playerManager);
 
     private EnvyGTSConfig config;
     private LocaleConfig locale;
@@ -69,7 +70,7 @@ public class EnvyGTSForge {
         FilterTypeFactory.register(new ItemFilterType());
         FilterTypeFactory.register(new PokemonFilterType());
 
-        this.playerManager.registerAttribute(this, GTSAttribute.class);
+        this.playerManager.registerAttribute(GTSAttribute.class);
 
         this.loadConfig();
 
@@ -87,7 +88,7 @@ public class EnvyGTSForge {
         new DiscordTradeRemoveListener();
 
         UtilConcurrency.runAsync(() -> {
-            this.tradeManager = new SQLGlobalTradeManager(this);
+            this.tradeManager = new SQLGlobalTradeManager();
             TradeManager.setPlatformTradeManager(this.tradeManager);
         });
     }
@@ -120,7 +121,7 @@ public class EnvyGTSForge {
 
     @SubscribeEvent
     public void onServerStarting(RegisterCommandsEvent event) {
-        this.commandFactory.registerCommand(event.getDispatcher(), new GTSCommand());
+        this.commandFactory.registerCommand(event.getDispatcher(), this.commandFactory.parseCommand(new GTSCommand()));
     }
 
     public static EnvyGTSForge getInstance() {

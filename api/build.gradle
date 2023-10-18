@@ -17,7 +17,7 @@ repositories {
 dependencies {
     shadow group: 'org.spongepowered', name: 'configurate-yaml', version: '4.0.0'
 
-    shadow group: 'com.envyful.api', name: 'commons', version: '4.8.2'
+    shadow group: 'com.envyful.api', name: 'commons', version: '5.5.1'
 }
 
 shadowJar {

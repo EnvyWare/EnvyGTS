@@ -1,10 +1,10 @@
 package com.envyful.gts.forge.command;
 
 import com.envyful.api.command.annotate.Command;
-import com.envyful.api.command.annotate.Permissible;
 import com.envyful.api.command.annotate.SubCommands;
 import com.envyful.api.command.annotate.executor.CommandProcessor;
 import com.envyful.api.command.annotate.executor.Sender;
+import com.envyful.api.command.annotate.permission.Permissible;
 import com.envyful.api.forge.chat.UtilChatColour;
 import com.envyful.gts.forge.EnvyGTSForge;
 import com.envyful.gts.forge.ui.ViewTradesUI;
@@ -12,9 +12,8 @@ import com.pixelmonmod.pixelmon.api.storage.StorageProxy;
 import net.minecraft.server.level.ServerPlayer;
 
 @Command(
-        value = "gts",
-        description = "Main GTS command",
-        aliases = {
+        value = {
+                "gts",
                 "globaltrade"
         }
 )
@@ -35,7 +34,7 @@ public class GTSCommand {
             player.sendSystemMessage(UtilChatColour.colour(EnvyGTSForge.getLocale().getMessages().getOpeningUi()));
         }
 
-        StorageProxy.getParty(player).retrieveAll("GTS");
+        StorageProxy.getPartyNow(player).retrieveAll("GTS");
         ViewTradesUI.openUI(EnvyGTSForge.getPlayerManager().getPlayer(player));
     }
 }

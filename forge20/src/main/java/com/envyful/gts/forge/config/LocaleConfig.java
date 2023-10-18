@@ -2,7 +2,6 @@ package com.envyful.gts.forge.config;
 
 import com.envyful.api.config.data.ConfigPath;
 import com.envyful.api.config.yaml.AbstractYamlConfig;
-import com.envyful.api.forge.chat.UtilChatColour;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
 import com.pixelmonmod.api.pokemon.PokemonSpecification;
@@ -276,7 +275,7 @@ public class LocaleConfig extends AbstractYamlConfig {
 
         public PokemonSpecification getSpec() {
             if (this.cachedSpec == null) {
-                this.cachedSpec = PokemonSpecificationProxy.create(this.spec);
+                this.cachedSpec = PokemonSpecificationProxy.create(this.spec).get();
             }
 
             return this.cachedSpec;

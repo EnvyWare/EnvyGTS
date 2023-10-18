@@ -1,10 +1,9 @@
 package com.envyful.gts.forge.command;
 
-import com.envyful.api.command.annotate.Child;
 import com.envyful.api.command.annotate.Command;
-import com.envyful.api.command.annotate.Permissible;
 import com.envyful.api.command.annotate.executor.CommandProcessor;
 import com.envyful.api.command.annotate.executor.Sender;
+import com.envyful.api.command.annotate.permission.Permissible;
 import com.envyful.api.forge.chat.UtilChatColour;
 import com.envyful.api.forge.player.ForgeEnvyPlayer;
 import com.envyful.gts.forge.EnvyGTSForge;
@@ -12,20 +11,18 @@ import com.envyful.gts.forge.player.GTSAttribute;
 import net.minecraft.server.level.ServerPlayer;
 
 @Command(
-        value = "broadcasts",
-        description = "Broadcasts settings command",
-        aliases = {
+        value = {
+                "broadcasts",
                 "bc"
         }
 )
 @Permissible("com.envyful.gts.command.settings.broadcasts")
-@Child
 public class BroadcastsCommand {
 
     @CommandProcessor
     public void onCommand(@Sender ServerPlayer player, String[] args) {
         ForgeEnvyPlayer sender = EnvyGTSForge.getPlayerManager().getPlayer(player);
-        GTSAttribute attribute = sender.getAttribute(EnvyGTSForge.class);
+        GTSAttribute attribute = sender.getAttribute(GTSAttribute.class);
 
         if (attribute == null) {
             return;

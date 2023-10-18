@@ -3,10 +3,10 @@ plugins {
     id("com.github.johnrengelman.shadow") version "8.1.1"
 }
 
-forgeVersion = "1.20.1"
+forgeVersion = "1.20.2"
 
 minecraft {
-    mappings channel: 'official', version: '1.20.1'
+    mappings channel: 'official', version: '1.20.2'
     copyIdeResources = true
 }
 
@@ -15,19 +15,19 @@ sourceSets.main.resources { srcDir 'src/generated/resources' }
 repositories {}
 
 dependencies {
-    minecraft "net.minecraftforge:forge:1.20.1-47.1.44"
+    minecraft 'net.minecraftforge:forge:1.20.2-48.0.30'
 
-    implementation 'pixelmon:Pixelmon-1.20.1-9.2.1-server:9.2.1'
+    implementation 'pixelmon:Pixelmon-1.20.2-9.2.4-server:9.2.4'
 
-    compileOnly 'com.github.EnvyWare.ForgePlaceholderAPI:api:0.0.1'
+    compileOnly "com.envyful.papi:api:2.0.5"
 
-    shadow group: 'org.spongepowered', name: 'configurate-yaml', version: '4.0.0'
+    shadow group: 'org.spongepowered', name: 'configurate-yaml', version: '4.2.0-COMMENTS'
 
-    shadow group: 'com.envyful.api', name: 'commons', version: '5.0.3'
-    shadow (group: 'com.envyful.api', name: 'forge20', version: '5.0.3') {
+    shadow group: 'com.envyful.api', name: 'commons', version: '5.5.2'
+    shadow (group: 'com.envyful.api', name: 'forge20', version: '5.5.2') {
         transitive = false;
     }
-    shadow (group: 'com.envyful.api', name: 'reforged20', version: '5.0.3') {
+    shadow (group: 'com.envyful.api', name: 'reforged20', version: '5.5.2') {
         transitive = false;
     }
 
@@ -42,23 +42,21 @@ shadowJar {
     relocate('org.spongepowered.configurate', 'com.envyful.gts.forge.shade.configurate')
     relocate('org.yaml.snakeyaml', 'com.envyful.gts.forge.shade.snakeyaml')
     relocate('io.leangen.geantyref', 'com.envyful.gts.forge.shade.geantyref')
-    relocate('com.google.gson', 'com.envyful.gts.forge.shade.gson')
     relocate('com.zaxxer', 'com.envyful.gts.forge.shade.hikari')
     relocate('org.slf4j', 'com.envyful.gts.forge.shade.slf4j')
     relocate('com.envyful.api', 'com.envyful.gts.forge.shade.envy.api')
     relocate('org.bstats', 'com.envyful.gts.forge.shade.bstats')
-    relocate('com.google.common', 'com.envyful.gts.forge.shade.guava')
     relocate('org.apache.logging', 'com.envyful.gts.forge.shade.log4j')
     relocate('io.netty', 'com.envyful.gts.forge.shade.netty')
     relocate('io.lettuce', 'com.envyful.gts.forge.shade.lettuce')
     relocate('com.cronutils', 'com.envyful.gts.forge.shade.cronutils')
     relocate('com.cronutils', 'com.envyful.gts.forge.shade.cronutils')
     relocate('com.sun.el', 'com.envyful.gts.forge.shade.sun.el')
-    relocate('javax', 'com.envyful.gts.forge.shade.javax')
-    relocate('javax', 'com.envyful.gts.forge.shade.javax')
     relocate('org.reactivestreams', 'com.envyful.gts.forge.shade.reactivestreams')
     relocate('reactor', 'com.envyful.gts.forge.shade.reactor')
 
+    exclude "com/google/**"
+    exclude "javax/**"
     exclude "**/module-info.class"
     exclude "**/*.properties"
     exclude "**/*.xml"

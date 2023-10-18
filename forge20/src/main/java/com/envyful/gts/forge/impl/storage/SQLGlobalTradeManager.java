@@ -14,8 +14,8 @@ import java.sql.SQLException;
 
 public class SQLGlobalTradeManager extends ForgeGlobalTradeManager {
 
-    public SQLGlobalTradeManager(EnvyGTSForge mod) {
-        try (Connection connection = mod.getDatabase().getConnection();
+    public SQLGlobalTradeManager() {
+        try (Connection connection = EnvyGTSForge.getDatabase().getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(EnvyGTSQueries.GET_ALL_TRADES)) {
             ResultSet resultSet = preparedStatement.executeQuery();
 

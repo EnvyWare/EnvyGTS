@@ -33,7 +33,7 @@ public class TradeCreateListener extends LazyListener {
                 }
 
                 for (String s : EnvyGTSForge.getLocale().getMessages().getCreateTradeBroadcast(this.getPokemon(event.getTrade()))) {
-                    s = event.getTrade().transformName(s);
+                    s = event.getTrade().replace(s);
                     s = s.replace("%player%", event.getPlayer().getName())
                             .replace("%name%", event.getTrade().getDisplayName())
                             .replace("%cost%",
