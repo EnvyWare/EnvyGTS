@@ -4,6 +4,7 @@ import com.envyful.api.concurrency.UtilConcurrency;
 import com.envyful.api.config.yaml.YamlConfigFactory;
 import com.envyful.api.database.Database;
 import com.envyful.api.database.impl.SimpleHikariDatabase;
+import com.envyful.api.database.sql.UtilSql;
 import com.envyful.api.forge.command.ForgeCommandFactory;
 import com.envyful.api.forge.command.parser.ForgeAnnotationCommandParser;
 import com.envyful.api.forge.gui.factory.ForgeGuiFactory;
@@ -55,6 +56,7 @@ public class EnvyGTSForge {
     private GlobalTradeManager tradeManager;
 
     public EnvyGTSForge() {
+        UtilSql.registerDriver();
         MinecraftForge.EVENT_BUS.register(this);
         instance = this;
     }
