@@ -23,11 +23,11 @@ dependencies {
 
     shadow group: 'org.spongepowered', name: 'configurate-yaml', version: '4.2.0-COMMENTS'
 
-    shadow group: 'com.envyful.api', name: 'commons', version: '5.5.2'
-    shadow (group: 'com.envyful.api', name: 'forge20', version: '5.5.2') {
+    shadow group: 'com.envyful.api', name: 'commons', version: '5.5.6'
+    shadow (group: 'com.envyful.api', name: 'forge20', version: '5.5.6') {
         transitive = false;
     }
-    shadow (group: 'com.envyful.api', name: 'reforged20', version: '5.5.2') {
+    shadow (group: 'com.envyful.api', name: 'reforged20', version: '5.5.6') {
         transitive = false;
     }
 
@@ -54,11 +54,11 @@ shadowJar {
     relocate('com.sun.el', 'com.envyful.gts.forge.shade.sun.el')
     relocate('org.reactivestreams', 'com.envyful.gts.forge.shade.reactivestreams')
     relocate('reactor', 'com.envyful.gts.forge.shade.reactor')
+    relocate('com.mysql', 'com.envyful.gts.forge.shade.mysql')
 
     exclude "com/google/**"
     exclude "javax/**"
     exclude "**/module-info.class"
-    exclude "**/*.properties"
     exclude "**/*.xml"
     exclude "META-INF/versions/9/**"
     exclude "META-INF/native-image/**"
