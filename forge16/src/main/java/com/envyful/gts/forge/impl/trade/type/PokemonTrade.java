@@ -12,6 +12,7 @@ import com.envyful.api.gui.item.Displayable;
 import com.envyful.api.gui.pane.Pane;
 import com.envyful.api.player.EnvyPlayer;
 import com.envyful.api.reforged.pixelmon.sprite.UtilSprite;
+import com.envyful.api.text.Placeholder;
 import com.envyful.api.time.UtilTimeFormat;
 import com.envyful.gts.api.Trade;
 import com.envyful.gts.api.TradeData;
@@ -20,6 +21,7 @@ import com.envyful.gts.api.discord.DiscordEvent;
 import com.envyful.gts.api.gui.SortType;
 import com.envyful.gts.api.sql.EnvyGTSQueries;
 import com.envyful.gts.forge.EnvyGTSForge;
+import com.envyful.gts.forge.event.PlaceholderCollectEvent;
 import com.envyful.gts.forge.event.TradeCollectEvent;
 import com.envyful.gts.forge.event.TradeRemoveEvent;
 import com.envyful.gts.forge.impl.trade.ForgeTrade;
@@ -116,10 +118,14 @@ public class PokemonTrade extends ForgeTrade {
 
     @Override
     public Displayable display() {
+        var placeholderEvent = new PlaceholderCollectEvent(this);
+
+        MinecraftForge.EVENT_BUS.post(placeholderEvent);
+
         return GuiFactory.displayableBuilder(ItemStack.class)
                 .singleClick()
                 .itemStack(new ItemBuilder(UtilSprite.getPokemonElement(pokemon,
-                        EnvyGTSForge.getGui().getSearchUIConfig().getSpriteConfig()))
+                        EnvyGTSForge.getGui().getSearchUIConfig().getSpriteConfig(),placeholderEvent.getPlaceholders().toArray(new Placeholder[0])))
                         .addLore(this.formatLore(EnvyGTSForge.getLocale().getListingBelowDataLore()))
                         .build())
                 .asyncClick(false)
