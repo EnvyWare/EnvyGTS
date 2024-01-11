@@ -3,6 +3,8 @@ plugins {
     id("com.github.johnrengelman.shadow") version "8.1.1"
 }
 
+java.toolchain.languageVersion = JavaLanguageVersion.of(11)
+
 forgeVersion = "1.16.5"
 
 minecraft {
@@ -42,11 +44,11 @@ dependencies {
 
     shadow group: 'org.spongepowered', name: 'configurate-yaml', version: '4.0.0'
 
-    shadow group: 'com.envyful.api', name: 'commons', version: '5.0.0'
-    shadow (group: 'com.envyful.api', name: 'forge16', version: '5.0.0') {
+    shadow group: 'com.envyful.api', name: 'commons', version: '5.7.8'
+    shadow (group: 'com.envyful.api', name: 'forge16', version: '5.7.8') {
         transitive = false;
     }
-    shadow (group: 'com.envyful.api', name: 'reforged16', version: '5.0.0') {
+    shadow (group: 'com.envyful.api', name: 'reforged16', version: '5.7.8') {
         transitive = false;
     }
 
