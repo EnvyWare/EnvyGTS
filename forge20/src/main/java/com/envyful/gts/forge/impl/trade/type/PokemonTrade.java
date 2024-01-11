@@ -141,7 +141,7 @@ public class PokemonTrade extends ForgeTrade {
                         this.removed = true;
                         MinecraftForge.EVENT_BUS.post(new TradeRemoveEvent(this));
 
-                        GTSAttribute attribute = envyPlayer.getAttribute(GTSAttribute.class);
+                        GTSAttribute attribute = envyPlayer.getAttributeNow(GTSAttribute.class);
                         attribute.getOwnedTrades().remove(this);
 
                         this.collect(envyPlayer, null);
@@ -205,7 +205,7 @@ public class PokemonTrade extends ForgeTrade {
                 .asyncClick(false)
                 .singleClick()
                 .clickHandler((envyPlayer, clickType) -> {
-                    GTSAttribute attribute = envyPlayer.getAttribute(GTSAttribute.class);
+                    GTSAttribute attribute = envyPlayer.getAttributeNow(GTSAttribute.class);
                     attribute.getOwnedTrades().remove(this);
                     this.collect(envyPlayer, returnGui);
                 })

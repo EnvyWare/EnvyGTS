@@ -21,7 +21,7 @@ public class EditDurationUI {
 
     public static void openUI(ForgeEnvyPlayer player, int page, int position, boolean error) {
         player.getParent().closeContainer();
-        GTSAttribute attribute = player.getAttribute(GTSAttribute.class);
+        GTSAttribute attribute = player.getAttributeNow(GTSAttribute.class);
         Pokemon pokemon = SelectPriceUI.getPokemon(player, page, position);
 
         UtilForgeConcurrency.runLater(() -> DialogueInputRegistry.builder()

@@ -156,7 +156,7 @@ public abstract class ForgeTrade implements Trade {
             return;
         }
 
-        GTSAttribute sellerAttribute = seller.getAttribute(GTSAttribute.class);
+        GTSAttribute sellerAttribute = seller.getAttributeNow(GTSAttribute.class);
         sellerAttribute.getOwnedTrades().remove(this);
     }
 

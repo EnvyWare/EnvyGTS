@@ -76,7 +76,7 @@ public class ItemTrade extends ForgeTrade {
                 returnGui.accept(player);
             }
 
-            GTSAttribute attribute = player.getAttribute(EnvyGTSForge.class);
+            GTSAttribute attribute = player.getAttributeNow(GTSAttribute.class);
             attribute.getOwnedTrades().add(this);
 
             return CompletableFuture.completedFuture(null);
@@ -137,7 +137,7 @@ public class ItemTrade extends ForgeTrade {
                         this.removed = true;
                         MinecraftForge.EVENT_BUS.post(new TradeRemoveEvent(this));
 
-                        GTSAttribute attribute = envyPlayer.getAttribute(EnvyGTSForge.class);
+                        GTSAttribute attribute = envyPlayer.getAttributeNow(GTSAttribute.class);
                         attribute.getOwnedTrades().remove(this);
 
                         this.collect(envyPlayer, null);
@@ -172,11 +172,11 @@ public class ItemTrade extends ForgeTrade {
                 }).build();
     }
 
-    private String[] formatLore(List<String> lore) {
-        List<String> newLore = Lists.newArrayList();
+    private ITextComponent[] formatLore(List<String> lore) {
+        List<ITextComponent> newLore = Lists.newArrayList();
 
         for (String s : lore) {
-            newLore.add(UtilChatColour.translateColourCodes('&', s
+            newLore.add(UtilChatColour.colour(s
                     .replace("%cost%",
                              String.format(EnvyGTSForge.getLocale().getMoneyFormat(), this.cost))
                     .replace("%duration%", UtilTimeFormat.getFormattedDuration((this.expiry - System.currentTimeMillis())))
@@ -185,7 +185,7 @@ public class ItemTrade extends ForgeTrade {
                     .replace("%original_owner%", this.originalOwnerName)));
         }
 
-        return newLore.toArray(new String[0]);
+        return newLore.toArray(new ITextComponent[0]);
     }
 
     @Override
@@ -199,7 +199,7 @@ public class ItemTrade extends ForgeTrade {
                                    .build())
                 .singleClick()
                 .clickHandler((envyPlayer, clickType) -> UtilForgeConcurrency.runSync(() -> {
-                    GTSAttribute attribute = envyPlayer.getAttribute(EnvyGTSForge.class);
+                    GTSAttribute attribute = envyPlayer.getAttributeNow(GTSAttribute.class);
                     attribute.getOwnedTrades().remove(this);
                     this.collect(envyPlayer, returnGui);
                 }))

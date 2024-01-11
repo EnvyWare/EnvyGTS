@@ -3,6 +3,7 @@ plugins {
     id("com.github.johnrengelman.shadow") version "8.1.1"
 }
 
+
 forgeVersion = "1.20.2"
 
 minecraft {
@@ -23,11 +24,11 @@ dependencies {
 
     shadow group: 'org.spongepowered', name: 'configurate-yaml', version: '4.2.0-COMMENTS'
 
-    shadow group: 'com.envyful.api', name: 'commons', version: '5.5.6'
-    shadow (group: 'com.envyful.api', name: 'forge20', version: '5.5.6') {
+    shadow group: 'com.envyful.api', name: 'commons', version: '5.7.8'
+    shadow (group: 'com.envyful.api', name: 'forge20', version: '5.7.8') {
         transitive = false;
     }
-    shadow (group: 'com.envyful.api', name: 'reforged20', version: '5.5.6') {
+    shadow (group: 'com.envyful.api', name: 'reforged20', version: '5.7.8') {
         transitive = false;
     }
 

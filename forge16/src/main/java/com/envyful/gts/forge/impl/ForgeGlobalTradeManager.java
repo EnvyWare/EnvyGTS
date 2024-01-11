@@ -21,7 +21,7 @@ public abstract class ForgeGlobalTradeManager implements GlobalTradeManager {
 
     @Override
     public boolean addTrade(EnvyPlayer<?> player, Trade trade) {
-        GTSAttribute attribute = player.getAttribute(EnvyGTSForge.class);
+        GTSAttribute attribute = player.getAttributeNow(GTSAttribute.class);
 
         if (attribute == null) {
             return false;
@@ -51,7 +51,7 @@ public abstract class ForgeGlobalTradeManager implements GlobalTradeManager {
 
     @Override
     public List<Trade> getUserTrades(EnvyPlayer<?> player) {
-        GTSAttribute attribute = player.getAttribute(EnvyGTSForge.class);
+        GTSAttribute attribute = player.getAttributeNow(GTSAttribute.class);
 
         if (attribute == null) {
             return Collections.emptyList();
@@ -62,7 +62,7 @@ public abstract class ForgeGlobalTradeManager implements GlobalTradeManager {
 
     @Override
     public List<Trade> getExpiredTrades(EnvyPlayer<?> player) {
-        GTSAttribute attribute = player.getAttribute(EnvyGTSForge.class);
+        GTSAttribute attribute = player.getAttributeNow(GTSAttribute.class);
 
         if (attribute == null) {
             return Collections.emptyList();
@@ -81,7 +81,7 @@ public abstract class ForgeGlobalTradeManager implements GlobalTradeManager {
 
     @Override
     public List<Trade> getPurchasedTrades(EnvyPlayer<?> player) {
-        GTSAttribute attribute = player.getAttribute(EnvyGTSForge.class);
+        GTSAttribute attribute = player.getAttributeNow(GTSAttribute.class);
 
         if (attribute == null) {
             return Collections.emptyList();

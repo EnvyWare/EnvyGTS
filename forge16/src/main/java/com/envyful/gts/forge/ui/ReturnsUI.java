@@ -18,7 +18,7 @@ public class ReturnsUI {
 
     public static void openUI(ForgeEnvyPlayer player) {
         GuiConfig.Returns config = EnvyGTSForge.getGui().getReturnsGui();
-        GTSAttribute attribute = player.getAttribute(EnvyGTSForge.class);
+        GTSAttribute attribute = player.getAttributeNow(GTSAttribute.class);
 
         Pane pane = GuiFactory.paneBuilder()
                 .topLeftX(0)

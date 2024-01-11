@@ -44,7 +44,7 @@ public class SellCommand {
         }
 
         ForgeEnvyPlayer sender = EnvyGTSForge.getPlayerManager().getPlayer(player);
-        GTSAttribute attribute = sender.getAttribute(GTSAttribute.class);
+        GTSAttribute attribute = sender.getAttributeNow(GTSAttribute.class);
         ItemStack inHand = player.getItemInHand(InteractionHand.MAIN_HAND);
 
         if (args.length == 0) {

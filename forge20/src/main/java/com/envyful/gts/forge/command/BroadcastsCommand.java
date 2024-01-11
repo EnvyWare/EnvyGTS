@@ -22,7 +22,7 @@ public class BroadcastsCommand {
     @CommandProcessor
     public void onCommand(@Sender ServerPlayer player, String[] args) {
         ForgeEnvyPlayer sender = EnvyGTSForge.getPlayerManager().getPlayer(player);
-        GTSAttribute attribute = sender.getAttribute(GTSAttribute.class);
+        GTSAttribute attribute = sender.getAttributeNow(GTSAttribute.class);
 
         if (attribute == null) {
             return;

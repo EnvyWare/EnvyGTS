@@ -42,6 +42,7 @@ import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.JsonToNBT;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.common.MinecraftForge;
 
 import java.sql.Connection;
@@ -140,7 +141,7 @@ public class PokemonTrade extends ForgeTrade {
                         this.removed = true;
                         MinecraftForge.EVENT_BUS.post(new TradeRemoveEvent(this));
 
-                        GTSAttribute attribute = envyPlayer.getAttribute(EnvyGTSForge.class);
+                        GTSAttribute attribute = envyPlayer.getAttributeNow(GTSAttribute.class);
                         attribute.getOwnedTrades().remove(this);
 
                         this.collect(envyPlayer, null);
@@ -175,11 +176,11 @@ public class PokemonTrade extends ForgeTrade {
                 }).build();
     }
 
-    private String[] formatLore(List<String> lore) {
-        List<String> newLore = Lists.newArrayList();
+    private ITextComponent[] formatLore(List<String> lore) {
+        List<ITextComponent> newLore = Lists.newArrayList();
 
         for (String s : lore) {
-            newLore.add(UtilChatColour.translateColourCodes('&', s
+            newLore.add(UtilChatColour.colour(s
                     .replace("%cost%",
                              String.format(EnvyGTSForge.getLocale().getMoneyFormat(), this.cost))
                     .replace("%duration%", UtilTimeFormat.getFormattedDuration((this.expiry - System.currentTimeMillis())))
@@ -188,7 +189,7 @@ public class PokemonTrade extends ForgeTrade {
                     .replace("%original_owner%", this.originalOwnerName)));
         }
 
-        return newLore.toArray(new String[0]);
+        return newLore.toArray(new ITextComponent[0]);
     }
 
     @Override
@@ -204,7 +205,7 @@ public class PokemonTrade extends ForgeTrade {
                 .asyncClick(false)
                 .singleClick()
                 .clickHandler((envyPlayer, clickType) -> {
-                    GTSAttribute attribute = envyPlayer.getAttribute(EnvyGTSForge.class);
+                    GTSAttribute attribute = envyPlayer.getAttributeNow(GTSAttribute.class);
                     attribute.getOwnedTrades().remove(this);
                     this.collect(envyPlayer, returnGui);
                 })

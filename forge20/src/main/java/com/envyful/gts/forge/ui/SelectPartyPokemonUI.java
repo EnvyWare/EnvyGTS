@@ -27,7 +27,7 @@ public class SelectPartyPokemonUI {
 
     public static void openUI(ForgeEnvyPlayer player) {
         GuiConfig.PartyPokemonConfig config = EnvyGTSForge.getGui().getPartyPokemonUIConfig();
-        GTSAttribute playerAttribute = player.getAttribute(GTSAttribute.class);
+        GTSAttribute playerAttribute = player.getAttributeNow(GTSAttribute.class);
 
         if (playerAttribute.getSelectedSlot() > 6) {
             playerAttribute.setSelectedSlot(-1);
@@ -54,7 +54,7 @@ public class SelectPartyPokemonUI {
         UtilConfigItem.builder()
                 .asyncClick(false)
                 .clickHandler((envyPlayer, clickType) -> {
-                    GTSAttribute attribute = envyPlayer.getAttribute(GTSAttribute.class);
+                    GTSAttribute attribute = envyPlayer.getAttributeNow(GTSAttribute.class);
 
                     List<Trade> trades = Lists.newArrayList(attribute.getOwnedTrades());
 
@@ -115,7 +115,7 @@ public class SelectPartyPokemonUI {
                         EnvyGTSForge.getGui().getPartyPokemonUIConfig().getSpriteConfig()
                 ));
 
-                GTSAttribute gtsAttribute = player.getAttribute(GTSAttribute.class);
+                GTSAttribute gtsAttribute = player.getAttributeNow(GTSAttribute.class);
 
                 if (gtsAttribute.getSelectedSlot() == slot) {
                     builder

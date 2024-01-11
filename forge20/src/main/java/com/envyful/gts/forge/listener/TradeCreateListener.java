@@ -26,7 +26,7 @@ public class TradeCreateListener extends LazyListener {
 
         UtilConcurrency.runAsync(() -> {
             for (ForgeEnvyPlayer onlinePlayer : EnvyGTSForge.getPlayerManager().getOnlinePlayers()) {
-                GTSAttribute attribute = onlinePlayer.getAttribute(GTSAttribute.class);
+                GTSAttribute attribute = onlinePlayer.getAttributeNow(GTSAttribute.class);
 
                 if (attribute == null || !attribute.getSettings().isToggledBroadcasts()) {
                     continue;

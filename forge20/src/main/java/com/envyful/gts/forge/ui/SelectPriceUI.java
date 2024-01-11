@@ -18,7 +18,7 @@ public class SelectPriceUI {
 
     public static void openUI(ForgeEnvyPlayer player, int page, int slot, boolean error) {
         player.getParent().closeContainer();
-        GTSAttribute attribute = player.getAttribute(GTSAttribute.class);
+        GTSAttribute attribute = player.getAttributeNow(GTSAttribute.class);
         Pokemon pokemon = getPokemon(player, page, slot);
 
         if (pokemon == null) {
