@@ -46,7 +46,6 @@ shadowJar {
     relocate('org.slf4j', 'com.envyful.gts.forge.shade.slf4j')
     relocate('com.envyful.api', 'com.envyful.gts.forge.shade.envy.api')
     relocate('org.bstats', 'com.envyful.gts.forge.shade.bstats')
-    relocate('org.apache.logging', 'com.envyful.gts.forge.shade.log4j')
     relocate('io.netty', 'com.envyful.gts.forge.shade.netty')
     relocate('io.lettuce', 'com.envyful.gts.forge.shade.lettuce')
     relocate('com.cronutils', 'com.envyful.gts.forge.shade.cronutils')
