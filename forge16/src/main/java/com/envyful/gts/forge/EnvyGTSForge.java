@@ -1,14 +1,18 @@
 package com.envyful.gts.forge;
 
 import com.envyful.api.concurrency.UtilConcurrency;
+import com.envyful.api.concurrency.UtilLogger;
 import com.envyful.api.config.yaml.YamlConfigFactory;
 import com.envyful.api.database.Database;
 import com.envyful.api.database.impl.SimpleHikariDatabase;
+import com.envyful.api.database.sql.UtilSql;
 import com.envyful.api.forge.command.ForgeCommandFactory;
 import com.envyful.api.forge.command.parser.ForgeAnnotationCommandParser;
 import com.envyful.api.forge.gui.factory.ForgeGuiFactory;
+import com.envyful.api.forge.platform.ForgePlatformHandler;
 import com.envyful.api.forge.player.ForgePlayerManager;
 import com.envyful.api.gui.factory.GuiFactory;
+import com.envyful.api.platform.PlatformProxy;
 import com.envyful.gts.api.GlobalTradeManager;
 import com.envyful.gts.api.TradeManager;
 import com.envyful.gts.api.discord.DiscordEventManager;
@@ -31,16 +35,17 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.server.FMLServerAboutToStartEvent;
 import net.minecraftforge.fml.event.server.FMLServerStartedEvent;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
 
 @Mod("envygts")
 public class EnvyGTSForge {
 
     public static final String VERSION = "4.4.1";
+
+    private static Logger LOGGER = LogManager.getLogger("EnvyGTS");
 
     private static EnvyGTSForge instance;
 
@@ -55,14 +60,16 @@ public class EnvyGTSForge {
     private GlobalTradeManager tradeManager;
 
     public EnvyGTSForge() {
+        UtilLogger.setLogger(LOGGER);
+        GuiFactory.setPlatformFactory(new ForgeGuiFactory());
+        PlatformProxy.setHandler(ForgePlatformHandler.getInstance());
+
         MinecraftForge.EVENT_BUS.register(this);
         instance = this;
     }
 
     @SubscribeEvent
     public void onServerStarting(FMLServerAboutToStartEvent event) {
-        GuiFactory.setPlatformFactory(new ForgeGuiFactory());
-
         FilterTypeFactory.init();
         FilterTypeFactory.register(new ForgeAllFilterType());
         FilterTypeFactory.register(new ForgeInstantBuyFilterType());
@@ -74,10 +81,8 @@ public class EnvyGTSForge {
 
         this.loadConfig();
 
-        UtilConcurrency.runAsync(() -> {
-            this.database = new SimpleHikariDatabase(this.config.getDatabaseDetails());
-            this.createTables();
-        });
+        this.database = new SimpleHikariDatabase(this.config.getDatabaseDetails());
+        this.createTables();
     }
 
     @SubscribeEvent
@@ -99,7 +104,7 @@ public class EnvyGTSForge {
             this.gui = YamlConfigFactory.getInstance(GuiConfig.class);
             this.locale = YamlConfigFactory.getInstance(LocaleConfig.class);
         } catch (IOException e) {
-            e.printStackTrace();
+            LOGGER.error("Error while loading configs", e);
         }
 
         if (this.config.isEnableWebHooks()) {
@@ -108,15 +113,13 @@ public class EnvyGTSForge {
     }
 
     private void createTables() {
-        try (Connection connection = this.database.getConnection();
-             PreparedStatement preparedStatement =
-                     connection.prepareStatement(EnvyGTSQueries.CREATE_MAIN_TABLE);
-             PreparedStatement settingsStatement = connection.prepareStatement(EnvyGTSQueries.CREATE_SETTINGS_TABLE)) {
-            preparedStatement.executeUpdate();
-            settingsStatement.executeUpdate();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+        UtilSql.update(this.database)
+                .query(EnvyGTSQueries.CREATE_MAIN_TABLE)
+                .executeAsync();
+
+        UtilSql.update(this.database)
+                .query(EnvyGTSQueries.CREATE_SETTINGS_TABLE)
+                .executeAsync();
     }
 
     @SubscribeEvent
