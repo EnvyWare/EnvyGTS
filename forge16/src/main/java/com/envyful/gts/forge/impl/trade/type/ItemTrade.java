@@ -19,6 +19,7 @@ import com.envyful.gts.api.discord.DiscordEvent;
 import com.envyful.gts.api.gui.SortType;
 import com.envyful.gts.api.sql.EnvyGTSQueries;
 import com.envyful.gts.forge.EnvyGTSForge;
+import com.envyful.gts.forge.config.EnvyGTSConfig;
 import com.envyful.gts.forge.event.TradeCollectEvent;
 import com.envyful.gts.forge.event.TradeRemoveEvent;
 import com.envyful.gts.forge.impl.trade.ForgeTrade;
@@ -256,6 +257,10 @@ public class ItemTrade extends ForgeTrade {
 
     @Override
     public String replace(String name) {
+        for (EnvyGTSConfig.WebhookTextReplacement replacement : EnvyGTSForge.getConfig().getReplacements()) {
+            name = replacement.replace(name);
+        }
+
         return name
                 .replace("%item_url%", EnvyGTSForge.getConfig().getItemUrl(this.item))
                 .replace("%item_id%", this.capitalizeAfterUnderscoreAndStart(item.getItem().getRegistryName().getPath()))

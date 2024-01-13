@@ -154,4 +154,8 @@ public class EnvyGTSForge {
     public static GuiConfig getGui() {
         return instance.gui;
     }
+
+    public static Logger getLogger() {
+        return LOGGER;
+    }
 }

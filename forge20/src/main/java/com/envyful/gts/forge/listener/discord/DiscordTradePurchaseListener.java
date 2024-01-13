@@ -5,6 +5,7 @@ import com.envyful.api.discord.DiscordWebHook;
 import com.envyful.api.forge.listener.LazyListener;
 import com.envyful.gts.api.discord.DiscordEvent;
 import com.envyful.gts.api.discord.DiscordEventManager;
+import com.envyful.gts.forge.EnvyGTSForge;
 import com.envyful.gts.forge.event.PostTradePurchaseEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
@@ -32,7 +33,7 @@ public class DiscordTradePurchaseListener extends LazyListener {
                     webHook.execute();
                 }
             } catch (IOException e) {
-                e.printStackTrace();
+                EnvyGTSForge.getLogger().error("Failed to send trade purchase webhook", e);
             }
         });
     }

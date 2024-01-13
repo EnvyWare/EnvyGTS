@@ -72,6 +72,10 @@ public class EnvyGTSConfig extends AbstractYamlConfig {
             "pixelmon:gracedia", "https://google.com"
     );
 
+    private Map<String, WebhookTextReplacement> webhookTextReplacement = Map.of(
+            "one", new WebhookTextReplacement("WOW!", "Wow this has been replaced")
+    );
+
     public EnvyGTSConfig() {
         super();
     }
@@ -270,5 +274,28 @@ public class EnvyGTSConfig extends AbstractYamlConfig {
 
     public String getNoUrl() {
         return this.noURL;
+    }
+
+    public List<WebhookTextReplacement> getReplacements() {
+        return Lists.newArrayList(this.webhookTextReplacement.values());
+    }
+
+    @ConfigSerializable
+    public static class WebhookTextReplacement {
+
+        private String pattern;
+        private String replacement;
+
+        public WebhookTextReplacement() {
+        }
+
+        public WebhookTextReplacement(String pattern, String replacement) {
+            this.pattern = pattern;
+            this.replacement = replacement;
+        }
+
+        public String replace(String text) {
+            return text.replace(this.pattern, this.replacement);
+        }
     }
 }

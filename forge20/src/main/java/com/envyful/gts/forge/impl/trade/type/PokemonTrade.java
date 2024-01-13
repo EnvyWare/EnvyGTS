@@ -21,6 +21,7 @@ import com.envyful.gts.api.discord.DiscordEvent;
 import com.envyful.gts.api.gui.SortType;
 import com.envyful.gts.api.sql.EnvyGTSQueries;
 import com.envyful.gts.forge.EnvyGTSForge;
+import com.envyful.gts.forge.config.EnvyGTSConfig;
 import com.envyful.gts.forge.event.PlaceholderCollectEvent;
 import com.envyful.gts.forge.event.TradeCollectEvent;
 import com.envyful.gts.forge.event.TradeRemoveEvent;
@@ -262,6 +263,10 @@ public class PokemonTrade extends ForgeTrade {
 
     @Override
     public String replace(String name) {
+        for (EnvyGTSConfig.WebhookTextReplacement replacement : EnvyGTSForge.getConfig().getReplacements()) {
+            name = replacement.replace(name);
+        }
+
         IVStore iVs = pokemon.getIVs();
         float ivHP = iVs.getStat(BattleStatsType.HP);
         float ivAtk = iVs.getStat(BattleStatsType.ATTACK);
