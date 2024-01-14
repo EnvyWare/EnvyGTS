@@ -8,6 +8,7 @@ import com.envyful.api.forge.gui.type.ConfirmationUI;
 import com.envyful.api.forge.items.ItemBuilder;
 import com.envyful.api.forge.items.UtilItemStack;
 import com.envyful.api.forge.player.ForgeEnvyPlayer;
+import com.envyful.api.forge.player.util.UtilPlayer;
 import com.envyful.api.gui.factory.GuiFactory;
 import com.envyful.api.gui.item.Displayable;
 import com.envyful.api.gui.pane.Pane;
@@ -129,6 +130,14 @@ public class ItemTrade extends ForgeTrade {
                 .clickHandler((envyPlayer, clickType) -> {
                     if (this.removed) {
                         ((ForgeEnvyPlayer) envyPlayer).getParent().closeContainer();
+                        return;
+                    }
+
+                    if (UtilPlayer.hasPermission((ServerPlayer) envyPlayer.getParent(), "envygts.admin") && Objects.equals(
+                            clickType,
+                            EnvyGTSForge.getConfig().getOwnerRemoveButton()
+                    )) {
+                        this.adminRemove(envyPlayer);
                         return;
                     }
 
