@@ -1,5 +1,6 @@
 package com.envyful.gts.forge.ui;
 
+import com.envyful.api.concurrency.UtilConcurrency;
 import com.envyful.api.forge.chat.UtilChatColour;
 import com.envyful.api.forge.concurrency.UtilForgeConcurrency;
 import com.envyful.api.forge.player.ForgeEnvyPlayer;
@@ -47,43 +48,45 @@ public class EditDurationUI {
                     }
                 })
                 .submitHandler(submitted -> {
-                    long inputtedValue = UtilTime.attemptParseTime(submitted.getInput()).orElse(-1L);
+                    UtilConcurrency.runAsync(() -> {
+                        long inputtedValue = UtilTime.attemptParseTime(submitted.getInput()).orElse(-1L);
 
-                    if (inputtedValue < TimeUnit.SECONDS.toMillis(EnvyGTSForge.getConfig().getMinTradeDuration()) || inputtedValue < 0) {
-                        openUI(player, page, position, true);
-                        return;
-                    }
+                        if (inputtedValue < TimeUnit.SECONDS.toMillis(EnvyGTSForge.getConfig().getMinTradeDuration()) || inputtedValue < 0) {
+                            openUI(player, page, position, true);
+                            return;
+                        }
 
-                    if (inputtedValue > TimeUnit.SECONDS.toMillis(EnvyGTSForge.getConfig().getMaxTradeDurationSeconds())) {
-                        openUI(player, page, position, true);
-                        return;
-                    }
+                        if (inputtedValue > TimeUnit.SECONDS.toMillis(EnvyGTSForge.getConfig().getMaxTradeDurationSeconds())) {
+                            openUI(player, page, position, true);
+                            return;
+                        }
 
-                    Pokemon pixelmon;
+                        Pokemon pixelmon;
 
-                    if (page == -1) {
-                        PlayerPartyStorage party = StorageProxy.getParty(player.getParent());
-                        pixelmon = party.get(position);
-                        party.set(position, null);
-                    } else {
-                        PCBox box = StorageProxy.getPCForPlayer(player.getParent()).getBox(page);
-                        pixelmon = box.get(position);
-                        box.set(position, null);
-                    }
+                        if (page == -1) {
+                            PlayerPartyStorage party = StorageProxy.getParty(player.getParent());
+                            pixelmon = party.get(position);
+                            party.set(position, null);
+                        } else {
+                            PCBox box = StorageProxy.getPCForPlayer(player.getParent()).getBox(page);
+                            pixelmon = box.get(position);
+                            box.set(position, null);
+                        }
 
-                    EnvyGTSForge.getTradeManager()
-                            .addTrade(player, ((PokemonTrade.Builder) ForgeTrade.builder()
-                                    .cost(attribute.getCurrentPrice())
-                                    .expiry(System.currentTimeMillis() + inputtedValue)
-                                    .owner(player)
-                                    .originalOwnerName(player.getName())
-                                    .content("p"))
-                                    .contents(pixelmon)
-                                    .build());
-                    attribute.setCurrentDuration(0);
-                    attribute.setCurrentMinPrice(0);
-                    attribute.setCurrentPrice(0);
-                    attribute.setSelectedSlot(-1);
+                        EnvyGTSForge.getTradeManager()
+                                .addTrade(player, ((PokemonTrade.Builder) ForgeTrade.builder()
+                                        .cost(attribute.getCurrentPrice())
+                                        .expiry(System.currentTimeMillis() + inputtedValue)
+                                        .owner(player)
+                                        .originalOwnerName(player.getName())
+                                        .content("p"))
+                                        .contents(pixelmon)
+                                        .build());
+                        attribute.setCurrentDuration(0);
+                        attribute.setCurrentMinPrice(0);
+                        attribute.setCurrentPrice(0);
+                        attribute.setSelectedSlot(-1);
+                    });
                 })
                 .open(player.getParent()), 5);
     }
