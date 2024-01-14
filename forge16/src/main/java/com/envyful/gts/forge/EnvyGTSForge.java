@@ -43,7 +43,7 @@ import java.io.IOException;
 @Mod("envygts")
 public class EnvyGTSForge {
 
-    public static final String VERSION = "4.5.0";
+    public static final String VERSION = "4.5.1";
 
     private static Logger LOGGER = LogManager.getLogger("EnvyGTS");
 
