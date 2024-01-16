@@ -110,6 +110,8 @@ public class EnvyGTSForge {
 
         if (this.config.isEnableWebHooks()) {
             DiscordEventManager.init();
+        } else {
+            LOGGER.info("Skipping WebHook setup as it is disabled in the config");
         }
     }
 
