@@ -60,7 +60,7 @@ shadowJar {
     setArchiveClassifier('')
     setArchiveBaseName("${rootProject.name}-Forge")
 
-    relocate('com.google', 'com.envyful.gts.forge.shade.google')
+    relocate('com.google.gson', 'com.envyful.gts.forge.shade.google.gson')
     relocate('org.spongepowered.configurate', 'com.envyful.gts.forge.shade.configurate')
     relocate('org.yaml.snakeyaml', 'com.envyful.gts.forge.shade.snakeyaml')
     relocate('io.leangen.geantyref', 'com.envyful.gts.forge.shade.geantyref')
