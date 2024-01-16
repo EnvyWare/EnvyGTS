@@ -31,6 +31,8 @@ public class DiscordTradePurchaseListener extends LazyListener {
 
                 if (webHook != null) {
                     webHook.execute();
+                } else {
+                    EnvyGTSForge.getLogger().warn("Failed to purchase webhook for trade: {}", event.getTrade().getDisplayName());
                 }
             } catch (IOException e) {
                 EnvyGTSForge.getLogger().error("Failed to send trade purchase webhook", e);

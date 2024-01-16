@@ -19,7 +19,9 @@ repositories {
 dependencies {
     shadow group: 'org.spongepowered', name: 'configurate-yaml', version: '4.0.0'
 
-    shadow group: 'com.envyful.api', name: 'commons', version: '5.5.1'
+    shadow group: 'com.envyful.api', name: 'commons', version: '5.8.2'
+
+    compileOnly 'org.apache.logging.log4j:log4j-core:2.22.1'
 }
 
 shadowJar {

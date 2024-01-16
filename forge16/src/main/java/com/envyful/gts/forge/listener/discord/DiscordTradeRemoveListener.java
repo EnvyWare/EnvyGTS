@@ -31,6 +31,8 @@ public class DiscordTradeRemoveListener extends LazyListener {
 
                 if (webHook != null) {
                     webHook.execute();
+                } else {
+                    EnvyGTSForge.getLogger().warn("Failed to remove webhook for trade: {}", event.getTrade().getDisplayName());
                 }
             } catch (IOException e) {
                 EnvyGTSForge.getLogger().error("Failed to send trade remove webhook", e);

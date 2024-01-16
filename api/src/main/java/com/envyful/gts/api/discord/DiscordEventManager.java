@@ -1,5 +1,7 @@
 package com.envyful.gts.api.discord;
 
+import com.envyful.api.concurrency.UtilLogger;
+
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -17,7 +19,7 @@ public class DiscordEventManager {
             purchaseHandler = loadHandler("config/EnvyGTS/webhooks/purchaser");
             removeHandler = loadHandler("config/EnvyGTS/webhooks/remover");
         } catch (IOException e) {
-            e.printStackTrace();
+            UtilLogger.logger().ifPresent(logger -> logger.error("Failed to load discord handlers", e));
         }
     }
 
@@ -28,15 +30,19 @@ public class DiscordEventManager {
         String itemJSON = "";
 
         if (!pokemonFile.exists() && !itemFile.exists()) {
+            UtilLogger.logger().ifPresent(logger -> logger.error("Neither the pokemon or item webhook exists for {}", filePath));
             return new DiscordEvent();
         }
 
         if (pokemonFile.exists()) {
             pokemonJSON = String.join(System.lineSeparator(), Files.readAllLines(pokemonFile.toPath(), StandardCharsets.UTF_8));
+            UtilLogger.logger().ifPresent(logger -> logger.error("The pokemon webhook does not exist for {}", filePath));
         }
 
         if (itemFile.exists()) {
             itemJSON = String.join(System.lineSeparator(), Files.readAllLines(itemFile.toPath(), StandardCharsets.UTF_8));
+        } else {
+            UtilLogger.logger().ifPresent(logger -> logger.error("The item webhook does not exist for {}", filePath));
         }
 
         return new DiscordEvent(true, pokemonJSON, itemJSON);
