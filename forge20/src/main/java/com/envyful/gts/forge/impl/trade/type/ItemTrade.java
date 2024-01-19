@@ -267,11 +267,7 @@ public class ItemTrade extends ForgeTrade {
 
     @Override
     public String replace(String name) {
-        for (EnvyGTSConfig.WebhookTextReplacement replacement : EnvyGTSForge.getConfig().getReplacements()) {
-            name = replacement.replace(name);
-        }
-
-        return name
+        name = name
                 .replace("%item_url%", EnvyGTSForge.getConfig().getItemUrl(this.item))
                 .replace("%item_id%", this.capitalizeAfterUnderscoreAndStart(ForgeRegistries.ITEMS.getKey(item.getItem()).getPath()))
                 .replace("%lore%", UtilItemStack.getRealLore(item.copy()).stream().map(Component::getString).collect(Collectors.joining("\n")))
@@ -284,8 +280,13 @@ public class ItemTrade extends ForgeTrade {
                 .replace("%price%", String.valueOf(this.cost))
                 .replace("%item%", this.item.getHoverName().getString())
                 .replace("%amount%", String.valueOf(this.item.getCount()));
-    }
 
+        for (EnvyGTSConfig.WebhookTextReplacement replacement : EnvyGTSForge.getConfig().getReplacements()) {
+            name = replacement.replace(name);
+        }
+
+        return name;
+    }
     private String handleEnchantmentText(ItemStack itemStack) {
         Map<Enchantment, Integer> enchantments = EnchantmentHelper.getEnchantments(itemStack);
 

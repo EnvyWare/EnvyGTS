@@ -272,10 +272,6 @@ public class PokemonTrade extends ForgeTrade {
 
     @Override
     public String replace(String name) {
-        for (EnvyGTSConfig.WebhookTextReplacement replacement : EnvyGTSForge.getConfig().getReplacements()) {
-            name = replacement.replace(name);
-        }
-
         IVStore iVs = pokemon.getIVs();
         float ivHP = iVs.getStat(BattleStatsType.HP);
         float ivAtk = iVs.getStat(BattleStatsType.ATTACK);
@@ -292,7 +288,7 @@ public class PokemonTrade extends ForgeTrade {
         float evSDef = pokemon.getEVs().getStat(BattleStatsType.SPECIAL_DEFENSE);
         ExtraStats extraStats = pokemon.getExtraStats();
 
-        return name.replace("%buyer%", this.ownerName)
+        name = name.replace("%buyer%", this.ownerName)
                 .replace("%seller%", this.originalOwnerName)
                 .replace("%held_item%", pokemon.getHeldItem().getDisplayName().getString())
                 .replace("%expires_in%", UtilTimeFormat.getFormattedDuration(this.expiry - System.currentTimeMillis()))
@@ -329,6 +325,12 @@ public class PokemonTrade extends ForgeTrade {
                 .replace("%form%", pokemon.getForm().getLocalizedName())
                 .replace("%size%", pokemon.getGrowth().getLocalizedName())
                 .replace("%custom_texture%", pokemon.getPalette().getLocalizedName());
+
+        for (EnvyGTSConfig.WebhookTextReplacement replacement : EnvyGTSForge.getConfig().getReplacements()) {
+            name = replacement.replace(name);
+        }
+
+        return name;
     }
 
     @Override
