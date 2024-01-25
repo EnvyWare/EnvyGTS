@@ -133,7 +133,7 @@ public class PokemonTrade extends ForgeTrade {
                         .build())
                 .asyncClick(false)
                 .clickHandler((envyPlayer, clickType) -> {
-                    if (this.removed) {
+                    if (this.removed || this.wasPurchased()) {
                         ((ForgeEnvyPlayer) envyPlayer).getParent().closeContainer();
                         return;
                     }

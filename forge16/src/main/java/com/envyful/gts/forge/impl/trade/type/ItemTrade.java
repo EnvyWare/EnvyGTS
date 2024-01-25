@@ -127,7 +127,7 @@ public class ItemTrade extends ForgeTrade {
                 .singleClick()
                 .asyncClick(false)
                 .clickHandler((envyPlayer, clickType) -> {
-                    if (this.removed) {
+                    if (this.removed || this.wasPurchased()) {
                         ((ForgeEnvyPlayer) envyPlayer).getParent().closeContainer();
                         return;
                     }
