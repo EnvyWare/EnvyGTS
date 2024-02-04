@@ -133,7 +133,7 @@ public class PokemonTrade extends ForgeTrade {
                         .build())
                 .asyncClick(false)
                 .clickHandler((envyPlayer, clickType) -> {
-                    if (this.removed || this.wasPurchased()) {
+                    if (this.removed || this.wasPurchased() || this.hasExpired()) {
                         ((ForgeEnvyPlayer) envyPlayer).getParent().closeContainer();
                         return;
                     }
@@ -142,6 +142,7 @@ public class PokemonTrade extends ForgeTrade {
                             clickType,
                             EnvyGTSForge.getConfig().getOwnerRemoveButton()
                     )) {
+                        this.removed = true;
                         this.adminRemove(envyPlayer);
                         return;
                     }
@@ -172,8 +173,8 @@ public class PokemonTrade extends ForgeTrade {
                                     .addLore(this.formatLore(EnvyGTSForge.getLocale().getListingBelowDataLore()))
                                     .build())
                             .confirmHandler((clicker, clickType1) -> UtilForgeConcurrency.runSync(() -> {
-                                if (this.purchased) {
-                                    ViewTradesUI.openUI((ForgeEnvyPlayer) clicker);
+                                if (this.purchased || this.wasRemoved() || this.hasExpired()) {
+                                    ViewTradesUI.openUI((ForgeEnvyPlayer)clicker);
                                     return;
                                 }
 

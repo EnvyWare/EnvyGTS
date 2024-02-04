@@ -127,7 +127,7 @@ public class ItemTrade extends ForgeTrade {
                 .singleClick()
                 .asyncClick(false)
                 .clickHandler((envyPlayer, clickType) -> {
-                    if (this.removed || this.wasPurchased()) {
+                    if (this.removed || this.wasPurchased() || this.hasExpired()) {
                         ((ForgeEnvyPlayer) envyPlayer).getParent().closeContainer();
                         return;
                     }
@@ -136,6 +136,7 @@ public class ItemTrade extends ForgeTrade {
                             clickType,
                             EnvyGTSForge.getConfig().getOwnerRemoveButton()
                     )) {
+                        this.removed = true;
                         this.adminRemove(envyPlayer);
                         return;
                     }
@@ -168,7 +169,7 @@ public class ItemTrade extends ForgeTrade {
                                                      .build())
                             .confirmHandler((clicker, clickType1) ->
                                 UtilForgeConcurrency.runSync(() -> {
-                                    if (this.purchased) {
+                                    if (this.purchased || this.wasRemoved() || this.hasExpired()) {
                                         ViewTradesUI.openUI((ForgeEnvyPlayer)clicker);
                                         return;
                                     }

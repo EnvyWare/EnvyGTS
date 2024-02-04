@@ -86,7 +86,7 @@ public abstract class ForgeTrade implements Trade {
 
     @Override
     public boolean attemptPurchase(EnvyPlayer<?> player) {
-        if (this.removed || this.purchased) {
+        if (this.removed || this.purchased || this.hasExpired()) {
             return false;
         }
 
