@@ -26,8 +26,8 @@ public class GTSAttribute extends ManagedForgeAttribute<EnvyGTSForge> {
     private long currentDuration = -1;
     private PlayerSettings settings = new PlayerSettings();
 
-    public GTSAttribute(ForgePlayerManager playerManager) {
-        super(EnvyGTSForge.getInstance(), playerManager);
+    public GTSAttribute() {
+        super(EnvyGTSForge.getInstance());
     }
 
     public List<Trade> getOwnedTrades() {

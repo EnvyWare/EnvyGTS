@@ -77,7 +77,7 @@ public class EnvyGTSForge {
         FilterTypeFactory.register(new ItemFilterType());
         FilterTypeFactory.register(new PokemonFilterType());
 
-        this.playerManager.registerAttribute(GTSAttribute.class);
+        this.playerManager.registerAttribute(GTSAttribute.class, GTSAttribute::new);
 
         this.loadConfig();
 

@@ -79,7 +79,7 @@ public class SellCommand {
             return;
         }
 
-        int amount = UtilParse.parseInteger(args[0]).orElse(-1);
+        int amount = UtilParse.parseInt(args[0]).orElse(-1);
 
         if (amount <= 0) {
             sender.message(UtilChatColour.colour(
