@@ -80,7 +80,6 @@ public class ItemTrade extends ForgeTrade {
                 returnGui.accept(player);
             }
 
-            EnvyGTSForge.getLogger().info("Updating count to " + copy.getCount() + " from " + this.item.getCount() + " for " + this.item.getHoverName().getString());
             this.item.setCount(copy.getCount());
 
             GTSAttribute attribute = player.getAttributeNow(GTSAttribute.class);
