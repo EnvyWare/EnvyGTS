@@ -69,7 +69,9 @@ public class ItemTrade extends ForgeTrade {
     public CompletableFuture<Void> collect(EnvyPlayer<?> player, Consumer<EnvyPlayer<?>> returnGui) {
         ServerPlayerEntity parent = (ServerPlayerEntity) player.getParent();
 
-        if (!parent.inventory.add(this.item.copy())) {
+        var copy = this.item.copy();
+
+        if (!parent.inventory.add(copy)) {
             player.message(UtilChatColour.colour(EnvyGTSForge.getLocale().getMessages().getInventoryFull()));
 
             if (returnGui == null) {
@@ -77,6 +79,8 @@ public class ItemTrade extends ForgeTrade {
             } else {
                 returnGui.accept(player);
             }
+
+            this.item.setCount(copy.getCount());
 
             GTSAttribute attribute = player.getAttributeNow(GTSAttribute.class);
             attribute.getOwnedTrades().add(this);
