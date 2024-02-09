@@ -113,6 +113,13 @@ public class ItemTrade extends ForgeTrade {
             return;
         }
 
+        var owner = EnvyGTSForge.getPlayerManager().getPlayer(this.owner);
+
+        if (owner != null) {
+            GTSAttribute attribute = owner.getAttributeNow(GTSAttribute.class);
+            attribute.getOwnedTrades().remove(this);
+        }
+
         admin.message(UtilChatColour.colour(EnvyGTSForge.getLocale().getMessages().getAdminRemoveTrade()));
         EnvyGTSForge.getTradeManager().removeTrade(this);
         UtilConcurrency.runAsync(this::delete);
@@ -140,7 +147,7 @@ public class ItemTrade extends ForgeTrade {
                     if (UtilPlayer.hasPermission((ServerPlayer) envyPlayer.getParent(), "envygts.admin") && Objects.equals(
                             clickType,
                             EnvyGTSForge.getConfig().getOwnerRemoveButton()
-                    )) {
+                    ) && ((ServerPlayer) envyPlayer.getParent()).isCreative()) {
                         this.adminRemove(envyPlayer);
                         return;
                     }

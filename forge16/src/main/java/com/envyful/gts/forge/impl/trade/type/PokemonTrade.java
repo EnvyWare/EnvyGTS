@@ -109,6 +109,13 @@ public class PokemonTrade extends ForgeTrade {
 
         parent.closeContainer();
 
+        var owner = EnvyGTSForge.getPlayerManager().getPlayer(this.owner);
+
+        if (owner != null) {
+            GTSAttribute attribute = owner.getAttributeNow(GTSAttribute.class);
+            attribute.getOwnedTrades().remove(this);
+        }
+
         StorageProxy.getParty((ServerPlayerEntity) admin.getParent()).add(this.pokemon);
         EnvyGTSForge.getTradeManager().removeTrade(this);
         UtilConcurrency.runAsync(this::delete);
@@ -141,7 +148,7 @@ public class PokemonTrade extends ForgeTrade {
                     if (UtilPlayer.hasPermission((ServerPlayerEntity) envyPlayer.getParent(), "envygts.admin") && Objects.equals(
                             clickType,
                             EnvyGTSForge.getConfig().getOwnerRemoveButton()
-                    )) {
+                    ) && ((ServerPlayerEntity) envyPlayer.getParent()).isCreative()) {
                         this.removed = true;
                         this.adminRemove(envyPlayer);
                         return;
