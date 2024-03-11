@@ -75,7 +75,7 @@ public class SelectPCPokemonUI {
         UtilConfigItem.builder()
                 .asyncClick(false)
                 .clickHandler((envyPlayer, clickType) -> {
-                    GTSAttribute attribute = envyPlayer.getAttributeNow(GTSAttribute.class);
+                    GTSAttribute attribute = ((ForgeEnvyPlayer) envyPlayer).getAttributeNow(GTSAttribute.class);
 
                     if (attribute.getSelectedSlot() == -1) {
                         return;
@@ -133,7 +133,7 @@ public class SelectPCPokemonUI {
                                 EnvyGTSForge.getGui().getPcConfig().getSpriteConfig()
                         ))
                         .clickHandler((envyPlayer, clickType) -> {
-                            GTSAttribute attribute = envyPlayer.getAttributeNow(GTSAttribute.class);
+                            GTSAttribute attribute = ((ForgeEnvyPlayer) envyPlayer).getAttributeNow(GTSAttribute.class);
                             attribute.setSelectedSlot(slot);
                             pane.set(config.getConfirmSlot() % 9, config.getConfirmSlot() / 9,
                                     GuiFactory.displayableBuilder(ItemStack.class)

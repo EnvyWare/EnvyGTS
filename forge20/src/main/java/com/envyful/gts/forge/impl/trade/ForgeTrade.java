@@ -147,10 +147,10 @@ public abstract class ForgeTrade implements Trade {
     }
 
     private void updateOwnership(EnvyPlayer<ServerPlayer> purchaser, UUID oldOwner) {
-        this.owner = purchaser.getUuid();
+        this.owner = purchaser.getUniqueId();
         this.ownerName = purchaser.getName();
 
-        EnvyPlayer<?> seller = EnvyGTSForge.getPlayerManager().getPlayer(oldOwner);
+        var seller = EnvyGTSForge.getPlayerManager().getPlayer(oldOwner);
 
         if (seller == null) {
             return;
@@ -232,7 +232,7 @@ public abstract class ForgeTrade implements Trade {
 
         public Builder owner(EnvyPlayer<?> player) {
             this.ownerName(player.getName());
-            return this.owner(player.getUuid());
+            return this.owner(player.getUniqueId());
         }
 
         public Builder owner(UUID owner) {

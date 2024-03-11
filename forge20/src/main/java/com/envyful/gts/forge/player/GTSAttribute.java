@@ -73,14 +73,14 @@ public class GTSAttribute extends ManagedForgeAttribute<EnvyGTSForge> {
     @Override
     public void load() {
         for (Trade allTrade : EnvyGTSForge.getTradeManager().getAllTrades()) {
-            if (allTrade.isOwner(this.parent.getUuid())) {
+            if (allTrade.isOwner(this.parent.getUniqueId())) {
                 this.ownedTrades.add(allTrade);
             }
         }
 
         try (Connection connection = EnvyGTSForge.getDatabase().getConnection();
              PreparedStatement settingsStatement = connection.prepareStatement(EnvyGTSQueries.GET_PLAYER_SETTINGS)) {
-            settingsStatement.setString(1, this.parent.getUuid().toString());
+            settingsStatement.setString(1, this.parent.getUniqueId().toString());
 
             ResultSet settingsSet = settingsStatement.executeQuery();
 
@@ -116,8 +116,8 @@ public class GTSAttribute extends ManagedForgeAttribute<EnvyGTSForge> {
              PreparedStatement preparedStatement = connection.prepareStatement(EnvyGTSQueries.UPDATE_PLAYER_NAME);
              PreparedStatement settingsStatement = connection.prepareStatement(EnvyGTSQueries.UPDATE_OR_CREATE_SETTINGS)) {
             preparedStatement.setString(1, this.parent.getParent().getName().getString());
-            preparedStatement.setString(2, this.parent.getUuid().toString());
-            settingsStatement.setString(1, this.parent.getUuid().toString());
+            preparedStatement.setString(2, this.parent.getUniqueId().toString());
+            settingsStatement.setString(1, this.parent.getUniqueId().toString());
             settingsStatement.setString(2, UtilGson.GSON.toJson(this.settings));
 
             preparedStatement.executeUpdate();
