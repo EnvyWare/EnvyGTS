@@ -53,14 +53,7 @@ public class GuiConfig extends AbstractYamlConfig {
     @ConfigSerializable
     public static class Returns {
 
-        private ConfigInterface guiSettings = new ConfigInterface(
-                "EnvyGTS", 6, "BLOCK", ImmutableMap.of("one",
-                ConfigItem.builder()
-                        .type("minecraft:black_stained_glass_pane")
-                        .name(" ")
-                        .amount(1)
-                        .build()
-        ));
+        private ConfigInterface guiSettings = ConfigInterface.defaultInterface("EnvyGTS");
 
         private ExtendedConfigItem backButton = ExtendedConfigItem.builder()
                 .type("pixelmon:eject_button")
@@ -93,14 +86,16 @@ public class GuiConfig extends AbstractYamlConfig {
     @ConfigSerializable
     public static class SellHandOrParty {
 
-        private ConfigInterface guiSettings = new ConfigInterface(
-                "EnvyGTS", 3, "BLOCK", ImmutableMap.of("one",
-                ConfigItem.builder()
+        private ConfigInterface guiSettings = ConfigInterface.builder()
+                .title("EnvyGTS")
+                .height(3)
+                .fillType(ConfigInterface.FillType.BLOCK)
+                .fillerItem(ConfigItem.builder()
                         .type("minecraft:black_stained_glass_pane")
                         .name(" ")
                         .amount(1)
-                        .build()
-        ));
+                        .build())
+                .build();
 
         private ExtendedConfigItem selectParty = ExtendedConfigItem.builder()
                 .type("pixelmon:poke_ball")
@@ -180,15 +175,21 @@ public class GuiConfig extends AbstractYamlConfig {
                 .positions(Pair.of(5, 5))
                 .build();
 
-        private ExtendedConfigItem filterButton = new ExtendedConfigItem(
-                "pixelmon:net_ball", 1, (byte) 0, "&bChange filter",
-                Lists.newArrayList("&aCurrent Filter: &f%filter%"), 2, 5, Maps.newHashMap()
-        );
+        private ExtendedConfigItem filterButton = ExtendedConfigItem.builder()
+                .type("pixelmon:net_ball")
+                .amount(1)
+                .name("&bChange filter")
+                .lore("&aCurrent Filter: &f%filter%")
+                .positions(2, 5)
+                .build();
 
-        private ExtendedConfigItem orderButton = new ExtendedConfigItem(
-                "pixelmon:blue_orb", 1, (byte) 0, "&bChange order",
-                Lists.newArrayList("&aCurrent order: &f%order%"), 6, 5, Maps.newHashMap()
-        );
+        private ExtendedConfigItem orderButton = ExtendedConfigItem.builder()
+                .type("pixelmon:blue_orb")
+                .amount(1)
+                .name("&bChange order")
+                .lore("&aCurrent order: &f%order%")
+                .positions(6, 5)
+                .build();
 
         private SpriteConfig spriteConfig = new SpriteConfig();
 
@@ -227,31 +228,43 @@ public class GuiConfig extends AbstractYamlConfig {
     @ConfigSerializable
     public static class PartyPokemonConfig {
 
-        private ConfigInterface guiSettings = new ConfigInterface(
-                "EnvyGTS", 3, "BLOCK", ImmutableMap.of("one", ConfigItem.builder()
-                .type("minecraft:black_stained_glass_pane")
-                .name(" ")
-                .amount(1)
-                .build()));
+        private ConfigInterface guiSettings = ConfigInterface.builder()
+                .title("EnvyGTS")
+                .height(3)
+                .fillType(ConfigInterface.FillType.BLOCK)
+                .fillerItem(ConfigItem.builder()
+                        .type("minecraft:black_stained_glass_pane")
+                        .name(" ")
+                        .amount(1)
+                        .build())
+                .build();
 
-        private ExtendedConfigItem backButton = new ExtendedConfigItem(
-                "pixelmon:eject_button", 1, (byte) 0, "&cBack",
-                Lists.newArrayList(), 0, 0, Maps.newHashMap()
-        );
+        private ExtendedConfigItem backButton = ExtendedConfigItem.builder()
+                .type("pixelmon:eject_button")
+                .amount(1)
+                .name("&cBack")
+                .positions(0, 0)
+                .build();
 
         private List<Integer> partySelectionPositions = Lists.newArrayList(
                 10, 11, 12, 14, 15, 16
         );
 
-        private ExtendedConfigItem confirmItem = new ExtendedConfigItem(
-                "pixelmon:poke_ball", 1, (byte) 0, "&a&lCONFIRM",
-                Lists.newArrayList(), 4, 2, Maps.newHashMap()
-        );
+        private ExtendedConfigItem confirmItem =
+                ExtendedConfigItem.builder()
+                        .type("pixelmon:poke_ball")
+                        .amount(1)
+                        .name("&a&lCONFIRM")
+                        .positions(4, 2)
+                        .build();
 
-        private ExtendedConfigItem viewPCButton = new ExtendedConfigItem(
-                "pixelmon:pc", 1, (byte) 0, "&aYour PC",
-                Lists.newArrayList(), 4, 0, Maps.newHashMap()
-        );
+        private ExtendedConfigItem viewPCButton =
+                ExtendedConfigItem.builder()
+                        .type("pixelmon:trade_holder_right")
+                        .amount(1)
+                        .name("&aView PC")
+                        .positions(8, 0)
+                        .build();
 
         private ConfigItem noPokemonItem = ConfigItem.builder()
                         .type("minecraft:barrier")
@@ -306,32 +319,39 @@ public class GuiConfig extends AbstractYamlConfig {
     @ConfigSerializable
     public static class SelectFromPCConfig {
 
-        private ConfigInterface guiSettings = new ConfigInterface(
-                "EnvyGTS", 6, "BLOCK", ImmutableMap.of("one", ConfigItem.builder()
-                .type("minecraft:black_stained_glass_pane")
-                .name(" ")
-                .amount(1)
-                .build()));
+        private ConfigInterface guiSettings = ConfigInterface.defaultInterface("EnvyGTS");
 
-        private ExtendedConfigItem backButton = new ExtendedConfigItem(
-                "pixelmon:eject_button", 1, (byte) 0, "&cBack",
-                Lists.newArrayList(), 0, 5, Maps.newHashMap()
-        );
+        private ExtendedConfigItem backButton =
+                ExtendedConfigItem.builder()
+                        .type("pixelmon:eject_button")
+                        .amount(1)
+                        .name("&cBack")
+                        .positions(0, 5)
+                        .build();
 
-        private ExtendedConfigItem nextPageButton = new ExtendedConfigItem(
-                "pixelmon:trade_holder_right", 1, (byte) 0, "&aNext Page",
-                Lists.newArrayList(), 8, 0, Maps.newHashMap()
-        );
+        private ExtendedConfigItem nextPageButton =
+                ExtendedConfigItem.builder()
+                        .type("pixelmon:trade_holder_right")
+                        .amount(1)
+                        .name("&aNext Page")
+                        .positions(8, 0)
+                        .build();
 
-        private ExtendedConfigItem previousPageButton = new ExtendedConfigItem(
-                "pixelmon:trade_holder_left", 1, (byte) 0, "&aPrevious Page",
-                Lists.newArrayList(), 0, 0, Maps.newHashMap()
-        );
+        private ExtendedConfigItem previousPageButton =
+                ExtendedConfigItem.builder()
+                        .type("pixelmon:trade_holder_left")
+                        .amount(1)
+                        .name("&aPrevious Page")
+                        .positions(0, 0)
+                        .build();
 
-        private ExtendedConfigItem confirmButton = new ExtendedConfigItem(
-                "pixelmon:poke_ball", 1, (byte) 0, "&a&lCONFIRM",
-                Lists.newArrayList(), 7, 3, Maps.newHashMap()
-        );
+        private ExtendedConfigItem confirmButton =
+                ExtendedConfigItem.builder()
+                        .type("pixelmon:poke_ball")
+                        .amount(1)
+                        .name("&a&lCONFIRM")
+                        .positions(7, 3)
+                        .build();
 
         private ConfigItem noPokemonItem = ConfigItem.builder()
                 .type("minecraft:barrier")

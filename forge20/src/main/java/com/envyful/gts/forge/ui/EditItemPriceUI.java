@@ -3,7 +3,6 @@ package com.envyful.gts.forge.ui;
 import com.envyful.api.forge.chat.UtilChatColour;
 import com.envyful.api.forge.concurrency.UtilForgeConcurrency;
 import com.envyful.api.forge.player.ForgeEnvyPlayer;
-import com.envyful.api.reforged.dialogue.DialogueInputRegistry;
 import com.envyful.api.type.UtilParse;
 import com.envyful.gts.forge.EnvyGTSForge;
 import com.envyful.gts.forge.player.GTSAttribute;

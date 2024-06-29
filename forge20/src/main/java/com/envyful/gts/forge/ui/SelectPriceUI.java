@@ -1,14 +1,17 @@
 package com.envyful.gts.forge.ui;
 
 import com.envyful.api.forge.chat.UtilChatColour;
-import com.envyful.api.forge.concurrency.UtilForgeConcurrency;
 import com.envyful.api.forge.player.ForgeEnvyPlayer;
-import com.envyful.api.reforged.dialogue.DialogueInputRegistry;
 import com.envyful.api.type.UtilParse;
 import com.envyful.gts.forge.EnvyGTSForge;
 import com.envyful.gts.forge.player.GTSAttribute;
+import com.pixelmonmod.pixelmon.api.dialogue.DialogueButton;
+import com.pixelmonmod.pixelmon.api.dialogue.DialogueFactory;
+import com.pixelmonmod.pixelmon.api.dialogue.InputPattern;
 import com.pixelmonmod.pixelmon.api.pokemon.Pokemon;
 import com.pixelmonmod.pixelmon.api.storage.StorageProxy;
+
+import java.util.regex.Pattern;
 
 public class SelectPriceUI {
 
@@ -25,40 +28,37 @@ public class SelectPriceUI {
             return;
         }
 
-        UtilForgeConcurrency.runLater(() -> DialogueInputRegistry.builder()
+        var dialogue = DialogueFactory.builder()
                 .title(UtilChatColour.colour(EnvyGTSForge.getLocale().getSellPriceInputDialogueTitle()))
-                .text(UtilChatColour.colour((!error ?
-                        EnvyGTSForge.getLocale().getSellPriceInputDialogueText() :
-                        EnvyGTSForge.getLocale().getSellPriceInputDialogueErrorText())
-                        .replace("%min_price%", String.format(EnvyGTSForge.getLocale().getMoneyFormat(), attribute.getCurrentPrice()))
-                        .replace("%max_price%", String.format(EnvyGTSForge.getLocale().getMoneyFormat(), EnvyGTSForge.getConfig().getMaxPrice()))
-                        .replace("%pokemon%", pokemon.getDisplayName())))
-                .defaultInputValue(String.valueOf(attribute.getCurrentPrice()))
+                .description(UtilChatColour.colour(EnvyGTSForge.getLocale().getSellPriceInputDialogueText()))
                 .closeOnEscape()
-                .closeHandler(closedScreen -> {
+                .onClose(closedScreen -> {
                     if (page == -1) {
                         SelectPartyPokemonUI.openUI(player);
                     } else {
                         SelectPCPokemonUI.openUI(player, page);
                     }
                 })
-                .submitHandler(submitted -> {
-                    double inputtedValue = UtilParse.parseDouble(submitted.getInput()).orElse(-1.0);
+                .buttons(DialogueButton.builder()
+                        .text("Submit")
+                        .acceptedInputs(InputPattern.of(Pattern.compile("[0-9]+"), UtilChatColour.colour(EnvyGTSForge.getLocale().getSellPriceInputDialogueErrorText())))
+                        .onClick(submitted -> {
+                            var inputtedValue = UtilParse.parseDouble(submitted.getInput()).orElse(-1.0);
 
-                    if (inputtedValue < attribute.getCurrentMinPrice() || inputtedValue < 0) {
-                        openUI(player, page, slot, true);
-                        return;
-                    }
+                            if (inputtedValue < attribute.getCurrentMinPrice() || inputtedValue < 0) {
+                                openUI(player, page, slot, true);
+                                return;
+                            }
 
-                    if (inputtedValue > EnvyGTSForge.getConfig().getMaxPrice()) {
-                        openUI(player, page, slot, true);
-                        return;
-                    }
+                            if (inputtedValue > EnvyGTSForge.getConfig().getMaxPrice()) {
+                                openUI(player, page, slot, true);
+                                return;
+                            }
 
-                    attribute.setCurrentPrice(inputtedValue);
-                    EditDurationUI.openUI(player, page, slot, false);
-                })
-                .open(player.getParent()), 5);
+                            attribute.setCurrentPrice(inputtedValue);
+                            EditDurationUI.openUI(player, page, slot, false);
+                        })
+                        .build());
     }
 
     public static Pokemon getPokemon(ForgeEnvyPlayer player, int page, int slot) {

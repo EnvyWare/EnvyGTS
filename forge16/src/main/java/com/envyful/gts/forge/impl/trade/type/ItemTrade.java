@@ -82,7 +82,7 @@ public class ItemTrade extends ForgeTrade {
 
             this.item.setCount(copy.getCount());
 
-            GTSAttribute attribute = player.getAttributeNow(GTSAttribute.class);
+            GTSAttribute attribute = ((ForgeEnvyPlayer) player).getAttributeNow(GTSAttribute.class);
             attribute.getOwnedTrades().add(this);
 
             return CompletableFuture.completedFuture(null);
@@ -159,7 +159,7 @@ public class ItemTrade extends ForgeTrade {
                         this.removed = true;
                         MinecraftForge.EVENT_BUS.post(new TradeRemoveEvent(this));
 
-                        GTSAttribute attribute = envyPlayer.getAttributeNow(GTSAttribute.class);
+                        GTSAttribute attribute = ((ForgeEnvyPlayer) envyPlayer).getAttributeNow(GTSAttribute.class);
                         attribute.getOwnedTrades().remove(this);
 
                         this.collect(envyPlayer, null);
@@ -221,7 +221,7 @@ public class ItemTrade extends ForgeTrade {
                                    .build())
                 .singleClick()
                 .clickHandler((envyPlayer, clickType) -> UtilForgeConcurrency.runSync(() -> {
-                    GTSAttribute attribute = envyPlayer.getAttributeNow(GTSAttribute.class);
+                    GTSAttribute attribute = ((ForgeEnvyPlayer) envyPlayer).getAttributeNow(GTSAttribute.class);
                     attribute.getOwnedTrades().remove(this);
                     this.collect(envyPlayer, returnGui);
                 }))

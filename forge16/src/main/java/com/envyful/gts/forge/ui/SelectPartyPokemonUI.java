@@ -54,7 +54,7 @@ public class SelectPartyPokemonUI {
         UtilConfigItem.builder()
                 .asyncClick(false)
                 .clickHandler((envyPlayer, clickType) -> {
-                    GTSAttribute attribute = envyPlayer.getAttributeNow(GTSAttribute.class);
+                    GTSAttribute attribute = player.getAttributeNow(GTSAttribute.class);
 
                     List<Trade> trades = Lists.newArrayList(attribute.getOwnedTrades());
 
