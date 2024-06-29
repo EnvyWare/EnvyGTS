@@ -7,6 +7,9 @@ import com.envyful.api.reforged.dialogue.DialogueInputRegistry;
 import com.envyful.api.type.UtilParse;
 import com.envyful.gts.forge.EnvyGTSForge;
 import com.envyful.gts.forge.player.GTSAttribute;
+import com.pixelmonmod.pixelmon.api.dialogue.DialogueButton;
+import com.pixelmonmod.pixelmon.api.dialogue.DialogueFactory;
+import com.pixelmonmod.pixelmon.api.dialogue.InputPattern;
 import net.minecraft.world.item.ItemStack;
 
 public class EditItemPriceUI {
@@ -16,18 +19,21 @@ public class EditItemPriceUI {
         GTSAttribute attribute = player.getAttributeNow(GTSAttribute.class);
 
         UtilForgeConcurrency.runLater(() -> {
-            DialogueInputRegistry.builder()
+            DialogueFactory.builder()
                     .title(UtilChatColour.colour(EnvyGTSForge.getLocale().getSellPriceInputDialogueTitle()))
-                    .text(UtilChatColour.colour((!error ?
+                    .description(UtilChatColour.colour((!error ?
                             EnvyGTSForge.getLocale().getSellPriceInputDialogueText() :
                             EnvyGTSForge.getLocale().getSellPriceInputDialogueErrorText())
                             .replace("%min_price%", String.format(EnvyGTSForge.getLocale().getMoneyFormat(), attribute.getCurrentPrice()))
                             .replace("%pokemon%", itemStack.getHoverName().getString())))
-                    .defaultInputValue(String.valueOf(0))
                     .closeOnEscape()
-                    .closeHandler(closedScreen -> SellHandOrParty.open(player))
-                    .submitHandler(submitted -> EditItemDurationUI.openUI(player, UtilParse.parseDouble(submitted.getInput()).orElse(-1.0), false))
-                    .open(player.getParent());
+                    .onClose(closedScreen -> SellHandOrParty.open(player))
+                    .buttons(DialogueButton.builder()
+                            .acceptedInputs(InputPattern.of("[0-9]+", UtilChatColour.colour(EnvyGTSForge.getLocale().getSellPriceInputDialogueErrorText())))
+                            .text("0")
+                            .onClick(submitted -> EditItemDurationUI.openUI(player, UtilParse.parseDouble(submitted.getInput()).orElse(0.0), false))
+                            .build())
+                    .sendTo(player.getParent());
         }, 5);
     }
 }
