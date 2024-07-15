@@ -112,7 +112,7 @@ public class GTSAttribute extends ManagedForgeAttribute<EnvyGTSForge> {
 
             this.settings = UtilGson.GSON.fromJson(settingsSet.getString("settings"), PlayerSettings.class);
         } catch (SQLException e) {
-            EnvyGTSForge.getLogger().error("Failed to load player data for " + this.parent.getName() + " (" + this.id + ")",e);
+            EnvyGTSForge.getLogger().error("Failed to load player data for " + this.parent.getName() + " (" + this.id + ")", e);
         }
     }
 
@@ -129,9 +129,7 @@ public class GTSAttribute extends ManagedForgeAttribute<EnvyGTSForge> {
             preparedStatement.executeUpdate();
             settingsStatement.executeUpdate();
         } catch (SQLException e) {
-            e.printStackTrace();
+            EnvyGTSForge.getLogger().error("Failed to save player data for " + this.parent.getName() + " (" + this.id + ")", e);
         }
-
-        EnvyGTSForge.getLogger().error("Failed to save player data for " + this.parent.getName() + " (" + this.id + ")",e);
     }
 }
