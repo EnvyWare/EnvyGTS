@@ -2,6 +2,7 @@ package com.envyful.gts.forge.player;
 
 import com.envyful.api.forge.chat.UtilChatColour;
 import com.envyful.api.forge.concurrency.UtilForgeConcurrency;
+import com.envyful.api.forge.player.ForgeEnvyPlayer;
 import com.envyful.api.forge.player.ForgePlayerManager;
 import com.envyful.api.forge.player.attribute.ManagedForgeAttribute;
 import com.envyful.api.json.UtilGson;
@@ -71,27 +72,8 @@ public class GTSAttribute extends ManagedForgeAttribute<EnvyGTSForge> {
     }
 
     @Override
-    public void load() {
-        for (Trade allTrade : EnvyGTSForge.getTradeManager().getAllTrades()) {
-            if (allTrade.isOwner(this.parent.getUniqueId())) {
-                this.ownedTrades.add(allTrade);
-            }
-        }
-
-        try (Connection connection = EnvyGTSForge.getDatabase().getConnection();
-             PreparedStatement settingsStatement = connection.prepareStatement(EnvyGTSQueries.GET_PLAYER_SETTINGS)) {
-            settingsStatement.setString(1, this.parent.getUniqueId().toString());
-
-            ResultSet settingsSet = settingsStatement.executeQuery();
-
-            if (!settingsSet.next()) {
-                return;
-            }
-
-            this.settings = UtilGson.GSON.fromJson(settingsSet.getString("settings"), PlayerSettings.class);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+    public void setParent(ForgeEnvyPlayer parent) {
+        super.setParent(parent);
 
         UtilForgeConcurrency.runSync(() -> {
             boolean returnMessage = false;
@@ -111,13 +93,37 @@ public class GTSAttribute extends ManagedForgeAttribute<EnvyGTSForge> {
     }
 
     @Override
+    public void load() {
+        for (Trade allTrade : EnvyGTSForge.getTradeManager().getAllTrades()) {
+            if (allTrade.isOwner(this.parent.getUniqueId())) {
+                this.ownedTrades.add(allTrade);
+            }
+        }
+
+        try (Connection connection = EnvyGTSForge.getDatabase().getConnection();
+             PreparedStatement settingsStatement = connection.prepareStatement(EnvyGTSQueries.GET_PLAYER_SETTINGS)) {
+            settingsStatement.setString(1, this.id.toString());
+
+            ResultSet settingsSet = settingsStatement.executeQuery();
+
+            if (!settingsSet.next()) {
+                return;
+            }
+
+            this.settings = UtilGson.GSON.fromJson(settingsSet.getString("settings"), PlayerSettings.class);
+        } catch (SQLException e) {
+            EnvyGTSForge.getLogger().error("Failed to load player data for " + this.parent.getName() + " (" + this.id + ")",e);
+        }
+    }
+
+    @Override
     public void save() {
         try (Connection connection = EnvyGTSForge.getDatabase().getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(EnvyGTSQueries.UPDATE_PLAYER_NAME);
              PreparedStatement settingsStatement = connection.prepareStatement(EnvyGTSQueries.UPDATE_OR_CREATE_SETTINGS)) {
-            preparedStatement.setString(1, this.parent.getParent().getName().getString());
-            preparedStatement.setString(2, this.parent.getUniqueId().toString());
-            settingsStatement.setString(1, this.parent.getUniqueId().toString());
+            preparedStatement.setString(1, this.parent.getName());
+            preparedStatement.setString(2, this.id.toString());
+            settingsStatement.setString(1, this.id.toString());
             settingsStatement.setString(2, UtilGson.GSON.toJson(this.settings));
 
             preparedStatement.executeUpdate();
@@ -125,5 +131,7 @@ public class GTSAttribute extends ManagedForgeAttribute<EnvyGTSForge> {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+
+        EnvyGTSForge.getLogger().error("Failed to save player data for " + this.parent.getName() + " (" + this.id + ")",e);
     }
 }
