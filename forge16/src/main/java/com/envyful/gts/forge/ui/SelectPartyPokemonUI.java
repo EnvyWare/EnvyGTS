@@ -73,7 +73,7 @@ public class SelectPartyPokemonUI {
 
                     PlayerPartyStorage party = StorageProxy.getParty(player.getParent());
 
-                    if (party.countAblePokemon() <= 1) {
+                    if (party.countAblePokemon() <= 1 || party.getTeam().size() <= attribute.getSelectedSlot()) {
                         return;
                     }
 

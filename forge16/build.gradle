@@ -38,7 +38,7 @@ repositories {
 
 dependencies {
     minecraft 'net.minecraftforge:forge:1.16.5-36.2.39'
-    implementation 'pixelmon:Pixelmon-1.16.5-9.1.11-server:9.1.11'
+    implementation 'pixelmon:Pixelmon-1.16.5-9.1.12-server:9.1.12'
 
     compileOnly "com.envyful.papi:api:2.0.5"
 
