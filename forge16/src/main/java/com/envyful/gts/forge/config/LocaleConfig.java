@@ -9,6 +9,7 @@ import com.pixelmonmod.api.pokemon.PokemonSpecification;
 import com.pixelmonmod.api.pokemon.PokemonSpecificationProxy;
 import com.pixelmonmod.pixelmon.api.pokemon.Pokemon;
 import org.spongepowered.configurate.objectmapping.ConfigSerializable;
+import org.spongepowered.configurate.objectmapping.meta.Comment;
 
 import java.util.List;
 import java.util.Map;
@@ -45,6 +46,10 @@ public class LocaleConfig extends AbstractYamlConfig {
     private String enchantFooter = "WOW!";
     private String enchantSeperator = "\n";
     private String enchantFormat = "%enchant% - %level%";
+    @Comment("The message sent to the player if they try to add an item to the GTS that fits one of the regex filters in the blacklist")
+    private List<String> blockedItem = List.of(
+            "&c&l(!) &cThat item was blocked from being added to the GTS because %reason%"
+    );
 
     private Messages messages = new Messages();
 
@@ -110,6 +115,10 @@ public class LocaleConfig extends AbstractYamlConfig {
 
     public String getEnchantFormat() {
         return this.enchantFormat;
+    }
+
+    public List<String> getBlockedItem() {
+        return this.blockedItem;
     }
 
     @ConfigSerializable

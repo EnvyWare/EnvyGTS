@@ -16,10 +16,12 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.*;
 import net.minecraftforge.registries.ForgeRegistries;
 import org.spongepowered.configurate.objectmapping.ConfigSerializable;
+import org.spongepowered.configurate.objectmapping.meta.Comment;
 
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.regex.Pattern;
 
 @SuppressWarnings("FieldMayBeFinal")
 @ConfigPath("config/EnvyGTS/config.yml")
@@ -56,6 +58,8 @@ public class EnvyGTSConfig extends AbstractYamlConfig {
     private Map<String, ConfigItem.NBTValue> nbtBlacklist = ImmutableMap.of(
             "example", new ConfigItem.NBTValue("string", "example_text")
     );
+    @Comment("A regex supported list of words that will be used to check the name and lore of items and pokemon attempted to be traded")
+    private Map<String, BlockedWord> tradeBlockedWords = ImmutableMap.of("one", new BlockedWord("fuck|shit|cunt", "No swearing!"));
 
     private transient List<PokemonSpecification> blacklistCache = null;
     private transient List<Item> itemBlacklistCache = null;
@@ -280,6 +284,16 @@ public class EnvyGTSConfig extends AbstractYamlConfig {
         return Lists.newArrayList(this.webhookTextReplacement.values());
     }
 
+    public String isBlocked(String text) {
+        for (var tradeBlockedWord : this.tradeBlockedWords.values()) {
+            if (tradeBlockedWord.pattern.matcher(text).find()) {
+                return tradeBlockedWord.reason;
+            }
+        }
+
+        return null;
+    }
+
     @ConfigSerializable
     public static class WebhookTextReplacement {
 
@@ -297,5 +311,25 @@ public class EnvyGTSConfig extends AbstractYamlConfig {
         public String replace(String text) {
             return text.replace(this.pattern, this.replacement);
         }
+    }
+
+    @ConfigSerializable
+    public static class BlockedWord {
+
+        private Pattern pattern;
+        private String reason;
+
+        public BlockedWord() {
+        }
+
+        public BlockedWord(String pattern, String reason) {
+            this.pattern = Pattern.compile(pattern);
+            this.reason = reason;
+        }
+
+        public boolean matches(String text) {
+            return this.pattern.matcher(text).find();
+        }
+
     }
 }

@@ -4,6 +4,7 @@ import com.envyful.api.concurrency.UtilConcurrency;
 import com.envyful.api.forge.chat.UtilChatColour;
 import com.envyful.api.forge.listener.LazyListener;
 import com.envyful.api.forge.player.ForgeEnvyPlayer;
+import com.envyful.api.text.Placeholder;
 import com.envyful.gts.api.Trade;
 import com.envyful.gts.forge.EnvyGTSForge;
 import com.envyful.gts.forge.event.TradeCreateEvent;
@@ -20,6 +21,14 @@ public class TradeCreateListener extends LazyListener {
 
     @SubscribeEvent
     public void onTradeCreate(TradeCreateEvent event) {
+        var blockedReason = EnvyGTSForge.getConfig().isBlocked(event.getTrade().getDisplayName());
+
+        if (blockedReason != null) {
+            event.setCanceled(true);
+            event.getPlayer().message(EnvyGTSForge.getLocale().getBlockedItem(), Placeholder.simple("%reason%", blockedReason));
+            return;
+        }
+
         if (!EnvyGTSForge.getConfig().isEnableNewListingBroadcasts()) {
             return;
         }
