@@ -44,7 +44,7 @@ public interface Trade extends SimplePlaceholder {
      * @return True if the player is the person selling the item
      */
     default boolean isOwner(EnvyPlayer<?> player) {
-        return this.isOwner(player.getUuid());
+        return this.isOwner(player.getUniqueId());
     }
 
     /**
