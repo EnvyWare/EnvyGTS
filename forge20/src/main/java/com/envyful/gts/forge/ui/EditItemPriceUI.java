@@ -11,6 +11,8 @@ import com.pixelmonmod.pixelmon.api.dialogue.DialogueFactory;
 import com.pixelmonmod.pixelmon.api.dialogue.InputPattern;
 import net.minecraft.world.item.ItemStack;
 
+import java.awt.*;
+
 public class EditItemPriceUI {
 
     public static void openUI(ForgeEnvyPlayer player, ItemStack itemStack, boolean error) {
@@ -30,6 +32,7 @@ public class EditItemPriceUI {
                     .buttons(DialogueButton.builder()
                             .acceptedInputs(InputPattern.of("[0-9]+", UtilChatColour.colour(EnvyGTSForge.getLocale().getSellPriceInputDialogueErrorText())))
                             .text("0")
+                            .backgroundColor(Color.GRAY)
                             .onClick(submitted -> EditItemDurationUI.openUI(player, UtilParse.parseDouble(submitted.getInput()).orElse(0.0), false))
                             .build())
                     .sendTo(player.getParent());

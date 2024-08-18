@@ -11,6 +11,7 @@ import com.pixelmonmod.pixelmon.api.dialogue.InputPattern;
 import com.pixelmonmod.pixelmon.api.pokemon.Pokemon;
 import com.pixelmonmod.pixelmon.api.storage.StorageProxy;
 
+import java.awt.*;
 import java.util.regex.Pattern;
 
 public class SelectPriceUI {
@@ -28,7 +29,7 @@ public class SelectPriceUI {
             return;
         }
 
-        var dialogue = DialogueFactory.builder()
+        DialogueFactory.builder()
                 .title(UtilChatColour.colour(EnvyGTSForge.getLocale().getSellPriceInputDialogueTitle()))
                 .description(UtilChatColour.colour(EnvyGTSForge.getLocale().getSellPriceInputDialogueText()))
                 .closeOnEscape()
@@ -41,6 +42,7 @@ public class SelectPriceUI {
                 })
                 .buttons(DialogueButton.builder()
                         .text("Submit")
+                        .backgroundColor(Color.GRAY)
                         .acceptedInputs(InputPattern.of(Pattern.compile("[0-9]+"), UtilChatColour.colour(EnvyGTSForge.getLocale().getSellPriceInputDialogueErrorText())))
                         .onClick(submitted -> {
                             var inputtedValue = UtilParse.parseDouble(submitted.getInput()).orElse(-1.0);
@@ -58,7 +60,7 @@ public class SelectPriceUI {
                             attribute.setCurrentPrice(inputtedValue);
                             EditDurationUI.openUI(player, page, slot, false);
                         })
-                        .build());
+                        .build()).sendTo(player.getParent());
     }
 
     public static Pokemon getPokemon(ForgeEnvyPlayer player, int page, int slot) {

@@ -75,7 +75,7 @@ public class SelectPCPokemonUI {
         UtilConfigItem.builder()
                 .asyncClick(false)
                 .clickHandler((envyPlayer, clickType) -> {
-                    GTSAttribute attribute = ((ForgeEnvyPlayer) envyPlayer).getAttributeNow(GTSAttribute.class);
+                    GTSAttribute attribute = envyPlayer.getAttributeNow(GTSAttribute.class);
 
                     if (attribute.getSelectedSlot() == -1) {
                         return;
