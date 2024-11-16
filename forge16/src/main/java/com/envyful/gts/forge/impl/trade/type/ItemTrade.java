@@ -142,7 +142,7 @@ public abstract class ItemTrade extends ForgeTrade {
                         return;
                     }
 
-                    if (UtilPlayer.hasPermission((ServerPlayerEntity) envyPlayer.getParent(), "envygts.admin") && Objects.equals(
+                    if (envyPlayer.hasPermission("envygts.admin") && Objects.equals(
                             clickType,
                             EnvyGTSForge.getConfig().getOwnerRemoveButton()
                     ) && ((ServerPlayerEntity) envyPlayer.getParent()).isCreative()) {

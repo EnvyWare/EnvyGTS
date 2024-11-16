@@ -20,11 +20,11 @@ public class BroadcastsCommand {
 
     @CommandProcessor
     public void onCommand(@Sender ForgeEnvyPlayer sender, String[] args) {
-        GTSAttribute attribute = sender.getAttributeNow(GTSAttribute.class);
-
-        if (attribute == null) {
+        if (!sender.hasAttribute(GTSAttribute.class)) {
             return;
         }
+
+        var attribute = sender.getAttributeNow(GTSAttribute.class);
 
         if (args.length == 0) {
             attribute.getSettings().setToggledBroadcasts(!attribute.getSettings().isToggledBroadcasts());

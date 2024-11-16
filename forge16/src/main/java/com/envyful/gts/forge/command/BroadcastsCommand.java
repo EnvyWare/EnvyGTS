@@ -8,7 +8,6 @@ import com.envyful.api.forge.chat.UtilChatColour;
 import com.envyful.api.forge.player.ForgeEnvyPlayer;
 import com.envyful.gts.forge.EnvyGTSForge;
 import com.envyful.gts.forge.player.GTSAttribute;
-import net.minecraft.entity.player.ServerPlayerEntity;
 
 @Command(
         value = {
@@ -20,13 +19,12 @@ import net.minecraft.entity.player.ServerPlayerEntity;
 public class BroadcastsCommand {
 
     @CommandProcessor
-    public void onCommand(@Sender ServerPlayerEntity player, String[] args) {
-        ForgeEnvyPlayer sender = EnvyGTSForge.getPlayerManager().getPlayer(player);
-        GTSAttribute attribute = sender.getAttributeNow(GTSAttribute.class);
-
-        if (attribute == null) {
+    public void onCommand(@Sender ForgeEnvyPlayer sender, String[] args) {
+        if (!sender.hasAttribute(GTSAttribute.class)) {
             return;
         }
+
+        var attribute = sender.getAttributeNow(GTSAttribute.class);
 
         if (args.length == 0) {
             attribute.getSettings().setToggledBroadcasts(!attribute.getSettings().isToggledBroadcasts());
