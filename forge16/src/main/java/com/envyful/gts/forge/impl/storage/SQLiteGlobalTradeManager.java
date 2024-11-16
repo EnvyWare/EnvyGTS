@@ -5,12 +5,12 @@ import com.envyful.gts.api.Trade;
 import com.envyful.gts.forge.EnvyGTSForge;
 import com.envyful.gts.forge.impl.ForgeGlobalTradeManager;
 import com.envyful.gts.forge.impl.TradeFactory;
-import com.envyful.gts.forge.player.SQLGTSAttributeAdapter;
+import com.envyful.gts.forge.player.SQLiteGTSAttributeAdapter;
 
-public class SQLGlobalTradeManager extends ForgeGlobalTradeManager {
+public class SQLiteGlobalTradeManager extends ForgeGlobalTradeManager {
 
-    public SQLGlobalTradeManager() {
-        EnvyGTSForge.getDatabase().query(SQLGTSAttributeAdapter.GET_ALL_TRADES)
+    public SQLiteGlobalTradeManager() {
+        EnvyGTSForge.getDatabase().query(SQLiteGTSAttributeAdapter.GET_ALL_TRADES)
                 .converter(resultSet -> this.activeTrades.add(TradeFactory.fromResultSet(resultSet)))
                 .executeWithConverter();
     }

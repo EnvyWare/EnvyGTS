@@ -13,17 +13,19 @@ import com.envyful.api.gui.factory.GuiFactory;
 import com.envyful.api.gui.item.Displayable;
 import com.envyful.api.gui.pane.Pane;
 import com.envyful.api.player.EnvyPlayer;
+import com.envyful.api.sqlite.config.SQLiteDatabaseDetailsConfig;
 import com.envyful.api.time.UtilTimeFormat;
 import com.envyful.gts.api.Trade;
 import com.envyful.gts.api.TradeData;
 import com.envyful.gts.api.discord.DiscordEvent;
 import com.envyful.gts.api.gui.SortType;
-import com.envyful.gts.api.sql.EnvyGTSQueries;
 import com.envyful.gts.forge.EnvyGTSForge;
 import com.envyful.gts.forge.config.EnvyGTSConfig;
 import com.envyful.gts.forge.event.TradeCollectEvent;
 import com.envyful.gts.forge.event.TradeRemoveEvent;
 import com.envyful.gts.forge.impl.trade.ForgeTrade;
+import com.envyful.gts.forge.impl.trade.type.sql.SQLItemTrade;
+import com.envyful.gts.forge.impl.trade.type.sqlite.SQLiteItemTrade;
 import com.envyful.gts.forge.player.GTSAttribute;
 import com.envyful.gts.forge.ui.ViewTradesUI;
 import com.google.common.collect.Lists;
@@ -38,15 +40,12 @@ import net.minecraft.nbt.JsonToNBT;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.common.MinecraftForge;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
-public class ItemTrade extends ForgeTrade {
+public abstract class ItemTrade extends ForgeTrade {
 
     private final ItemStack item;
     private final TradeData tradeData;
@@ -67,7 +66,7 @@ public class ItemTrade extends ForgeTrade {
 
     @Override
     public CompletableFuture<Void> collect(EnvyPlayer<?> player, Consumer<EnvyPlayer<?>> returnGui) {
-        ServerPlayerEntity parent = (ServerPlayerEntity) player.getParent();
+        var parent = (ServerPlayerEntity) player.getParent();
 
         var copy = this.item.copy();
 
@@ -82,7 +81,7 @@ public class ItemTrade extends ForgeTrade {
 
             this.item.setCount(copy.getCount());
 
-            GTSAttribute attribute = ((ForgeEnvyPlayer) player).getAttributeNow(GTSAttribute.class);
+            var attribute = player.getAttributeNow(GTSAttribute.class);
             attribute.getOwnedTrades().add(this);
 
             return CompletableFuture.completedFuture(null);
@@ -93,19 +92,19 @@ public class ItemTrade extends ForgeTrade {
         EnvyGTSForge.getTradeManager().removeTrade(this);
 
         if (returnGui == null) {
-            parent.closeContainer();
+            player.closeInventory();
         } else {
             returnGui.accept(player);
         }
 
-        return CompletableFuture.runAsync(this::delete, UtilConcurrency.SCHEDULED_EXECUTOR_SERVICE);
+        return UtilConcurrency.runAsync(this::delete);
     }
 
     @Override
     public void adminRemove(EnvyPlayer<?> admin) {
-        ServerPlayerEntity parent = (ServerPlayerEntity) admin.getParent();
+        var parent = (ServerPlayerEntity) admin.getParent();
 
-        parent.closeContainer();
+        admin.closeInventory();
 
         if (!parent.inventory.add(this.item.copy())) {
             admin.message(UtilChatColour.colour(EnvyGTSForge.getLocale().getMessages().getInventoryFull()));
@@ -228,45 +227,8 @@ public class ItemTrade extends ForgeTrade {
                 .build());
     }
 
-    @Override
-    public void delete() {
-        try (Connection connection = EnvyGTSForge.getDatabase().getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(EnvyGTSQueries.REMOVE_TRADE)) {
-            preparedStatement.setString(1, this.owner.toString());
-            preparedStatement.setLong(2, this.expiry);
-            preparedStatement.setDouble(3, this.cost);
-            preparedStatement.setString(4, "i");
-            preparedStatement.setString(5, "INSTANT_BUY");
-
-            preparedStatement.executeUpdate();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
-
-    @Override
-    public void save() {
-        try (Connection connection = EnvyGTSForge.getDatabase().getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(EnvyGTSQueries.ADD_TRADE)) {
-            preparedStatement.setString(1, this.owner.toString());
-            preparedStatement.setString(2, this.ownerName);
-            preparedStatement.setString(3, this.originalOwnerName);
-            preparedStatement.setLong(4, this.expiry);
-            preparedStatement.setDouble(5, this.cost);
-            preparedStatement.setInt(6, this.removed ? 1 : 0);
-            preparedStatement.setString(7, "INSTANT_BUY");
-            preparedStatement.setString(8, "i");
-            preparedStatement.setString(9, this.getItemJson());
-            preparedStatement.setInt(10, 0);
-
-            preparedStatement.executeUpdate();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
-
-    private String getItemJson() {
-        CompoundNBT tag = new CompoundNBT();
+    protected String getItemJson() {
+        var tag = new CompoundNBT();
         this.item.save(tag);
         return tag.toString();
     }
@@ -398,10 +360,10 @@ public class ItemTrade extends ForgeTrade {
         @Override
         public Builder contents(String contents) {
             try {
-                CompoundNBT tagCompound = JsonToNBT.parseTag(contents);
+                var tagCompound = JsonToNBT.parseTag(contents);
                 return this.contents(ItemStack.of(tagCompound));
             } catch (CommandSyntaxException e) {
-                e.printStackTrace();
+                EnvyGTSForge.getLogger().error("Failed to parse item contents: " + contents);
             }
             return this;
         }
@@ -422,11 +384,13 @@ public class ItemTrade extends ForgeTrade {
                 return null;
             }
 
-            return new ItemTrade(this.owner, this.ownerName, this.originalOwnerName, this.cost, this.expiry,
-                                 this.itemStack,
-                                 this.removed,
-                                 this.purchased
-            );
+            if (EnvyGTSForge.getPlayerManager().getSaveManager().getSaveMode().equals(SQLiteDatabaseDetailsConfig.ID)) {
+                return new SQLItemTrade(this.owner, this.ownerName, this.originalOwnerName, this.cost, this.expiry,
+                                        this.itemStack, this.removed, this.purchased);
+            } else {
+                return new SQLiteItemTrade(this.owner, this.ownerName, this.originalOwnerName, this.cost, this.expiry,
+                        this.itemStack, this.removed, this.purchased);
+            }
         }
     }
 }

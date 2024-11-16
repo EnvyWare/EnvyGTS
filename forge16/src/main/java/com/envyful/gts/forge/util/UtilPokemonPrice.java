@@ -2,19 +2,19 @@ package com.envyful.gts.forge.util;
 
 import com.envyful.gts.forge.EnvyGTSForge;
 import com.envyful.gts.forge.config.PokeSpecPricing;
-import com.google.common.collect.Lists;
 import com.pixelmonmod.pixelmon.api.pokemon.Pokemon;
 
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
 public class UtilPokemonPrice {
 
     public static double getMinPrice(Pokemon pokemon) {
-        double defaultPrice = EnvyGTSForge.getConfig().getMinPokemonPrice();
-        List<PokeSpecPricing> applicable = Lists.newArrayList();
+        var defaultPrice = EnvyGTSForge.getConfig().getMinPokemonPrice();
+        List<PokeSpecPricing> applicable = new ArrayList<>();
 
-        for (PokeSpecPricing minPriceModifier : EnvyGTSForge.getConfig().getMinPriceModifiers()) {
+        for (var minPriceModifier : EnvyGTSForge.getConfig().getMinPriceModifiers()) {
             if (minPriceModifier.getSpec().matches(pokemon)) {
                 applicable.add(minPriceModifier);
             }
@@ -22,7 +22,7 @@ public class UtilPokemonPrice {
 
         applicable.sort(Comparator.comparing(PokeSpecPricing::getPriority));
 
-        for (PokeSpecPricing pokeSpecPricing : applicable) {
+        for (var pokeSpecPricing : applicable) {
             defaultPrice = pokeSpecPricing.apply(defaultPrice);
         }
 

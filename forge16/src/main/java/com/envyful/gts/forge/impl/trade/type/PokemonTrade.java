@@ -13,6 +13,7 @@ import com.envyful.api.gui.item.Displayable;
 import com.envyful.api.gui.pane.Pane;
 import com.envyful.api.player.EnvyPlayer;
 import com.envyful.api.reforged.pixelmon.sprite.UtilSprite;
+import com.envyful.api.sqlite.config.SQLiteDatabaseDetailsConfig;
 import com.envyful.api.text.Placeholder;
 import com.envyful.api.time.UtilTimeFormat;
 import com.envyful.gts.api.Trade;
@@ -20,13 +21,14 @@ import com.envyful.gts.api.TradeData;
 import com.envyful.gts.api.data.PixelmonTradeData;
 import com.envyful.gts.api.discord.DiscordEvent;
 import com.envyful.gts.api.gui.SortType;
-import com.envyful.gts.api.sql.EnvyGTSQueries;
 import com.envyful.gts.forge.EnvyGTSForge;
 import com.envyful.gts.forge.config.EnvyGTSConfig;
 import com.envyful.gts.forge.event.PlaceholderCollectEvent;
 import com.envyful.gts.forge.event.TradeCollectEvent;
 import com.envyful.gts.forge.event.TradeRemoveEvent;
 import com.envyful.gts.forge.impl.trade.ForgeTrade;
+import com.envyful.gts.forge.impl.trade.type.sql.SQLPokemonTrade;
+import com.envyful.gts.forge.impl.trade.type.sqlite.SQLitePokemonTrade;
 import com.envyful.gts.forge.player.GTSAttribute;
 import com.envyful.gts.forge.ui.ViewTradesUI;
 import com.google.common.collect.Lists;
@@ -47,9 +49,6 @@ import net.minecraft.nbt.JsonToNBT;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.common.MinecraftForge;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
@@ -61,7 +60,7 @@ import java.util.function.Consumer;
  * Represents a pokemon {@link Trade} in the GTS
  *
  */
-public class PokemonTrade extends ForgeTrade {
+public abstract class PokemonTrade extends ForgeTrade {
 
     private final Pokemon pokemon;
     private final TradeData tradeData;
@@ -230,44 +229,7 @@ public class PokemonTrade extends ForgeTrade {
                 .build());
     }
 
-    @Override
-    public void delete() {
-        try (Connection connection = EnvyGTSForge.getDatabase().getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(EnvyGTSQueries.REMOVE_TRADE)) {
-            preparedStatement.setString(1, this.owner.toString());
-            preparedStatement.setLong(2, this.expiry);
-            preparedStatement.setDouble(3, this.cost);
-            preparedStatement.setString(4, "p");
-            preparedStatement.setString(5, "INSTANT_BUY");
-
-            preparedStatement.executeUpdate();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
-
-    @Override
-    public void save() {
-        try (Connection connection = EnvyGTSForge.getDatabase().getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(EnvyGTSQueries.ADD_TRADE)) {
-            preparedStatement.setString(1, this.owner.toString());
-            preparedStatement.setString(2, this.ownerName);
-            preparedStatement.setString(3, this.originalOwnerName);
-            preparedStatement.setLong(4, this.expiry);
-            preparedStatement.setDouble(5, this.cost);
-            preparedStatement.setInt(6, this.removed ? 1 : 0);
-            preparedStatement.setString(7, "INSTANT_BUY");
-            preparedStatement.setString(8, "p");
-            preparedStatement.setString(9, this.getPokemonJson());
-            preparedStatement.setInt(10, 0);
-
-            preparedStatement.executeUpdate();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
-
-    private String getPokemonJson() {
+    protected String getPokemonJson() {
         CompoundNBT tag = new CompoundNBT();
         this.pokemon.writeToNBT(tag);
         return tag.toString();
@@ -470,10 +432,13 @@ public class PokemonTrade extends ForgeTrade {
                 return null;
             }
 
-            return new PokemonTrade(this.owner, this.ownerName, this.originalOwnerName, this.cost, this.expiry,
-                                    this.pokemon,
-                                    this.removed,
-                                    this.purchased);
+            if (EnvyGTSForge.getPlayerManager().getSaveManager().getSaveMode().equals(SQLiteDatabaseDetailsConfig.ID)) {
+                return new SQLPokemonTrade(this.owner, this.ownerName, this.originalOwnerName, this.cost, this.expiry,
+                        this.pokemon, this.removed, this.purchased);
+            } else {
+                return new SQLitePokemonTrade(this.owner, this.ownerName, this.originalOwnerName, this.cost, this.expiry,
+                        this.pokemon, this.removed, this.purchased);
+            }
         }
     }
 }

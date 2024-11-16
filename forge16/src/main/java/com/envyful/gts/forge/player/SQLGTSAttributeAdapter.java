@@ -1,6 +1,14 @@
-package com.envyful.gts.api.sql;
+package com.envyful.gts.forge.player;
 
-public class EnvyGTSQueries {
+import com.envyful.api.database.sql.SqlType;
+import com.envyful.api.json.UtilGson;
+import com.envyful.api.player.attribute.adapter.AttributeAdapter;
+import com.envyful.gts.api.player.PlayerSettings;
+import com.envyful.gts.forge.EnvyGTSForge;
+
+import java.util.UUID;
+
+public class SQLGTSAttributeAdapter implements AttributeAdapter<GTSAttribute, UUID> {
 
     public static final String CREATE_MAIN_TABLE = "CREATE TABLE IF NOT EXISTS `envygts_trade`(" +
             "id             INT             UNSIGNED    NOT NULL    AUTO_INCREMENT, " +
@@ -56,4 +64,50 @@ public class EnvyGTSQueries {
     public static final String UPDATE_OR_CREATE_SETTINGS = "INSERT INTO `envygts_settings`(owner, settings) " +
             "VALUES (?, ?) ON DUPLICATE KEY UPDATE settings = VALUES(`settings`);";
 
+    @Override
+    public void save(GTSAttribute attribute) {
+        EnvyGTSForge.getDatabase()
+                .update(UPDATE_PLAYER_NAME)
+                .data(SqlType.text(attribute.name), SqlType.text(attribute.getId().toString()))
+                .execute();
+
+        EnvyGTSForge.getDatabase()
+                .update(UPDATE_OR_CREATE_SETTINGS)
+                .data(SqlType.text(attribute.getId().toString()), SqlType.text(UtilGson.GSON.toJson(attribute.settings)))
+                .execute();
+    }
+
+    @Override
+    public void load(GTSAttribute attribute) {
+        for (var allTrade : EnvyGTSForge.getTradeManager().getAllTrades()) {
+            if (allTrade.isOwner(attribute.getId())) {
+                attribute.ownedTrades.add(allTrade);
+            }
+        }
+
+        EnvyGTSForge.getDatabase()
+                .query(GET_PLAYER_SETTINGS)
+                .data(SqlType.text(attribute.getId().toString()))
+                .converter(resultSet -> {
+                    attribute.settings = UtilGson.GSON.fromJson(resultSet.getString("settings"), PlayerSettings.class);
+                    return null;
+                })
+                .executeWithConverter();
+    }
+
+    @Override
+    public void delete(GTSAttribute gtsAttribute) {
+        //TODO:
+    }
+
+    @Override
+    public void deleteAll() {
+        //TODO:
+    }
+
+    @Override
+    public void initialize() {
+        EnvyGTSForge.getDatabase().update(CREATE_MAIN_TABLE).executeAsync();
+        EnvyGTSForge.getDatabase().update(CREATE_SETTINGS_TABLE).executeAsync();
+    }
 }

@@ -1,10 +1,11 @@
 package com.envyful.gts.forge.config;
 
 import com.envyful.api.config.data.ConfigPath;
+import com.envyful.api.config.database.DatabaseDetailsConfig;
 import com.envyful.api.config.type.ConfigItem;
-import com.envyful.api.config.type.SQLDatabaseDetails;
 import com.envyful.api.config.yaml.AbstractYamlConfig;
 import com.envyful.api.gui.item.Displayable;
+import com.envyful.api.sqlite.config.SQLiteDatabaseDetailsConfig;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
 import com.pixelmonmod.api.pokemon.PokemonSpecification;
@@ -28,9 +29,7 @@ import java.util.regex.Pattern;
 @ConfigSerializable
 public class EnvyGTSConfig extends AbstractYamlConfig {
 
-    private SQLDatabaseDetails databaseDetails = new SQLDatabaseDetails("EnvyGTS", "0.0.0.0", 3306, "admin",
-                                                                        "password", "database"
-    );
+    private DatabaseDetailsConfig databaseDetails = new SQLiteDatabaseDetailsConfig("config/EnvyGTS/gts.db");
 
     private Map<String, String> itemUrlFormats = ImmutableMap.of(
             "minecraft", "https://minecraft.fandom.com/wiki/Special:FilePath/%item_id%.png"
@@ -84,7 +83,7 @@ public class EnvyGTSConfig extends AbstractYamlConfig {
         super();
     }
 
-    public SQLDatabaseDetails getDatabaseDetails() {
+    public DatabaseDetailsConfig getDatabaseDetails() {
         return this.databaseDetails;
     }
 

@@ -1,13 +1,11 @@
 package com.envyful.gts.forge.impl.trade;
 
-import com.envyful.api.concurrency.UtilConcurrency;
 import com.envyful.api.forge.chat.UtilChatColour;
 import com.envyful.api.forge.player.ForgeEnvyPlayer;
 import com.envyful.api.forge.player.util.UtilPlayer;
 import com.envyful.api.player.EnvyPlayer;
 import com.envyful.gts.api.Trade;
 import com.envyful.gts.api.gui.FilterType;
-import com.envyful.gts.api.sql.EnvyGTSQueries;
 import com.envyful.gts.forge.EnvyGTSForge;
 import com.envyful.gts.forge.config.EnvyGTSConfig;
 import com.envyful.gts.forge.event.PostTradePurchaseEvent;
@@ -22,9 +20,6 @@ import net.minecraft.util.Util;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.server.ServerLifecycleHooks;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
 import java.util.Objects;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
@@ -161,59 +156,9 @@ public abstract class ForgeTrade implements Trade {
         sellerAttribute.getOwnedTrades().remove(this);
     }
 
-    protected CompletableFuture<Void> setRemoved() {
-        this.removed = true;
+    protected abstract CompletableFuture<Void> setRemoved();
 
-        return CompletableFuture.runAsync(() -> {
-            try (Connection connection = EnvyGTSForge.getDatabase().getConnection();
-                 PreparedStatement preparedStatement = connection.prepareStatement(EnvyGTSQueries.UPDATE_REMOVED)) {
-                preparedStatement.setInt(1, 1);
-                preparedStatement.setInt(2, this.purchased ? 1 : 0);
-                preparedStatement.setString(3, this.owner.toString());
-                preparedStatement.setLong(4, this.expiry);
-                preparedStatement.setDouble(5, this.cost);
-
-                if (this instanceof ItemTrade) {
-                    preparedStatement.setString(6, "i");
-                } else {
-                    preparedStatement.setString(6, "p");
-                }
-
-                preparedStatement.setString(7, "INSTANT_BUY");
-                preparedStatement.executeUpdate();
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-        }, UtilConcurrency.SCHEDULED_EXECUTOR_SERVICE);
-    }
-
-    protected void updateOwner(UUID newOwner, String newOwnerName) {
-        UUID owner = this.owner;
-        this.owner = newOwner;
-        this.ownerName = newOwnerName;
-
-        UtilConcurrency.runAsync(() -> {
-            try (Connection connection = EnvyGTSForge.getDatabase().getConnection();
-                 PreparedStatement preparedStatement = connection.prepareStatement(EnvyGTSQueries.UPDATE_OWNER)) {
-                preparedStatement.setString(1, newOwner.toString());
-                preparedStatement.setString(2, newOwnerName);
-                preparedStatement.setString(3, owner.toString());
-                preparedStatement.setLong(4, this.expiry);
-                preparedStatement.setDouble(5, this.cost);
-
-                if (this instanceof ItemTrade) {
-                    preparedStatement.setString(6, "i");
-                } else {
-                    preparedStatement.setString(6, "p");
-                }
-
-                preparedStatement.setString(7, "INSTANT_BUY");
-                preparedStatement.executeUpdate();
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-        });
-    }
+    protected abstract void updateOwner(UUID newOwner, String newOwnerName);
 
     public static Builder builder() {
         return new Builder();
