@@ -2,10 +2,11 @@ package com.envyful.gts.forge;
 
 import com.envyful.api.concurrency.UtilConcurrency;
 import com.envyful.api.concurrency.UtilLogger;
+import com.envyful.api.config.database.DatabaseDetailsConfig;
+import com.envyful.api.config.database.DatabaseDetailsRegistry;
+import com.envyful.api.config.type.SQLDatabaseDetails;
 import com.envyful.api.config.yaml.YamlConfigFactory;
 import com.envyful.api.database.Database;
-import com.envyful.api.database.impl.SimpleHikariDatabase;
-import com.envyful.api.database.sql.UtilSql;
 import com.envyful.api.forge.command.ForgeCommandFactory;
 import com.envyful.api.forge.command.parser.ForgeAnnotationCommandParser;
 import com.envyful.api.forge.gui.factory.ForgeGuiFactory;
@@ -13,22 +14,27 @@ import com.envyful.api.forge.platform.ForgePlatformHandler;
 import com.envyful.api.forge.player.ForgePlayerManager;
 import com.envyful.api.gui.factory.GuiFactory;
 import com.envyful.api.platform.PlatformProxy;
+import com.envyful.api.player.Attribute;
+import com.envyful.api.sqlite.config.SQLiteDatabaseDetailsConfig;
 import com.envyful.gts.api.GlobalTradeManager;
 import com.envyful.gts.api.TradeManager;
 import com.envyful.gts.api.discord.DiscordEventManager;
 import com.envyful.gts.api.gui.FilterTypeFactory;
-import com.envyful.gts.api.sql.EnvyGTSQueries;
 import com.envyful.gts.forge.command.GTSCommand;
 import com.envyful.gts.forge.config.EnvyGTSConfig;
 import com.envyful.gts.forge.config.GuiConfig;
 import com.envyful.gts.forge.config.LocaleConfig;
 import com.envyful.gts.forge.impl.filter.*;
 import com.envyful.gts.forge.impl.storage.SQLGlobalTradeManager;
+import com.envyful.gts.forge.impl.storage.SQLiteGlobalTradeManager;
 import com.envyful.gts.forge.listener.TradeCreateListener;
 import com.envyful.gts.forge.listener.discord.DiscordTradeCreateListener;
 import com.envyful.gts.forge.listener.discord.DiscordTradePurchaseListener;
 import com.envyful.gts.forge.listener.discord.DiscordTradeRemoveListener;
 import com.envyful.gts.forge.player.GTSAttribute;
+import com.envyful.gts.forge.player.SQLGTSAttributeAdapter;
+import com.envyful.gts.forge.player.SQLiteGTSAttributeAdapter;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.RegisterCommandsEvent;
 import net.minecraftforge.event.server.ServerAboutToStartEvent;
@@ -43,9 +49,7 @@ import java.io.IOException;
 @Mod("envygts")
 public class EnvyGTSForge {
 
-    public static final String VERSION = "4.5.6";
-
-    private static Logger LOGGER = LogManager.getLogger("EnvyGTS");
+    private static final Logger LOGGER = LogManager.getLogger("EnvyGTS");
 
     private static EnvyGTSForge instance;
 
@@ -60,10 +64,13 @@ public class EnvyGTSForge {
     private GlobalTradeManager tradeManager;
 
     public EnvyGTSForge() {
+        SQLiteDatabaseDetailsConfig.register();
         UtilLogger.setLogger(LOGGER);
-        UtilSql.registerDriver();
+
         GuiFactory.setPlatformFactory(new ForgeGuiFactory());
+        GuiFactory.setPlayerManager(this.playerManager);
         PlatformProxy.setHandler(ForgePlatformHandler.getInstance());
+        PlatformProxy.setPlayerManager(this.playerManager);
 
         MinecraftForge.EVENT_BUS.register(this);
         instance = this;
@@ -78,12 +85,17 @@ public class EnvyGTSForge {
         FilterTypeFactory.register(new ItemFilterType());
         FilterTypeFactory.register(new PokemonFilterType());
 
-        this.playerManager.registerAttribute(GTSAttribute.class, GTSAttribute::new);
-
         this.loadConfig();
+        this.playerManager.getSaveManager().setSaveMode(DatabaseDetailsRegistry.getRegistry().getKey((Class<DatabaseDetailsConfig>) this.getConfig().getDatabaseDetails().getClass()));
 
-        this.database = new SimpleHikariDatabase(this.config.getDatabaseDetails());
-        this.createTables();
+        this.playerManager.registerAttribute(Attribute.builder(GTSAttribute.class, ServerPlayer.class)
+                .constructor(GTSAttribute::new)
+                .registerAdapter(SQLDatabaseDetails.ID, new SQLGTSAttributeAdapter())
+                .registerAdapter(SQLiteDatabaseDetailsConfig.ID, new SQLiteGTSAttributeAdapter())
+        );
+
+        this.database = this.config.getDatabaseDetails().createDatabase();
+        this.playerManager.getSaveManager().getAdapter(GTSAttribute.class).initialize();
     }
 
     @SubscribeEvent
@@ -94,7 +106,7 @@ public class EnvyGTSForge {
         new DiscordTradeRemoveListener();
 
         UtilConcurrency.runAsync(() -> {
-            this.tradeManager = new SQLGlobalTradeManager();
+            this.tradeManager = this.playerManager.getSaveManager().getSaveMode().equalsIgnoreCase(SQLiteDatabaseDetailsConfig.ID) ? new SQLiteGlobalTradeManager() : new SQLGlobalTradeManager();
             TradeManager.setPlatformTradeManager(this.tradeManager);
         });
     }
@@ -113,16 +125,6 @@ public class EnvyGTSForge {
         } else {
             LOGGER.info("Skipping WebHook setup as it is disabled in the config");
         }
-    }
-
-    private void createTables() {
-        UtilSql.update(this.database)
-                .query(EnvyGTSQueries.CREATE_MAIN_TABLE)
-                .executeAsync();
-
-        UtilSql.update(this.database)
-                .query(EnvyGTSQueries.CREATE_SETTINGS_TABLE)
-                .executeAsync();
     }
 
     @SubscribeEvent

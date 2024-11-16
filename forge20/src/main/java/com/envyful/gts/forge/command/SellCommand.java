@@ -20,7 +20,6 @@ import com.google.common.collect.Lists;
 import com.pixelmonmod.pixelmon.api.storage.StorageProxy;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 
 import java.util.List;
@@ -45,7 +44,7 @@ public class SellCommand {
 
         ForgeEnvyPlayer sender = EnvyGTSForge.getPlayerManager().getPlayer(player);
         GTSAttribute attribute = sender.getAttributeNow(GTSAttribute.class);
-        ItemStack inHand = player.getItemInHand(InteractionHand.MAIN_HAND);
+        var inHand = player.getItemInHand(InteractionHand.MAIN_HAND);
 
         if (args.length == 0) {
             StorageProxy.getPartyNow(player).retrieveAll("GTS");
@@ -155,7 +154,7 @@ public class SellCommand {
                 .expiry(System.currentTimeMillis() + duration)
                 .content("i");
 
-        ItemStack copy = inHand.copy();
+        var copy = inHand.copy();
         copy.setCount(amount);
         builder.contents(copy);
         inHand.shrink(amount);

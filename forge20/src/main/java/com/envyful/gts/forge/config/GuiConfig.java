@@ -267,10 +267,10 @@ public class GuiConfig extends AbstractYamlConfig {
                         .build();
 
         private ConfigItem noPokemonItem = ConfigItem.builder()
-                        .type("minecraft:barrier")
-                        .name("&cNo pokemon in this position")
-                        .amount(1)
-                        .build();
+                .type("minecraft:barrier")
+                .name("&cNo pokemon in this position")
+                .amount(1)
+                .build();
 
         private ConfigItem untradeablePokemonItem = ConfigItem.builder()
                 .type("minecraft:barrier")

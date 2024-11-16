@@ -21,8 +21,6 @@ public class DiscordTradeCreateListener extends LazyListener {
     public void onTradeCreate(TradeCreateEvent event) {
         DiscordEvent publishHandler = DiscordEventManager.getPublishHandler();
 
-        EnvyGTSForge.getLogger().info("DiscordTradeCreateListener: " + publishHandler);
-        EnvyGTSForge.getLogger().info("DiscordTradeCreateListener: " + publishHandler.isEnabled());
         if (publishHandler == null || !publishHandler.isEnabled()) {
             return;
         }
@@ -34,7 +32,7 @@ public class DiscordTradeCreateListener extends LazyListener {
                 if (webHook != null) {
                     webHook.execute();
                 } else {
-                    EnvyGTSForge.getLogger().warn("Failed to create webhook for trade: " + event.getTrade().getDisplayName());
+                    EnvyGTSForge.getLogger().warn("Failed to create webhook for trade: {}", event.getTrade().getDisplayName());
                 }
             } catch (IOException e) {
                 EnvyGTSForge.getLogger().error("Failed to send trade create webhook", e);

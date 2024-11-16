@@ -16,7 +16,6 @@ import com.envyful.gts.forge.player.GTSAttribute;
 import com.envyful.gts.forge.util.UtilPokemonPrice;
 import com.google.common.collect.Lists;
 import com.pixelmonmod.pixelmon.api.pokemon.Pokemon;
-import com.pixelmonmod.pixelmon.api.storage.PlayerPartyStorage;
 import com.pixelmonmod.pixelmon.api.storage.StorageProxy;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.Enchantments;
@@ -54,7 +53,7 @@ public class SelectPartyPokemonUI {
         UtilConfigItem.builder()
                 .asyncClick(false)
                 .clickHandler((envyPlayer, clickType) -> {
-                    GTSAttribute attribute = ((ForgeEnvyPlayer) envyPlayer).getAttributeNow(GTSAttribute.class);
+                    GTSAttribute attribute = player.getAttributeNow(GTSAttribute.class);
 
                     List<Trade> trades = Lists.newArrayList(attribute.getOwnedTrades());
 
@@ -71,7 +70,7 @@ public class SelectPartyPokemonUI {
                         return;
                     }
 
-                    PlayerPartyStorage party = StorageProxy.getPartyNow(player.getParent());
+                    var party = StorageProxy.getPartyNow(player.getParent());
 
                     if (party.countAblePokemon() <= 1 || party.getTeam().size() <= attribute.getSelectedSlot()) {
                         return;
@@ -95,7 +94,7 @@ public class SelectPartyPokemonUI {
     }
 
     private static void setPokemon(ForgeEnvyPlayer player, Pane pane) {
-        PlayerPartyStorage party = StorageProxy.getPartyNow(player.getParent());
+        var party = StorageProxy.getPartyNow(player.getParent());
         Pokemon[] all = party.getAll();
         GuiConfig.PartyPokemonConfig config = EnvyGTSForge.getGui().getPartyPokemonUIConfig();
 

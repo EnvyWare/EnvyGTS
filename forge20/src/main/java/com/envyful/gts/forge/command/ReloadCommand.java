@@ -4,10 +4,9 @@ import com.envyful.api.command.annotate.Command;
 import com.envyful.api.command.annotate.executor.CommandProcessor;
 import com.envyful.api.command.annotate.executor.Sender;
 import com.envyful.api.command.annotate.permission.Permissible;
+import com.envyful.api.platform.Messageable;
 import com.envyful.gts.forge.EnvyGTSForge;
 import com.envyful.gts.forge.event.GTSReloadEvent;
-import net.minecraft.commands.CommandSource;
-import net.minecraft.network.chat.Component;
 import net.minecraftforge.common.MinecraftForge;
 
 @Command(
@@ -17,9 +16,9 @@ import net.minecraftforge.common.MinecraftForge;
 public class ReloadCommand {
 
     @CommandProcessor
-    public void onCommand(@Sender CommandSource sender, String[] args) {
+    public void onCommand(@Sender Messageable<?> sender, String[] args) {
         EnvyGTSForge.getInstance().loadConfig();
         MinecraftForge.EVENT_BUS.post(new GTSReloadEvent());
-        sender.sendSystemMessage(Component.literal("Reloaded config"));
+        sender.message("Reloaded config");
     }
 }
