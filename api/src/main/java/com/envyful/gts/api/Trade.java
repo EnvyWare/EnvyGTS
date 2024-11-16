@@ -1,12 +1,10 @@
 package com.envyful.gts.api;
 
-import com.envyful.api.discord.DiscordWebHook;
 import com.envyful.api.gui.item.Displayable;
 import com.envyful.api.gui.pane.Pane;
 import com.envyful.api.player.EnvyPlayer;
 import com.envyful.api.text.ParseResult;
 import com.envyful.api.text.Placeholder;
-import com.envyful.gts.api.discord.DiscordEvent;
 import com.envyful.gts.api.gui.FilterType;
 import org.checkerframework.checker.nullness.qual.NonNull;
 
@@ -157,14 +155,6 @@ public interface Trade extends Placeholder {
      *
      */
     void save();
-
-    /**
-     *
-     * Gets the webhook for this event
-     *
-     * @return The webhook for this event
-     */
-    DiscordWebHook getWebHook(DiscordEvent event);
 
     /**
      *

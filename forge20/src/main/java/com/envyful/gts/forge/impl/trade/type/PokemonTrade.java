@@ -1,7 +1,6 @@
 package com.envyful.gts.forge.impl.trade.type;
 
 import com.envyful.api.concurrency.UtilConcurrency;
-import com.envyful.api.discord.DiscordWebHook;
 import com.envyful.api.forge.chat.UtilChatColour;
 import com.envyful.api.forge.concurrency.UtilForgeConcurrency;
 import com.envyful.api.forge.gui.type.ConfirmationUI;
@@ -14,12 +13,8 @@ import com.envyful.api.reforged.pixelmon.config.SpriteConfig;
 import com.envyful.api.reforged.pixelmon.sprite.UtilSprite;
 import com.envyful.api.sqlite.config.SQLiteDatabaseDetailsConfig;
 import com.envyful.api.text.Placeholder;
-import com.envyful.api.text.PlaceholderFactory;
-import com.envyful.api.time.UtilTimeFormat;
 import com.envyful.gts.api.Trade;
-import com.envyful.gts.api.discord.DiscordEvent;
 import com.envyful.gts.forge.EnvyGTSForge;
-import com.envyful.gts.forge.config.EnvyGTSConfig;
 import com.envyful.gts.forge.event.PlaceholderCollectEvent;
 import com.envyful.gts.forge.event.TradeCollectEvent;
 import com.envyful.gts.forge.event.TradeRemoveEvent;
@@ -31,11 +26,6 @@ import com.envyful.gts.forge.ui.ViewTradesUI;
 import com.pixelmonmod.api.pokemon.PokemonSpecification;
 import com.pixelmonmod.pixelmon.api.pokemon.Pokemon;
 import com.pixelmonmod.pixelmon.api.pokemon.PokemonFactory;
-import com.pixelmonmod.pixelmon.api.pokemon.stats.BattleStatsType;
-import com.pixelmonmod.pixelmon.api.pokemon.stats.ExtraStats;
-import com.pixelmonmod.pixelmon.api.pokemon.stats.IVStore;
-import com.pixelmonmod.pixelmon.api.pokemon.stats.extraStats.LakeTrioStats;
-import com.pixelmonmod.pixelmon.api.pokemon.stats.extraStats.MewStats;
 import com.pixelmonmod.pixelmon.api.registries.PixelmonSpecies;
 import com.pixelmonmod.pixelmon.api.storage.StorageProxy;
 import net.minecraft.nbt.CompoundTag;
@@ -202,15 +192,6 @@ public abstract class PokemonTrade extends ForgeTrade {
 
         placeholders.addAll(UtilSprite.getPokemonPlaceholders(pokemon, SpriteConfig.DEFAULT));
         return placeholders;
-    }
-
-    @Override
-    public DiscordWebHook getWebHook(DiscordEvent event) {
-        if (!event.isPokemonEnabled()) {
-            return null;
-        }
-
-        return DiscordWebHook.fromJson(String.join(System.lineSeparator(), PlaceholderFactory.handlePlaceholders(event.getPokemonJSON(), this)));
     }
 
     @Override

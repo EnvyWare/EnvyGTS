@@ -1,7 +1,6 @@
 package com.envyful.gts.forge.impl.trade.type;
 
 import com.envyful.api.concurrency.UtilConcurrency;
-import com.envyful.api.discord.DiscordWebHook;
 import com.envyful.api.forge.chat.UtilChatColour;
 import com.envyful.api.forge.concurrency.UtilForgeConcurrency;
 import com.envyful.api.forge.gui.type.ConfirmationUI;
@@ -14,9 +13,7 @@ import com.envyful.api.reforged.pixelmon.config.SpriteConfig;
 import com.envyful.api.reforged.pixelmon.sprite.UtilSprite;
 import com.envyful.api.sqlite.config.SQLiteDatabaseDetailsConfig;
 import com.envyful.api.text.Placeholder;
-import com.envyful.api.text.PlaceholderFactory;
 import com.envyful.gts.api.Trade;
-import com.envyful.gts.api.discord.DiscordEvent;
 import com.envyful.gts.forge.EnvyGTSForge;
 import com.envyful.gts.forge.event.PlaceholderCollectEvent;
 import com.envyful.gts.forge.event.TradeCollectEvent;
@@ -195,15 +192,6 @@ public abstract class PokemonTrade extends ForgeTrade {
 
         placeholders.addAll(UtilSprite.getPokemonPlaceholders(pokemon, SpriteConfig.DEFAULT));
         return placeholders;
-    }
-
-    @Override
-    public DiscordWebHook getWebHook(DiscordEvent event) {
-        if (!event.isPokemonEnabled()) {
-            return null;
-        }
-
-        return DiscordWebHook.fromJson(String.join(System.lineSeparator(), PlaceholderFactory.handlePlaceholders(event.getPokemonJSON(), this)));
     }
 
     @Override

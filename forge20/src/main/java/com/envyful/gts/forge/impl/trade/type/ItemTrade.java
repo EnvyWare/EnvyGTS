@@ -260,15 +260,6 @@ public abstract class ItemTrade extends ForgeTrade {
         return builder.toString();
     }
 
-    @Override
-    public DiscordWebHook getWebHook(DiscordEvent event) {
-        if (!event.isItemEnabled()) {
-            return null;
-        }
-
-        return DiscordWebHook.fromJson(String.join(System.lineSeparator(), PlaceholderFactory.handlePlaceholders(this.getItemJson(), this)));
-    }
-
     private String capitalizeAfterUnderscoreAndStart(String word) {
         String[] s = word.split("_");
         List<String> words = Lists.newArrayList();
