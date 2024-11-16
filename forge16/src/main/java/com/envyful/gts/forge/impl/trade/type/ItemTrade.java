@@ -147,7 +147,7 @@ public abstract class ItemTrade extends ForgeTrade {
                         this.removed = true;
                         MinecraftForge.EVENT_BUS.post(new TradeRemoveEvent(this));
 
-                        GTSAttribute attribute = ((ForgeEnvyPlayer) envyPlayer).getAttributeNow(GTSAttribute.class);
+                        var attribute = envyPlayer.getAttributeNow(GTSAttribute.class);
                         attribute.getOwnedTrades().remove(this);
 
                         this.collect(envyPlayer, null);

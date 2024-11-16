@@ -191,7 +191,9 @@ public class GuiConfig extends AbstractYamlConfig {
                 .positions(6, 5)
                 .build();
 
-        private SpriteConfig spriteConfig = new SpriteConfig();
+        private SpriteConfig spriteConfig = SpriteConfig.builder()
+                .addLore("%below_lore_data%")
+                .build();
 
         public SearchTradesConfig() {
         }

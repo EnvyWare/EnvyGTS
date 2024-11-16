@@ -5,7 +5,6 @@ import com.envyful.api.discord.DiscordWebHook;
 import com.envyful.api.forge.chat.UtilChatColour;
 import com.envyful.api.forge.concurrency.UtilForgeConcurrency;
 import com.envyful.api.forge.gui.type.ConfirmationUI;
-import com.envyful.api.forge.items.ItemBuilder;
 import com.envyful.api.forge.player.ForgeEnvyPlayer;
 import com.envyful.api.gui.factory.GuiFactory;
 import com.envyful.api.gui.item.Displayable;
@@ -27,7 +26,6 @@ import com.envyful.gts.forge.impl.trade.type.sql.SQLPokemonTrade;
 import com.envyful.gts.forge.impl.trade.type.sqlite.SQLitePokemonTrade;
 import com.envyful.gts.forge.player.GTSAttribute;
 import com.envyful.gts.forge.ui.ViewTradesUI;
-import com.google.common.collect.Lists;
 import com.pixelmonmod.api.pokemon.PokemonSpecification;
 import com.pixelmonmod.pixelmon.api.pokemon.Pokemon;
 import com.pixelmonmod.pixelmon.api.pokemon.PokemonFactory;
@@ -40,12 +38,10 @@ import com.pixelmonmod.pixelmon.api.registries.PixelmonSpecies;
 import com.pixelmonmod.pixelmon.api.storage.StorageProxy;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.TagParser;
-import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.common.MinecraftForge;
 
-import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
@@ -79,8 +75,6 @@ public abstract class PokemonTrade extends ForgeTrade {
 
     @Override
     public CompletableFuture<Void> collect(EnvyPlayer<?> player, Consumer<EnvyPlayer<?>> returnGui) {
-        var parent = (ServerPlayer) player.getParent();
-
         MinecraftForge.EVENT_BUS.post(new TradeCollectEvent((ForgeEnvyPlayer) player, this));
 
         StorageProxy.getPartyNow((ServerPlayer) player.getParent()).add(this.pokemon);
@@ -97,9 +91,7 @@ public abstract class PokemonTrade extends ForgeTrade {
 
     @Override
     public void adminRemove(EnvyPlayer<?> admin) {
-        var parent = (ServerPlayer) admin.getParent();
-
-        parent.closeContainer();
+        admin.closeInventory();
 
         var owner = EnvyGTSForge.getPlayerManager().getPlayer(this.owner);
 
@@ -115,16 +107,13 @@ public abstract class PokemonTrade extends ForgeTrade {
 
     @Override
     public Displayable display() {
-        var placeholderEvent = new PlaceholderCollectEvent(this);
+        var placeholderEvent = new PlaceholderCollectEvent(this, Placeholder.multiLine("%below_lore_data%", EnvyGTSForge.getLocale().getListingBelowDataLore()), this);
 
         MinecraftForge.EVENT_BUS.post(placeholderEvent);
 
         return GuiFactory.displayableBuilder(ItemStack.class)
                 .singleClick()
-                .itemStack(new ItemBuilder(UtilSprite.getPokemonElement(pokemon,
-                        EnvyGTSForge.getGui().getSearchUIConfig().getSpriteConfig(),placeholderEvent.getPlaceholders().toArray(new Placeholder[0])))
-                        .addLore(this.formatLore(EnvyGTSForge.getLocale().getListingBelowDataLore()))
-                        .build())
+                .itemStack(UtilSprite.getPokemonElement(pokemon, EnvyGTSForge.getGui().getSearchUIConfig().getSpriteConfig(),placeholderEvent.getPlaceholders().toArray(new Placeholder[0])))
                 .asyncClick(false)
                 .clickHandler((envyPlayer, clickType) -> {
                     if (this.removed || this.wasPurchased() || this.hasExpired()) {
@@ -162,10 +151,7 @@ public abstract class PokemonTrade extends ForgeTrade {
                             .player(envyPlayer)
                             .playerManager(EnvyGTSForge.getPlayerManager())
                             .config(EnvyGTSForge.getGui().getSearchUIConfig().getConfirmGuiConfig())
-                            .descriptionItem(new ItemBuilder(UtilSprite.getPokemonElement(pokemon,
-                                    EnvyGTSForge.getGui().getSearchUIConfig().getSpriteConfig()))
-                                    .addLore(this.formatLore(EnvyGTSForge.getLocale().getListingBelowDataLore()))
-                                    .build())
+                            .descriptionItem(UtilSprite.getPokemonElement(pokemon, EnvyGTSForge.getGui().getSearchUIConfig().getSpriteConfig(),placeholderEvent.getPlaceholders().toArray(new Placeholder[0])))
                             .confirmHandler((clicker, clickType1) -> UtilForgeConcurrency.runSync(() -> {
                                 if (this.purchased || this.wasRemoved() || this.hasExpired()) {
                                     ViewTradesUI.openUI((ForgeEnvyPlayer)clicker);
@@ -181,32 +167,16 @@ public abstract class PokemonTrade extends ForgeTrade {
                 }).build();
     }
 
-    private Component[] formatLore(List<String> lore) {
-        List<Component> newLore = Lists.newArrayList();
-
-        for (String s : lore) {
-            newLore.add(UtilChatColour.colour(s
-                    .replace("%cost%",
-                             String.format(EnvyGTSForge.getLocale().getMoneyFormat(), this.cost))
-                    .replace("%duration%", UtilTimeFormat.getFormattedDuration((this.expiry - System.currentTimeMillis())))
-                    .replace("%owner%", this.ownerName)
-                    .replace("%buyer%", this.ownerName)
-                    .replace("%original_owner%", this.originalOwnerName)));
-        }
-
-        return newLore.toArray(new Component[0]);
-    }
-
     @Override
     public void displayClaimable(int pos, Consumer<EnvyPlayer<?>> returnGui, Pane pane) {
         int posX = pos % 9;
         int posY = pos / 9;
+        var placeholderEvent = new PlaceholderCollectEvent(this, Placeholder.multiLine("%below_lore_data%", EnvyGTSForge.getLocale().getListingBelowDataLore()), this);
+
+        MinecraftForge.EVENT_BUS.post(placeholderEvent);
 
         pane.set(posX, posY, GuiFactory.displayableBuilder(ItemStack.class)
-                .itemStack(new ItemBuilder(UtilSprite.getPokemonElement(pokemon,
-                        EnvyGTSForge.getGui().getSearchUIConfig().getSpriteConfig()))
-                                   .addLore(this.formatLore(EnvyGTSForge.getLocale().getListingBelowExpiredOrClaimableLore()))
-                                   .build())
+                .itemStack(UtilSprite.getPokemonElement(pokemon, EnvyGTSForge.getGui().getSearchUIConfig().getSpriteConfig(),placeholderEvent.getPlaceholders().toArray(new Placeholder[0])))
                 .asyncClick(false)
                 .singleClick()
                 .clickHandler((envyPlayer, clickType) -> {
