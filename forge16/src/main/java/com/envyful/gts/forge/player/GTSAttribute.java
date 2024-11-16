@@ -1,10 +1,12 @@
 package com.envyful.gts.forge.player;
 
+import com.envyful.api.database.sql.SqlType;
 import com.envyful.api.forge.chat.UtilChatColour;
 import com.envyful.api.forge.concurrency.UtilForgeConcurrency;
-import com.envyful.api.forge.player.ForgePlayerManager;
+import com.envyful.api.forge.player.ForgeEnvyPlayer;
 import com.envyful.api.forge.player.attribute.ManagedForgeAttribute;
 import com.envyful.api.json.UtilGson;
+import com.envyful.api.player.attribute.adapter.SelfAttributeAdapter;
 import com.envyful.gts.api.Trade;
 import com.envyful.gts.api.player.PlayerSettings;
 import com.envyful.gts.api.sql.EnvyGTSQueries;
@@ -16,8 +18,9 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.UUID;
 
-public class GTSAttribute extends ManagedForgeAttribute<EnvyGTSForge> {
+public class GTSAttribute extends ManagedForgeAttribute<EnvyGTSForge> implements SelfAttributeAdapter<UUID> {
 
     private List<Trade> ownedTrades = Lists.newArrayList();
     private int selectedSlot = -1;
@@ -25,9 +28,10 @@ public class GTSAttribute extends ManagedForgeAttribute<EnvyGTSForge> {
     private double currentMinPrice = -1;
     private long currentDuration = -1;
     private PlayerSettings settings = new PlayerSettings();
+    private String name;
 
-    public GTSAttribute() {
-        super(EnvyGTSForge.getInstance());
+    public GTSAttribute(UUID id) {
+        super(id, EnvyGTSForge.getInstance());
     }
 
     public List<Trade> getOwnedTrades() {
@@ -71,27 +75,10 @@ public class GTSAttribute extends ManagedForgeAttribute<EnvyGTSForge> {
     }
 
     @Override
-    public void load() {
-        for (Trade allTrade : EnvyGTSForge.getTradeManager().getAllTrades()) {
-            if (allTrade.isOwner(this.parent.getUniqueId())) {
-                this.ownedTrades.add(allTrade);
-            }
-        }
+    public void setParent(ForgeEnvyPlayer parent) {
+        super.setParent(parent);
 
-        try (Connection connection = EnvyGTSForge.getDatabase().getConnection();
-             PreparedStatement settingsStatement = connection.prepareStatement(EnvyGTSQueries.GET_PLAYER_SETTINGS)) {
-            settingsStatement.setString(1, this.parent.getUniqueId().toString());
-
-            ResultSet settingsSet = settingsStatement.executeQuery();
-
-            if (!settingsSet.next()) {
-                return;
-            }
-
-            this.settings = UtilGson.GSON.fromJson(settingsSet.getString("settings"), PlayerSettings.class);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+        this.name = parent.getName();
 
         UtilForgeConcurrency.runSync(() -> {
             boolean returnMessage = false;
@@ -111,19 +98,34 @@ public class GTSAttribute extends ManagedForgeAttribute<EnvyGTSForge> {
     }
 
     @Override
-    public void save() {
-        try (Connection connection = EnvyGTSForge.getDatabase().getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(EnvyGTSQueries.UPDATE_PLAYER_NAME);
-             PreparedStatement settingsStatement = connection.prepareStatement(EnvyGTSQueries.UPDATE_OR_CREATE_SETTINGS)) {
-            preparedStatement.setString(1, "");
-            preparedStatement.setString(2, this.id.toString());
-            settingsStatement.setString(1, this.id.toString());
-            settingsStatement.setString(2, UtilGson.GSON.toJson(this.settings));
-
-            preparedStatement.executeUpdate();
-            settingsStatement.executeUpdate();
-        } catch (SQLException e) {
-            e.printStackTrace();
+    public void load() {
+        for (var allTrade : EnvyGTSForge.getTradeManager().getAllTrades()) {
+            if (allTrade.isOwner(this.id)) {
+                this.ownedTrades.add(allTrade);
+            }
         }
+
+
+        EnvyGTSForge.getDatabase()
+                .query(EnvyGTSQueries.GET_PLAYER_SETTINGS)
+                .data(SqlType.text(this.id.toString()))
+                .converter(resultSet -> {
+                    this.settings = UtilGson.GSON.fromJson(resultSet.getString("settings"), PlayerSettings.class);
+                    return null;
+                })
+                .executeWithConverter();
+    }
+
+    @Override
+    public void save() {
+        EnvyGTSForge.getDatabase()
+                .update(EnvyGTSQueries.UPDATE_PLAYER_NAME)
+                .data(SqlType.text(this.name), SqlType.text(this.id.toString()))
+                .execute();
+
+        EnvyGTSForge.getDatabase()
+                .update(EnvyGTSQueries.UPDATE_OR_CREATE_SETTINGS)
+                .data(SqlType.text(this.id.toString()), SqlType.text(UtilGson.GSON.toJson(this.settings)))
+                .execute();
     }
 }

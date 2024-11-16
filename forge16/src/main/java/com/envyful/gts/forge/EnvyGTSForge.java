@@ -4,7 +4,6 @@ import com.envyful.api.concurrency.UtilConcurrency;
 import com.envyful.api.concurrency.UtilLogger;
 import com.envyful.api.config.yaml.YamlConfigFactory;
 import com.envyful.api.database.Database;
-import com.envyful.api.database.impl.SimpleHikariDatabase;
 import com.envyful.api.database.sql.UtilSql;
 import com.envyful.api.forge.command.ForgeCommandFactory;
 import com.envyful.api.forge.command.parser.ForgeAnnotationCommandParser;
@@ -43,9 +42,7 @@ import java.io.IOException;
 @Mod("envygts")
 public class EnvyGTSForge {
 
-    public static final String VERSION = "4.5.6";
-
-    private static Logger LOGGER = LogManager.getLogger("EnvyGTS");
+    private static final Logger LOGGER = LogManager.getLogger("EnvyGTS");
 
     private static EnvyGTSForge instance;
 
@@ -61,8 +58,11 @@ public class EnvyGTSForge {
 
     public EnvyGTSForge() {
         UtilLogger.setLogger(LOGGER);
+
         GuiFactory.setPlatformFactory(new ForgeGuiFactory());
+        GuiFactory.setPlayerManager(this.playerManager);
         PlatformProxy.setHandler(ForgePlatformHandler.getInstance());
+        PlatformProxy.setPlayerManager(this.playerManager);
 
         MinecraftForge.EVENT_BUS.register(this);
         instance = this;
@@ -81,7 +81,7 @@ public class EnvyGTSForge {
 
         this.loadConfig();
 
-        this.database = new SimpleHikariDatabase(this.config.getDatabaseDetails());
+        this.database = this.config.getDatabaseDetails().createDatabase();
         this.createTables();
     }
 
