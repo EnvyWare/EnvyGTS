@@ -5,16 +5,16 @@ import com.envyful.api.discord.DiscordWebHook;
 import com.envyful.api.forge.chat.UtilChatColour;
 import com.envyful.api.forge.concurrency.UtilForgeConcurrency;
 import com.envyful.api.forge.gui.type.ConfirmationUI;
-import com.envyful.api.forge.items.ItemBuilder;
 import com.envyful.api.forge.player.ForgeEnvyPlayer;
 import com.envyful.api.gui.factory.GuiFactory;
 import com.envyful.api.gui.item.Displayable;
 import com.envyful.api.gui.pane.Pane;
 import com.envyful.api.player.EnvyPlayer;
+import com.envyful.api.reforged.pixelmon.config.SpriteConfig;
 import com.envyful.api.reforged.pixelmon.sprite.UtilSprite;
 import com.envyful.api.sqlite.config.SQLiteDatabaseDetailsConfig;
 import com.envyful.api.text.Placeholder;
-import com.envyful.api.time.UtilTimeFormat;
+import com.envyful.api.text.PlaceholderFactory;
 import com.envyful.gts.api.Trade;
 import com.envyful.gts.api.discord.DiscordEvent;
 import com.envyful.gts.forge.EnvyGTSForge;
@@ -29,10 +29,6 @@ import com.envyful.gts.forge.ui.ViewTradesUI;
 import com.pixelmonmod.api.pokemon.PokemonSpecification;
 import com.pixelmonmod.pixelmon.api.pokemon.Pokemon;
 import com.pixelmonmod.pixelmon.api.pokemon.PokemonFactory;
-import com.pixelmonmod.pixelmon.api.pokemon.stats.BattleStatsType;
-import com.pixelmonmod.pixelmon.api.pokemon.stats.IVStore;
-import com.pixelmonmod.pixelmon.api.pokemon.stats.extraStats.LakeTrioStats;
-import com.pixelmonmod.pixelmon.api.pokemon.stats.extraStats.MewStats;
 import com.pixelmonmod.pixelmon.api.registries.PixelmonSpecies;
 import com.pixelmonmod.pixelmon.api.storage.StorageProxy;
 import net.minecraft.entity.player.ServerPlayerEntity;
@@ -41,6 +37,7 @@ import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.JsonToNBT;
 import net.minecraftforge.common.MinecraftForge;
 
+import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
@@ -193,66 +190,11 @@ public abstract class PokemonTrade extends ForgeTrade {
     }
 
     @Override
-    public String replace(String name) {
-        IVStore iVs = pokemon.getIVs();
-        float ivHP = iVs.getStat(BattleStatsType.HP);
-        float ivAtk = iVs.getStat(BattleStatsType.ATTACK);
-        float ivDef = iVs.getStat(BattleStatsType.DEFENSE);
-        float ivSpeed = iVs.getStat(BattleStatsType.SPEED);
-        float ivSAtk = iVs.getStat(BattleStatsType.SPECIAL_ATTACK);
-        float ivSDef = iVs.getStat(BattleStatsType.SPECIAL_DEFENSE);
-        int percentage = Math.round(((ivHP + ivDef + ivAtk + ivSpeed + ivSAtk + ivSDef) / 186f) * 100);
-        float evHP = pokemon.getEVs().getStat(BattleStatsType.HP);
-        float evAtk = pokemon.getEVs().getStat(BattleStatsType.ATTACK);
-        float evDef = pokemon.getEVs().getStat(BattleStatsType.DEFENSE);
-        float evSpeed = pokemon.getEVs().getStat(BattleStatsType.SPEED);
-        float evSAtk = pokemon.getEVs().getStat(BattleStatsType.SPECIAL_ATTACK);
-        float evSDef = pokemon.getEVs().getStat(BattleStatsType.SPECIAL_DEFENSE);
-        var extraStats = pokemon.getExtraStats();
+    public List<Placeholder> placeholders() {
+        var placeholders = super.placeholders();
 
-        name = name.replace("%buyer%", this.ownerName)
-                .replace("%seller%", this.originalOwnerName)
-                .replace("%held_item%", pokemon.getHeldItem().getDisplayName().getString())
-                .replace("%expires_in%", UtilTimeFormat.getFormattedDuration(this.expiry - System.currentTimeMillis()))
-                .replace("%price%", this.cost + "")
-                .replace("%species%", pokemon.getSpecies().getLocalizedName())
-                .replace("%species_lower%", pokemon.getSpecies().getLocalizedName().toLowerCase())
-                .replace("%friendship%", pokemon.getFriendship() + "")
-                .replace("%level%", pokemon.getPokemonLevel() + "")
-                .replace("%gender%", pokemon.getGender().getLocalizedName())
-                .replace("%unbreedable%", pokemon.isUnbreedable() ? "True" : "False")
-                .replace("%nature%", pokemon.getNature().getLocalizedName())
-                .replace("%ability%", pokemon.getAbility().getLocalizedName())
-                .replace("%untradeable%", pokemon.isUntradeable() ? "True" : "False")
-                .replace("%iv_percentage%", percentage + "")
-                .replace("%iv_hp%", ((int) ivHP) + "")
-                .replace("%iv_attack%", ((int) ivAtk) + "")
-                .replace("%iv_defence%", ((int) ivDef) + "")
-                .replace("%iv_spattack%", ((int) ivSAtk) + "")
-                .replace("%iv_spdefence%", ((int) ivSDef) + "")
-                .replace("%iv_speed%", ((int) ivSpeed) + "")
-                .replace("%ev_hp%", ((int) evHP) + "")
-                .replace("%ev_attack%", ((int) evAtk) + "")
-                .replace("%ev_defence%", ((int) evDef) + "")
-                .replace("%ev_spattack%", ((int) evSAtk) + "")
-                .replace("%ev_spdefence%", ((int) evSDef) + "")
-                .replace("%ev_speed%", ((int) evSpeed) + "")
-                .replace("%move_1%", getMove(pokemon, 0))
-                .replace("%move_2%", getMove(pokemon, 1))
-                .replace("%move_3%", getMove(pokemon, 2))
-                .replace("%move_4%", getMove(pokemon, 3))
-                .replace("%mew_cloned%", extraStats instanceof MewStats ? (((MewStats) extraStats).numCloned + "") : "")
-                .replace("%trio_gemmed%", extraStats instanceof LakeTrioStats ? (((LakeTrioStats) extraStats).numEnchanted + "") : "")
-                .replace("%shiny%", pokemon.isShiny() ? "True" : "False")
-                .replace("%form%", pokemon.getForm().getLocalizedName())
-                .replace("%size%", pokemon.getGrowth().getLocalizedName())
-                .replace("%custom_texture%", pokemon.getPalette().getLocalizedName());
-
-        for (var replacement : EnvyGTSForge.getConfig().getReplacements()) {
-            name = replacement.replace(name);
-        }
-
-        return name;
+        placeholders.addAll(UtilSprite.getPokemonPlaceholders(pokemon, SpriteConfig.DEFAULT));
+        return placeholders;
     }
 
     @Override
@@ -261,25 +203,7 @@ public abstract class PokemonTrade extends ForgeTrade {
             return null;
         }
 
-        String newJSON = this.replace(event.getPokemonJSON());
-
-        return DiscordWebHook.fromJson(newJSON);
-    }
-
-    private String getMove(Pokemon pokemon, int pos) {
-        if (pokemon.getMoveset() == null) {
-            return "";
-        }
-
-        if (pokemon.getMoveset().attacks.length <= pos) {
-            return "";
-        }
-
-        if (pokemon.getMoveset().attacks[pos] == null) {
-            return "";
-        }
-
-        return pokemon.getMoveset().attacks[pos].getActualMove().getLocalizedName();
+        return DiscordWebHook.fromJson(String.join(System.lineSeparator(), PlaceholderFactory.handlePlaceholders(event.getPokemonJSON(), this)));
     }
 
     @Override

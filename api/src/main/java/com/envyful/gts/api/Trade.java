@@ -4,10 +4,13 @@ import com.envyful.api.discord.DiscordWebHook;
 import com.envyful.api.gui.item.Displayable;
 import com.envyful.api.gui.pane.Pane;
 import com.envyful.api.player.EnvyPlayer;
-import com.envyful.api.text.parse.SimplePlaceholder;
+import com.envyful.api.text.ParseResult;
+import com.envyful.api.text.Placeholder;
 import com.envyful.gts.api.discord.DiscordEvent;
 import com.envyful.gts.api.gui.FilterType;
+import org.checkerframework.checker.nullness.qual.NonNull;
 
+import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
@@ -17,7 +20,7 @@ import java.util.function.Consumer;
  * This interface represents an item that exists on GTS.
  *
  */
-public interface Trade extends SimplePlaceholder {
+public interface Trade extends Placeholder {
 
     /**
      *
@@ -171,5 +174,22 @@ public interface Trade extends SimplePlaceholder {
      * @return True if matching
      */
     boolean matches(Object o);
+
+    @Override
+    default @NonNull ParseResult replace(@NonNull ParseResult parseResult) {
+        for (Placeholder placeholder : this.placeholders()) {
+            parseResult = placeholder.replace(parseResult);
+        }
+
+        return parseResult;
+    }
+
+    /**
+     *
+     * Gets the placeholders for this trade
+     *
+     * @return The placeholders
+     */
+    List<Placeholder> placeholders();
 
 }

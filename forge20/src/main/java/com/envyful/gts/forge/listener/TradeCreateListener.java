@@ -34,24 +34,24 @@ public class TradeCreateListener extends LazyListener {
         }
 
         UtilConcurrency.runAsync(() -> {
-            for (ForgeEnvyPlayer onlinePlayer : EnvyGTSForge.getPlayerManager().getOnlinePlayers()) {
-                GTSAttribute attribute = onlinePlayer.getAttributeNow(GTSAttribute.class);
-
-                if (attribute == null || !attribute.getSettings().isToggledBroadcasts()) {
-                    continue;
-                }
-
-                for (String s : EnvyGTSForge.getLocale().getMessages().getCreateTradeBroadcast(this.getPokemon(event.getTrade()))) {
-                    s = event.getTrade().replace(s);
-                    s = s.replace("%player%", event.getPlayer().getName())
-                            .replace("%name%", event.getTrade().getDisplayName())
-                            .replace("%cost%",
-                                    String.format(EnvyGTSForge.getLocale().getMoneyFormat(),
-                                            event.getTrade().getCost()));
-
-                    onlinePlayer.message(UtilChatColour.colour(s));
-                }
-            }
+//            for (ForgeEnvyPlayer onlinePlayer : EnvyGTSForge.getPlayerManager().getOnlinePlayers()) {
+//                GTSAttribute attribute = onlinePlayer.getAttributeNow(GTSAttribute.class);
+//
+//                if (attribute == null || !attribute.getSettings().isToggledBroadcasts()) {
+//                    continue;
+//                }
+//
+//                for (String s : EnvyGTSForge.getLocale().getMessages().getCreateTradeBroadcast(this.getPokemon(event.getTrade()))) {
+//                    s = event.getTrade().replace(s);
+//                    s = s.replace("%player%", event.getPlayer().getName())
+//                            .replace("%name%", event.getTrade().getDisplayName())
+//                            .replace("%cost%",
+//                                    String.format(EnvyGTSForge.getLocale().getMoneyFormat(),
+//                                            event.getTrade().getCost()));
+//
+//                    onlinePlayer.message(UtilChatColour.colour(s));
+//                }
+//            }
         });
     }
 

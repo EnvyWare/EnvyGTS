@@ -13,10 +13,11 @@ import com.envyful.api.gui.item.Displayable;
 import com.envyful.api.gui.pane.Pane;
 import com.envyful.api.player.EnvyPlayer;
 import com.envyful.api.sqlite.config.SQLiteDatabaseDetailsConfig;
+import com.envyful.api.text.Placeholder;
+import com.envyful.api.text.PlaceholderFactory;
 import com.envyful.api.time.UtilTimeFormat;
 import com.envyful.gts.api.discord.DiscordEvent;
 import com.envyful.gts.forge.EnvyGTSForge;
-import com.envyful.gts.forge.config.EnvyGTSConfig;
 import com.envyful.gts.forge.event.TradeCollectEvent;
 import com.envyful.gts.forge.event.TradeRemoveEvent;
 import com.envyful.gts.forge.impl.trade.ForgeTrade;
@@ -223,26 +224,20 @@ public abstract class ItemTrade extends ForgeTrade {
     }
 
     @Override
-    public String replace(String name) {
-        name = name
-                .replace("%item_url%", EnvyGTSForge.getConfig().getItemUrl(this.item))
-                .replace("%item_id%", this.capitalizeAfterUnderscoreAndStart(item.getItem().getRegistryName().getPath()))
-                .replace("%lore%", UtilItemStack.getRealLore(item.copy()).stream().map(ITextComponent::getString).collect(Collectors.joining("\n")))
-                .replace("%date%", String.valueOf(System.currentTimeMillis()))
-                .replace("%namespace%", item.getItem().getRegistryName().getNamespace())
-                .replace("%buyer%", this.ownerName)
-                .replace("%seller%", this.originalOwnerName)
-                .replace("%enchantments%", this.handleEnchantmentText(this.item))
-                .replace("%expires_in%", UtilTimeFormat.getFormattedDuration(this.expiry - System.currentTimeMillis()))
-                .replace("%price%", String.valueOf(this.cost))
-                .replace("%item%", this.item.getHoverName().getString())
-                .replace("%amount%", String.valueOf(this.item.getCount()));
+    public List<Placeholder> placeholders() {
+        var placeholders = super.placeholders();
 
-        for (EnvyGTSConfig.WebhookTextReplacement replacement : EnvyGTSForge.getConfig().getReplacements()) {
-            name = replacement.replace(name);
-        }
+        placeholders.addAll(List.of(
+                Placeholder.simple("%item_url%", EnvyGTSForge.getConfig().getItemUrl(this.item)),
+                Placeholder.simple("%item_id%", this.capitalizeAfterUnderscoreAndStart(item.getItem().getRegistryName().getPath())),
+                Placeholder.simple("%lore%", UtilItemStack.getRealLore(item.copy()).stream().map(ITextComponent::getString).collect(Collectors.joining("\n"))),
+                Placeholder.simple("%namespace%", item.getItem().getRegistryName().getNamespace()),
+                Placeholder.simple("%enchantments%", this.handleEnchantmentText(this.item)),
+                Placeholder.simple("%item%", this.item.getHoverName().getString()),
+                Placeholder.simple("%amount%", String.valueOf(this.item.getCount()))
+        ));
 
-        return name;
+        return placeholders;
     }
 
     private String handleEnchantmentText(ItemStack itemStack) {
@@ -270,7 +265,7 @@ public abstract class ItemTrade extends ForgeTrade {
             return null;
         }
 
-        return DiscordWebHook.fromJson(this.replace(event.getItemJSON()));
+        return DiscordWebHook.fromJson(String.join(System.lineSeparator(), PlaceholderFactory.handlePlaceholders(this.getItemJson(), this)));
     }
 
     private String capitalizeAfterUnderscoreAndStart(String word) {

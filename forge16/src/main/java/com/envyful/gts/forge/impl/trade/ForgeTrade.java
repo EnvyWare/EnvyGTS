@@ -3,6 +3,8 @@ package com.envyful.gts.forge.impl.trade;
 import com.envyful.api.forge.chat.UtilChatColour;
 import com.envyful.api.forge.player.ForgeEnvyPlayer;
 import com.envyful.api.player.EnvyPlayer;
+import com.envyful.api.text.Placeholder;
+import com.envyful.api.time.UtilTimeFormat;
 import com.envyful.gts.api.Trade;
 import com.envyful.gts.api.gui.FilterType;
 import com.envyful.gts.forge.EnvyGTSForge;
@@ -11,11 +13,13 @@ import com.envyful.gts.forge.event.TradePurchaseEvent;
 import com.envyful.gts.forge.impl.trade.type.ItemTrade;
 import com.envyful.gts.forge.impl.trade.type.PokemonTrade;
 import com.envyful.gts.forge.player.GTSAttribute;
+import com.google.common.collect.Lists;
 import com.pixelmonmod.pixelmon.api.economy.BankAccountProxy;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.server.ServerLifecycleHooks;
 
+import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
@@ -159,6 +163,17 @@ public abstract class ForgeTrade implements Trade {
     protected abstract CompletableFuture<Void> setRemoved();
 
     protected abstract void updateOwner(UUID newOwner, String newOwnerName);
+
+    @Override
+    public List<Placeholder> placeholders() {
+        return Lists.newArrayList(
+                Placeholder.simple("%seller%", this.originalOwnerName),
+                        Placeholder.simple("%buyer%", this.ownerName),
+                        Placeholder.simple("%price%", String.format(EnvyGTSForge.getLocale().getMoneyFormat(), this.cost)),
+                Placeholder.simple("%expires_in%", UtilTimeFormat.getFormattedDuration(this.expiry - System.currentTimeMillis())),
+                Placeholder.simple("%date%", String.valueOf(System.currentTimeMillis()))
+        );
+    }
 
     public static Builder builder() {
         return new Builder();
