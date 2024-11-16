@@ -14,10 +14,7 @@ import com.envyful.api.gui.pane.Pane;
 import com.envyful.api.player.EnvyPlayer;
 import com.envyful.api.sqlite.config.SQLiteDatabaseDetailsConfig;
 import com.envyful.api.time.UtilTimeFormat;
-import com.envyful.gts.api.Trade;
-import com.envyful.gts.api.TradeData;
 import com.envyful.gts.api.discord.DiscordEvent;
-import com.envyful.gts.api.gui.SortType;
 import com.envyful.gts.forge.EnvyGTSForge;
 import com.envyful.gts.forge.config.EnvyGTSConfig;
 import com.envyful.gts.forge.event.TradeCollectEvent;
@@ -47,7 +44,6 @@ import java.util.stream.Collectors;
 public abstract class ItemTrade extends ForgeTrade {
 
     private final ItemStack item;
-    private final TradeData tradeData;
 
     public ItemTrade(UUID owner, String ownerName, String originalOwnerName, double cost, long expiry, ItemStack item,
                      boolean removed,
@@ -55,7 +51,6 @@ public abstract class ItemTrade extends ForgeTrade {
         super(owner, ownerName, cost, expiry, originalOwnerName, removed, purchased);
 
         this.item = item;
-        this.tradeData = new TradeData(owner, this.item.copy().getDisplayName().getString(), this.expiry);
     }
 
     @Override
@@ -120,11 +115,6 @@ public abstract class ItemTrade extends ForgeTrade {
         admin.message(UtilChatColour.colour(EnvyGTSForge.getLocale().getMessages().getAdminRemoveTrade()));
         EnvyGTSForge.getTradeManager().removeTrade(this);
         UtilConcurrency.runAsync(this::delete);
-    }
-
-    @Override
-    public int compare(Trade other, SortType type) {
-        return type.getComparator().compare(this.toData(), other.toData());
     }
 
     @Override
@@ -230,11 +220,6 @@ public abstract class ItemTrade extends ForgeTrade {
         var tag = new CompoundTag();
         this.item.save(tag);
         return tag.toString();
-    }
-
-    @Override
-    public TradeData toData() {
-        return this.tradeData;
     }
 
     @Override

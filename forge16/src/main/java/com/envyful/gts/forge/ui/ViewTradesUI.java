@@ -78,7 +78,7 @@ public class ViewTradesUI {
         MinecraftForge.EVENT_BUS.post(filterEvent);
 
         allTrades = filterEvent.getTrades();
-        allTrades.sort((o1, o2) -> o1.compare(o2, sortType));
+        allTrades.sort(sortType::compare);
 
         return allTrades;
     }

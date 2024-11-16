@@ -7,7 +7,6 @@ import com.envyful.api.forge.concurrency.UtilForgeConcurrency;
 import com.envyful.api.forge.gui.type.ConfirmationUI;
 import com.envyful.api.forge.items.ItemBuilder;
 import com.envyful.api.forge.player.ForgeEnvyPlayer;
-import com.envyful.api.forge.player.util.UtilPlayer;
 import com.envyful.api.gui.factory.GuiFactory;
 import com.envyful.api.gui.item.Displayable;
 import com.envyful.api.gui.pane.Pane;
@@ -17,10 +16,7 @@ import com.envyful.api.sqlite.config.SQLiteDatabaseDetailsConfig;
 import com.envyful.api.text.Placeholder;
 import com.envyful.api.time.UtilTimeFormat;
 import com.envyful.gts.api.Trade;
-import com.envyful.gts.api.TradeData;
-import com.envyful.gts.api.data.PixelmonTradeData;
 import com.envyful.gts.api.discord.DiscordEvent;
-import com.envyful.gts.api.gui.SortType;
 import com.envyful.gts.forge.EnvyGTSForge;
 import com.envyful.gts.forge.config.EnvyGTSConfig;
 import com.envyful.gts.forge.event.PlaceholderCollectEvent;
@@ -63,7 +59,6 @@ import java.util.function.Consumer;
 public abstract class PokemonTrade extends ForgeTrade {
 
     private final Pokemon pokemon;
-    private final TradeData tradeData;
 
     public PokemonTrade(UUID owner, String ownerName, String originalOwnerName, double cost, long expiry,
                         Pokemon pokemon, boolean removed,
@@ -71,8 +66,6 @@ public abstract class PokemonTrade extends ForgeTrade {
         super(owner, ownerName, cost, expiry, originalOwnerName, removed, purchased);
 
         this.pokemon = pokemon;
-        this.tradeData = new PixelmonTradeData(owner, this.pokemon.getDisplayName(), expiry,
-                                               pokemon.writeToNBT(new CompoundNBT()).toString());
     }
 
     public Pokemon getPokemon() {
@@ -118,11 +111,6 @@ public abstract class PokemonTrade extends ForgeTrade {
         StorageProxy.getParty((ServerPlayerEntity) admin.getParent()).add(this.pokemon);
         EnvyGTSForge.getTradeManager().removeTrade(this);
         UtilConcurrency.runAsync(this::delete);
-    }
-
-    @Override
-    public int compare(Trade other, SortType type) {
-        return type.getComparator().compare(this.toData(), other.toData());
     }
 
     @Override
@@ -233,11 +221,6 @@ public abstract class PokemonTrade extends ForgeTrade {
         CompoundNBT tag = new CompoundNBT();
         this.pokemon.writeToNBT(tag);
         return tag.toString();
-    }
-
-    @Override
-    public TradeData toData() {
-        return this.tradeData;
     }
 
     @Override
@@ -354,7 +337,6 @@ public abstract class PokemonTrade extends ForgeTrade {
                 ", removed=" + removed +
                 ", purchased=" + purchased +
                 ", pokemon=" + pokemon +
-                ", tradeData=" + tradeData +
                 '}';
     }
 

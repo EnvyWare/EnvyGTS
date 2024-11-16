@@ -7,7 +7,6 @@ import com.envyful.api.player.EnvyPlayer;
 import com.envyful.api.text.parse.SimplePlaceholder;
 import com.envyful.gts.api.discord.DiscordEvent;
 import com.envyful.gts.api.gui.FilterType;
-import com.envyful.gts.api.gui.SortType;
 
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
@@ -66,6 +65,14 @@ public interface Trade extends SimplePlaceholder {
 
     /**
      *
+     * Gets the timestamp at which this trade will expire
+     *
+     * @return The expiry timestamp
+     */
+    long getExpiry();
+
+    /**
+     *
      * If the item was removed by the owner
      *
      * @return If the item was removed
@@ -110,16 +117,6 @@ public interface Trade extends SimplePlaceholder {
 
     /**
      *
-     * Used for sorting the GTS GUI
-     *
-     * @param other The other trade to compare to
-     * @param type The type of sorting happening
-     * @return positive if should be placed first; 0 - if equal; negative if should be placed after
-     */
-    int compare(Trade other, SortType type);
-
-    /**
-     *
      * Used for filtering the GTS GUI for specific types
      * Returns true if it matches the filter type
      *
@@ -157,14 +154,6 @@ public interface Trade extends SimplePlaceholder {
      *
      */
     void save();
-
-    /**
-     *
-     * Converts to TradeData
-     *
-     * @return The TradeData representation
-     */
-    TradeData toData();
 
     /**
      *

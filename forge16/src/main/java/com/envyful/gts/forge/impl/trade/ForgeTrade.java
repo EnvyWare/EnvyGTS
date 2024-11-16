@@ -2,21 +2,17 @@ package com.envyful.gts.forge.impl.trade;
 
 import com.envyful.api.forge.chat.UtilChatColour;
 import com.envyful.api.forge.player.ForgeEnvyPlayer;
-import com.envyful.api.forge.player.util.UtilPlayer;
 import com.envyful.api.player.EnvyPlayer;
 import com.envyful.gts.api.Trade;
 import com.envyful.gts.api.gui.FilterType;
 import com.envyful.gts.forge.EnvyGTSForge;
-import com.envyful.gts.forge.config.EnvyGTSConfig;
 import com.envyful.gts.forge.event.PostTradePurchaseEvent;
 import com.envyful.gts.forge.event.TradePurchaseEvent;
 import com.envyful.gts.forge.impl.trade.type.ItemTrade;
 import com.envyful.gts.forge.impl.trade.type.PokemonTrade;
 import com.envyful.gts.forge.player.GTSAttribute;
-import com.pixelmonmod.pixelmon.api.economy.BankAccount;
 import com.pixelmonmod.pixelmon.api.economy.BankAccountProxy;
 import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.util.Util;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.server.ServerLifecycleHooks;
 
@@ -58,6 +54,11 @@ public abstract class ForgeTrade implements Trade {
     @Override
     public double getCost() {
         return this.cost;
+    }
+
+    @Override
+    public long getExpiry() {
+        return this.expiry;
     }
 
     @Override
