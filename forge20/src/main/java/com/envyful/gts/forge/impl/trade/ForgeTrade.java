@@ -2,18 +2,15 @@ package com.envyful.gts.forge.impl.trade;
 
 import com.envyful.api.forge.chat.UtilChatColour;
 import com.envyful.api.forge.player.ForgeEnvyPlayer;
-import com.envyful.api.forge.player.util.UtilPlayer;
 import com.envyful.api.player.EnvyPlayer;
 import com.envyful.gts.api.Trade;
 import com.envyful.gts.api.gui.FilterType;
 import com.envyful.gts.forge.EnvyGTSForge;
-import com.envyful.gts.forge.config.EnvyGTSConfig;
 import com.envyful.gts.forge.event.PostTradePurchaseEvent;
 import com.envyful.gts.forge.event.TradePurchaseEvent;
 import com.envyful.gts.forge.impl.trade.type.ItemTrade;
 import com.envyful.gts.forge.impl.trade.type.PokemonTrade;
 import com.envyful.gts.forge.player.GTSAttribute;
-import com.pixelmonmod.pixelmon.api.economy.BankAccount;
 import com.pixelmonmod.pixelmon.api.economy.BankAccountProxy;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraftforge.common.MinecraftForge;
@@ -99,8 +96,8 @@ public abstract class ForgeTrade implements Trade {
 
         bankAccount.take(this.cost);
 
-        EnvyGTSConfig config = EnvyGTSForge.getConfig();
-        BankAccount target = BankAccountProxy.getBankAccountNow(this.owner);
+        var config = EnvyGTSForge.getConfig();
+        var target = BankAccountProxy.getBankAccountNow(this.owner);
 
         if (target == null) {
             return false;
@@ -114,11 +111,11 @@ public abstract class ForgeTrade implements Trade {
         this.purchased = true;
         this.setRemoved().whenCompleteAsync((unused, throwable) -> {
             this.collect(player, null).thenApply(unused1 -> {
-                this.updateOwnership((EnvyPlayer<ServerPlayer>) player, this.owner);
+                this.updateOwnership(player, this.owner);
 
                 MinecraftForge.EVENT_BUS.post(new PostTradePurchaseEvent((ForgeEnvyPlayer) player, this));
 
-                player.message(UtilChatColour.colour(EnvyGTSForge.getLocale().getMessages().getPurchasedTrade()));
+                player.message(EnvyGTSForge.getLocale().getMessages().getPurchasedTrade());
                 return null;
             });
         }, ServerLifecycleHooks.getCurrentServer());
@@ -126,22 +123,20 @@ public abstract class ForgeTrade implements Trade {
     }
 
     private void attemptSendMessage(UUID owner, String buyerName, double taxTaken) {
-        var target = UtilPlayer.getOnlinePlayer(owner);
+        var target = EnvyGTSForge.getPlayerManager().getPlayer(owner);
 
         if (target == null) {
             return;
         }
 
-        target.sendSystemMessage(UtilChatColour.colour(
-                EnvyGTSForge.getLocale().getMessages().getItemWasPurchased()
+        target.message(EnvyGTSForge.getLocale().getMessages().getItemWasPurchased()
                 .replace("%item%", this.getDisplayName())
                 .replace("%buyer%", buyerName)
                 .replace("%tax%", String.format("%.2f", taxTaken))
-                .replace("%price%", String.format(EnvyGTSForge.getLocale().getMoneyFormat(), this.getCost()))
-        ));
+                .replace("%price%", String.format(EnvyGTSForge.getLocale().getMoneyFormat(), this.getCost())));
     }
 
-    private void updateOwnership(EnvyPlayer<ServerPlayer> purchaser, UUID oldOwner) {
+    private void updateOwnership(EnvyPlayer<?> purchaser, UUID oldOwner) {
         this.owner = purchaser.getUniqueId();
         this.ownerName = purchaser.getName();
 

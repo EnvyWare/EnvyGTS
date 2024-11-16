@@ -100,8 +100,8 @@ public abstract class ForgeTrade implements Trade {
 
         bankAccount.take(this.cost);
 
-        EnvyGTSConfig config = EnvyGTSForge.getConfig();
-        BankAccount target = BankAccountProxy.getBankAccountUnsafe(this.owner);
+        var config = EnvyGTSForge.getConfig();
+        var target = BankAccountProxy.getBankAccountUnsafe(this.owner);
 
         if (target == null) {
             return false;
@@ -115,34 +115,33 @@ public abstract class ForgeTrade implements Trade {
         this.purchased = true;
         this.setRemoved().whenCompleteAsync((unused, throwable) -> {
             this.collect(player, null).thenApply(unused1 -> {
-                this.updateOwnership((EnvyPlayer<ServerPlayerEntity>) player, this.owner);
+                this.updateOwnership(player, this.owner);
 
                 MinecraftForge.EVENT_BUS.post(new PostTradePurchaseEvent((ForgeEnvyPlayer) player, this));
 
-                player.message(UtilChatColour.colour(EnvyGTSForge.getLocale().getMessages().getPurchasedTrade()));
+                player.message(EnvyGTSForge.getLocale().getMessages().getPurchasedTrade(), this);
                 return null;
             });
         }, ServerLifecycleHooks.getCurrentServer());
+
         return true;
     }
 
     private void attemptSendMessage(UUID owner, String buyerName, double taxTaken) {
-        ServerPlayerEntity target = UtilPlayer.getOnlinePlayer(owner);
+        var target = EnvyGTSForge.getPlayerManager().getPlayer(owner);
 
         if (target == null) {
             return;
         }
 
-        target.sendMessage(UtilChatColour.colour(
-                EnvyGTSForge.getLocale().getMessages().getItemWasPurchased()
+        target.message(EnvyGTSForge.getLocale().getMessages().getItemWasPurchased()
                 .replace("%item%", this.getDisplayName())
                 .replace("%buyer%", buyerName)
                 .replace("%tax%", String.format("%.2f", taxTaken))
-                .replace("%price%", String.format(EnvyGTSForge.getLocale().getMoneyFormat(), this.getCost()))
-        ), Util.NIL_UUID);
+                .replace("%price%", String.format(EnvyGTSForge.getLocale().getMoneyFormat(), this.getCost())));
     }
 
-    private void updateOwnership(EnvyPlayer<ServerPlayerEntity> purchaser, UUID oldOwner) {
+    private void updateOwnership(EnvyPlayer<?> purchaser, UUID oldOwner) {
         this.owner = purchaser.getUniqueId();
         this.ownerName = purchaser.getName();
 
