@@ -6,6 +6,7 @@ import com.envyful.api.command.annotate.executor.CommandProcessor;
 import com.envyful.api.command.annotate.executor.Sender;
 import com.envyful.api.command.annotate.permission.Permissible;
 import com.envyful.api.forge.chat.UtilChatColour;
+import com.envyful.api.forge.player.ForgeEnvyPlayer;
 import com.envyful.gts.forge.EnvyGTSForge;
 import com.envyful.gts.forge.ui.ViewTradesUI;
 import com.pixelmonmod.pixelmon.api.storage.StorageProxy;
@@ -24,17 +25,14 @@ import net.minecraft.server.level.ServerPlayer;
 public class GTSCommand {
 
     @CommandProcessor
-    public void onCommand(@Sender ServerPlayer player, String[] args) {
-        if (player.isPassenger()) {
-            player.sendSystemMessage(UtilChatColour.colour(EnvyGTSForge.getLocale().getMessages().getCannotRideAndGts()));
+    public void onCommand(@Sender ForgeEnvyPlayer player, String[] args) {
+        if (player.getParent().isPassenger()) {
+            player.message(EnvyGTSForge.getLocale().getMessages().getCannotRideAndGts());
             return;
         }
 
-        if (EnvyGTSForge.getConfig().isEnableOpeningUIMessage()) {
-            player.sendSystemMessage(UtilChatColour.colour(EnvyGTSForge.getLocale().getMessages().getOpeningUi()));
-        }
-
-        StorageProxy.getPartyNow(player).retrieveAll("GTS");
-        ViewTradesUI.openUI(EnvyGTSForge.getPlayerManager().getPlayer(player));
+        player.message(EnvyGTSForge.getLocale().getMessages().getOpeningUi());
+        StorageProxy.getPartyNow(player.getParent()).retrieveAll("GTS");
+        ViewTradesUI.openUI(player);
     }
 }

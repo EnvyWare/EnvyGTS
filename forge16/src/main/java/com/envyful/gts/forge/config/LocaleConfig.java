@@ -124,8 +124,8 @@ public class LocaleConfig extends AbstractYamlConfig {
     @ConfigSerializable
     public static class Messages {
 
-        private String cannotRideAndGts = "&c&l(!) Please stop riding whilst trying to open the GTS";
-        private String openingUi = "&e&l(!) &eOpening GTS...";
+        private List<String> cannotRideAndGts = List.of("&c&l(!) Please stop riding whilst trying to open the GTS");
+        private List<String> openingUi = List.of("&e&l(!) &eOpening GTS...");
         private String sellInsuffucientArgs = "&c&l(!) &cInsufficient args! /gts s <amount> <price> [duration]";
         private String sellNoItemInHand = "&c&l(!) &cYou must have an item in your hand to sell!";
 
@@ -191,7 +191,7 @@ public class LocaleConfig extends AbstractYamlConfig {
             return this.inventoryFull;
         }
 
-        public String getOpeningUi() {
+        public List<String> getOpeningUi() {
             return this.openingUi;
         }
 
@@ -263,7 +263,7 @@ public class LocaleConfig extends AbstractYamlConfig {
             return this.cannotGoAboveMaxTime;
         }
 
-        public String getCannotRideAndGts() {
+        public List<String> getCannotRideAndGts() {
             return this.cannotRideAndGts;
         }
     }

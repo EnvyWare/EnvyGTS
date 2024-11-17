@@ -1,7 +1,6 @@
 package com.envyful.gts.forge.impl.trade.type;
 
 import com.envyful.api.concurrency.UtilConcurrency;
-import com.envyful.api.discord.DiscordWebHook;
 import com.envyful.api.forge.chat.UtilChatColour;
 import com.envyful.api.forge.concurrency.UtilForgeConcurrency;
 import com.envyful.api.forge.gui.type.ConfirmationUI;
@@ -14,9 +13,7 @@ import com.envyful.api.gui.pane.Pane;
 import com.envyful.api.player.EnvyPlayer;
 import com.envyful.api.sqlite.config.SQLiteDatabaseDetailsConfig;
 import com.envyful.api.text.Placeholder;
-import com.envyful.api.text.PlaceholderFactory;
 import com.envyful.api.time.UtilTimeFormat;
-import com.envyful.gts.api.discord.DiscordEvent;
 import com.envyful.gts.forge.EnvyGTSForge;
 import com.envyful.gts.forge.event.TradeCollectEvent;
 import com.envyful.gts.forge.event.TradeRemoveEvent;
@@ -133,7 +130,7 @@ public abstract class ItemTrade extends ForgeTrade {
                     }
 
                     if (envyPlayer.hasPermission("envygts.admin") && Objects.equals(
-                            clickType,
+                            clickType.name(),
                             EnvyGTSForge.getConfig().getOwnerRemoveButton()
                     ) && ((ServerPlayerEntity) envyPlayer.getParent()).isCreative()) {
                         this.removed = true;

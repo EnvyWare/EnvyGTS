@@ -18,7 +18,6 @@ import com.envyful.api.player.Attribute;
 import com.envyful.api.sqlite.config.SQLiteDatabaseDetailsConfig;
 import com.envyful.gts.api.GlobalTradeManager;
 import com.envyful.gts.api.TradeManager;
-import com.envyful.gts.api.discord.DiscordEventManager;
 import com.envyful.gts.api.gui.FilterTypeFactory;
 import com.envyful.gts.forge.command.GTSCommand;
 import com.envyful.gts.forge.config.EnvyGTSConfig;
@@ -28,9 +27,7 @@ import com.envyful.gts.forge.impl.filter.*;
 import com.envyful.gts.forge.impl.storage.SQLGlobalTradeManager;
 import com.envyful.gts.forge.impl.storage.SQLiteGlobalTradeManager;
 import com.envyful.gts.forge.listener.TradeCreateListener;
-import com.envyful.gts.forge.listener.discord.DiscordTradeCreateListener;
-import com.envyful.gts.forge.listener.discord.DiscordTradePurchaseListener;
-import com.envyful.gts.forge.listener.discord.DiscordTradeRemoveListener;
+import com.envyful.gts.forge.listener.WebhookListener;
 import com.envyful.gts.forge.player.GTSAttribute;
 import com.envyful.gts.forge.player.SQLGTSAttributeAdapter;
 import com.envyful.gts.forge.player.SQLiteGTSAttributeAdapter;
@@ -101,9 +98,7 @@ public class EnvyGTSForge {
     @SubscribeEvent
     public void onServerStarted(ServerStartedEvent event) {
         new TradeCreateListener();
-        new DiscordTradeCreateListener();
-        new DiscordTradePurchaseListener();
-        new DiscordTradeRemoveListener();
+        MinecraftForge.EVENT_BUS.register(new WebhookListener());
 
         UtilConcurrency.runAsync(() -> {
             this.tradeManager = this.playerManager.getSaveManager().getSaveMode().equalsIgnoreCase(SQLiteDatabaseDetailsConfig.ID) ? new SQLiteGlobalTradeManager() : new SQLGlobalTradeManager();
@@ -118,12 +113,6 @@ public class EnvyGTSForge {
             this.locale = YamlConfigFactory.getInstance(LocaleConfig.class);
         } catch (IOException e) {
             LOGGER.error("Error while loading configs", e);
-        }
-
-        if (this.config.isEnableWebHooks()) {
-            DiscordEventManager.init();
-        } else {
-            LOGGER.info("Skipping WebHook setup as it is disabled in the config");
         }
     }
 

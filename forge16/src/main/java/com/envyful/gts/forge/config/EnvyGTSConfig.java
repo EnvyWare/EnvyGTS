@@ -4,6 +4,8 @@ import com.envyful.api.config.data.ConfigPath;
 import com.envyful.api.config.database.DatabaseDetailsConfig;
 import com.envyful.api.config.type.ConfigItem;
 import com.envyful.api.config.yaml.AbstractYamlConfig;
+import com.envyful.api.discord.yaml.DiscordEmbedConfig;
+import com.envyful.api.discord.yaml.DiscordWebHookConfig;
 import com.envyful.api.gui.item.Displayable;
 import com.envyful.api.sqlite.config.SQLiteDatabaseDetailsConfig;
 import com.google.common.collect.ImmutableMap;
@@ -19,6 +21,7 @@ import net.minecraftforge.registries.ForgeRegistries;
 import org.spongepowered.configurate.objectmapping.ConfigSerializable;
 import org.spongepowered.configurate.objectmapping.meta.Comment;
 
+import java.awt.*;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -29,54 +32,151 @@ import java.util.regex.Pattern;
 @ConfigSerializable
 public class EnvyGTSConfig extends AbstractYamlConfig {
 
+    @Comment("The database details for EnvyGTS. For more information visit https://www.envyware.co.uk/docs/general-help/general-config/config-databases/#sqlite")
     private DatabaseDetailsConfig databaseDetails = new SQLiteDatabaseDetailsConfig("config/EnvyGTS/gts.db");
 
+    @Comment("A map of item namespaces to their respective URL formats. %item_id% will be replaced with the item's ID. This is used for getting the item's sprite for webhooks to display in Discord")
     private Map<String, String> itemUrlFormats = ImmutableMap.of(
             "minecraft", "https://minecraft.fandom.com/wiki/Special:FilePath/%item_id%.png"
     );
 
+    @Comment("The fallback URL for items that do not have a specified URL format")
     private String fallback = "https://minecraft.fandom.com/wiki/Special:FilePath/%item_id%.png";
-    private String noURL = "https://minecraft.fandom.com/wiki/Special:FilePath/%item_id%.png";
 
+    @Comment("The minimum trade duration in seconds")
     private long minTradeDuration = 300;
-    private long defaultTradeDurationSeconds = 300;
-    private long maxTradeDurationSeconds = 172800;
-    private double minPokemonPrice = 10_000.00;
-    private boolean enableWebHooks = false;
-    private String ownerRemoveButton = "RIGHT";
-    private boolean enableTax = false;
-    private double taxRate = 0.95;
-    private boolean enableNewListingBroadcasts = true;
-    private int maxListingsPerUser = 5;
-    private double maxPrice = 10_000_000;
-    private boolean allowEggs = false;
-    private boolean enableOpeningUIMessage = true;
 
+    @Comment("The default trade duration in seconds. This shows up as the default value in the GUI")
+    private long defaultTradeDurationSeconds = 300;
+
+    @Comment("The maximum trade duration in seconds")
+    private long maxTradeDurationSeconds = 172800;
+
+    @Comment("The minimum price a Pokemon can be listed for")
+    private double minPokemonPrice = 10_000.00;
+
+    @Comment("The button that the owner can click to remove their listing. Valid values are LEFT, RIGHT, SHIFT_LEFT, and SHIFT_RIGHT")
+    private String ownerRemoveButton = "RIGHT";
+
+    @Comment("Whether to enable tax on trades")
+    private boolean enableTax = false;
+
+    @Comment("The tax rate for trades. The final amount given to the seller is multiplied by this value")
+    private double taxRate = 0.95;
+
+    @Comment("Whether to enable broadcasts when a new listing is created")
+    private boolean enableNewListingBroadcasts = true;
+
+    @Comment("The maximum number of listings a user can have at once")
+    private int maxListingsPerUser = 5;
+
+    @Comment("The maximum price a Pokemon can be listed for")
+    private double maxPrice = 10_000_000;
+
+    @Comment("If true, eggs can be listed on the GTS")
+    private boolean allowEggs = false;
+
+    @Comment("Pokemon that are blacklisted from being traded. This is a list of Pokemon specifications")
     private List<String> blacklist = Lists.newArrayList("hoopa");
+
+    @Comment("A list of items that are blacklisted from being traded")
     private List<String> itemBlackList = Lists.newArrayList("minecraft:stone");
+
+    @Comment("A map of NBT keys to their respective values that are blacklisted from being traded. An item is blacklisted if it has any of the specified NBT keys with the specified values")
     private Map<String, ConfigItem.NBTValue> nbtBlacklist = ImmutableMap.of(
             "example", new ConfigItem.NBTValue("string", "example_text")
     );
+
     @Comment("A regex supported list of words that will be used to check the name and lore of items and pokemon attempted to be traded")
     private Map<String, BlockedWord> tradeBlockedWords = ImmutableMap.of("one", new BlockedWord("fuck|shit|cunt", "No swearing!"));
 
     private transient List<PokemonSpecification> blacklistCache = null;
     private transient List<Item> itemBlacklistCache = null;
-
     private transient Displayable.ClickType cachedOwnerRemoveButton = null;
 
+    @Comment("A map of Pokemon specifications to their respective price modifiers. The key is the Pokemon specification and the value is the price modifier. The default results in shiny Pokemon being worth twice as much as the default \"min-pokemon-price\"")
     private Map<String, PokeSpecPricing> minPriceModifiers = ImmutableMap.of(
             "example", new PokeSpecPricing("shiny:1", new PokeSpecPricing.MathHandler("*", 2.0, 1))
     );
 
+    @Comment("A list of conditions that Pokemon must meet to be breedable. This is a list of Pokemon specifications")
     private List<String> unbreedableConditions = Lists.newArrayList("abs:2");
 
+    @Comment("A map of item namespaces to their respective URL formats. %item_id% will be replaced with the item's ID. This is used for getting the item's sprite for webhooks to display in Discord")
     private Map<String, String> itemReplacementURLs = ImmutableMap.of(
             "pixelmon:gracedia", "https://google.com"
     );
 
+    @Comment("A map of patterns to their respective replacements. When a webhook is sent, the text will be replaced with the replacement")
     private Map<String, WebhookTextReplacement> webhookTextReplacement = Map.of(
             "one", new WebhookTextReplacement("WOW!", "Wow this has been replaced")
+    );
+
+    @Comment("These webhooks are executed when a trade is created, removed, or completed. The key is the event type and the value is the webhook configuration")
+    private Map<String, GTSWebHook> webhooks = Map.of(
+            "one", new GTSWebHook("trade_create", DiscordWebHookConfig.builder().disabled().url("https://discord.com/api/webhooks/<url here>")
+                    .content("Message")
+                    .avatarUrl("https://www.envyware.co.uk/img/logo.svg")
+                    .username("EnvyWare Ltd")
+                    .embeds(
+                            DiscordEmbedConfig.builder()
+                                    .title("Trade Created")
+                                    .author(new DiscordEmbedConfig.Author("EnvyWare", "https://www.envyware.co.uk/img/logo.svg", "https://www.envyware.co.uk/img/logo.svg"))
+                                    .description("A new trade has been created!")
+                                    .color(new DiscordEmbedConfig.DiscordColor(255, 255, 255, 255))
+                                    .url("https://www.envyware.co.uk")
+                                    .footer(new DiscordEmbedConfig.Footer("EnvyWare", "https://www.envyware.co.uk/img/logo.svg"))
+                                    .thumbnail(new DiscordEmbedConfig.Thumbnail("https://www.envyware.co.uk/img/logo.svg"))
+                                    .image(new DiscordEmbedConfig.Image("https://www.envyware.co.uk/img/logo.svg"))
+                                    .fields(
+                                            new DiscordEmbedConfig.Field("Field 1", "Value 1", true),
+                                            new DiscordEmbedConfig.Field("Price", "%price%", true)
+                                    )
+                                    .build()
+                    )
+                    .build()),
+            "two", new GTSWebHook("trade_remove", DiscordWebHookConfig.builder().disabled().url("https://discord.com/api/webhooks/<url here>")
+                    .content("Message")
+                    .avatarUrl("https://www.envyware.co.uk/img/logo.svg")
+                    .username("EnvyWare Ltd")
+                    .embeds(
+                            DiscordEmbedConfig.builder()
+                                    .title("Trade Created")
+                                    .author(new DiscordEmbedConfig.Author("EnvyWare", "https://www.envyware.co.uk/img/logo.svg", "https://www.envyware.co.uk/img/logo.svg"))
+                                    .description("A new trade has been created!")
+                                    .color(new DiscordEmbedConfig.DiscordColor(255, 255, 255, 255))
+                                    .url("https://www.envyware.co.uk")
+                                    .footer(new DiscordEmbedConfig.Footer("EnvyWare", "https://www.envyware.co.uk/img/logo.svg"))
+                                    .thumbnail(new DiscordEmbedConfig.Thumbnail("https://www.envyware.co.uk/img/logo.svg"))
+                                    .image(new DiscordEmbedConfig.Image("https://www.envyware.co.uk/img/logo.svg"))
+                                    .fields(
+                                            new DiscordEmbedConfig.Field("Field 1", "Value 1", true),
+                                            new DiscordEmbedConfig.Field("Price", "%price%", true)
+                                    )
+                                    .build()
+                    )
+                    .build()),
+            "three", new GTSWebHook("trade_complete", DiscordWebHookConfig.builder().disabled().url("https://discord.com/api/webhooks/<url here>")
+                    .content("Message")
+                    .avatarUrl("https://www.envyware.co.uk/img/logo.svg")
+                    .username("EnvyWare Ltd")
+                    .embeds(
+                            DiscordEmbedConfig.builder()
+                                    .title("Trade Created")
+                                    .author(new DiscordEmbedConfig.Author("EnvyWare", "https://www.envyware.co.uk/img/logo.svg", "https://www.envyware.co.uk/img/logo.svg"))
+                                    .description("A new trade has been created!")
+                                    .color(new DiscordEmbedConfig.DiscordColor(255, 255, 255, 255))
+                                    .url("https://www.envyware.co.uk")
+                                    .footer(new DiscordEmbedConfig.Footer("EnvyWare", "https://www.envyware.co.uk/img/logo.svg"))
+                                    .thumbnail(new DiscordEmbedConfig.Thumbnail("https://www.envyware.co.uk/img/logo.svg"))
+                                    .image(new DiscordEmbedConfig.Image("https://www.envyware.co.uk/img/logo.svg"))
+                                    .fields(
+                                            new DiscordEmbedConfig.Field("Field 1", "Value 1", true),
+                                            new DiscordEmbedConfig.Field("Price", "%price%", true)
+                                    )
+                                    .build()
+                    )
+                    .build())
     );
 
     public EnvyGTSConfig() {
@@ -109,10 +209,6 @@ public class EnvyGTSConfig extends AbstractYamlConfig {
 
     public List<String> getUnbreedableConditions() {
         return this.unbreedableConditions;
-    }
-
-    public boolean isEnableWebHooks() {
-        return this.enableWebHooks;
     }
 
     public Displayable.ClickType getOwnerRemoveButton() {
@@ -232,10 +328,6 @@ public class EnvyGTSConfig extends AbstractYamlConfig {
         return this.allowEggs;
     }
 
-    public boolean isEnableOpeningUIMessage() {
-        return this.enableOpeningUIMessage;
-    }
-
     public String getItemUrl(ItemStack itemStack) {
         ItemStack countIndependentCopy = itemStack.copy();
         countIndependentCopy.setCount(1);
@@ -275,10 +367,6 @@ public class EnvyGTSConfig extends AbstractYamlConfig {
         return this.itemReplacementURLs.get(key);
     }
 
-    public String getNoUrl() {
-        return this.noURL;
-    }
-
     public List<WebhookTextReplacement> getReplacements() {
         return Lists.newArrayList(this.webhookTextReplacement.values());
     }
@@ -291,6 +379,18 @@ public class EnvyGTSConfig extends AbstractYamlConfig {
         }
 
         return null;
+    }
+
+    public List<DiscordWebHookConfig> getWebhooks(String type) {
+        List<DiscordWebHookConfig> configs = Lists.newArrayList();
+
+        for (var webHook : this.webhooks.values()) {
+            if (webHook.getEvent().equalsIgnoreCase(type)) {
+                configs.add(webHook.getWebHook());
+            }
+        }
+
+        return configs;
     }
 
     @ConfigSerializable
