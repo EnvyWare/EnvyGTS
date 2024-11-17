@@ -154,14 +154,14 @@ public class LocaleConfig extends AbstractYamlConfig {
         private List<String> createTradeBroadcast = Lists.newArrayList(
                 " ",
                 "&a&lENVY GTS",
-                "&e%player%&7 added a new GTS listing for %name% for $%cost%",
+                "&e%seller%&7 added a new GTS listing for %name% for $%price%",
                 " "
         );
 
         private Map<String, SpecBasedBroadcast> createTradeBroadcasts = ImmutableMap.of("example", new SpecBasedBroadcast("", Lists.newArrayList(
                 " ",
                 "&a&lENVY GTS",
-                "&e%player%&7 added a new GTS listing for %name% for $%cost%",
+                "&e%seller%&7 added a new GTS listing for %name% for $%price%",
                 " "
         )));
 

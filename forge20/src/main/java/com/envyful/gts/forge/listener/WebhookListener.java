@@ -18,17 +18,17 @@ public class WebhookListener {
 
     @SubscribeEvent
     public void onTradeCreate(TradeCreateEvent event) {
-        this.onWebhookEvent("trade_create");
+        this.onWebhookEvent("trade_create", event.getTrade(), this.getFilterPlaceholders());
     }
 
     @SubscribeEvent
     public void onTradeCreate(PostTradePurchaseEvent event) {
-        this.onWebhookEvent("trade_purchase");
+        this.onWebhookEvent("trade_purchase", event.getTrade(), this.getFilterPlaceholders());
     }
 
     @SubscribeEvent
     public void onTradeRemove(TradeRemoveEvent event) {
-        this.onWebhookEvent("trade_remove");
+        this.onWebhookEvent("trade_remove", event.getTrade(), this.getFilterPlaceholders());
     }
 
     private void onWebhookEvent(String type, Placeholder... placeholders) {
@@ -40,6 +40,16 @@ public class WebhookListener {
                     EnvyGTSForge.getLogger().error("Failed to execute webhook: ", e);
                 }
             }
+        });
+    }
+
+    private Placeholder getFilterPlaceholders() {
+        return Placeholder.simple(s -> {
+            for (var replacement : EnvyGTSForge.getConfig().getReplacements()) {
+                s = replacement.replace(s);
+            }
+
+            return s;
         });
     }
 }

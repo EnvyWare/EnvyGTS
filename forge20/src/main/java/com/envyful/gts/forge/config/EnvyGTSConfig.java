@@ -115,18 +115,18 @@ public class EnvyGTSConfig extends AbstractYamlConfig {
     private Map<String, GTSWebHook> webhooks = Map.of(
             "one", new GTSWebHook("trade_create", DiscordWebHookConfig.builder().disabled().url("https://discord.com/api/webhooks/<url here>")
                     .content("Message")
-                    .avatarUrl("https://www.envyware.co.uk/img/logo.svg")
+                    .avatarUrl("https://avatars.githubusercontent.com/u/86280492?s=48&v=4")
                     .username("EnvyWare Ltd")
                     .embeds(
                             DiscordEmbedConfig.builder()
                                     .title("Trade Created")
-                                    .author(new DiscordEmbedConfig.Author("EnvyWare", "https://www.envyware.co.uk/img/logo.svg", "https://www.envyware.co.uk/img/logo.svg"))
+                                    .author(new DiscordEmbedConfig.Author("EnvyWare", "https://avatars.githubusercontent.com/u/86280492?s=48&v=4", "https://avatars.githubusercontent.com/u/86280492?s=48&v=4"))
                                     .description("A new trade has been created!")
                                     .color(new DiscordEmbedConfig.DiscordColor(255, 255, 255, 255))
                                     .url("https://www.envyware.co.uk")
-                                    .footer(new DiscordEmbedConfig.Footer("EnvyWare", "https://www.envyware.co.uk/img/logo.svg"))
-                                    .thumbnail(new DiscordEmbedConfig.Thumbnail("https://www.envyware.co.uk/img/logo.svg"))
-                                    .image(new DiscordEmbedConfig.Image("https://www.envyware.co.uk/img/logo.svg"))
+                                    .footer(new DiscordEmbedConfig.Footer("EnvyWare", "https://avatars.githubusercontent.com/u/86280492?s=48&v=4"))
+                                    .thumbnail(new DiscordEmbedConfig.Thumbnail("https://avatars.githubusercontent.com/u/86280492?s=48&v=4"))
+                                    .image(new DiscordEmbedConfig.Image("https://avatars.githubusercontent.com/u/86280492?s=48&v=4"))
                                     .fields(
                                             new DiscordEmbedConfig.Field("Field 1", "Value 1", true),
                                             new DiscordEmbedConfig.Field("Price", "%price%", true)
@@ -136,18 +136,18 @@ public class EnvyGTSConfig extends AbstractYamlConfig {
                     .build()),
             "two", new GTSWebHook("trade_remove", DiscordWebHookConfig.builder().disabled().url("https://discord.com/api/webhooks/<url here>")
                     .content("Message")
-                    .avatarUrl("https://www.envyware.co.uk/img/logo.svg")
+                    .avatarUrl("https://avatars.githubusercontent.com/u/86280492?s=48&v=4")
                     .username("EnvyWare Ltd")
                     .embeds(
                             DiscordEmbedConfig.builder()
                                     .title("Trade Created")
-                                    .author(new DiscordEmbedConfig.Author("EnvyWare", "https://www.envyware.co.uk/img/logo.svg", "https://www.envyware.co.uk/img/logo.svg"))
+                                    .author(new DiscordEmbedConfig.Author("EnvyWare", "https://avatars.githubusercontent.com/u/86280492?s=48&v=4", "https://avatars.githubusercontent.com/u/86280492?s=48&v=4"))
                                     .description("A new trade has been created!")
                                     .color(new DiscordEmbedConfig.DiscordColor(255, 255, 255, 255))
                                     .url("https://www.envyware.co.uk")
-                                    .footer(new DiscordEmbedConfig.Footer("EnvyWare", "https://www.envyware.co.uk/img/logo.svg"))
-                                    .thumbnail(new DiscordEmbedConfig.Thumbnail("https://www.envyware.co.uk/img/logo.svg"))
-                                    .image(new DiscordEmbedConfig.Image("https://www.envyware.co.uk/img/logo.svg"))
+                                    .footer(new DiscordEmbedConfig.Footer("EnvyWare", "https://avatars.githubusercontent.com/u/86280492?s=48&v=4"))
+                                    .thumbnail(new DiscordEmbedConfig.Thumbnail("https://avatars.githubusercontent.com/u/86280492?s=48&v=4"))
+                                    .image(new DiscordEmbedConfig.Image("https://avatars.githubusercontent.com/u/86280492?s=48&v=4"))
                                     .fields(
                                             new DiscordEmbedConfig.Field("Field 1", "Value 1", true),
                                             new DiscordEmbedConfig.Field("Price", "%price%", true)
@@ -157,18 +157,18 @@ public class EnvyGTSConfig extends AbstractYamlConfig {
                     .build()),
             "three", new GTSWebHook("trade_complete", DiscordWebHookConfig.builder().disabled().url("https://discord.com/api/webhooks/<url here>")
                     .content("Message")
-                    .avatarUrl("https://www.envyware.co.uk/img/logo.svg")
+                    .avatarUrl("https://avatars.githubusercontent.com/u/86280492?s=48&v=4")
                     .username("EnvyWare Ltd")
                     .embeds(
                             DiscordEmbedConfig.builder()
                                     .title("Trade Created")
-                                    .author(new DiscordEmbedConfig.Author("EnvyWare", "https://www.envyware.co.uk/img/logo.svg", "https://www.envyware.co.uk/img/logo.svg"))
+                                    .author(new DiscordEmbedConfig.Author("EnvyWare", "https://avatars.githubusercontent.com/u/86280492?s=48&v=4", "https://avatars.githubusercontent.com/u/86280492?s=48&v=4"))
                                     .description("A new trade has been created!")
                                     .color(new DiscordEmbedConfig.DiscordColor(255, 255, 255, 255))
                                     .url("https://www.envyware.co.uk")
-                                    .footer(new DiscordEmbedConfig.Footer("EnvyWare", "https://www.envyware.co.uk/img/logo.svg"))
-                                    .thumbnail(new DiscordEmbedConfig.Thumbnail("https://www.envyware.co.uk/img/logo.svg"))
-                                    .image(new DiscordEmbedConfig.Image("https://www.envyware.co.uk/img/logo.svg"))
+                                    .footer(new DiscordEmbedConfig.Footer("EnvyWare", "https://avatars.githubusercontent.com/u/86280492?s=48&v=4"))
+                                    .thumbnail(new DiscordEmbedConfig.Thumbnail("https://avatars.githubusercontent.com/u/86280492?s=48&v=4"))
+                                    .image(new DiscordEmbedConfig.Image("https://avatars.githubusercontent.com/u/86280492?s=48&v=4"))
                                     .fields(
                                             new DiscordEmbedConfig.Field("Field 1", "Value 1", true),
                                             new DiscordEmbedConfig.Field("Price", "%price%", true)
