@@ -18,7 +18,6 @@ import com.envyful.gts.forge.ui.SelectPartyPokemonUI;
 import com.envyful.gts.forge.ui.SellHandOrParty;
 import com.google.common.collect.Lists;
 import com.pixelmonmod.pixelmon.api.storage.StorageProxy;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.item.Items;
 
@@ -36,43 +35,42 @@ import java.util.concurrent.TimeUnit;
 public class SellCommand {
 
     @CommandProcessor
-    public void onSellCommand(@Sender ServerPlayer player, String[] args) {
-        if (player.isPassenger()) {
-            player.sendSystemMessage(UtilChatColour.colour(EnvyGTSForge.getLocale().getMessages().getCannotRideAndGts()));
+    public void onSellCommand(@Sender ForgeEnvyPlayer player, String[] args) {
+        if (player.getParent().isPassenger()) {
+            player.message(EnvyGTSForge.getLocale().getMessages().getCannotRideAndGts());
             return;
         }
 
-        ForgeEnvyPlayer sender = EnvyGTSForge.getPlayerManager().getPlayer(player);
-        GTSAttribute attribute = sender.getAttributeNow(GTSAttribute.class);
-        var inHand = player.getItemInHand(InteractionHand.MAIN_HAND);
+        GTSAttribute attribute = player.getAttributeNow(GTSAttribute.class);
+        var inHand = player.getParent().getItemInHand(InteractionHand.MAIN_HAND);
 
         if (args.length == 0) {
-            StorageProxy.getPartyNow(player).retrieveAll("GTS");
+            StorageProxy.getPartyNow(player.getParent()).retrieveAll("GTS");
 
             if (Objects.equals(inHand.getItem(), Items.AIR) || EnvyGTSForge.getConfig().isBlackListed(inHand)) {
-                SelectPartyPokemonUI.openUI(sender);
+                SelectPartyPokemonUI.openUI(player);
             } else {
-                SellHandOrParty.open(sender);
+                SellHandOrParty.open(player);
             }
             return;
         }
 
         if (args.length < 2) {
-            sender.message(UtilChatColour.colour(
+            player.message(UtilChatColour.colour(
                     EnvyGTSForge.getLocale().getMessages().getSellInsuffucientArgs()
             ));
             return;
         }
 
         if (Objects.equals(inHand.getItem(), Items.AIR)) {
-            sender.message(UtilChatColour.colour(
+            player.message(UtilChatColour.colour(
                     EnvyGTSForge.getLocale().getMessages().getSellNoItemInHand()
             ));
             return;
         }
 
         if (EnvyGTSForge.getConfig().isBlackListed(inHand)) {
-            sender.message(UtilChatColour.colour(
+            player.message(UtilChatColour.colour(
                     EnvyGTSForge.getLocale().getMessages().getCannotSellBlacklisted())
             );
             return;
@@ -81,7 +79,7 @@ public class SellCommand {
         int amount = UtilParse.parseInt(args[0]).orElse(-1);
 
         if (amount <= 0) {
-            sender.message(UtilChatColour.colour(
+            player.message(UtilChatColour.colour(
                     EnvyGTSForge.getLocale().getMessages().getAmountMustBePositive()
             ));
             return;
@@ -90,14 +88,14 @@ public class SellCommand {
         double price = UtilParse.parseDouble(args[1]).orElse(-1.0);
 
         if (price < 1.0) {
-            sender.message(UtilChatColour.colour(
+            player.message(UtilChatColour.colour(
                     EnvyGTSForge.getLocale().getMessages().getPriceMustBeMoreThanOne()
             ));
             return;
         }
 
         if (price > EnvyGTSForge.getConfig().getMaxPrice()) {
-            sender.message(UtilChatColour.colour(
+            player.message(UtilChatColour.colour(
                     EnvyGTSForge.getLocale().getMessages().getCannotGoAboveMaxPrice()
                             .replace("%max_price%",
                                      String.format(EnvyGTSForge.getLocale().getMoneyFormat(),
@@ -107,7 +105,7 @@ public class SellCommand {
         }
 
         if (amount > inHand.getCount()) {
-            player.sendSystemMessage(UtilChatColour.colour(
+            player.message(UtilChatColour.colour(
                     EnvyGTSForge.getLocale().getMessages().getNotEnoughItems()
             ));
             return;
@@ -118,7 +116,7 @@ public class SellCommand {
         trades.removeIf(trade -> trade.hasExpired() || trade.wasPurchased() || trade.wasRemoved());
 
         if (trades.size() >= EnvyGTSForge.getConfig().getMaxListingsPerUser()) {
-            sender.message(UtilChatColour.colour(
+            player.message(UtilChatColour.colour(
                     EnvyGTSForge.getLocale().getMessages().getMaxTradesAlreadyReached()
             ));
             return;
@@ -130,7 +128,7 @@ public class SellCommand {
             duration = UtilTime.attemptParseTime(args[2]).orElse(-1L);
 
             if (duration < TimeUnit.SECONDS.toMillis(EnvyGTSForge.getConfig().getMinTradeDuration()) || duration < 0) {
-                sender.message(UtilChatColour.colour(
+                player.message(UtilChatColour.colour(
                         EnvyGTSForge.getLocale().getMessages().getCannotGoBelowMinTime()
                                 .replace("%min_duration%", String.valueOf(EnvyGTSForge.getConfig().getMinTradeDuration()))
                 ));
@@ -138,7 +136,7 @@ public class SellCommand {
             }
 
             if (duration > TimeUnit.SECONDS.toMillis(EnvyGTSForge.getConfig().getMaxTradeDurationSeconds())) {
-                sender.message(UtilChatColour.colour(
+                player.message(UtilChatColour.colour(
                         EnvyGTSForge.getLocale().getMessages().getCannotGoAboveMaxTime()
                                 .replace("%max_duration%",
                                         UtilTimeFormat.getFormattedDuration(EnvyGTSForge.getConfig().getMaxTradeDurationSeconds()))
@@ -148,8 +146,8 @@ public class SellCommand {
         }
 
         ItemTrade.Builder builder = (ItemTrade.Builder) ForgeTrade.builder()
-                .owner(sender)
-                .originalOwnerName(sender.getName())
+                .owner(player)
+                .originalOwnerName(player.getName())
                 .cost(price)
                 .expiry(System.currentTimeMillis() + duration)
                 .content("i");
@@ -159,9 +157,9 @@ public class SellCommand {
         builder.contents(copy);
         inHand.shrink(amount);
 
-        player.sendSystemMessage(UtilChatColour.colour(
+        player.message(UtilChatColour.colour(
                 EnvyGTSForge.getLocale().getMessages().getAddedItemToGts()
         ));
-        EnvyGTSForge.getTradeManager().addTrade(sender, builder.build());
+        EnvyGTSForge.getTradeManager().addTrade(player, builder.build());
     }
 }

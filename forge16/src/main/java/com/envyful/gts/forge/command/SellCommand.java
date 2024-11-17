@@ -18,11 +18,9 @@ import com.envyful.gts.forge.ui.SelectPartyPokemonUI;
 import com.envyful.gts.forge.ui.SellHandOrParty;
 import com.google.common.collect.Lists;
 import com.pixelmonmod.pixelmon.api.storage.StorageProxy;
-import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.util.Hand;
-import net.minecraft.util.Util;
 
 import java.util.List;
 import java.util.Objects;
@@ -38,18 +36,17 @@ import java.util.concurrent.TimeUnit;
 public class SellCommand {
 
     @CommandProcessor
-    public void onSellCommand(@Sender ServerPlayerEntity player, String[] args) {
-        if (player.isPassenger()) {
-            player.sendMessage(UtilChatColour.colour(EnvyGTSForge.getLocale().getMessages().getCannotRideAndGts()), Util.NIL_UUID);
+    public void onSellCommand(@Sender ForgeEnvyPlayer sender, String[] args) {
+        if (sender.getParent().isPassenger()) {
+            sender.message(EnvyGTSForge.getLocale().getMessages().getCannotRideAndGts());
             return;
         }
 
-        ForgeEnvyPlayer sender = EnvyGTSForge.getPlayerManager().getPlayer(player);
         GTSAttribute attribute = sender.getAttributeNow(GTSAttribute.class);
-        ItemStack inHand = player.getItemInHand(Hand.MAIN_HAND);
+        ItemStack inHand = sender.getParent().getItemInHand(Hand.MAIN_HAND);
 
         if (args.length == 0) {
-            StorageProxy.getParty(player).retrieveAll("GTS");
+            StorageProxy.getParty(sender.getParent()).retrieveAll("GTS");
 
             if (Objects.equals(inHand.getItem(), Items.AIR) || EnvyGTSForge.getConfig().isBlackListed(inHand)) {
                 SelectPartyPokemonUI.openUI(sender);
@@ -109,9 +106,9 @@ public class SellCommand {
         }
 
         if (amount > inHand.getCount()) {
-            player.sendMessage(UtilChatColour.colour(
+            sender.message(UtilChatColour.colour(
                     EnvyGTSForge.getLocale().getMessages().getNotEnoughItems()
-            ), Util.NIL_UUID);
+            ));
             return;
         }
 
@@ -161,9 +158,9 @@ public class SellCommand {
         builder.contents(copy);
         inHand.shrink(amount);
 
-        player.sendMessage(UtilChatColour.colour(
+        sender.message(UtilChatColour.colour(
                 EnvyGTSForge.getLocale().getMessages().getAddedItemToGts()
-        ), Util.NIL_UUID);
+        ));
         EnvyGTSForge.getTradeManager().addTrade(sender, builder.build());
     }
 }
