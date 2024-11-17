@@ -4,6 +4,7 @@ import com.envyful.api.concurrency.UtilConcurrency;
 import com.envyful.api.forge.chat.UtilChatColour;
 import com.envyful.api.forge.listener.LazyListener;
 import com.envyful.api.forge.player.ForgeEnvyPlayer;
+import com.envyful.api.platform.PlatformProxy;
 import com.envyful.api.text.Placeholder;
 import com.envyful.gts.api.Trade;
 import com.envyful.gts.forge.EnvyGTSForge;
@@ -33,26 +34,7 @@ public class TradeCreateListener extends LazyListener {
             return;
         }
 
-        UtilConcurrency.runAsync(() -> {
-//            for (ForgeEnvyPlayer onlinePlayer : EnvyGTSForge.getPlayerManager().getOnlinePlayers()) {
-//                GTSAttribute attribute = onlinePlayer.getAttributeNow(GTSAttribute.class);
-//
-//                if (attribute == null || !attribute.getSettings().isToggledBroadcasts()) {
-//                    continue;
-//                }
-//
-//                for (String s : EnvyGTSForge.getLocale().getMessages().getCreateTradeBroadcast(this.getPokemon(event.getTrade()))) {
-//                    s = event.getTrade().replace(s);
-//                    s = s.replace("%player%", event.getPlayer().getName())
-//                            .replace("%name%", event.getTrade().getDisplayName())
-//                            .replace("%cost%",
-//                                    String.format(EnvyGTSForge.getLocale().getMoneyFormat(),
-//                                            event.getTrade().getCost()));
-//
-//                    onlinePlayer.message(UtilChatColour.colour(s));
-//                }
-//            }
-        });
+        PlatformProxy.broadcastMessage(EnvyGTSForge.getLocale().getMessages().getCreateTradeBroadcast(this.getPokemon(event.getTrade())), event.getTrade());
     }
 
     private Pokemon getPokemon(Trade trade) {
