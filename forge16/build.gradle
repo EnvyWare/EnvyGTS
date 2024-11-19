@@ -68,6 +68,7 @@ shadowJar {
     relocate('com.zaxxer', 'com.envyful.gts.forge.shade.hikari')
     relocate('org.slf4j', 'com.envyful.gts.forge.shade.slf4j')
     relocate('com.envyful.api', 'com.envyful.gts.forge.shade.envy.api')
+    relocate('uk.co.envyware.helios', 'com.envyful.gts.forge.shade.envy.helios')
     relocate('org.bstats', 'com.envyful.gts.forge.shade.bstats')
     relocate('io.netty', 'com.envyful.gts.forge.shade.netty')
     relocate('io.lettuce', 'com.envyful.gts.forge.shade.lettuce')
@@ -77,7 +78,7 @@ shadowJar {
     relocate('org.reactivestreams', 'com.envyful.gts.forge.shade.reactivestreams')
     relocate('reactor', 'com.envyful.gts.forge.shade.reactor')
     relocate('com.mysql', 'com.envyful.gts.forge.shade.mysql')
-    relocate('com.sqlite', 'com.envyful.gts.forge.shade.sqlite')
+    relocate('org.sqlite', 'com.envyful.gts.forge.shade.sqlite')
 
     exclude "javax/**"
     exclude "**/module-info.class"
