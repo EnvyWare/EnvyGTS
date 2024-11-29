@@ -56,58 +56,44 @@ public class SellCommand {
         }
 
         if (args.length < 2) {
-            player.message(UtilChatColour.colour(
-                    EnvyGTSForge.getLocale().getMessages().getSellInsuffucientArgs()
-            ));
+            player.message(EnvyGTSForge.getLocale().getMessages().getSellInsuffucientArgs());
             return;
         }
 
         if (Objects.equals(inHand.getItem(), Items.AIR)) {
-            player.message(UtilChatColour.colour(
-                    EnvyGTSForge.getLocale().getMessages().getSellNoItemInHand()
-            ));
+            player.message(EnvyGTSForge.getLocale().getMessages().getSellNoItemInHand());
             return;
         }
 
         if (EnvyGTSForge.getConfig().isBlackListed(inHand)) {
-            player.message(UtilChatColour.colour(
-                    EnvyGTSForge.getLocale().getMessages().getCannotSellBlacklisted())
-            );
+            player.message(EnvyGTSForge.getLocale().getMessages().getCannotSellBlacklisted());
             return;
         }
 
         int amount = UtilParse.parseInt(args[0]).orElse(-1);
 
         if (amount <= 0) {
-            player.message(UtilChatColour.colour(
-                    EnvyGTSForge.getLocale().getMessages().getAmountMustBePositive()
-            ));
+            player.message(EnvyGTSForge.getLocale().getMessages().getAmountMustBePositive());
             return;
         }
 
         double price = UtilParse.parseDouble(args[1]).orElse(-1.0);
 
         if (price < 1.0) {
-            player.message(UtilChatColour.colour(
-                    EnvyGTSForge.getLocale().getMessages().getPriceMustBeMoreThanOne()
-            ));
+            player.message(EnvyGTSForge.getLocale().getMessages().getPriceMustBeMoreThanOne());
             return;
         }
 
         if (price > EnvyGTSForge.getConfig().getMaxPrice()) {
-            player.message(UtilChatColour.colour(
-                    EnvyGTSForge.getLocale().getMessages().getCannotGoAboveMaxPrice()
+            player.message(EnvyGTSForge.getLocale().getMessages().getCannotGoAboveMaxPrice()
                             .replace("%max_price%",
                                      String.format(EnvyGTSForge.getLocale().getMoneyFormat(),
-                                             EnvyGTSForge.getConfig().getMaxPrice()))
-            ));
+                                             EnvyGTSForge.getConfig().getMaxPrice())));
             return;
         }
 
         if (amount > inHand.getCount()) {
-            player.message(UtilChatColour.colour(
-                    EnvyGTSForge.getLocale().getMessages().getNotEnoughItems()
-            ));
+            player.message(EnvyGTSForge.getLocale().getMessages().getNotEnoughItems());
             return;
         }
 
@@ -116,9 +102,7 @@ public class SellCommand {
         trades.removeIf(trade -> trade.hasExpired() || trade.wasPurchased() || trade.wasRemoved());
 
         if (trades.size() >= EnvyGTSForge.getConfig().getMaxListingsPerUser()) {
-            player.message(UtilChatColour.colour(
-                    EnvyGTSForge.getLocale().getMessages().getMaxTradesAlreadyReached()
-            ));
+            player.message(EnvyGTSForge.getLocale().getMessages().getMaxTradesAlreadyReached());
             return;
         }
 
@@ -128,19 +112,18 @@ public class SellCommand {
             duration = UtilTime.attemptParseTime(args[2]).orElse(-1L);
 
             if (duration < TimeUnit.SECONDS.toMillis(EnvyGTSForge.getConfig().getMinTradeDuration()) || duration < 0) {
-                player.message(UtilChatColour.colour(
+                player.message(
                         EnvyGTSForge.getLocale().getMessages().getCannotGoBelowMinTime()
                                 .replace("%min_duration%", String.valueOf(EnvyGTSForge.getConfig().getMinTradeDuration()))
-                ));
+                );
                 return;
             }
 
             if (duration > TimeUnit.SECONDS.toMillis(EnvyGTSForge.getConfig().getMaxTradeDurationSeconds())) {
-                player.message(UtilChatColour.colour(
-                        EnvyGTSForge.getLocale().getMessages().getCannotGoAboveMaxTime()
+                player.message(EnvyGTSForge.getLocale().getMessages().getCannotGoAboveMaxTime()
                                 .replace("%max_duration%",
                                         UtilTimeFormat.getFormattedDuration(EnvyGTSForge.getConfig().getMaxTradeDurationSeconds()))
-                ));
+                );
                 return;
             }
         }
@@ -157,9 +140,7 @@ public class SellCommand {
         builder.contents(copy);
         inHand.shrink(amount);
 
-        player.message(UtilChatColour.colour(
-                EnvyGTSForge.getLocale().getMessages().getAddedItemToGts()
-        ));
+        player.message(EnvyGTSForge.getLocale().getMessages().getAddedItemToGts());
         EnvyGTSForge.getTradeManager().addTrade(player, builder.build());
     }
 }
