@@ -191,6 +191,7 @@ public abstract class PokemonTrade extends ForgeTrade {
         var placeholders = super.placeholders();
 
         placeholders.addAll(UtilSprite.getPokemonPlaceholders(pokemon, SpriteConfig.DEFAULT));
+        placeholders.add(Placeholder.simple("%name%", this.pokemon.getLocalizedName()));
         return placeholders;
     }
 

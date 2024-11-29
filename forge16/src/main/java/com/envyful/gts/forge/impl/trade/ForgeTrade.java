@@ -168,6 +168,7 @@ public abstract class ForgeTrade implements Trade {
     public List<Placeholder> placeholders() {
         return Lists.newArrayList(
                 Placeholder.simple("%seller%", this.originalOwnerName),
+                        Placeholder.simple("%original_owner%", this.originalOwnerName),
                         Placeholder.simple("%buyer%", this.ownerName),
                         Placeholder.simple("%price%", String.format(EnvyGTSForge.getLocale().getMoneyFormat(), this.cost)),
                 Placeholder.simple("%expires_in%", UtilTimeFormat.getFormattedDuration(this.expiry - System.currentTimeMillis())),
