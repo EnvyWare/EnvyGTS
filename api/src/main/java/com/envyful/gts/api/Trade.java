@@ -167,7 +167,7 @@ public interface Trade extends Placeholder {
 
     @Override
     default @NonNull ParseResult replace(@NonNull ParseResult parseResult) {
-        for (Placeholder placeholder : this.placeholders()) {
+        for (var placeholder : this.placeholders()) {
             parseResult = placeholder.replace(parseResult);
         }
 
