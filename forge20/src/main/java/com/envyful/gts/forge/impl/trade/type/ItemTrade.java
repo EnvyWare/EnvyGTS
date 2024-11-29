@@ -10,11 +10,13 @@ import com.envyful.api.forge.player.ForgeEnvyPlayer;
 import com.envyful.api.gui.factory.GuiFactory;
 import com.envyful.api.gui.item.Displayable;
 import com.envyful.api.gui.pane.Pane;
+import com.envyful.api.platform.PlatformProxy;
 import com.envyful.api.player.EnvyPlayer;
 import com.envyful.api.sqlite.config.SQLiteDatabaseDetailsConfig;
 import com.envyful.api.text.Placeholder;
 import com.envyful.api.time.UtilTimeFormat;
 import com.envyful.gts.forge.EnvyGTSForge;
+import com.envyful.gts.forge.event.PlaceholderCollectEvent;
 import com.envyful.gts.forge.event.TradeCollectEvent;
 import com.envyful.gts.forge.event.TradeRemoveEvent;
 import com.envyful.gts.forge.impl.trade.ForgeTrade;
@@ -117,9 +119,12 @@ public abstract class ItemTrade extends ForgeTrade {
 
     @Override
     public Displayable display() {
+        var placeholderEvent = new PlaceholderCollectEvent(this, Placeholder.multiLine("%below_lore_data%", EnvyGTSForge.getLocale().getListingBelowDataLore()), this);
+        MinecraftForge.EVENT_BUS.post(placeholderEvent);
+        
         return GuiFactory.displayableBuilder(ItemStack.class)
                 .itemStack(new ItemBuilder(this.item.copy())
-                                   .addLore(this.formatLore(EnvyGTSForge.getLocale().getListingBelowDataLore()))
+                        .addLore(PlatformProxy.<Component>parse(EnvyGTSForge.getLocale().getListingBelowDataLore(), placeholderEvent.getPlaceholders().toArray(new Placeholder[0])).toArray(new Component[0]))
                                    .build())
                 .singleClick()
                 .asyncClick(false)
@@ -162,7 +167,7 @@ public abstract class ItemTrade extends ForgeTrade {
                             .playerManager(EnvyGTSForge.getPlayerManager())
                             .config(EnvyGTSForge.getGui().getSearchUIConfig().getConfirmGuiConfig())
                             .descriptionItem(new ItemBuilder(this.item.copy())
-                                                     .addLore(this.formatLore(EnvyGTSForge.getLocale().getListingBelowDataLore()))
+                                    .addLore(PlatformProxy.<Component>parse(EnvyGTSForge.getLocale().getListingBelowDataLore(), placeholderEvent.getPlaceholders().toArray(new Placeholder[0])).toArray(new Component[0]))
                                                      .build())
                             .confirmHandler((clicker, clickType1) ->
                                 UtilForgeConcurrency.runSync(() -> {
@@ -180,30 +185,18 @@ public abstract class ItemTrade extends ForgeTrade {
                 }).build();
     }
 
-    private Component[] formatLore(List<String> lore) {
-        List<Component> newLore = Lists.newArrayList();
-
-        for (String s : lore) {
-            newLore.add(UtilChatColour.colour(s
-                    .replace("%cost%",
-                             String.format(EnvyGTSForge.getLocale().getMoneyFormat(), this.cost))
-                    .replace("%duration%", UtilTimeFormat.getFormattedDuration((this.expiry - System.currentTimeMillis())))
-                    .replace("%owner%", this.ownerName)
-                    .replace("%buyer%", this.ownerName)
-                    .replace("%original_owner%", this.originalOwnerName)));
-        }
-
-        return newLore.toArray(new Component[0]);
-    }
-
     @Override
     public void displayClaimable(int pos, Consumer<EnvyPlayer<?>> returnGui, Pane pane) {
+        var placeholderEvent = new PlaceholderCollectEvent(this, Placeholder.multiLine("%below_lore_data%", EnvyGTSForge.getLocale().getListingBelowDataLore()), this);
+
         int posX = pos % 9;
         int posY = pos / 9;
 
+        MinecraftForge.EVENT_BUS.post(placeholderEvent);
+
         pane.set(posX, posY, GuiFactory.displayableBuilder(ItemStack.class)
                 .itemStack(new ItemBuilder(this.item.copy())
-                                   .addLore(this.formatLore(EnvyGTSForge.getLocale().getListingBelowExpiredOrClaimableLore()))
+                        .addLore(PlatformProxy.<Component>parse(EnvyGTSForge.getLocale().getListingBelowDataLore(), placeholderEvent.getPlaceholders().toArray(new Placeholder[0])).toArray(new Component[0]))
                                    .build())
                 .singleClick()
                 .clickHandler((envyPlayer, clickType) -> UtilForgeConcurrency.runSync(() -> {
@@ -231,7 +224,8 @@ public abstract class ItemTrade extends ForgeTrade {
                 Placeholder.simple("%namespace%", item.getItem().builtInRegistryHolder().unwrapKey().get().location().getNamespace()),
                 Placeholder.simple("%enchantments%", this.handleEnchantmentText(this.item)),
                 Placeholder.simple("%item%", this.item.getHoverName().getString()),
-                Placeholder.simple("%amount%", String.valueOf(this.item.getCount()))
+                Placeholder.simple("%amount%", String.valueOf(this.item.getCount())),
+                Placeholder.simple("%name%", this.item.getHoverName().getString())
         ));
 
         return placeholders;
