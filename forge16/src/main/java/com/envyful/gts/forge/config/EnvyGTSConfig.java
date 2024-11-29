@@ -7,6 +7,7 @@ import com.envyful.api.config.yaml.AbstractYamlConfig;
 import com.envyful.api.discord.yaml.DiscordEmbedConfig;
 import com.envyful.api.discord.yaml.DiscordWebHookConfig;
 import com.envyful.api.gui.item.Displayable;
+import com.envyful.api.sqlite.config.H2DatabaseDetailsConfig;
 import com.envyful.api.sqlite.config.SQLiteDatabaseDetailsConfig;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
@@ -33,7 +34,7 @@ import java.util.regex.Pattern;
 public class EnvyGTSConfig extends AbstractYamlConfig {
 
     @Comment("The database details for EnvyGTS. For more information visit https://www.envyware.co.uk/docs/general-help/general-config/config-databases/#sqlite")
-    private DatabaseDetailsConfig databaseDetails = new SQLiteDatabaseDetailsConfig("config/EnvyGTS/gts.db");
+    private DatabaseDetailsConfig databaseDetails = new H2DatabaseDetailsConfig("config/EnvyGTS/gts.db");
 
     @Comment("A map of item namespaces to their respective URL formats. %item_id% will be replaced with the item's ID. This is used for getting the item's sprite for webhooks to display in Discord")
     private Map<String, String> itemUrlFormats = ImmutableMap.of(

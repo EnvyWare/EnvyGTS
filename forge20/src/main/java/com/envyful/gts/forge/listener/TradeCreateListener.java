@@ -1,16 +1,12 @@
 package com.envyful.gts.forge.listener;
 
-import com.envyful.api.concurrency.UtilConcurrency;
-import com.envyful.api.forge.chat.UtilChatColour;
 import com.envyful.api.forge.listener.LazyListener;
-import com.envyful.api.forge.player.ForgeEnvyPlayer;
 import com.envyful.api.platform.PlatformProxy;
 import com.envyful.api.text.Placeholder;
 import com.envyful.gts.api.Trade;
 import com.envyful.gts.forge.EnvyGTSForge;
 import com.envyful.gts.forge.event.TradeCreateEvent;
 import com.envyful.gts.forge.impl.trade.type.PokemonTrade;
-import com.envyful.gts.forge.player.GTSAttribute;
 import com.pixelmonmod.pixelmon.api.pokemon.Pokemon;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 

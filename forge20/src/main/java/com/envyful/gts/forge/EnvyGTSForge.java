@@ -7,6 +7,7 @@ import com.envyful.api.config.database.DatabaseDetailsRegistry;
 import com.envyful.api.config.type.SQLDatabaseDetails;
 import com.envyful.api.config.yaml.YamlConfigFactory;
 import com.envyful.api.database.Database;
+import com.envyful.api.forge.chat.ComponentTextFormatter;
 import com.envyful.api.forge.command.ForgeCommandFactory;
 import com.envyful.api.forge.command.parser.ForgeAnnotationCommandParser;
 import com.envyful.api.forge.gui.factory.ForgeGuiFactory;
@@ -68,6 +69,7 @@ public class EnvyGTSForge {
         GuiFactory.setPlayerManager(this.playerManager);
         PlatformProxy.setHandler(ForgePlatformHandler.getInstance());
         PlatformProxy.setPlayerManager(this.playerManager);
+        PlatformProxy.setTextFormatter(ComponentTextFormatter.getInstance());
 
         MinecraftForge.EVENT_BUS.register(this);
         instance = this;
