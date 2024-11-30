@@ -9,6 +9,7 @@ import com.envyful.api.forge.player.ForgeEnvyPlayer;
 import com.envyful.api.gui.factory.GuiFactory;
 import com.envyful.api.gui.pane.Pane;
 import com.envyful.api.reforged.pixelmon.sprite.UtilSprite;
+import com.envyful.api.text.Placeholder;
 import com.envyful.gts.api.Trade;
 import com.envyful.gts.forge.EnvyGTSForge;
 import com.envyful.gts.forge.config.GuiConfig;
@@ -130,7 +131,8 @@ public class SelectPCPokemonUI {
                 pane.set(2 + posX, posY, GuiFactory.displayableBuilder(ItemStack.class)
                         .itemStack(UtilSprite.getPokemonElement(
                                 pokemon,
-                                EnvyGTSForge.getGui().getPcConfig().getSpriteConfig()
+                                EnvyGTSForge.getGui().getSpriteConfig(),
+                                Placeholder.empty("%below_lore_data%")
                         ))
                         .clickHandler((envyPlayer, clickType) -> {
                             GTSAttribute attribute = player.getAttributeNow(GTSAttribute.class);
@@ -139,7 +141,8 @@ public class SelectPCPokemonUI {
                                     GuiFactory.displayableBuilder(ItemStack.class)
                                             .itemStack(new ItemBuilder(UtilSprite.getPokemonElement(
                                                     box.get(slot),
-                                                    EnvyGTSForge.getGui().getPartyPokemonUIConfig().getSpriteConfig()
+                                                    EnvyGTSForge.getGui().getSpriteConfig(),
+                                                    Placeholder.empty("%below_lore_data%")
                                             ))
                                                     .enchant(Enchantments.UNBREAKING, 1)
                                                     .itemFlag(ItemFlag.HIDE_ENCHANTS)

@@ -7,7 +7,6 @@ import com.envyful.api.config.yaml.AbstractYamlConfig;
 import com.envyful.api.discord.yaml.DiscordEmbedConfig;
 import com.envyful.api.discord.yaml.DiscordWebHookConfig;
 import com.envyful.api.gui.item.Displayable;
-import com.envyful.api.sqlite.config.H2DatabaseDetailsConfig;
 import com.envyful.api.sqlite.config.SQLiteDatabaseDetailsConfig;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
@@ -22,7 +21,6 @@ import net.minecraftforge.registries.ForgeRegistries;
 import org.spongepowered.configurate.objectmapping.ConfigSerializable;
 import org.spongepowered.configurate.objectmapping.meta.Comment;
 
-import java.awt.*;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;

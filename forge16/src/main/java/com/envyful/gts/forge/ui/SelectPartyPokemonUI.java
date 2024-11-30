@@ -9,6 +9,7 @@ import com.envyful.api.forge.player.ForgeEnvyPlayer;
 import com.envyful.api.gui.factory.GuiFactory;
 import com.envyful.api.gui.pane.Pane;
 import com.envyful.api.reforged.pixelmon.sprite.UtilSprite;
+import com.envyful.api.text.Placeholder;
 import com.envyful.gts.api.Trade;
 import com.envyful.gts.forge.EnvyGTSForge;
 import com.envyful.gts.forge.config.GuiConfig;
@@ -112,7 +113,8 @@ public class SelectPartyPokemonUI {
                 final int slot = i;
                 ItemBuilder builder = new ItemBuilder(UtilSprite.getPokemonElement(
                         all[i],
-                        EnvyGTSForge.getGui().getPartyPokemonUIConfig().getSpriteConfig()
+                        EnvyGTSForge.getGui().getSpriteConfig(),
+                        Placeholder.empty("%below_lore_data%")
                 ));
 
                 GTSAttribute gtsAttribute = player.getAttributeNow(GTSAttribute.class);

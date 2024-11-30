@@ -106,7 +106,7 @@ public abstract class PokemonTrade extends ForgeTrade {
 
         return GuiFactory.displayableBuilder(ItemStack.class)
                 .singleClick()
-                .itemStack(UtilSprite.getPokemonElement(pokemon, EnvyGTSForge.getGui().getSearchUIConfig().getSpriteConfig(),placeholderEvent.getPlaceholders().toArray(new Placeholder[0])))
+                .itemStack(UtilSprite.getPokemonElement(pokemon, EnvyGTSForge.getGui().getSpriteConfig(),placeholderEvent.getPlaceholders().toArray(new Placeholder[0])))
                 .asyncClick(false)
                 .clickHandler((envyPlayer, clickType) -> {
                     if (this.removed || this.wasPurchased() || this.hasExpired()) {
@@ -128,7 +128,7 @@ public abstract class PokemonTrade extends ForgeTrade {
                         this.removed = true;
                         MinecraftForge.EVENT_BUS.post(new TradeRemoveEvent(this));
 
-                        GTSAttribute attribute = ((ForgeEnvyPlayer) envyPlayer).getAttributeNow(GTSAttribute.class);
+                        GTSAttribute attribute = envyPlayer.getAttributeNow(GTSAttribute.class);
                         attribute.getOwnedTrades().remove(this);
 
                         this.collect(envyPlayer, null);
@@ -144,7 +144,7 @@ public abstract class PokemonTrade extends ForgeTrade {
                             .player(envyPlayer)
                             .playerManager(EnvyGTSForge.getPlayerManager())
                             .config(EnvyGTSForge.getGui().getSearchUIConfig().getConfirmGuiConfig())
-                            .descriptionItem(UtilSprite.getPokemonElement(pokemon, EnvyGTSForge.getGui().getSearchUIConfig().getSpriteConfig(),placeholderEvent.getPlaceholders().toArray(new Placeholder[0])))
+                            .descriptionItem(UtilSprite.getPokemonElement(pokemon, EnvyGTSForge.getGui().getSpriteConfig(),placeholderEvent.getPlaceholders().toArray(new Placeholder[0])))
                             .confirmHandler((clicker, clickType1) -> UtilForgeConcurrency.runSync(() -> {
                                 if (this.purchased || this.wasRemoved() || this.hasExpired()) {
                                     ViewTradesUI.openUI((ForgeEnvyPlayer)clicker);
@@ -169,7 +169,7 @@ public abstract class PokemonTrade extends ForgeTrade {
         MinecraftForge.EVENT_BUS.post(placeholderEvent);
 
         pane.set(posX, posY, GuiFactory.displayableBuilder(ItemStack.class)
-                .itemStack(UtilSprite.getPokemonElement(pokemon, EnvyGTSForge.getGui().getSearchUIConfig().getSpriteConfig(),placeholderEvent.getPlaceholders().toArray(new Placeholder[0])))
+                .itemStack(UtilSprite.getPokemonElement(pokemon, EnvyGTSForge.getGui().getSpriteConfig(),placeholderEvent.getPlaceholders().toArray(new Placeholder[0])))
                 .asyncClick(false)
                 .singleClick()
                 .clickHandler((envyPlayer, clickType) -> {
@@ -190,7 +190,7 @@ public abstract class PokemonTrade extends ForgeTrade {
     public List<Placeholder> placeholders() {
         var placeholders = super.placeholders();
 
-        placeholders.addAll(UtilSprite.getPokemonPlaceholders(pokemon, SpriteConfig.DEFAULT));
+        placeholders.addAll(UtilSprite.getPokemonPlaceholders(pokemon, EnvyGTSForge.getGui().getSpriteConfig()));
         placeholders.add(Placeholder.simple("%name%", this.pokemon.getLocalizedName()));
         return placeholders;
     }

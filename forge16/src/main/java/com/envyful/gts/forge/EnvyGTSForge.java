@@ -16,7 +16,6 @@ import com.envyful.api.forge.player.ForgePlayerManager;
 import com.envyful.api.gui.factory.GuiFactory;
 import com.envyful.api.platform.PlatformProxy;
 import com.envyful.api.player.Attribute;
-import com.envyful.api.sqlite.config.H2DatabaseDetailsConfig;
 import com.envyful.api.sqlite.config.SQLiteDatabaseDetailsConfig;
 import com.envyful.gts.api.GlobalTradeManager;
 import com.envyful.gts.api.TradeManager;
@@ -64,7 +63,6 @@ public class EnvyGTSForge {
 
     public EnvyGTSForge() {
         SQLiteDatabaseDetailsConfig.register();
-        H2DatabaseDetailsConfig.register();
         UtilLogger.setLogger(LOGGER);
 
         GuiFactory.setPlatformFactory(new ForgeGuiFactory());
