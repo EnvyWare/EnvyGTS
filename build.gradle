@@ -3,7 +3,7 @@ subprojects {
     apply plugin: 'maven-publish'
 
     group = 'com.envyful.gts'
-    version = '5.0.2'
+    version = '5.0.3'
 
     ext {
         forgeVersion = "none"
