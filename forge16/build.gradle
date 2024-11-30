@@ -44,13 +44,12 @@ dependencies {
 
     shadow group: 'org.spongepowered', name: 'configurate-yaml', version: '4.0.0'
 
-    shadow group: 'com.envyful.api', name: 'commons', version: '7.2.0'
-    shadow group: 'com.envyful.api', name: 'sqlite', version: '7.2.0'
-    shadow group: 'com.envyful.api', name: 'h2', version: '7.2.0'
-    shadow (group: 'com.envyful.api', name: 'forge16', version: '7.2.0') {
+    shadow group: 'com.envyful.api', name: 'commons', version: '7.2.2'
+    shadow group: 'com.envyful.api', name: 'sqlite', version: '7.2.2'
+    shadow (group: 'com.envyful.api', name: 'forge16', version: '7.2.2') {
         transitive = false;
     }
-    shadow (group: 'com.envyful.api', name: 'reforged16', version: '7.2.0') {
+    shadow (group: 'com.envyful.api', name: 'reforged16', version: '7.2.2') {
         transitive = false;
     }
 
@@ -79,7 +78,6 @@ shadowJar {
     relocate('org.reactivestreams', 'com.envyful.gts.forge.shade.reactivestreams')
     relocate('reactor', 'com.envyful.gts.forge.shade.reactor')
     relocate('com.mysql', 'com.envyful.gts.forge.shade.mysql')
-    relocate('org.sqlite', 'com.envyful.gts.forge.shade.sqlite')
 
     exclude "javax/**"
     exclude "**/module-info.class"
