@@ -6,10 +6,9 @@ import com.envyful.api.player.attribute.adapter.AttributeAdapter;
 import com.envyful.gts.api.player.PlayerSettings;
 import com.envyful.gts.forge.EnvyGTSForge;
 
-import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 
-public class SQLiteGTSAttributeAdapter implements AttributeAdapter<GTSAttribute, UUID> {
+public class SQLiteGTSAttributeAdapter implements AttributeAdapter<GTSAttribute> {
 
     public static final String CREATE_MAIN_TABLE = "CREATE TABLE IF NOT EXISTS `envygts_trade`(" +
             "id             INTEGER         NOT NULL, " +
@@ -69,31 +68,31 @@ public class SQLiteGTSAttributeAdapter implements AttributeAdapter<GTSAttribute,
     public CompletableFuture<Void> save(GTSAttribute attribute) {
         return CompletableFuture.allOf(EnvyGTSForge.getDatabase()
                         .update(UPDATE_PLAYER_NAME)
-                        .data(SqlType.text(attribute.name), SqlType.text(attribute.getId().toString()))
+                        .data(SqlType.text(attribute.name), SqlType.text(attribute.getUniqueId().toString()))
                         .executeAsync(),
 
                 EnvyGTSForge.getDatabase()
                         .update(CREATE_SETTINGS)
-                        .data(SqlType.text(attribute.getId().toString()), SqlType.text(UtilGson.GSON.toJson(attribute.settings)))
+                        .data(SqlType.text(attribute.getUniqueId().toString()), SqlType.text(UtilGson.GSON.toJson(attribute.settings)))
                         .executeAsync(),
 
                 EnvyGTSForge.getDatabase()
                         .update(UPDATE_SETTINGS)
-                        .data(SqlType.text(UtilGson.GSON.toJson(attribute.settings)), SqlType.text(attribute.getId().toString()))
+                        .data(SqlType.text(UtilGson.GSON.toJson(attribute.settings)), SqlType.text(attribute.getUniqueId().toString()))
                         .executeAsync());
     }
 
     @Override
     public void load(GTSAttribute attribute) {
         for (var allTrade : EnvyGTSForge.getTradeManager().getAllTrades()) {
-            if (allTrade.isOwner(attribute.getId())) {
+            if (allTrade.isOwner(attribute.getUniqueId())) {
                 attribute.ownedTrades.add(allTrade);
             }
         }
 
         EnvyGTSForge.getDatabase()
                 .query(GET_PLAYER_SETTINGS)
-                .data(SqlType.text(attribute.getId().toString()))
+                .data(SqlType.text(attribute.getUniqueId().toString()))
                 .converter(resultSet -> {
                     attribute.settings = UtilGson.GSON.fromJson(resultSet.getString("settings"), PlayerSettings.class);
                     return null;

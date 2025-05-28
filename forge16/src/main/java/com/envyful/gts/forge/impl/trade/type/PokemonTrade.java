@@ -2,14 +2,13 @@ package com.envyful.gts.forge.impl.trade.type;
 
 import com.envyful.api.concurrency.UtilConcurrency;
 import com.envyful.api.forge.chat.UtilChatColour;
-import com.envyful.api.forge.concurrency.UtilForgeConcurrency;
 import com.envyful.api.forge.gui.type.ConfirmationUI;
 import com.envyful.api.forge.player.ForgeEnvyPlayer;
 import com.envyful.api.gui.factory.GuiFactory;
 import com.envyful.api.gui.item.Displayable;
 import com.envyful.api.gui.pane.Pane;
+import com.envyful.api.platform.PlatformProxy;
 import com.envyful.api.player.EnvyPlayer;
-import com.envyful.api.reforged.pixelmon.config.SpriteConfig;
 import com.envyful.api.reforged.pixelmon.sprite.UtilSprite;
 import com.envyful.api.sqlite.config.SQLiteDatabaseDetailsConfig;
 import com.envyful.api.text.Placeholder;
@@ -145,7 +144,7 @@ public abstract class PokemonTrade extends ForgeTrade {
                             .playerManager(EnvyGTSForge.getPlayerManager())
                             .config(EnvyGTSForge.getGui().getSearchUIConfig().getConfirmGuiConfig())
                             .descriptionItem(UtilSprite.getPokemonElement(pokemon, EnvyGTSForge.getGui().getSpriteConfig(),placeholderEvent.getPlaceholders().toArray(new Placeholder[0])))
-                            .confirmHandler((clicker, clickType1) -> UtilForgeConcurrency.runSync(() -> {
+                            .confirmHandler((clicker, clickType1) -> PlatformProxy.runSync(() -> {
                                 if (this.purchased || this.wasRemoved() || this.hasExpired()) {
                                     ViewTradesUI.openUI((ForgeEnvyPlayer)clicker);
                                     return;
@@ -190,7 +189,7 @@ public abstract class PokemonTrade extends ForgeTrade {
     public List<Placeholder> placeholders() {
         var placeholders = super.placeholders();
 
-        placeholders.addAll(UtilSprite.getPokemonPlaceholders(pokemon, EnvyGTSForge.getGui().getSpriteConfig()));
+        placeholders.add(EnvyGTSForge.getGui().getSpriteConfig().getPokemonPlaceholders(pokemon));
         placeholders.add(Placeholder.simple("%name%", this.pokemon.getLocalizedName()));
         return placeholders;
     }
@@ -296,7 +295,7 @@ public abstract class PokemonTrade extends ForgeTrade {
                 return null;
             }
 
-            if (EnvyGTSForge.getPlayerManager().getSaveManager().getSaveMode().equals(SQLiteDatabaseDetailsConfig.ID)) {
+            if (EnvyGTSForge.getPlayerManager().getSaveMode(GTSAttribute.class).equals(SQLiteDatabaseDetailsConfig.ID)) {
                 return new SQLPokemonTrade(this.owner, this.ownerName, this.originalOwnerName, this.cost, this.expiry,
                         this.pokemon, this.removed, this.purchased);
             } else {

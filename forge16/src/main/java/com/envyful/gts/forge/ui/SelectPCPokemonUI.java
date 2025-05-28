@@ -1,7 +1,6 @@
 package com.envyful.gts.forge.ui;
 
 import com.envyful.api.forge.chat.UtilChatColour;
-import com.envyful.api.forge.config.UtilConfigInterface;
 import com.envyful.api.forge.config.UtilConfigItem;
 import com.envyful.api.forge.items.ItemBuilder;
 import com.envyful.api.forge.items.ItemFlag;
@@ -34,15 +33,9 @@ public class SelectPCPokemonUI {
     public static void openUI(ForgeEnvyPlayer player, int page) {
         GuiConfig.SelectFromPCConfig config = EnvyGTSForge.getGui().getPcConfig();
 
-        ((GTSAttribute) player.getAttributeNow(GTSAttribute.class)).setSelectedSlot(-1);
+        (player.getAttributeNow(GTSAttribute.class)).setSelectedSlot(-1);
 
-        Pane pane = GuiFactory.paneBuilder()
-                .topLeftX(0).topLeftY(0)
-                .width(9)
-                .height(config.getGuiSettings().getHeight())
-                .build();
-
-        UtilConfigInterface.fillBackground(pane, config.getGuiSettings());
+        var pane = config.getGuiSettings().toPane();
 
         PCStorage pc = StorageProxy.getPCForPlayer(player.getParent());
 
@@ -102,12 +95,7 @@ public class SelectPCPokemonUI {
                 })
                 .extendedConfigItem(player, pane, config.getConfirmButton());
 
-        GuiFactory.guiBuilder()
-                .setPlayerManager(EnvyGTSForge.getPlayerManager())
-                .addPane(pane)
-                .height(config.getGuiSettings().getHeight())
-                .title(UtilChatColour.colour(config.getGuiSettings().getTitle()))
-                .build().open(player);
+        pane.open(player, config.getGuiSettings());
     }
 
     private static void setPokemon(ForgeEnvyPlayer player, int page, Pane pane) {

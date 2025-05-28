@@ -6,10 +6,9 @@ import com.envyful.api.player.attribute.adapter.AttributeAdapter;
 import com.envyful.gts.api.player.PlayerSettings;
 import com.envyful.gts.forge.EnvyGTSForge;
 
-import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 
-public class SQLGTSAttributeAdapter implements AttributeAdapter<GTSAttribute, UUID> {
+public class SQLGTSAttributeAdapter implements AttributeAdapter<GTSAttribute> {
 
     public static final String CREATE_MAIN_TABLE = "CREATE TABLE IF NOT EXISTS `envygts_trade`(" +
             "id             INT             UNSIGNED    NOT NULL    AUTO_INCREMENT, " +
@@ -69,26 +68,26 @@ public class SQLGTSAttributeAdapter implements AttributeAdapter<GTSAttribute, UU
     public CompletableFuture<Void> save(GTSAttribute attribute) {
         return CompletableFuture.allOf(EnvyGTSForge.getDatabase()
                         .update(UPDATE_PLAYER_NAME)
-                        .data(SqlType.text(attribute.name), SqlType.text(attribute.getId().toString()))
+                        .data(SqlType.text(attribute.name), SqlType.text(attribute.getUniqueId().toString()))
                         .executeAsync(),
 
                 EnvyGTSForge.getDatabase()
                         .update(UPDATE_OR_CREATE_SETTINGS)
-                        .data(SqlType.text(attribute.getId().toString()), SqlType.text(UtilGson.GSON.toJson(attribute.settings)))
+                        .data(SqlType.text(attribute.getUniqueId().toString()), SqlType.text(UtilGson.GSON.toJson(attribute.settings)))
                         .executeAsync());
     }
 
     @Override
     public void load(GTSAttribute attribute) {
         for (var allTrade : EnvyGTSForge.getTradeManager().getAllTrades()) {
-            if (allTrade.isOwner(attribute.getId())) {
+            if (allTrade.isOwner(attribute.getUniqueId())) {
                 attribute.ownedTrades.add(allTrade);
             }
         }
 
         EnvyGTSForge.getDatabase()
                 .query(GET_PLAYER_SETTINGS)
-                .data(SqlType.text(attribute.getId().toString()))
+                .data(SqlType.text(attribute.getUniqueId().toString()))
                 .converter(resultSet -> {
                     attribute.settings = UtilGson.GSON.fromJson(resultSet.getString("settings"), PlayerSettings.class);
                     return null;

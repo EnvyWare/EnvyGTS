@@ -2,7 +2,6 @@ package com.envyful.gts.forge.impl.trade.type;
 
 import com.envyful.api.concurrency.UtilConcurrency;
 import com.envyful.api.forge.chat.UtilChatColour;
-import com.envyful.api.forge.concurrency.UtilForgeConcurrency;
 import com.envyful.api.forge.gui.type.ConfirmationUI;
 import com.envyful.api.forge.items.ItemBuilder;
 import com.envyful.api.forge.items.UtilItemStack;
@@ -171,7 +170,7 @@ public abstract class ItemTrade extends ForgeTrade {
                                     .addLore(PlatformProxy.<ITextComponent>parse(EnvyGTSForge.getLocale().getListingBelowDataLore(), placeholderEvent.getPlaceholders().toArray(new Placeholder[0])).toArray(new ITextComponent[0]))
                                     .build())
                             .confirmHandler((clicker, clickType1) ->
-                                    UtilForgeConcurrency.runSync(() -> {
+                                    PlatformProxy.runSync(() -> {
                                         if (this.purchased || this.wasRemoved() || this.hasExpired()) {
                                             ViewTradesUI.openUI((ForgeEnvyPlayer) clicker);
                                             return;
@@ -214,7 +213,7 @@ public abstract class ItemTrade extends ForgeTrade {
                         .addLore(PlatformProxy.<ITextComponent>parse(EnvyGTSForge.getLocale().getListingBelowDataLore(), placeholderEvent.getPlaceholders().toArray(new Placeholder[0])).toArray(new ITextComponent[0]))
                         .build())
                 .singleClick()
-                .clickHandler((envyPlayer, clickType) -> UtilForgeConcurrency.runSync(() -> {
+                .clickHandler((envyPlayer, clickType) -> PlatformProxy.runSync(() -> {
                     GTSAttribute attribute = ((ForgeEnvyPlayer) envyPlayer).getAttributeNow(GTSAttribute.class);
                     attribute.getOwnedTrades().remove(this);
                     this.collect(envyPlayer, returnGui);
@@ -360,7 +359,7 @@ public abstract class ItemTrade extends ForgeTrade {
                 return null;
             }
 
-            if (EnvyGTSForge.getPlayerManager().getSaveManager().getSaveMode().equals(SQLiteDatabaseDetailsConfig.ID)) {
+            if (EnvyGTSForge.getPlayerManager().getSaveMode(GTSAttribute.class).equals(SQLiteDatabaseDetailsConfig.ID)) {
                 return new SQLItemTrade(this.owner, this.ownerName, this.originalOwnerName, this.cost, this.expiry,
                                         this.itemStack, this.removed, this.purchased);
             } else {

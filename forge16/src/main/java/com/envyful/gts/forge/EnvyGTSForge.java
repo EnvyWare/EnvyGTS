@@ -12,6 +12,7 @@ import com.envyful.api.forge.command.ForgeCommandFactory;
 import com.envyful.api.forge.command.parser.ForgeAnnotationCommandParser;
 import com.envyful.api.forge.gui.factory.ForgeGuiFactory;
 import com.envyful.api.forge.platform.ForgePlatformHandler;
+import com.envyful.api.forge.player.ForgeEnvyPlayer;
 import com.envyful.api.forge.player.ForgePlayerManager;
 import com.envyful.api.gui.factory.GuiFactory;
 import com.envyful.api.platform.PlatformProxy;
@@ -32,7 +33,6 @@ import com.envyful.gts.forge.listener.WebhookListener;
 import com.envyful.gts.forge.player.GTSAttribute;
 import com.envyful.gts.forge.player.SQLGTSAttributeAdapter;
 import com.envyful.gts.forge.player.SQLiteGTSAttributeAdapter;
-import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.RegisterCommandsEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -66,7 +66,6 @@ public class EnvyGTSForge {
         UtilLogger.setLogger(LOGGER);
 
         GuiFactory.setPlatformFactory(new ForgeGuiFactory());
-        GuiFactory.setPlayerManager(this.playerManager);
         PlatformProxy.setHandler(ForgePlatformHandler.getInstance());
         PlatformProxy.setPlayerManager(this.playerManager);
         PlatformProxy.setTextFormatter(ITextComponentTextFormatter.getInstance());
@@ -85,16 +84,16 @@ public class EnvyGTSForge {
         FilterTypeFactory.register(new PokemonFilterType());
 
         this.loadConfig();
-        this.playerManager.getSaveManager().setSaveMode(DatabaseDetailsRegistry.getRegistry().getKey((Class<DatabaseDetailsConfig>) this.getConfig().getDatabaseDetails().getClass()));
+        this.playerManager.setGlobalSaveMode(DatabaseDetailsRegistry.getRegistry().getKey((Class<DatabaseDetailsConfig>) this.getConfig().getDatabaseDetails().getClass()));
 
-        this.playerManager.registerAttribute(Attribute.builder(GTSAttribute.class, ServerPlayerEntity.class)
+        this.playerManager.registerAttribute(Attribute.builder(GTSAttribute.class, ForgeEnvyPlayer.class)
                 .constructor(GTSAttribute::new)
                 .registerAdapter(SQLDatabaseDetails.ID, new SQLGTSAttributeAdapter())
                 .registerAdapter(SQLiteDatabaseDetailsConfig.ID, new SQLiteGTSAttributeAdapter())
         );
 
         this.database = this.config.getDatabaseDetails().createDatabase();
-        this.playerManager.getSaveManager().getAdapter(GTSAttribute.class).initialize();
+        this.playerManager.getAdapter(GTSAttribute.class).initialize();
     }
 
     @SubscribeEvent
@@ -103,7 +102,7 @@ public class EnvyGTSForge {
         MinecraftForge.EVENT_BUS.register(new WebhookListener());
 
         UtilConcurrency.runAsync(() -> {
-            switch (this.playerManager.getSaveManager().getSaveMode()) {
+            switch (this.playerManager.getSaveMode(GTSAttribute.class)) {
                 case SQLiteDatabaseDetailsConfig.ID:
                     this.tradeManager = new SQLiteGlobalTradeManager();
                     break;

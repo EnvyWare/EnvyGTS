@@ -28,7 +28,6 @@ public class ViewTradesUI {
 
         UtilConfigInterface.paginatedBuilder(allTrades)
                 .itemConversion(Trade::display)
-                .playerManager(EnvyGTSForge.getPlayerManager())
                 .configSettings(config.getGuiSettings())
                 .extraItems((pane, currentPage) -> {
                     UtilConfigItem.builder()

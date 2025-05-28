@@ -1,9 +1,9 @@
 package com.envyful.gts.forge.player;
 
 import com.envyful.api.forge.chat.UtilChatColour;
-import com.envyful.api.forge.concurrency.UtilForgeConcurrency;
 import com.envyful.api.forge.player.ForgeEnvyPlayer;
 import com.envyful.api.forge.player.attribute.ManagedForgeAttribute;
+import com.envyful.api.platform.PlatformProxy;
 import com.envyful.gts.api.Trade;
 import com.envyful.gts.api.player.PlayerSettings;
 import com.envyful.gts.forge.EnvyGTSForge;
@@ -72,10 +72,10 @@ public class GTSAttribute extends ManagedForgeAttribute<EnvyGTSForge> {
 
         this.name = parent.getName();
 
-        UtilForgeConcurrency.runSync(() -> {
+        PlatformProxy.runSync(() -> {
             boolean returnMessage = false;
 
-            for (Trade ownedTrade : Lists.newArrayList(this.ownedTrades)) {
+            for (var ownedTrade : Lists.newArrayList(this.ownedTrades)) {
                 if (ownedTrade.hasExpired() || ownedTrade.wasPurchased() || ownedTrade.wasRemoved()) {
                     returnMessage = true;
                     ownedTrade.collect(this.parent, null);

@@ -1,7 +1,6 @@
 package com.envyful.gts.forge.ui;
 
 import com.envyful.api.forge.chat.UtilChatColour;
-import com.envyful.api.forge.config.UtilConfigInterface;
 import com.envyful.api.forge.config.UtilConfigItem;
 import com.envyful.api.forge.items.ItemBuilder;
 import com.envyful.api.forge.items.ItemFlag;
@@ -34,13 +33,7 @@ public class SelectPartyPokemonUI {
             playerAttribute.setSelectedSlot(-1);
         }
 
-        Pane pane = GuiFactory.paneBuilder()
-                .topLeftX(0).topLeftY(0)
-                .width(9)
-                .height(config.getGuiSettings().getHeight())
-                .build();
-
-        UtilConfigInterface.fillBackground(pane, config.getGuiSettings());
+        var pane = config.getGuiSettings().toPane();
 
         setPokemon(player, pane);
 
@@ -87,12 +80,7 @@ public class SelectPartyPokemonUI {
                 })
                 .extendedConfigItem(player, pane, config.getConfirmItem());
 
-        GuiFactory.guiBuilder()
-                .setPlayerManager(EnvyGTSForge.getPlayerManager())
-                .addPane(pane)
-                .height(config.getGuiSettings().getHeight())
-                .title(UtilChatColour.colour(config.getGuiSettings().getTitle()))
-                .build().open(player);
+        pane.open(player, config.getGuiSettings());
     }
 
     private static void setPokemon(ForgeEnvyPlayer player, Pane pane) {
