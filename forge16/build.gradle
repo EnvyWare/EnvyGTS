@@ -44,12 +44,12 @@ dependencies {
 
     shadow group: 'org.spongepowered', name: 'configurate-yaml', version: '4.0.0'
 
-    shadow group: 'com.envyful.api', name: 'commons', version: '7.2.2'
-    shadow group: 'com.envyful.api', name: 'sqlite', version: '7.2.2'
-    shadow (group: 'com.envyful.api', name: 'forge16', version: '7.2.2') {
+    shadow group: 'com.envyful.api', name: 'commons', version: '8.0.5'
+    shadow group: 'com.envyful.api', name: 'sqlite', version: '8.0.5'
+    shadow (group: 'com.envyful.api', name: 'forge16', version: '8.0.5') {
         transitive = false;
     }
-    shadow (group: 'com.envyful.api', name: 'reforged16', version: '7.2.2') {
+    shadow (group: 'com.envyful.api', name: 'reforged16', version: '8.0.5') {
         transitive = false;
     }
 
