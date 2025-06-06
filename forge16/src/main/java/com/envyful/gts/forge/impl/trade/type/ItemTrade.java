@@ -76,6 +76,7 @@ public abstract class ItemTrade extends ForgeTrade {
 
             var attribute = player.getAttributeNow(GTSAttribute.class);
             attribute.getOwnedTrades().add(this);
+            this.save();
 
             return CompletableFuture.completedFuture(null);
         }
@@ -83,12 +84,15 @@ public abstract class ItemTrade extends ForgeTrade {
         MinecraftForge.EVENT_BUS.post(new TradeCollectEvent((ForgeEnvyPlayer) player, this));
 
         EnvyGTSForge.getTradeManager().removeTrade(this);
+        this.removed = true;
 
         if (returnGui == null) {
             player.closeInventory();
         } else {
             returnGui.accept(player);
         }
+
+        UtilConcurrency.runAsync(this::save);
 
         return UtilConcurrency.runAsync(this::delete);
     }
@@ -213,11 +217,13 @@ public abstract class ItemTrade extends ForgeTrade {
                         .addLore(PlatformProxy.<ITextComponent>parse(EnvyGTSForge.getLocale().getListingBelowDataLore(), placeholderEvent.getPlaceholders().toArray(new Placeholder[0])).toArray(new ITextComponent[0]))
                         .build())
                 .singleClick()
-                .clickHandler((envyPlayer, clickType) -> PlatformProxy.runSync(() -> {
-                    GTSAttribute attribute = ((ForgeEnvyPlayer) envyPlayer).getAttributeNow(GTSAttribute.class);
+                .syncClick()
+                .clickHandler((envyPlayer, clickType) -> {
+                    var attribute = envyPlayer.getAttributeNow(GTSAttribute.class);
+
                     attribute.getOwnedTrades().remove(this);
                     this.collect(envyPlayer, returnGui);
-                }))
+                })
                 .build());
     }
 
