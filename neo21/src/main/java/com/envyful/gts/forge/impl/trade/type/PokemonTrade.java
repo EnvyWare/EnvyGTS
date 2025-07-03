@@ -129,6 +129,7 @@ public abstract class PokemonTrade extends ForgeTrade {
 
                         GTSAttribute attribute = envyPlayer.getAttributeNow(GTSAttribute.class);
                         attribute.getOwnedTrades().remove(this);
+                        UtilConcurrency.runAsync(this::delete);
 
                         this.collect(envyPlayer, null);
                         envyPlayer.message(UtilChatColour.colour(EnvyGTSForge.getLocale().getMessages().getRemovedOwnTrade()));
@@ -172,8 +173,9 @@ public abstract class PokemonTrade extends ForgeTrade {
                 .asyncClick(false)
                 .singleClick()
                 .clickHandler((envyPlayer, clickType) -> {
-                    GTSAttribute attribute = ((ForgeEnvyPlayer) envyPlayer).getAttributeNow(GTSAttribute.class);
+                    GTSAttribute attribute = envyPlayer.getAttributeNow(GTSAttribute.class);
                     attribute.getOwnedTrades().remove(this);
+                    UtilConcurrency.runAsync(this::delete);
                     this.collect(envyPlayer, returnGui);
                 })
                 .build());

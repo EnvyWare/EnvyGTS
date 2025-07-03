@@ -4,6 +4,7 @@ import com.envyful.api.neoforge.chat.UtilChatColour;
 import com.envyful.api.neoforge.concurrency.UtilForgeConcurrency;
 import com.envyful.api.neoforge.player.ForgeEnvyPlayer;
 import com.envyful.api.neoforge.player.util.UtilPlayer;
+import com.envyful.api.platform.PlatformProxy;
 import com.envyful.api.time.UtilTime;
 import com.envyful.api.time.UtilTimeFormat;
 import com.envyful.gts.forge.EnvyGTSForge;
@@ -34,11 +35,10 @@ public class EditItemDurationUI {
                         .replace("%max_duration%", UtilTimeFormat.getFormattedDuration(
                                 TimeUnit.SECONDS.toMillis(EnvyGTSForge.getConfig().getMinTradeDuration())
                         ))
-                        .replace("%item%", itemInHand.getHoverName().getString())))
+                        .replace("%pokemonItem%", itemInHand.getHoverName().getString())))
                 .showInput()
                 .defaultText(TimeUnit.SECONDS.toMinutes(EnvyGTSForge.getConfig().getMinTradeDuration()) + "m")
                 .closeOnEscape()
-                .onClose(closedScreen -> SellHandOrParty.open(player))
                 .buttons(DialogueButton.builder()
                         .text("Submit")
                         .onClick(submitted -> {
@@ -55,6 +55,7 @@ public class EditItemDurationUI {
                             }
 
                             UtilPlayer.runCommand(player.getParent(), "gts sell " + itemInHand.getCount() + " " + time + " " + submitted.getInput());
+                            PlatformProxy.runSync(player.getParent()::closeContainer);
                         })
                         .build())
                 .sendTo(player.getParent()), 5);

@@ -74,6 +74,7 @@ public abstract class ItemTrade extends ForgeTrade {
             } else {
                 returnGui.accept(player);
             }
+            UtilConcurrency.runAsync(this::delete);
 
             this.item.setCount(copy.getCount());
 
@@ -94,8 +95,6 @@ public abstract class ItemTrade extends ForgeTrade {
         } else {
             returnGui.accept(player);
         }
-
-        UtilConcurrency.runAsync(this::save);
 
         return UtilConcurrency.runAsync(this::delete);
     }
@@ -159,6 +158,7 @@ public abstract class ItemTrade extends ForgeTrade {
 
                         var attribute = envyPlayer.getAttributeNow(GTSAttribute.class);
                         attribute.getOwnedTrades().remove(this);
+                        UtilConcurrency.runAsync(this::delete);
 
                         this.collect(envyPlayer, null);
                         envyPlayer.message(UtilChatColour.colour(EnvyGTSForge.getLocale().getMessages().getRemovedOwnTrade()));
