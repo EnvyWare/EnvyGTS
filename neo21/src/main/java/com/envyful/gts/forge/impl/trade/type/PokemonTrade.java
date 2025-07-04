@@ -129,7 +129,6 @@ public abstract class PokemonTrade extends ForgeTrade {
 
                         GTSAttribute attribute = envyPlayer.getAttributeNow(GTSAttribute.class);
                         attribute.getOwnedTrades().remove(this);
-                        UtilConcurrency.runAsync(this::delete);
 
                         this.collect(envyPlayer, null);
                         envyPlayer.message(UtilChatColour.colour(EnvyGTSForge.getLocale().getMessages().getRemovedOwnTrade()));
