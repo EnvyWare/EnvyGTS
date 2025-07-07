@@ -15,6 +15,7 @@ import com.envyful.api.neoforge.gui.factory.ForgeGuiFactory;
 import com.envyful.api.neoforge.platform.ForgePlatformHandler;
 import com.envyful.api.neoforge.player.ForgeEnvyPlayer;
 import com.envyful.api.neoforge.player.ForgePlayerManager;
+import com.envyful.api.neoforge.player.util.UtilPlayer;
 import com.envyful.api.platform.PlatformProxy;
 import com.envyful.api.player.Attribute;
 import com.envyful.api.sqlite.config.SQLiteDatabaseDetailsConfig;
@@ -127,6 +128,7 @@ public class EnvyGTSForge {
 
     @SubscribeEvent
     public void onServerStarting(RegisterCommandsEvent event) {
+        UtilPlayer.registerPermission("envygts.admin");
         this.commandFactory.registerCommand(event.getDispatcher(), this.commandFactory.parseCommand(new GTSCommand()));
     }
 
