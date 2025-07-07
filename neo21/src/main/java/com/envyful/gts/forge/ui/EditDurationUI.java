@@ -40,7 +40,7 @@ public class EditDurationUI {
                             .replace("%max_duration%", UtilTimeFormat.getFormattedDuration(
                                     TimeUnit.SECONDS.toMillis(EnvyGTSForge.getConfig().getMinTradeDuration())
                             ))
-                            .replace("%pokemon%", pokemon.getDisplayName().getString())))
+                            .replace("%pokemonItem%", pokemon.getDisplayName().getString())))
                     .defaultText(TimeUnit.SECONDS.toMinutes(EnvyGTSForge.getConfig().getMinTradeDuration()) + "m")
                     .maxInputLength(10)
                     .closeOnEscape()
@@ -96,6 +96,7 @@ public class EditDurationUI {
                                             attribute.setCurrentMinPrice(0);
                                             attribute.setCurrentPrice(0);
                                             attribute.setSelectedSlot(-1);
+                                            PlatformProxy.runSync(player.getParent()::closeContainer);
                                         });
                                     })
                                     .build()

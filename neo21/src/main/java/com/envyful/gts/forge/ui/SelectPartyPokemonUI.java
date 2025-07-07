@@ -114,8 +114,6 @@ public class SelectPartyPokemonUI {
                     item.enchant(enchants.getHolder(Enchantments.MENDING).orElseThrow(), 1);
                 }
 
-                player.getParent().getInventory().add(item.copy());
-
                 pane.set(pos % 9, pos / 9, GuiFactory.displayableBuilder(ItemStack.class)
                         .itemStack(item)
                         .clickHandler((envyPlayer, clickType) -> {
