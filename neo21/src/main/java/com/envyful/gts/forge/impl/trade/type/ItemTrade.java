@@ -69,11 +69,6 @@ public abstract class ItemTrade extends ForgeTrade {
         if (!parent.getInventory().add(copy)) {
             player.message(UtilChatColour.colour(EnvyGTSForge.getLocale().getMessages().getInventoryFull()));
 
-            if (returnGui == null) {
-                parent.closeContainer();
-            } else {
-                returnGui.accept(player);
-            }
             UtilConcurrency.runAsync(this::delete);
 
             this.item.setCount(copy.getCount());
@@ -81,6 +76,12 @@ public abstract class ItemTrade extends ForgeTrade {
             var attribute = player.getAttributeNow(GTSAttribute.class);
             attribute.getOwnedTrades().add(this);
             this.save();
+
+            if (returnGui == null) {
+                parent.closeContainer();
+            } else {
+                returnGui.accept(player);
+            }
 
             return CompletableFuture.completedFuture(null);
         }
