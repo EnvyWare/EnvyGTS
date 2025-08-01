@@ -34,7 +34,7 @@ public class EditItemDurationUI {
                         .replace("%max_duration%", UtilTimeFormat.getFormattedDuration(
                                 TimeUnit.SECONDS.toMillis(EnvyGTSForge.getConfig().getMinTradeDuration())
                         ))
-                        .replace("%item%", itemInHand.getHoverName().getString())))
+                        .replace("%pokemon%", itemInHand.getHoverName().getString())))
                 .showInput()
                 .defaultText(TimeUnit.SECONDS.toMinutes(EnvyGTSForge.getConfig().getMinTradeDuration()) + "m")
                 .closeOnEscape()
