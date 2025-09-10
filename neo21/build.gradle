@@ -23,7 +23,7 @@ dependencies {
 
     shadow group: 'org.spongepowered', name: 'configurate-yaml', version: '4.2.0-COMMENTS'
 
-    var apiVersion = "8.1.9"
+    var apiVersion = "8.2.0"
     shadow (group: 'com.envyful.api', name: 'commons', version: apiVersion)
     shadow (group: 'com.envyful.api', name: 'neo21', version: apiVersion) {
         transitive = false
