@@ -23,6 +23,8 @@ public interface TradeService {
 
     void removeListing(Trade trade);
 
+    void addSale(Sale sale);
+
     List<Trade> historicalListings();
 
     List<Trade> historicalListings(ForgeEnvyPlayer player);

@@ -2,8 +2,11 @@ package com.envyful.gts.forge.api.service;
 
 import com.envyful.api.concurrency.UtilConcurrency;
 import com.envyful.api.neoforge.player.ForgeEnvyPlayer;
+import com.envyful.gts.forge.api.Sale;
 import com.envyful.gts.forge.api.TradeService;
 import com.envyful.gts.forge.api.trade.Trade;
+import com.envyful.gts.forge.event.TradeRemoveEvent;
+import net.neoforged.neoforge.common.NeoForge;
 
 import java.util.*;
 import java.util.concurrent.TimeUnit;
@@ -53,6 +56,12 @@ public class CachedTradeService implements TradeService {
     @Override
     public void removeListing(Trade trade) {
         this.activeListings.remove(trade.offer().id());
+        NeoForge.EVENT_BUS.post(new TradeRemoveEvent(trade));
+    }
+
+    @Override
+    public void addSale(Sale sale) {
+        this.removeListing(this.activeListing(sale.offerId()));
     }
 
     @Override

@@ -14,6 +14,10 @@ public sealed interface Trade extends Placeholder
 
     TradeOffer offer();
 
+    default UUID tradeId() {
+        return this.offer().id();
+    }
+
     default boolean isSeller(EnvyPlayer<?> player) {
         return this.isSeller(player.getUniqueId());
     }

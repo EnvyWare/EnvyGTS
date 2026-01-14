@@ -1,16 +1,25 @@
 package com.envyful.gts.forge.ui;
 
+import com.envyful.api.gui.factory.GuiFactory;
+import com.envyful.api.gui.item.Displayable;
 import com.envyful.api.neoforge.config.UtilConfigInterface;
 import com.envyful.api.neoforge.config.UtilConfigItem;
+import com.envyful.api.neoforge.gui.type.ConfirmationUI;
 import com.envyful.api.neoforge.player.ForgeEnvyPlayer;
+import com.envyful.api.platform.PlatformProxy;
+import com.envyful.api.player.EnvyPlayer;
 import com.envyful.api.text.parse.SimplePlaceholder;
 import com.envyful.gts.forge.EnvyGTSForge;
+import com.envyful.gts.forge.api.CollectionItem;
+import com.envyful.gts.forge.api.Sale;
 import com.envyful.gts.forge.api.gui.FilterType;
 import com.envyful.gts.forge.api.gui.FilterTypeFactory;
 import com.envyful.gts.forge.api.gui.SortType;
+import com.envyful.gts.forge.api.trade.ActiveTrade;
 import com.envyful.gts.forge.api.trade.Trade;
 import com.envyful.gts.forge.event.TradeViewFilterEvent;
 import com.envyful.gts.forge.event.TradesGUISetupEvent;
+import com.envyful.gts.forge.player.GTSAttribute;
 import net.neoforged.neoforge.common.NeoForge;
 
 import java.util.ArrayList;
@@ -22,21 +31,70 @@ public class ViewTradesUI {
         openUI(player, 1, FilterTypeFactory.getDefault(), SortType.MOST_RECENT);
     }
 
+    @SuppressWarnings("unchecked")
     public static void openUI(ForgeEnvyPlayer player, int page, FilterType filter, SortType sort) {
         var config = EnvyGTSForge.getGui().getSearchUIConfig();
         var allTrades = getAllVisibleTrades(player, filter, sort);
 
         UtilConfigInterface.paginatedBuilder(allTrades)
-                .itemConversion(trade -> trade.offer().item().display()
+                .itemConversion(trade -> GuiFactory.displayableBuilder(trade.offer().item().display())
                         .clickHandler((envyPlayer, clickType) -> {
                             var updatedTrade = EnvyGTSForge.getTradeService().activeListing(trade.offer().id());
 
-                            if (updatedTrade == null) {
+                            if (!(updatedTrade instanceof ActiveTrade)) {
                                 //TODO: message the player
                                 return;
                             }
 
+                            var activeTrade = (ActiveTrade) updatedTrade;
 
+                            //TODO: check auction status before handling click when active
+                            if (canAdminRemove(envyPlayer, clickType)) {
+                                //TODO: message the seller of the auction & the admin
+                                EnvyGTSForge.getTradeService().removeListing(activeTrade);
+                                openUI(player, page, filter, sort);
+                                activeTrade.offer().item().collect(envyPlayer);
+                                return;
+                            }
+
+                            if (isOwnerRemoveClick(clickType) && activeTrade.isSeller(envyPlayer)) {
+                                EnvyGTSForge.getTradeService().removeListing(activeTrade);
+                                openUI(player, page, filter, sort);
+                                activeTrade.offer().item().collect(envyPlayer);
+                                //TODO: message the seller of the auction
+                                return;
+                            }
+
+                            if (activeTrade.isSeller(envyPlayer)) {
+                                //TODO: message the player
+                                return;
+                            }
+
+                            ConfirmationUI.builder()
+                                    .player(envyPlayer)
+                                    .playerManager(EnvyGTSForge.getPlayerManager())
+                                    .config(EnvyGTSForge.getGui().getSearchUIConfig().getConfirmGuiConfig())
+                                    .descriptionItem(activeTrade.offer().item().display())
+                                    .confirmHandler((clicker, clickType1) ->
+                                            PlatformProxy.runSync(() -> {
+                                                var tradeAfterClick = EnvyGTSForge.getTradeService().activeListing(activeTrade.offer().id());
+
+                                                if (!(tradeAfterClick instanceof ActiveTrade)) {
+                                                    //TODO: message the player
+                                                    openUI(player, page, filter, sort);
+                                                    return;
+                                                }
+
+                                                if (attemptPurchase(clicker, tradeAfterClick)) {
+                                                    openUI(player, page, filter, sort);
+                                                    return;
+                                                }
+
+                                                openUI(player, page, filter, sort);
+                                                //TODO: message the player
+                                            }))
+                                    .returnHandler((envyPlayer1, clickType1) -> ViewTradesUI.openUI((ForgeEnvyPlayer) envyPlayer))
+                                    .open();
                         })
                         .build())
                 .configSettings(config.getGuiSettings())
@@ -80,5 +138,37 @@ public class ViewTradesUI {
         allTrades.sort(sortType::compare);
 
         return allTrades;
+    }
+
+    private static boolean canAdminRemove(EnvyPlayer<?> player, Displayable.ClickType clickType) {
+        if (!isOwnerRemoveClick(clickType)) {
+            return false;
+        }
+
+        return player.hasPermission("envygts.admin");
+    }
+
+    private static boolean isOwnerRemoveClick(Displayable.ClickType clickType){
+        return clickType == EnvyGTSForge.getConfig().getOwnerRemoveButton();
+    }
+
+    private static boolean attemptPurchase(EnvyPlayer<?> player, Trade trade) {
+        var gtsAttribute = player.getAttributeNow(GTSAttribute.class);
+        var bank = ((ForgeEnvyPlayer) player).getParent().getPartyNow();
+
+        if (bank.getBalance().doubleValue() < trade.offer().price().getPrice()) {
+            //TODO: message the player
+            return false;
+        }
+
+        var sale = new Sale(trade, (ForgeEnvyPlayer) player);
+
+        bank.take(trade.offer().price().getPrice());
+        EnvyGTSForge.getTradeService().addSale(sale);
+        gtsAttribute.addCollectionItem(new CollectionItem(trade, sale));
+
+        //TODO: message players
+
+        return true;
     }
 }

@@ -1,11 +1,9 @@
 package com.envyful.gts.forge.api.item.type;
 
-import com.envyful.api.gui.factory.GuiFactory;
-import com.envyful.api.gui.item.Displayable;
+import com.envyful.api.neoforge.player.ForgeEnvyPlayer;
 import com.envyful.api.player.EnvyPlayer;
 import com.envyful.gts.forge.api.item.TradeItem;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.server.ServerLifecycleHooks;
 
@@ -18,8 +16,8 @@ public class ItemStackTradeItem implements TradeItem {
     }
 
     @Override
-    public Displayable.Builder<ItemStack> display() {
-        return GuiFactory.displayableBuilder(this.itemStack.copy());
+    public ItemStack display() {
+        return this.itemStack.copy();
     }
 
     @Override
@@ -29,13 +27,11 @@ public class ItemStackTradeItem implements TradeItem {
 
     @Override
     public boolean collect(EnvyPlayer<?> player) {
-        var forgePlayer = (ServerPlayer) player.getParent();
-
-        if (forgePlayer.getInventory().getFreeSlot() == -1) {
+        if (!player.hasInventorySpace(1)) {
             return false;
         }
 
-        forgePlayer.getInventory().add(this.itemStack.copy());
+        ((ForgeEnvyPlayer) player).getParent().getInventory().add(this.itemStack.copy());
         return true;
     }
 

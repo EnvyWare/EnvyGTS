@@ -8,7 +8,7 @@ public interface TradeItem {
 
     String displayName();
 
-    Displayable.Builder<ItemStack> display();
+    ItemStack display();
 
     boolean collect(EnvyPlayer<?> player);
 

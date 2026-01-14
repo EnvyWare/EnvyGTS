@@ -20,8 +20,8 @@ public class PokemonTradeItem implements TradeItem {
     }
 
     @Override
-    public Displayable.Builder<ItemStack> display() {
-        return GuiFactory.displayableBuilder(EnvyGTSForge.getGui().getSpriteConfig().fromPokemon(this.pokemon));
+    public ItemStack display() {
+        return EnvyGTSForge.getGui().getSpriteConfig().fromPokemon(this.pokemon);
     }
 
     @Override

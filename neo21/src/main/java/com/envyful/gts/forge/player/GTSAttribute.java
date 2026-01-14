@@ -36,6 +36,16 @@ public class GTSAttribute extends ManagedForgeAttribute<EnvyGTSForge> implements
         return List.copyOf(this.collections);
     }
 
+    public CollectionItem getCollectionItem(UUID offerId) {
+        for (var item : this.collections) {
+            if (item.offer().id().equals(offerId)) {
+                return item;
+            }
+        }
+
+        return null;
+    }
+
     public void removeCollectionItem(CollectionItem item) {
         this.collections.remove(item);
     }
