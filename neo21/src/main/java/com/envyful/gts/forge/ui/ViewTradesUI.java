@@ -4,16 +4,16 @@ import com.envyful.api.neoforge.config.UtilConfigInterface;
 import com.envyful.api.neoforge.config.UtilConfigItem;
 import com.envyful.api.neoforge.player.ForgeEnvyPlayer;
 import com.envyful.api.text.parse.SimplePlaceholder;
-import com.envyful.gts.api.Trade;
-import com.envyful.gts.api.gui.FilterType;
-import com.envyful.gts.api.gui.FilterTypeFactory;
-import com.envyful.gts.api.gui.SortType;
 import com.envyful.gts.forge.EnvyGTSForge;
-import com.envyful.gts.forge.config.GuiConfig;
+import com.envyful.gts.forge.api.gui.FilterType;
+import com.envyful.gts.forge.api.gui.FilterTypeFactory;
+import com.envyful.gts.forge.api.gui.SortType;
+import com.envyful.gts.forge.api.trade.Trade;
 import com.envyful.gts.forge.event.TradeViewFilterEvent;
 import com.envyful.gts.forge.event.TradesGUISetupEvent;
 import net.neoforged.neoforge.common.NeoForge;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class ViewTradesUI {
@@ -23,11 +23,22 @@ public class ViewTradesUI {
     }
 
     public static void openUI(ForgeEnvyPlayer player, int page, FilterType filter, SortType sort) {
-        GuiConfig.SearchTradesConfig config = EnvyGTSForge.getGui().getSearchUIConfig();
-        List<Trade> allTrades = getAllVisibleTrades(player, filter, sort);
+        var config = EnvyGTSForge.getGui().getSearchUIConfig();
+        var allTrades = getAllVisibleTrades(player, filter, sort);
 
         UtilConfigInterface.paginatedBuilder(allTrades)
-                .itemConversion(Trade::display)
+                .itemConversion(trade -> trade.offer().item().display()
+                        .clickHandler((envyPlayer, clickType) -> {
+                            var updatedTrade = EnvyGTSForge.getTradeService().activeListing(trade.offer().id());
+
+                            if (updatedTrade == null) {
+                                //TODO: message the player
+                                return;
+                            }
+
+
+                        })
+                        .build())
                 .configSettings(config.getGuiSettings())
                 .extraItems((pane, currentPage) -> {
                     UtilConfigItem.builder()
@@ -58,21 +69,10 @@ public class ViewTradesUI {
     }
 
     private static List<Trade> getAllVisibleTrades(ForgeEnvyPlayer player, FilterType filter, SortType sortType) {
-        List<Trade> allTrades = EnvyGTSForge.getTradeManager().getAllTrades();
+        List<Trade> allTrades = new ArrayList<>(EnvyGTSForge.getTradeService().activeListings());
 
-        allTrades.removeIf(trade -> {
-            if (trade.wasPurchased()) {
-                return true;
-            }
-
-            if (trade.hasExpired() || trade.wasRemoved()) {
-                return true;
-            }
-
-            return !trade.filter(player, filter);
-        });
-
-        TradeViewFilterEvent filterEvent = new TradeViewFilterEvent(player, allTrades, filter);
+        allTrades.removeIf(trade -> !filter.isAllowed(player, trade));
+        var filterEvent = new TradeViewFilterEvent(player, allTrades, filter);
 
         NeoForge.EVENT_BUS.post(filterEvent);
 

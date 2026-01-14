@@ -1,6 +1,5 @@
 package com.envyful.gts.forge;
 
-import com.envyful.api.concurrency.UtilConcurrency;
 import com.envyful.api.concurrency.UtilLogger;
 import com.envyful.api.config.database.DatabaseDetailsConfig;
 import com.envyful.api.config.database.DatabaseDetailsRegistry;
@@ -18,16 +17,14 @@ import com.envyful.api.neoforge.player.ForgePlayerManager;
 import com.envyful.api.platform.PlatformProxy;
 import com.envyful.api.player.Attribute;
 import com.envyful.api.sqlite.config.SQLiteDatabaseDetailsConfig;
-import com.envyful.gts.api.GlobalTradeManager;
-import com.envyful.gts.api.TradeManager;
-import com.envyful.gts.api.gui.FilterTypeFactory;
+import com.envyful.gts.forge.api.TradeService;
+import com.envyful.gts.forge.api.gui.FilterTypeFactory;
+import com.envyful.gts.forge.api.gui.impl.*;
+import com.envyful.gts.forge.api.service.CachedTradeService;
 import com.envyful.gts.forge.command.GTSCommand;
 import com.envyful.gts.forge.config.EnvyGTSConfig;
 import com.envyful.gts.forge.config.GuiConfig;
 import com.envyful.gts.forge.config.LocaleConfig;
-import com.envyful.gts.forge.impl.filter.*;
-import com.envyful.gts.forge.impl.storage.SQLGlobalTradeManager;
-import com.envyful.gts.forge.impl.storage.SQLiteGlobalTradeManager;
 import com.envyful.gts.forge.listener.TradeCreateListener;
 import com.envyful.gts.forge.listener.WebhookListener;
 import com.envyful.gts.forge.player.GTSAttribute;
@@ -59,7 +56,7 @@ public class EnvyGTSForge {
     private GuiConfig gui;
 
     private Database database;
-    private GlobalTradeManager tradeManager;
+    private TradeService tradeService = new CachedTradeService();
 
     public EnvyGTSForge() {
         SQLiteDatabaseDetailsConfig.register();
@@ -77,23 +74,18 @@ public class EnvyGTSForge {
     @SubscribeEvent
     public void onServerStarting(ServerAboutToStartEvent event) {
         FilterTypeFactory.init();
-        FilterTypeFactory.register(new ForgeAllFilterType());
-        FilterTypeFactory.register(new ForgeInstantBuyFilterType());
-        FilterTypeFactory.register(new ForgeOwnFilterType());
+        FilterTypeFactory.register(new AllFilterType());
+        FilterTypeFactory.register(new InstantBuyFilterType());
+        FilterTypeFactory.register(new OwnFilterType());
         FilterTypeFactory.register(new ItemFilterType());
         FilterTypeFactory.register(new PokemonFilterType());
 
         this.loadConfig();
         this.playerManager.setGlobalSaveMode(DatabaseDetailsRegistry.getRegistry().getKey((Class<DatabaseDetailsConfig>) this.getConfig().getDatabaseDetails().getClass()));
 
-        this.playerManager.registerAttribute(Attribute.builder(GTSAttribute.class, ForgeEnvyPlayer.class)
-                .constructor(GTSAttribute::new)
-                .registerAdapter(SQLDatabaseDetails.ID, new SQLGTSAttributeAdapter())
-                .registerAdapter(SQLiteDatabaseDetailsConfig.ID, new SQLiteGTSAttributeAdapter())
-        );
+        this.playerManager.registerAttribute(GTSAttribute.class, GTSAttribute::new);
 
         this.database = this.config.getDatabaseDetails().createDatabase();
-        this.playerManager.getAdapter(GTSAttribute.class).initialize();
     }
 
     @SubscribeEvent
@@ -101,18 +93,18 @@ public class EnvyGTSForge {
         new TradeCreateListener();
         NeoForge.EVENT_BUS.register(new WebhookListener());
 
-        UtilConcurrency.runAsync(() -> {
-            switch (this.playerManager.getSaveMode(GTSAttribute.class)) {
-                case SQLiteDatabaseDetailsConfig.ID:
-                    this.tradeManager = new SQLiteGlobalTradeManager();
-                    break;
-                case SQLDatabaseDetails.ID:
-                    this.tradeManager = new SQLGlobalTradeManager();
-                    break;
-            }
-
-            TradeManager.setPlatformTradeManager(this.tradeManager);
-        });
+//        UtilConcurrency.runAsync(() -> {
+//            switch (this.playerManager.getSaveMode(GTSAttribute.class)) {
+//                case SQLiteDatabaseDetailsConfig.ID:
+//                    this.tradeManager = new SQLiteGlobalTradeManager();
+//                    break;
+//                case SQLDatabaseDetails.ID:
+//                    this.tradeManager = new SQLGlobalTradeManager();
+//                    break;
+//            }
+//
+//            TradeService.setPlatformTradeManager(this.tradeManager);
+//        });
     }
 
     public void loadConfig() {
@@ -146,8 +138,8 @@ public class EnvyGTSForge {
         return instance.playerManager;
     }
 
-    public static GlobalTradeManager getTradeManager() {
-        return instance.tradeManager;
+    public static TradeService getTradeService() {
+        return instance.tradeService;
     }
 
     public static LocaleConfig getLocale() {

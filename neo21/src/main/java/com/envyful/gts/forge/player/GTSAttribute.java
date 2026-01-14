@@ -1,20 +1,22 @@
 package com.envyful.gts.forge.player;
 
-import com.envyful.api.neoforge.chat.UtilChatColour;
 import com.envyful.api.neoforge.player.ForgeEnvyPlayer;
 import com.envyful.api.neoforge.player.attribute.ManagedForgeAttribute;
 import com.envyful.api.platform.PlatformProxy;
-import com.envyful.gts.api.Trade;
-import com.envyful.gts.api.player.PlayerSettings;
+import com.envyful.api.player.attribute.adapter.SelfAttributeAdapter;
 import com.envyful.gts.forge.EnvyGTSForge;
-import com.google.common.collect.Lists;
+import com.envyful.gts.forge.api.CollectionItem;
+import com.envyful.gts.forge.api.player.PlayerSettings;
+import com.envyful.gts.forge.api.trade.Trade;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-public class GTSAttribute extends ManagedForgeAttribute<EnvyGTSForge> {
+public class GTSAttribute extends ManagedForgeAttribute<EnvyGTSForge> implements SelfAttributeAdapter {
 
-    protected List<Trade> ownedTrades = Lists.newArrayList();
+    private List<CollectionItem> collections = new ArrayList<>();
+
     protected int selectedSlot = -1;
     protected double currentPrice = -1;
     protected double currentMinPrice = -1;
@@ -27,7 +29,25 @@ public class GTSAttribute extends ManagedForgeAttribute<EnvyGTSForge> {
     }
 
     public List<Trade> getOwnedTrades() {
-        return this.ownedTrades;
+        return EnvyGTSForge.getTradeService().userListings(this.parent);
+    }
+
+    public List<CollectionItem> getCollections() {
+        return List.copyOf(this.collections);
+    }
+
+    public void removeCollectionItem(CollectionItem item) {
+        this.collections.remove(item);
+    }
+
+    public void addCollectionItem(CollectionItem item) {
+        this.collections.add(item);
+    }
+
+    public boolean hasReachedMaximumTrades() {
+        var ownedTrades = this.getOwnedTrades();
+
+        return ownedTrades.size() >= EnvyGTSForge.getConfig().getMaxListingsPerUser();
     }
 
     public int getSelectedSlot() {
@@ -75,17 +95,21 @@ public class GTSAttribute extends ManagedForgeAttribute<EnvyGTSForge> {
         PlatformProxy.runSync(() -> {
             boolean returnMessage = false;
 
-            for (var ownedTrade : Lists.newArrayList(this.ownedTrades)) {
-                if (ownedTrade.hasExpired() || ownedTrade.wasPurchased() || ownedTrade.wasRemoved()) {
-                    returnMessage = true;
-                    ownedTrade.collect(this.parent, null);
-                    this.ownedTrades.remove(ownedTrade);
-                }
-            }
+            //TODO: check collections
 
             if (returnMessage) {
-                this.parent.message(UtilChatColour.colour(EnvyGTSForge.getLocale().getMessages().getItemsToClaim()));
+                this.parent.message(EnvyGTSForge.getLocale().getMessages().getItemsToClaim());
             }
         });
+    }
+
+    @Override
+    public void load() {
+
+    }
+
+    @Override
+    public void save() {
+
     }
 }

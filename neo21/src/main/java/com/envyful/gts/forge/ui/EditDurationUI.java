@@ -7,8 +7,10 @@ import com.envyful.api.platform.PlatformProxy;
 import com.envyful.api.time.UtilTime;
 import com.envyful.api.time.UtilTimeFormat;
 import com.envyful.gts.forge.EnvyGTSForge;
-import com.envyful.gts.forge.impl.trade.ForgeTrade;
-import com.envyful.gts.forge.impl.trade.type.PokemonTrade;
+import com.envyful.gts.forge.api.TradeOffer;
+import com.envyful.gts.forge.api.item.type.PokemonTradeItem;
+import com.envyful.gts.forge.api.money.InstantPurchaseMoney;
+import com.envyful.gts.forge.api.trade.ActiveTrade;
 import com.envyful.gts.forge.player.GTSAttribute;
 import com.pixelmonmod.pixelmon.api.dialogue.DialogueButton;
 import com.pixelmonmod.pixelmon.api.dialogue.DialogueFactory;
@@ -19,14 +21,16 @@ import com.pixelmonmod.pixelmon.api.storage.StorageProxy;
 import net.minecraft.network.chat.Component;
 
 import java.awt.*;
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.concurrent.TimeUnit;
 
 public class EditDurationUI {
 
     public static void openUI(ForgeEnvyPlayer player, int page, int position, boolean error) {
         player.getParent().closeContainer();
-        GTSAttribute attribute = player.getAttributeNow(GTSAttribute.class);
-        Pokemon pokemon = SelectPriceUI.getPokemon(player, page, position);
+        var attribute = player.getAttributeNow(GTSAttribute.class);
+        var pokemon = SelectPriceUI.getPokemon(player, page, position);
 
         PlatformProxy.runLater(() -> {
             DialogueFactory.builder()
@@ -83,15 +87,12 @@ public class EditDurationUI {
                                                 box.set(position, null);
                                             }
 
-                                            EnvyGTSForge.getTradeManager()
-                                                    .addTrade(player, ((PokemonTrade.Builder) ForgeTrade.builder()
-                                                            .cost(attribute.getCurrentPrice())
-                                                            .expiry(System.currentTimeMillis() + inputtedValue)
-                                                            .owner(player)
-                                                            .originalOwnerName(player.getName())
-                                                            .content("p"))
-                                                            .contents(pixelmon)
-                                                            .build());
+                                            var offer = TradeOffer.newOffer(player,
+                                                    Instant.now().plus(inputtedValue, ChronoUnit.MILLIS),
+                                                    new PokemonTradeItem(pixelmon),
+                                                    new InstantPurchaseMoney(attribute.getCurrentPrice()));
+
+                                            EnvyGTSForge.getTradeService().addListing(new ActiveTrade(offer));
                                             attribute.setCurrentDuration(0);
                                             attribute.setCurrentMinPrice(0);
                                             attribute.setCurrentPrice(0);

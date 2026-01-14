@@ -19,8 +19,8 @@ public class EditItemDurationUI {
 
     public static void openUI(ForgeEnvyPlayer player, double time, boolean error) {
         player.getParent().closeContainer();
-        GTSAttribute attribute = player.getAttributeNow(GTSAttribute.class);
-        ItemStack itemInHand = player.getParent().getItemInHand(InteractionHand.MAIN_HAND);
+        var attribute = player.getAttributeNow(GTSAttribute.class);
+        var itemInHand = player.getParent().getItemInHand(InteractionHand.MAIN_HAND);
 
         UtilForgeConcurrency.runLater(() -> DialogueFactory.builder()
                 .title(UtilChatColour.colour(EnvyGTSForge.getLocale().getDurationInputDialogueTitle()))

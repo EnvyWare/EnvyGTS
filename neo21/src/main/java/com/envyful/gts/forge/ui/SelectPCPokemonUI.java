@@ -9,7 +9,7 @@ import com.envyful.api.neoforge.items.ItemFlag;
 import com.envyful.api.neoforge.player.ForgeEnvyPlayer;
 import com.envyful.api.reforged.pixelmon.sprite.UtilSprite;
 import com.envyful.api.text.Placeholder;
-import com.envyful.gts.api.Trade;
+import com.envyful.gts.forge.api.TradeOffer;
 import com.envyful.gts.forge.EnvyGTSForge;
 import com.envyful.gts.forge.config.GuiConfig;
 import com.envyful.gts.forge.player.GTSAttribute;
@@ -77,11 +77,7 @@ public class SelectPCPokemonUI {
                         return;
                     }
 
-                    List<Trade> trades = Lists.newArrayList(attribute.getOwnedTrades());
-
-                    trades.removeIf(trade -> trade.hasExpired() || trade.wasPurchased() || trade.wasRemoved());
-
-                    if (trades.size() >= EnvyGTSForge.getConfig().getMaxListingsPerUser()) {
+                    if (attribute.hasReachedMaximumTrades()) {
                         player.message(UtilChatColour.colour(
                                 EnvyGTSForge.getLocale().getMessages().getMaxTradesAlreadyReached()
                         ));

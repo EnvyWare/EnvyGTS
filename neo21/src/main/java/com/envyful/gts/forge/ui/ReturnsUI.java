@@ -2,7 +2,7 @@ package com.envyful.gts.forge.ui;
 
 import com.envyful.api.neoforge.config.UtilConfigItem;
 import com.envyful.api.neoforge.player.ForgeEnvyPlayer;
-import com.envyful.gts.api.Trade;
+import com.envyful.gts.forge.api.TradeOffer;
 import com.envyful.gts.forge.EnvyGTSForge;
 import com.envyful.gts.forge.player.GTSAttribute;
 
@@ -15,15 +15,14 @@ public class ReturnsUI {
         var attribute = player.getAttributeNow(GTSAttribute.class);
         var pane = config.getGuiSettings().toPane();
         var returnPositions = config.getReturnPositions();
-        var collect = attribute.getOwnedTrades().stream().filter(trade -> trade.hasExpired() || trade.wasRemoved() || trade.wasPurchased()).collect(Collectors.toList());
+        var collect = attribute.getCollections();
 
         for (int i = 0; i < returnPositions.size(); i++) {
             if (i >= collect.size()) {
                 break;
             }
 
-            Trade trade = collect.get(i);
-            trade.displayClaimable(returnPositions.get(i), envyPlayer -> openUI(player), pane);
+            //TODO:
         }
 
         UtilConfigItem.builder()

@@ -5,11 +5,10 @@ import com.envyful.api.gui.pane.Pane;
 import com.envyful.api.neoforge.chat.UtilChatColour;
 import com.envyful.api.neoforge.config.UtilConfigItem;
 import com.envyful.api.neoforge.items.ItemBuilder;
-import com.envyful.api.neoforge.items.ItemFlag;
 import com.envyful.api.neoforge.player.ForgeEnvyPlayer;
 import com.envyful.api.reforged.pixelmon.sprite.UtilSprite;
 import com.envyful.api.text.Placeholder;
-import com.envyful.gts.api.Trade;
+import com.envyful.gts.forge.api.TradeOffer;
 import com.envyful.gts.forge.EnvyGTSForge;
 import com.envyful.gts.forge.config.GuiConfig;
 import com.envyful.gts.forge.player.GTSAttribute;
@@ -49,16 +48,10 @@ public class SelectPartyPokemonUI {
         UtilConfigItem.builder()
                 .asyncClick(false)
                 .clickHandler((envyPlayer, clickType) -> {
-                    GTSAttribute attribute = player.getAttributeNow(GTSAttribute.class);
+                    var attribute = player.getAttributeNow(GTSAttribute.class);
 
-                    List<Trade> trades = Lists.newArrayList(attribute.getOwnedTrades());
-
-                    trades.removeIf(trade -> trade.hasExpired() || trade.wasPurchased() || trade.wasRemoved());
-
-                    if (trades.size() >= EnvyGTSForge.getConfig().getMaxListingsPerUser()) {
-                        player.message(UtilChatColour.colour(
-                                EnvyGTSForge.getLocale().getMessages().getMaxTradesAlreadyReached()
-                        ));
+                    if (attribute.hasReachedMaximumTrades()) {
+                        player.message(EnvyGTSForge.getLocale().getMessages().getMaxTradesAlreadyReached());
                         return;
                     }
 
@@ -66,13 +59,13 @@ public class SelectPartyPokemonUI {
                         return;
                     }
 
-                    PlayerPartyStorage party = player.getParent().getPartyNow();
+                    var party = player.getParent().getPartyNow();
 
                     if (party.countAblePokemon() <= 1 || party.getTeam().size() <= attribute.getSelectedSlot()) {
                         return;
                     }
 
-                    double price = UtilPokemonPrice.getMinPrice(party.get(attribute.getSelectedSlot()));
+                    var price = UtilPokemonPrice.getMinPrice(party.get(attribute.getSelectedSlot()));
 
                     attribute.setCurrentPrice(price);
                     attribute.setCurrentMinPrice(price);
@@ -85,9 +78,9 @@ public class SelectPartyPokemonUI {
     }
 
     private static void setPokemon(ForgeEnvyPlayer player, Pane pane) {
-        PlayerPartyStorage party = player.getParent().getPartyNow();
-        Pokemon[] all = party.getAll();
-        GuiConfig.PartyPokemonConfig config = EnvyGTSForge.getGui().getPartyPokemonUIConfig();
+        var party = player.getParent().getPartyNow();
+        var all = party.getAll();
+        var config = EnvyGTSForge.getGui().getPartyPokemonUIConfig();
         var enchants = ServerLifecycleHooks.getCurrentServer().registryAccess().registryOrThrow(Registries.ENCHANTMENT);
 
         for (int i = 0; i < 6; i++) {
@@ -101,14 +94,8 @@ public class SelectPartyPokemonUI {
                 pane.set(pos % 9, pos / 9, GuiFactory.displayable(UtilConfigItem.fromConfigItem(config.getUntradeablePokemonItem())));
             } else {
                 final int slot = i;
-                ItemBuilder builder = new ItemBuilder(UtilSprite.getPokemonElement(
-                        all[i],
-                        EnvyGTSForge.getGui().getSpriteConfig(),
-                        Placeholder.empty("%below_lore_data%")
-                ));
-
                 var gtsAttribute = player.getAttributeNow(GTSAttribute.class);
-                var item = builder.build();
+                var item = EnvyGTSForge.getGui().getSpriteConfig().fromPokemon(all[i],Placeholder.empty("%below_lore_data%"));
 
                 if (gtsAttribute.getSelectedSlot() == slot) {
                     item.enchant(enchants.getHolder(Enchantments.MENDING).orElseThrow(), 1);

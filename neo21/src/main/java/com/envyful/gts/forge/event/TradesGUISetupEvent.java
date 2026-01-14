@@ -2,8 +2,8 @@ package com.envyful.gts.forge.event;
 
 import com.envyful.api.gui.pane.Pane;
 import com.envyful.api.neoforge.player.ForgeEnvyPlayer;
-import com.envyful.gts.api.gui.FilterType;
-import com.envyful.gts.api.gui.SortType;
+import com.envyful.gts.forge.api.gui.FilterType;
+import com.envyful.gts.forge.api.gui.SortType;
 import net.neoforged.bus.api.Event;
 
 public class TradesGUISetupEvent extends Event {

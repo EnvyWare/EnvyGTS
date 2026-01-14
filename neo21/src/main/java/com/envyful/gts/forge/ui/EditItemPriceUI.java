@@ -17,7 +17,7 @@ public class EditItemPriceUI {
 
     public static void openUI(ForgeEnvyPlayer player, ItemStack itemStack, boolean error) {
         player.getParent().closeContainer();
-        GTSAttribute attribute = player.getAttributeNow(GTSAttribute.class);
+        var attribute = player.getAttributeNow(GTSAttribute.class);
 
         UtilForgeConcurrency.runLater(() -> {
             DialogueFactory.builder()

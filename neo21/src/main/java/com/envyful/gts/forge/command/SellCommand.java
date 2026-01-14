@@ -4,23 +4,23 @@ import com.envyful.api.command.annotate.Command;
 import com.envyful.api.command.annotate.executor.CommandProcessor;
 import com.envyful.api.command.annotate.executor.Sender;
 import com.envyful.api.command.annotate.permission.Permissible;
-import com.envyful.api.neoforge.chat.UtilChatColour;
 import com.envyful.api.neoforge.player.ForgeEnvyPlayer;
 import com.envyful.api.time.UtilTime;
 import com.envyful.api.time.UtilTimeFormat;
 import com.envyful.api.type.UtilParse;
-import com.envyful.gts.api.Trade;
 import com.envyful.gts.forge.EnvyGTSForge;
-import com.envyful.gts.forge.impl.trade.ForgeTrade;
-import com.envyful.gts.forge.impl.trade.type.ItemTrade;
+import com.envyful.gts.forge.api.TradeOffer;
+import com.envyful.gts.forge.api.item.type.ItemStackTradeItem;
+import com.envyful.gts.forge.api.money.InstantPurchaseMoney;
+import com.envyful.gts.forge.api.trade.ActiveTrade;
 import com.envyful.gts.forge.player.GTSAttribute;
 import com.envyful.gts.forge.ui.SelectPartyPokemonUI;
 import com.envyful.gts.forge.ui.SellHandOrParty;
-import com.google.common.collect.Lists;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.item.Items;
 
-import java.util.List;
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
@@ -96,11 +96,7 @@ public class SellCommand {
             return;
         }
 
-        List<Trade> trades = Lists.newArrayList(attribute.getOwnedTrades());
-
-        trades.removeIf(trade -> trade.hasExpired() || trade.wasPurchased() || trade.wasRemoved());
-
-        if (trades.size() >= EnvyGTSForge.getConfig().getMaxListingsPerUser()) {
+        if (attribute.hasReachedMaximumTrades()) {
             sender.message(EnvyGTSForge.getLocale().getMessages().getMaxTradesAlreadyReached());
             return;
         }
@@ -125,21 +121,16 @@ public class SellCommand {
             }
         }
 
-        ItemTrade.Builder builder = (ItemTrade.Builder) ForgeTrade.builder()
-                .owner(sender)
-                .originalOwnerName(sender.getName())
-                .cost(price)
-                .expiry(System.currentTimeMillis() + duration)
-                .content("i");
-
         var copy = inHand.copy();
         copy.setCount(amount);
-        builder.contents(copy);
         inHand.shrink(amount);
 
-        sender.message(UtilChatColour.colour(
-                EnvyGTSForge.getLocale().getMessages().getAddedItemToGts()
-        ));
-        EnvyGTSForge.getTradeManager().addTrade(sender, builder.build());
+        var offer = TradeOffer.newOffer(sender,
+                Instant.now().plus(duration, ChronoUnit.MILLIS),
+                new ItemStackTradeItem(copy),
+                new InstantPurchaseMoney(price));
+
+        EnvyGTSForge.getTradeService().addListing(new ActiveTrade(offer));
+        sender.message(EnvyGTSForge.getLocale().getMessages().getAddedItemToGts());
     }
 }
