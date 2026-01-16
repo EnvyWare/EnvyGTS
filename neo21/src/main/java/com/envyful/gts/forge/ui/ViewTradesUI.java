@@ -9,13 +9,11 @@ import com.envyful.api.neoforge.items.ItemBuilder;
 import com.envyful.api.neoforge.player.ForgeEnvyPlayer;
 import com.envyful.api.platform.PlatformProxy;
 import com.envyful.api.player.EnvyPlayer;
-import com.envyful.api.text.Placeholder;
 import com.envyful.api.text.PlaceholderFactory;
 import com.envyful.api.text.parse.SimplePlaceholder;
 import com.envyful.gts.forge.EnvyGTSForge;
 import com.envyful.gts.forge.api.CollectionItem;
 import com.envyful.gts.forge.api.Sale;
-import com.envyful.gts.forge.api.event.PlaceholderCollectEvent;
 import com.envyful.gts.forge.api.event.TradePurchaseEvent;
 import com.envyful.gts.forge.api.event.TradeViewFilterEvent;
 import com.envyful.gts.forge.api.event.TradesGUISetupEvent;
@@ -193,10 +191,7 @@ public class ViewTradesUI {
     }
 
     private static Displayable.Builder<ItemStack> buildDisplay(Trade trade) {
-        var placeholderCollect = new PlaceholderCollectEvent(trade, trade);
-        NeoForge.EVENT_BUS.post(placeholderCollect);
-
-        var item = new ItemBuilder(trade.offer().item().display(placeholderCollect.getPlaceholders().toArray(new Placeholder[0])));
+        var item = new ItemBuilder(trade.offer().item().display(trade));
 
         for (var belowLoreMessage : PlaceholderFactory.handlePlaceholders(EnvyGTSForge.getLocale().getListingBelowDataLore(), trade)) {
             item.addLore(PlatformProxy.<Component>flatParse(belowLoreMessage));

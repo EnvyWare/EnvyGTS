@@ -4,6 +4,7 @@ import com.envyful.api.player.EnvyPlayer;
 import com.envyful.api.text.ParseResult;
 import com.envyful.api.text.Placeholder;
 import com.envyful.gts.forge.api.TradeOffer;
+import com.envyful.gts.forge.api.event.PlaceholderCollectEvent;
 import net.minecraft.server.level.ServerPlayer;
 import org.checkerframework.checker.nullness.qual.NonNull;
 
@@ -32,6 +33,12 @@ public sealed interface Trade extends Placeholder
 
     @Override
     default @NonNull ParseResult replace(@NonNull ParseResult parseResult) {
-        return this.offer().replace(parseResult);
+        var event = new PlaceholderCollectEvent(this, this.offer());
+
+        for (var placeholder : event.getPlaceholders()) {
+            parseResult = placeholder.replace(parseResult);
+        }
+
+        return parseResult;
     }
 }
