@@ -55,8 +55,9 @@ public class GTSAttribute extends ManagedForgeAttribute<EnvyGTSForge> implements
 
     public void removeCollectionItem(CollectionItem item) {
         this.collections.remove(item);
+
         EnvyGTSForge.getDSLContext().deleteFrom(GTSDatabase.COLLECTIONS)
-                .where(GTSDatabase.TRADES_OFFER_ID.eq(item.offer().id().toString()))
+                .where(GTSDatabase.COLLECTIONS_OFFER_ID.eq(item.offer().id().toString()))
                 .executeAsync(UtilConcurrency.SCHEDULED_EXECUTOR_SERVICE);
     }
 

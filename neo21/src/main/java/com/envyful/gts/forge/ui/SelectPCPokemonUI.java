@@ -116,19 +116,13 @@ public class SelectPCPokemonUI {
             } else {
                 final int slot = i;
                 pane.set(2 + posX, posY, GuiFactory.displayableBuilder(ItemStack.class)
-                        .itemStack(UtilSprite.getPokemonElement(
-                                pokemon,
-                                EnvyGTSForge.getGui().getSpriteConfig()
-                        ))
+                        .itemStack(EnvyGTSForge.getGui().getSpriteConfig().fromPokemon(pokemon))
                         .clickHandler((envyPlayer, clickType) -> {
                             GTSAttribute attribute = player.getAttributeNow(GTSAttribute.class);
                             attribute.setSelectedSlot(slot);
                             pane.set(config.getConfirmSlot() % 9, config.getConfirmSlot() / 9,
                                     GuiFactory.displayableBuilder(ItemStack.class)
-                                            .itemStack(new ItemBuilder(UtilSprite.getPokemonElement(
-                                                    box.get(slot),
-                                                    EnvyGTSForge.getGui().getSpriteConfig()
-                                            ))
+                                            .itemStack(new ItemBuilder(EnvyGTSForge.getGui().getSpriteConfig().fromPokemon(box.get(slot)))
                                                     .enchant(enchants.getHolder(Enchantments.UNBREAKING).orElseThrow(), 1)
                                                     .itemFlag(ItemFlag.HIDE_ENCHANTS)
                                                     .build())
