@@ -60,7 +60,6 @@ subprojects {
         }
 
         tasks.register('customPublish') {
-            dependsOn ':api:jar'
             dependsOn 'build'
             dependsOn 'publish'
         }
