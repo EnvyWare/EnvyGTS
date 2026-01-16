@@ -137,9 +137,6 @@ public class SellCommand {
 
         EnvyGTSForge.getTradeService().addListing(trade);
         NeoForge.EVENT_BUS.post(new TradeCreateEvent(sender, trade));
-        sender.message(List.of(EnvyGTSForge.getLocale().getMessages().getListedItem()),
-                trade,
-                Placeholder.simple("%name%", copy.getDisplayName().getString()),
-                Placeholder.simple("%price%", String.format(EnvyGTSForge.getLocale().getMoneyFormat(), attribute.getCurrentPrice())));
+        sender.message(List.of(EnvyGTSForge.getLocale().getMessages().getListedItem()), trade);
     }
 }

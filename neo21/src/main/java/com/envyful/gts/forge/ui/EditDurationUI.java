@@ -101,10 +101,7 @@ public class EditDurationUI {
                                             NeoForge.EVENT_BUS.post(new TradeCreateEvent(player, trade));
                                             attribute.setCurrentMinPrice(0);
                                             attribute.setCurrentPrice(0);
-                                            player.message(List.of(EnvyGTSForge.getLocale().getMessages().getListedItem()),
-                                                    trade,
-                                                    Placeholder.simple("%name%", pixelmon.getDisplayName().getString()),
-                                                    Placeholder.simple("%price%", String.format(EnvyGTSForge.getLocale().getMoneyFormat(), attribute.getCurrentPrice())));
+                                            player.message(List.of(EnvyGTSForge.getLocale().getMessages().getListedItem()), trade);
                                         });
                                     })
                                     .build()
