@@ -91,7 +91,7 @@ public class EnvyGTSForge {
 
         dslContext = DSL.using(this.database, this.config.getDatabaseDetails() instanceof SQLiteDatabaseDetailsConfig ? SQLDialect.SQLITE : SQLDialect.MARIADB);
 
-        createTables(dslContext);
+        createTables();
         tradeService = new jOOQTradeService();
     }
 
@@ -152,64 +152,62 @@ public class EnvyGTSForge {
         return instance.dslContext;
     }
 
-    private CompletableFuture<Void> createTables(DSLContext context) {
-        return CompletableFuture.allOf(
-                dslContext.createTableIfNotExists(GTSDatabase.TRADES)
-                        .columns(
-                                GTSDatabase.TRADES_OFFER_ID,
-                                GTSDatabase.TRADES_SELLER_UUID,
-                                GTSDatabase.TRADES_SELLER_NAME,
-                                GTSDatabase.TRADES_CREATION_TIME,
-                                GTSDatabase.TRADES_EXPIRY_TIME,
-                                GTSDatabase.TRADES_PRICE
-                        )
-                        .primaryKey(GTSDatabase.TRADES_OFFER_ID)
-                        .executeAsync(UtilConcurrency.SCHEDULED_EXECUTOR_SERVICE).toCompletableFuture(),
+    private void createTables() {
+        dslContext.createTableIfNotExists(GTSDatabase.TRADES)
+                .columns(
+                        GTSDatabase.TRADES_OFFER_ID,
+                        GTSDatabase.TRADES_SELLER_UUID,
+                        GTSDatabase.TRADES_SELLER_NAME,
+                        GTSDatabase.TRADES_CREATION_TIME,
+                        GTSDatabase.TRADES_EXPIRY_TIME,
+                        GTSDatabase.TRADES_PRICE
+                )
+                .primaryKey(GTSDatabase.TRADES_OFFER_ID)
+                .execute();
 
-                dslContext.createTableIfNotExists(GTSDatabase.TRADE_ITEMS)
-                        .columns(
-                                GTSDatabase.TRADE_ITEMS_OFFER_ID,
-                                GTSDatabase.TRADE_ITEMS_TYPE,
-                                GTSDatabase.TRADE_ITEMS_DATA
-                        )
-                        .primaryKey(GTSDatabase.TRADES_OFFER_ID)
-                        .constraint(DSL.foreignKey(GTSDatabase.TRADES_OFFER_ID).references(GTSDatabase.TRADES, GTSDatabase.TRADES_OFFER_ID))
-                        .executeAsync(UtilConcurrency.SCHEDULED_EXECUTOR_SERVICE).toCompletableFuture(),
+        dslContext.createTableIfNotExists(GTSDatabase.TRADE_ITEMS)
+                .columns(
+                        GTSDatabase.TRADE_ITEMS_OFFER_ID,
+                        GTSDatabase.TRADE_ITEMS_TYPE,
+                        GTSDatabase.TRADE_ITEMS_DATA
+                )
+                .primaryKey(GTSDatabase.TRADES_OFFER_ID)
+                .constraint(DSL.foreignKey(GTSDatabase.TRADES_OFFER_ID).references(GTSDatabase.TRADES, GTSDatabase.TRADES_OFFER_ID))
+                .execute();
 
-                dslContext.createTableIfNotExists(GTSDatabase.TRADE_OUTCOMES)
-                        .columns(
-                                GTSDatabase.TRADE_OUTCOMES_OFFER_ID,
-                                GTSDatabase.TRADE_OUTCOMES_TYPE,
-                                GTSDatabase.TRADE_OUTCOMES_TIME
-                        )
-                        .primaryKey(GTSDatabase.TRADES_OFFER_ID)
-                        .constraint(DSL.foreignKey(GTSDatabase.TRADES_OFFER_ID).references(GTSDatabase.TRADES, GTSDatabase.TRADES_OFFER_ID))
-                        .executeAsync(UtilConcurrency.SCHEDULED_EXECUTOR_SERVICE).toCompletableFuture(),
+        dslContext.createTableIfNotExists(GTSDatabase.TRADE_OUTCOMES)
+                .columns(
+                        GTSDatabase.TRADE_OUTCOMES_OFFER_ID,
+                        GTSDatabase.TRADE_OUTCOMES_TYPE,
+                        GTSDatabase.TRADE_OUTCOMES_TIME
+                )
+                .primaryKey(GTSDatabase.TRADES_OFFER_ID)
+                .constraint(DSL.foreignKey(GTSDatabase.TRADES_OFFER_ID).references(GTSDatabase.TRADES, GTSDatabase.TRADES_OFFER_ID))
+                .execute();
 
-                dslContext.createTableIfNotExists(GTSDatabase.SALES)
-                        .columns(
-                                GTSDatabase.SALES_SALE_ID,
-                                GTSDatabase.SALES_OFFER_ID,
-                                GTSDatabase.SALES_BUYER_UUID,
-                                GTSDatabase.SALES_BUYER_NAME,
-                                GTSDatabase.SALES_PURCHASE_TIME,
-                                GTSDatabase.SALES_PURCHASE_PRICE
-                        )
-                        .primaryKey(GTSDatabase.SALES_SALE_ID)
-                        .constraint(DSL.unique(GTSDatabase.SALES_OFFER_ID))
-                        .constraint(DSL.foreignKey(GTSDatabase.SALES_OFFER_ID).references(GTSDatabase.TRADES, GTSDatabase.TRADES_OFFER_ID))
-                        .executeAsync(UtilConcurrency.SCHEDULED_EXECUTOR_SERVICE).toCompletableFuture(),
+        dslContext.createTableIfNotExists(GTSDatabase.SALES)
+                .columns(
+                        GTSDatabase.SALES_SALE_ID,
+                        GTSDatabase.SALES_OFFER_ID,
+                        GTSDatabase.SALES_BUYER_UUID,
+                        GTSDatabase.SALES_BUYER_NAME,
+                        GTSDatabase.SALES_PURCHASE_TIME,
+                        GTSDatabase.SALES_PURCHASE_PRICE
+                )
+                .primaryKey(GTSDatabase.SALES_SALE_ID)
+                .constraint(DSL.unique(GTSDatabase.SALES_OFFER_ID))
+                .constraint(DSL.foreignKey(GTSDatabase.SALES_OFFER_ID).references(GTSDatabase.TRADES, GTSDatabase.TRADES_OFFER_ID))
+                .execute();
 
-                dslContext.createTableIfNotExists(GTSDatabase.COLLECTIONS)
-                        .columns(
-                                GTSDatabase.COLLECTIONS_PLAYER,
-                                GTSDatabase.COLLECTIONS_OFFER_ID,
-                                GTSDatabase.COLLECTIONS_SALE_ID
-                        )
-                        .primaryKey(GTSDatabase.COLLECTIONS_OFFER_ID)
-                        .constraint(DSL.foreignKey(GTSDatabase.COLLECTIONS_SALE_ID).references(GTSDatabase.SALES, GTSDatabase.SALES_SALE_ID))
-                        .constraint(DSL.foreignKey(GTSDatabase.COLLECTIONS_OFFER_ID).references(GTSDatabase.TRADES, GTSDatabase.TRADES_OFFER_ID))
-                        .executeAsync(UtilConcurrency.SCHEDULED_EXECUTOR_SERVICE).toCompletableFuture()
-        );
+        dslContext.createTableIfNotExists(GTSDatabase.COLLECTIONS)
+                .columns(
+                        GTSDatabase.COLLECTIONS_PLAYER,
+                        GTSDatabase.COLLECTIONS_OFFER_ID,
+                        GTSDatabase.COLLECTIONS_SALE_ID
+                )
+                .primaryKey(GTSDatabase.COLLECTIONS_OFFER_ID)
+                .constraint(DSL.foreignKey(GTSDatabase.COLLECTIONS_SALE_ID).references(GTSDatabase.SALES, GTSDatabase.SALES_SALE_ID))
+                .constraint(DSL.foreignKey(GTSDatabase.COLLECTIONS_OFFER_ID).references(GTSDatabase.TRADES, GTSDatabase.TRADES_OFFER_ID))
+                .execute();
     }
 }
