@@ -22,7 +22,7 @@ public class TradeCreateListener extends LazyListener {
 
         if (blockedReason != null) {
             event.setCanceled(true);
-            event.getPlayer().message(EnvyGTSForge.getLocale().getBlockedItem(), Placeholder.simple("%reason%", blockedReason));
+            event.getPlayer().message(EnvyGTSForge.getLocale().getMessages().getBlockedItem(), Placeholder.simple("%reason%", blockedReason));
             return;
         }
 

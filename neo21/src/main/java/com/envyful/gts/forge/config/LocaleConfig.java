@@ -45,10 +45,6 @@ public class LocaleConfig extends AbstractYamlConfig {
     private String enchantFooter = "WOW!";
     private String enchantSeperator = "\n";
     private String enchantFormat = "%enchant% - %level%";
-    @Comment("The message sent to the player if they try to add an item to the GTS that fits one of the regex filters in the blacklist")
-    private List<String> blockedItem = List.of(
-            "&c&l(!) &cThat item was blocked from being added to the GTS because %reason%"
-    );
 
     private Messages messages = new Messages();
 
@@ -116,10 +112,6 @@ public class LocaleConfig extends AbstractYamlConfig {
         return this.enchantFormat;
     }
 
-    public List<String> getBlockedItem() {
-        return this.blockedItem;
-    }
-
     @ConfigSerializable
     public static class Messages {
 
@@ -150,7 +142,6 @@ public class LocaleConfig extends AbstractYamlConfig {
         private String toggledBroadcastsOn = "&e&l(!) &eToggled broadcasts &a&lON";
         private String toggledBroadcastsOff = "&e&l(!) &eToggled broadcasts &c&lOFF";
 
-        private String itemWasPurchased = "&e&l(!) &eYour %item% auction was purchased by %buyer% for %price% and &a$%tax%&e was taken!";
         private String itemsToClaim = "&c&l(!) &cYou have auctions to claim in the GTS!";
         private String tradeNoLongerAvailable = "&c&l(!) &cThat trade is no longer available!";
         private String invenntoryFull = "&c&l(!) &cYou do not have enough inventory space to collect this item!";
@@ -168,6 +159,11 @@ public class LocaleConfig extends AbstractYamlConfig {
                 "&e%seller%&7 added a new GTS listing for %name% for $%price%",
                 " "
         )));
+
+        @Comment("The message sent to the player if they try to add an item to the GTS that fits one of the regex filters in the blacklist")
+        private List<String> blockedItem = List.of(
+                "&c&l(!) &cThat item was blocked from being added to the GTS because %reason%"
+        );
 
         public Messages() {}
 
@@ -275,10 +271,6 @@ public class LocaleConfig extends AbstractYamlConfig {
             return this.cannotGoBelowMinTime;
         }
 
-        public String getItemWasPurchased() {
-            return this.itemWasPurchased;
-        }
-
         public String getItemsToClaim() {
             return this.itemsToClaim;
         }
@@ -289,6 +281,10 @@ public class LocaleConfig extends AbstractYamlConfig {
 
         public List<String> getCannotRideAndGts() {
             return this.cannotRideAndGts;
+        }
+        
+        public List<String> getBlockedItem() {
+            return this.blockedItem;
         }
     }
 
