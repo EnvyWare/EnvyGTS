@@ -1,4 +1,4 @@
-package com.envyful.gts.forge.event;
+package com.envyful.gts.forge.api.event;
 
 
 import net.neoforged.bus.api.Event;

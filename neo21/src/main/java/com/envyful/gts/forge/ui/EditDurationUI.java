@@ -13,7 +13,7 @@ import com.envyful.gts.forge.api.item.type.PokemonTradeItem;
 import com.envyful.gts.forge.api.money.InstantPurchaseMoney;
 import com.envyful.gts.forge.api.player.GTSAttribute;
 import com.envyful.gts.forge.api.trade.ActiveTrade;
-import com.envyful.gts.forge.event.TradeCreateEvent;
+import com.envyful.gts.forge.api.event.TradeCreateEvent;
 import com.pixelmonmod.pixelmon.api.dialogue.DialogueButton;
 import com.pixelmonmod.pixelmon.api.dialogue.DialogueFactory;
 import com.pixelmonmod.pixelmon.api.pokemon.Pokemon;

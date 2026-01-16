@@ -6,7 +6,7 @@ import com.envyful.gts.forge.api.CollectionItem;
 import com.envyful.gts.forge.api.Sale;
 import com.envyful.gts.forge.api.TradeService;
 import com.envyful.gts.forge.api.trade.Trade;
-import com.envyful.gts.forge.event.TradeRemoveEvent;
+import com.envyful.gts.forge.api.event.TradeRemoveEvent;
 import com.envyful.gts.forge.api.player.GTSAttribute;
 import net.neoforged.neoforge.common.NeoForge;
 

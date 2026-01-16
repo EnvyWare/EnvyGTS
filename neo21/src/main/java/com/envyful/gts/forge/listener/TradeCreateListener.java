@@ -6,7 +6,7 @@ import com.envyful.api.text.Placeholder;
 import com.envyful.gts.forge.EnvyGTSForge;
 import com.envyful.gts.forge.api.item.type.PokemonTradeItem;
 import com.envyful.gts.forge.api.trade.Trade;
-import com.envyful.gts.forge.event.TradeCreateEvent;
+import com.envyful.gts.forge.api.event.TradeCreateEvent;
 import com.pixelmonmod.pixelmon.api.pokemon.Pokemon;
 import net.neoforged.bus.api.SubscribeEvent;
 

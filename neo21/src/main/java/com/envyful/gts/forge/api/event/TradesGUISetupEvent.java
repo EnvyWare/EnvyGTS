@@ -1,4 +1,4 @@
-package com.envyful.gts.forge.event;
+package com.envyful.gts.forge.api.event;
 
 import com.envyful.api.gui.pane.Pane;
 import com.envyful.api.neoforge.player.ForgeEnvyPlayer;

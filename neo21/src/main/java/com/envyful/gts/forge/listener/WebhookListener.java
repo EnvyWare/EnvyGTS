@@ -3,9 +3,9 @@ package com.envyful.gts.forge.listener;
 import com.envyful.api.concurrency.UtilConcurrency;
 import com.envyful.api.text.Placeholder;
 import com.envyful.gts.forge.EnvyGTSForge;
-import com.envyful.gts.forge.event.PostTradePurchaseEvent;
-import com.envyful.gts.forge.event.TradeCreateEvent;
-import com.envyful.gts.forge.event.TradeRemoveEvent;
+import com.envyful.gts.forge.api.event.PostTradePurchaseEvent;
+import com.envyful.gts.forge.api.event.TradeCreateEvent;
+import com.envyful.gts.forge.api.event.TradeRemoveEvent;
 import net.neoforged.bus.api.SubscribeEvent;
 
 import java.io.IOException;

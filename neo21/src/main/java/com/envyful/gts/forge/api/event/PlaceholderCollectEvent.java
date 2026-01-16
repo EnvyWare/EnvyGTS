@@ -1,7 +1,6 @@
-package com.envyful.gts.forge.event;
+package com.envyful.gts.forge.api.event;
 
 import com.envyful.api.text.Placeholder;
-import com.envyful.gts.forge.api.TradeOffer;
 import com.envyful.gts.forge.api.trade.Trade;
 import com.google.common.collect.Lists;
 import net.neoforged.bus.api.Event;
