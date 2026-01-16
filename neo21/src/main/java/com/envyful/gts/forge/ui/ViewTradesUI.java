@@ -15,15 +15,16 @@ import com.envyful.api.text.parse.SimplePlaceholder;
 import com.envyful.gts.forge.EnvyGTSForge;
 import com.envyful.gts.forge.api.CollectionItem;
 import com.envyful.gts.forge.api.Sale;
+import com.envyful.gts.forge.api.event.PlaceholderCollectEvent;
+import com.envyful.gts.forge.api.event.TradePurchaseEvent;
+import com.envyful.gts.forge.api.event.TradeViewFilterEvent;
+import com.envyful.gts.forge.api.event.TradesGUISetupEvent;
 import com.envyful.gts.forge.api.gui.FilterType;
 import com.envyful.gts.forge.api.gui.FilterTypeFactory;
 import com.envyful.gts.forge.api.gui.SortType;
+import com.envyful.gts.forge.api.player.GTSAttribute;
 import com.envyful.gts.forge.api.trade.ActiveTrade;
 import com.envyful.gts.forge.api.trade.Trade;
-import com.envyful.gts.forge.api.event.PlaceholderCollectEvent;
-import com.envyful.gts.forge.api.event.TradeViewFilterEvent;
-import com.envyful.gts.forge.api.event.TradesGUISetupEvent;
-import com.envyful.gts.forge.api.player.GTSAttribute;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.common.NeoForge;
@@ -175,11 +176,18 @@ public class ViewTradesUI {
             return false;
         }
 
+        var pre = new TradePurchaseEvent.Pre(trade.offer().seller().getPlayer(), (ForgeEnvyPlayer) player, trade);
+
+        if (NeoForge.EVENT_BUS.post(pre).isCanceled()) {
+            return false;
+        }
+
         var sale = new Sale(trade, (ForgeEnvyPlayer) player);
 
         bank.take(trade.offer().price().getPrice());
         EnvyGTSForge.getTradeService().addSale(sale);
         gtsAttribute.addCollectionItem(new CollectionItem(trade, sale));
+        NeoForge.EVENT_BUS.post(new TradePurchaseEvent.Post(trade.offer().seller().getPlayer(), (ForgeEnvyPlayer) player, trade));
 
         return true;
     }

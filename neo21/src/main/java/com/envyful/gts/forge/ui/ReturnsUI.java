@@ -5,7 +5,9 @@ import com.envyful.api.neoforge.config.UtilConfigInterface;
 import com.envyful.api.neoforge.config.UtilConfigItem;
 import com.envyful.api.neoforge.player.ForgeEnvyPlayer;
 import com.envyful.gts.forge.EnvyGTSForge;
+import com.envyful.gts.forge.api.event.TradeCollectEvent;
 import com.envyful.gts.forge.api.player.GTSAttribute;
+import net.neoforged.neoforge.common.NeoForge;
 
 public class ReturnsUI {
 
@@ -31,6 +33,7 @@ public class ReturnsUI {
                             }
 
                             if (collection.offer().item().collect(player)) {
+                                NeoForge.EVENT_BUS.post(new TradeCollectEvent(player, updatedCollection));
                                 attribute.removeCollectionItem(collection);
                                 openUI(player);
                                 player.message(EnvyGTSForge.getLocale().getMessages().getReturnCollected());

@@ -10,21 +10,41 @@ import net.neoforged.bus.api.ICancellableEvent;
  * Represents when a player purchases a trade from the GTS
  *
  */
-public class TradePurchaseEvent extends Event implements ICancellableEvent {
+public abstract class TradePurchaseEvent extends Event {
 
-    private final ForgeEnvyPlayer purchasee;
+    private final ForgeEnvyPlayer seller;
+    private final ForgeEnvyPlayer purchaser;
     private final Trade trade;
 
-    public TradePurchaseEvent(ForgeEnvyPlayer purchasee, Trade trade) {
-        this.purchasee = purchasee;
+    protected TradePurchaseEvent(ForgeEnvyPlayer seller, ForgeEnvyPlayer purchaser, Trade trade) {
+        this.seller = seller;
+        this.purchaser = purchaser;
         this.trade = trade;
     }
 
-    public ForgeEnvyPlayer getPurchasee() {
-        return this.purchasee;
+    public ForgeEnvyPlayer getSeller() {
+        return this.seller;
+    }
+
+    public ForgeEnvyPlayer getPurchaser() {
+        return this.purchaser;
     }
 
     public Trade getTrade() {
         return this.trade;
+    }
+
+    public static class Pre extends TradePurchaseEvent implements ICancellableEvent {
+
+        public Pre(ForgeEnvyPlayer seller, ForgeEnvyPlayer purchaser, Trade trade) {
+            super(seller, purchaser, trade);
+        }
+    }
+
+    public static class Post extends TradePurchaseEvent {
+
+        public Post(ForgeEnvyPlayer seller, ForgeEnvyPlayer purchaser, Trade trade) {
+            super(seller, purchaser, trade);
+        }
     }
 }
