@@ -1,6 +1,7 @@
 package com.envyful.gts.forge.api.item;
 
 import com.envyful.api.player.EnvyPlayer;
+import com.envyful.api.text.Placeholder;
 import com.envyful.gts.forge.api.item.type.ItemStackTradeItem;
 import com.envyful.gts.forge.api.item.type.PokemonTradeItem;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
@@ -12,7 +13,7 @@ public interface TradeItem {
 
     String displayName();
 
-    ItemStack display();
+    ItemStack display(Placeholder... placeholders);
 
     boolean collect(EnvyPlayer<?> player);
 

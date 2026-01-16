@@ -28,9 +28,7 @@ public class GuiConfig extends AbstractYamlConfig {
     private SellHandOrParty sellHandOrParty = new SellHandOrParty();
     private Returns returnsGui = new Returns();
 
-    private SpriteConfig spriteConfig = SpriteConfig.builder()
-            .addLore("%below_lore_data%")
-            .build();
+    private SpriteConfig spriteConfig = SpriteConfig.DEFAULT;
 
     public GuiConfig() {
         super();

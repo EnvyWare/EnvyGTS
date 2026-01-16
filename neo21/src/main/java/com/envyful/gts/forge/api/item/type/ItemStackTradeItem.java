@@ -2,6 +2,7 @@ package com.envyful.gts.forge.api.item.type;
 
 import com.envyful.api.neoforge.player.ForgeEnvyPlayer;
 import com.envyful.api.player.EnvyPlayer;
+import com.envyful.api.text.Placeholder;
 import com.envyful.gts.forge.api.item.TradeItem;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import net.minecraft.nbt.CompoundTag;
@@ -27,7 +28,7 @@ public class ItemStackTradeItem implements TradeItem {
     }
 
     @Override
-    public ItemStack display() {
+    public ItemStack display(Placeholder... placeholders) {
         return this.itemStack.copy();
     }
 

@@ -5,9 +5,12 @@ import com.envyful.api.gui.item.Displayable;
 import com.envyful.api.neoforge.config.UtilConfigInterface;
 import com.envyful.api.neoforge.config.UtilConfigItem;
 import com.envyful.api.neoforge.gui.type.ConfirmationUI;
+import com.envyful.api.neoforge.items.ItemBuilder;
 import com.envyful.api.neoforge.player.ForgeEnvyPlayer;
 import com.envyful.api.platform.PlatformProxy;
 import com.envyful.api.player.EnvyPlayer;
+import com.envyful.api.text.Placeholder;
+import com.envyful.api.text.PlaceholderFactory;
 import com.envyful.api.text.parse.SimplePlaceholder;
 import com.envyful.gts.forge.EnvyGTSForge;
 import com.envyful.gts.forge.api.CollectionItem;
@@ -17,9 +20,12 @@ import com.envyful.gts.forge.api.gui.FilterTypeFactory;
 import com.envyful.gts.forge.api.gui.SortType;
 import com.envyful.gts.forge.api.trade.ActiveTrade;
 import com.envyful.gts.forge.api.trade.Trade;
+import com.envyful.gts.forge.event.PlaceholderCollectEvent;
 import com.envyful.gts.forge.event.TradeViewFilterEvent;
 import com.envyful.gts.forge.event.TradesGUISetupEvent;
 import com.envyful.gts.forge.player.GTSAttribute;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.common.NeoForge;
 
 import java.util.ArrayList;
@@ -37,7 +43,7 @@ public class ViewTradesUI {
         var allTrades = getAllVisibleTrades(player, filter, sort);
 
         UtilConfigInterface.paginatedBuilder(allTrades)
-                .itemConversion(trade -> GuiFactory.displayableBuilder(trade.offer().item().display())
+                .itemConversion(trade -> buildDisplay(trade)
                         .clickHandler((envyPlayer, clickType) -> {
                             var updatedTrade = EnvyGTSForge.getTradeService().activeListing(trade.offer().id());
 
@@ -176,5 +182,18 @@ public class ViewTradesUI {
         gtsAttribute.addCollectionItem(new CollectionItem(trade, sale));
 
         return true;
+    }
+
+    private static Displayable.Builder<ItemStack> buildDisplay(Trade trade) {
+        var placeholderCollect = new PlaceholderCollectEvent(trade, trade);
+        NeoForge.EVENT_BUS.post(placeholderCollect);
+
+        var item = new ItemBuilder(trade.offer().item().display(placeholderCollect.getPlaceholders().toArray(new Placeholder[0])));
+
+        for (var belowLoreMessage : PlaceholderFactory.handlePlaceholders(EnvyGTSForge.getLocale().getListingBelowDataLore(), trade)) {
+            item.addLore(PlatformProxy.<Component>flatParse(belowLoreMessage));
+        }
+
+        return GuiFactory.displayableBuilder(item.build());
     }
 }

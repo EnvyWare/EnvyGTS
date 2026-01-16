@@ -1,6 +1,7 @@
 package com.envyful.gts.forge.config;
 
 import com.envyful.api.config.data.ConfigPath;
+import com.envyful.api.config.type.TimeFormatConfig;
 import com.envyful.api.config.yaml.AbstractYamlConfig;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
@@ -10,6 +11,7 @@ import com.pixelmonmod.pixelmon.api.pokemon.Pokemon;
 import org.spongepowered.configurate.objectmapping.ConfigSerializable;
 import org.spongepowered.configurate.objectmapping.meta.Comment;
 
+import java.sql.Time;
 import java.util.List;
 import java.util.Map;
 
@@ -45,6 +47,7 @@ public class LocaleConfig extends AbstractYamlConfig {
     private String enchantFooter = "WOW!";
     private String enchantSeperator = "\n";
     private String enchantFormat = "%enchant% - %level%";
+    private TimeFormatConfig expiryTimeFormat = new TimeFormatConfig();
 
     private Messages messages = new Messages();
 
@@ -110,6 +113,10 @@ public class LocaleConfig extends AbstractYamlConfig {
 
     public String getEnchantFormat() {
         return this.enchantFormat;
+    }
+
+    public TimeFormatConfig getExpiryTimeFormat() {
+        return this.expiryTimeFormat;
     }
 
     @ConfigSerializable
@@ -282,7 +289,7 @@ public class LocaleConfig extends AbstractYamlConfig {
         public List<String> getCannotRideAndGts() {
             return this.cannotRideAndGts;
         }
-        
+
         public List<String> getBlockedItem() {
             return this.blockedItem;
         }

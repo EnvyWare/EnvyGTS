@@ -2,6 +2,7 @@ package com.envyful.gts.forge.api;
 
 import com.envyful.api.player.EnvyPlayer;
 import com.envyful.api.text.parse.SimplePlaceholder;
+import com.envyful.gts.forge.EnvyGTSForge;
 import com.envyful.gts.forge.api.item.TradeItem;
 import com.envyful.gts.forge.api.money.Money;
 import com.envyful.gts.forge.api.player.PlayerInfo;
@@ -32,6 +33,8 @@ public record TradeOffer(UUID id, PlayerInfo seller, Instant creationTime, Insta
 
     @Override
     public String replace(String s) {
-        return s;
+        return s.replace("%expires_in%", EnvyGTSForge.getLocale().getExpiryTimeFormat().format(this.expiryTime.toEpochMilli() - System.currentTimeMillis()))
+                .replace("%seller%", this.seller().name())
+                .replace("%price%", String.format(EnvyGTSForge.getLocale().getMoneyFormat(), this.price().getPrice()));
     }
 }

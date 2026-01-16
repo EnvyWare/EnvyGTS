@@ -1,6 +1,7 @@
 package com.envyful.gts.forge.api.item.type;
 
 import com.envyful.api.player.EnvyPlayer;
+import com.envyful.api.text.Placeholder;
 import com.envyful.gts.forge.EnvyGTSForge;
 import com.envyful.gts.forge.api.item.TradeItem;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
@@ -30,8 +31,8 @@ public class PokemonTradeItem implements TradeItem {
     }
 
     @Override
-    public ItemStack display() {
-        return EnvyGTSForge.getGui().getSpriteConfig().fromPokemon(this.pokemon);
+    public ItemStack display(Placeholder... placeholders) {
+        return EnvyGTSForge.getGui().getSpriteConfig().fromPokemon(this.pokemon, placeholders);
     }
 
     @Override

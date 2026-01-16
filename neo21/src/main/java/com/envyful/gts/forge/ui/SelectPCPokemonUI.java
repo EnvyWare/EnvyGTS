@@ -118,8 +118,7 @@ public class SelectPCPokemonUI {
                 pane.set(2 + posX, posY, GuiFactory.displayableBuilder(ItemStack.class)
                         .itemStack(UtilSprite.getPokemonElement(
                                 pokemon,
-                                EnvyGTSForge.getGui().getSpriteConfig(),
-                                Placeholder.empty("%below_lore_data%")
+                                EnvyGTSForge.getGui().getSpriteConfig()
                         ))
                         .clickHandler((envyPlayer, clickType) -> {
                             GTSAttribute attribute = player.getAttributeNow(GTSAttribute.class);
@@ -128,8 +127,7 @@ public class SelectPCPokemonUI {
                                     GuiFactory.displayableBuilder(ItemStack.class)
                                             .itemStack(new ItemBuilder(UtilSprite.getPokemonElement(
                                                     box.get(slot),
-                                                    EnvyGTSForge.getGui().getSpriteConfig(),
-                                                    Placeholder.empty("%below_lore_data%")
+                                                    EnvyGTSForge.getGui().getSpriteConfig()
                                             ))
                                                     .enchant(enchants.getHolder(Enchantments.UNBREAKING).orElseThrow(), 1)
                                                     .itemFlag(ItemFlag.HIDE_ENCHANTS)
