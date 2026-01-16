@@ -7,11 +7,10 @@ import com.envyful.api.neoforge.player.util.UtilPlayer;
 import com.envyful.api.time.UtilTime;
 import com.envyful.api.time.UtilTimeFormat;
 import com.envyful.gts.forge.EnvyGTSForge;
-import com.envyful.gts.forge.player.GTSAttribute;
+import com.envyful.gts.forge.api.player.GTSAttribute;
 import com.pixelmonmod.pixelmon.api.dialogue.DialogueButton;
 import com.pixelmonmod.pixelmon.api.dialogue.DialogueFactory;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.item.ItemStack;
 
 import java.util.concurrent.TimeUnit;
 
@@ -19,8 +18,8 @@ public class EditItemDurationUI {
 
     public static void openUI(ForgeEnvyPlayer player, double time, boolean error) {
         player.getParent().closeContainer();
-        GTSAttribute attribute = player.getAttributeNow(GTSAttribute.class);
-        ItemStack itemInHand = player.getParent().getItemInHand(InteractionHand.MAIN_HAND);
+        var attribute = player.getAttributeNow(GTSAttribute.class);
+        var itemInHand = player.getParent().getItemInHand(InteractionHand.MAIN_HAND);
 
         UtilForgeConcurrency.runLater(() -> DialogueFactory.builder()
                 .title(UtilChatColour.colour(EnvyGTSForge.getLocale().getDurationInputDialogueTitle()))

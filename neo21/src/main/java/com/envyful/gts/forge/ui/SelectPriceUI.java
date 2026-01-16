@@ -2,14 +2,16 @@ package com.envyful.gts.forge.ui;
 
 import com.envyful.api.neoforge.chat.UtilChatColour;
 import com.envyful.api.neoforge.player.ForgeEnvyPlayer;
+import com.envyful.api.platform.PlatformProxy;
 import com.envyful.api.type.UtilParse;
 import com.envyful.gts.forge.EnvyGTSForge;
-import com.envyful.gts.forge.player.GTSAttribute;
+import com.envyful.gts.forge.api.player.GTSAttribute;
 import com.pixelmonmod.pixelmon.api.dialogue.DialogueButton;
 import com.pixelmonmod.pixelmon.api.dialogue.DialogueFactory;
 import com.pixelmonmod.pixelmon.api.dialogue.InputPattern;
 import com.pixelmonmod.pixelmon.api.pokemon.Pokemon;
 import com.pixelmonmod.pixelmon.api.storage.StorageProxy;
+import net.minecraft.network.chat.Component;
 
 import java.awt.*;
 import java.util.regex.Pattern;
@@ -22,8 +24,7 @@ public class SelectPriceUI {
 
     public static void openUI(ForgeEnvyPlayer player, int page, int slot, boolean error) {
         player.getParent().closeContainer();
-        GTSAttribute attribute = player.getAttributeNow(GTSAttribute.class);
-        Pokemon pokemon = getPokemon(player, page, slot);
+        var pokemon = getPokemon(player, page, slot);
 
         if (pokemon == null) {
             return;
@@ -41,15 +42,15 @@ public class SelectPriceUI {
     }
 
     public static DialogueFactory.Builder dialogueBuilder(ForgeEnvyPlayer player, int page, int slot, boolean error) {
-        GTSAttribute attribute = player.getAttributeNow(GTSAttribute.class);
-        Pokemon pokemon = getPokemon(player, page, slot);
+        var attribute = player.getAttributeNow(GTSAttribute.class);
+        var pokemon = getPokemon(player, page, slot);
 
         if (pokemon == null) {
             return null;
         }
 
         return DialogueFactory.builder()
-                .title(UtilChatColour.colour(EnvyGTSForge.getLocale().getSellPriceInputDialogueTitle()))
+                .title(PlatformProxy.<Component>flatParse(EnvyGTSForge.getLocale().getSellPriceInputDialogueTitle()))
                 .description(UtilChatColour.colour((error ? EnvyGTSForge.getLocale().getSellPriceInputDialogueErrorText() : EnvyGTSForge.getLocale().getSellPriceInputDialogueText())
                         .replace("%pokemon%", pokemon.getDisplayName().getString())
                         .replace("%min_price%", String.format(EnvyGTSForge.getLocale().getMoneyFormat(), attribute.getCurrentMinPrice()))

@@ -21,7 +21,7 @@ import com.envyful.gts.forge.ui.ViewTradesUI;
 })
 public class GTSCommand {
 
-    @CommandProcessor
+    @CommandProcessor(executeAsync = false)
     public void onCommand(@Sender ForgeEnvyPlayer player, String[] args) {
         if (player.getParent().isPassenger()) {
             player.message(EnvyGTSForge.getLocale().getMessages().getCannotRideAndGts());

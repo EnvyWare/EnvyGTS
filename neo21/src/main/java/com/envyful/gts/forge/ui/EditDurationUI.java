@@ -4,12 +4,16 @@ import com.envyful.api.concurrency.UtilConcurrency;
 import com.envyful.api.neoforge.chat.UtilChatColour;
 import com.envyful.api.neoforge.player.ForgeEnvyPlayer;
 import com.envyful.api.platform.PlatformProxy;
+import com.envyful.api.text.Placeholder;
 import com.envyful.api.time.UtilTime;
 import com.envyful.api.time.UtilTimeFormat;
 import com.envyful.gts.forge.EnvyGTSForge;
-import com.envyful.gts.forge.impl.trade.ForgeTrade;
-import com.envyful.gts.forge.impl.trade.type.PokemonTrade;
-import com.envyful.gts.forge.player.GTSAttribute;
+import com.envyful.gts.forge.api.TradeOffer;
+import com.envyful.gts.forge.api.item.type.PokemonTradeItem;
+import com.envyful.gts.forge.api.money.InstantPurchaseMoney;
+import com.envyful.gts.forge.api.player.GTSAttribute;
+import com.envyful.gts.forge.api.trade.ActiveTrade;
+import com.envyful.gts.forge.api.event.TradeCreateEvent;
 import com.pixelmonmod.pixelmon.api.dialogue.DialogueButton;
 import com.pixelmonmod.pixelmon.api.dialogue.DialogueFactory;
 import com.pixelmonmod.pixelmon.api.pokemon.Pokemon;
@@ -17,16 +21,20 @@ import com.pixelmonmod.pixelmon.api.storage.PCBox;
 import com.pixelmonmod.pixelmon.api.storage.PlayerPartyStorage;
 import com.pixelmonmod.pixelmon.api.storage.StorageProxy;
 import net.minecraft.network.chat.Component;
+import net.neoforged.neoforge.common.NeoForge;
 
 import java.awt.*;
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 public class EditDurationUI {
 
     public static void openUI(ForgeEnvyPlayer player, int page, int position, boolean error) {
         player.getParent().closeContainer();
-        GTSAttribute attribute = player.getAttributeNow(GTSAttribute.class);
-        Pokemon pokemon = SelectPriceUI.getPokemon(player, page, position);
+        var attribute = player.getAttributeNow(GTSAttribute.class);
+        var pokemon = SelectPriceUI.getPokemon(player, page, position);
 
         PlatformProxy.runLater(() -> {
             DialogueFactory.builder()
@@ -83,19 +91,17 @@ public class EditDurationUI {
                                                 box.set(position, null);
                                             }
 
-                                            EnvyGTSForge.getTradeManager()
-                                                    .addTrade(player, ((PokemonTrade.Builder) ForgeTrade.builder()
-                                                            .cost(attribute.getCurrentPrice())
-                                                            .expiry(System.currentTimeMillis() + inputtedValue)
-                                                            .owner(player)
-                                                            .originalOwnerName(player.getName())
-                                                            .content("p"))
-                                                            .contents(pixelmon)
-                                                            .build());
-                                            attribute.setCurrentDuration(0);
+                                            var offer = TradeOffer.newOffer(player,
+                                                    Instant.now().plus(inputtedValue, ChronoUnit.MILLIS),
+                                                    new PokemonTradeItem(pixelmon),
+                                                    new InstantPurchaseMoney(attribute.getCurrentPrice()));
+
+                                            var trade = new ActiveTrade(offer);
+                                            EnvyGTSForge.getTradeService().addListing(trade);
+                                            NeoForge.EVENT_BUS.post(new TradeCreateEvent(player, trade));
                                             attribute.setCurrentMinPrice(0);
                                             attribute.setCurrentPrice(0);
-                                            attribute.setSelectedSlot(-1);
+                                            player.message(List.of(EnvyGTSForge.getLocale().getMessages().getListedItem()), trade);
                                         });
                                     })
                                     .build()
