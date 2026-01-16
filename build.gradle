@@ -55,7 +55,6 @@ subprojects {
         }
 
         tasks.named("publishMavenPublicationToEnvywareRepository") {
-            dependsOn ':api:jar'
             dependsOn shadowJar
         }
 
