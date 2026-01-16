@@ -4,10 +4,11 @@ import com.envyful.api.concurrency.UtilConcurrency;
 import com.envyful.gts.forge.EnvyGTSForge;
 import com.envyful.gts.forge.api.player.PlayerInfo;
 import com.envyful.gts.forge.api.trade.Trade;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.UUID;
 
-public record CollectionItem(TradeOffer offer, Sale sale) {
+public record CollectionItem(TradeOffer offer, @Nullable Sale sale) {
 
     public CollectionItem(Trade trade, Sale sale) {
         this(trade.offer(), sale);
