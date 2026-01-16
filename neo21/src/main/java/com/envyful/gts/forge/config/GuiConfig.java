@@ -339,14 +339,6 @@ public class GuiConfig extends AbstractYamlConfig {
                         .positions(0, 0)
                         .build();
 
-        private ExtendedConfigItem confirmButton =
-                ExtendedConfigItem.builder()
-                        .type("pixelmon:poke_ball")
-                        .amount(1)
-                        .name("&a&lCONFIRM")
-                        .positions(7, 3)
-                        .build();
-
         private ConfigItem noPokemonItem = ConfigItem.builder()
                 .type("minecraft:barrier")
                 .name("&cNo pokemon in this position")
@@ -387,10 +379,6 @@ public class GuiConfig extends AbstractYamlConfig {
 
         public int getPerPage() {
             return this.perPage;
-        }
-
-        public ExtendedConfigItem getConfirmButton() {
-            return this.confirmButton;
         }
 
         public int getConfirmSlot() {

@@ -29,12 +29,10 @@ public class SelectPCPokemonUI {
     public static void openUI(ForgeEnvyPlayer player, int page) {
         var config = EnvyGTSForge.getGui().getPcConfig();
         var pane = config.getGuiSettings().toPane();
-
-        PCStorage pc = StorageProxy.getPCForPlayerNow(player.getParent());
+        var pc = StorageProxy.getPCForPlayerNow(player.getParent());
 
         setPokemon(player, page, pane);
 
-        UtilConfigItem.builder().extendedConfigItem(player, pane, config.getConfirmButton());
         UtilConfigItem.builder()
                 .clickHandler((envyPlayer, clickType) -> SelectPartyPokemonUI.openUI(player))
                 .extendedConfigItem(player, pane, config.getBackButton());
@@ -59,62 +57,72 @@ public class SelectPCPokemonUI {
                 })
                 .extendedConfigItem(player, pane, config.getPreviousPageButton());
 
-        UtilConfigItem.builder()
-                .asyncClick(false)
-                .clickHandler((envyPlayer, clickType) -> {
-                    GTSAttribute attribute = player.getAttributeNow(GTSAttribute.class);
-
-
-                    if (attribute.hasReachedMaximumTrades()) {
-                        player.message(UtilChatColour.colour(
-                                EnvyGTSForge.getLocale().getMessages().getMaxTradesAlreadyReached()
-                        ));
-                        return;
-                    }
-
-                    double price = UtilPokemonPrice.getMinPrice(pc.getBox(page).get(1));
-
-                    attribute.setCurrentPrice(price);
-                    attribute.setCurrentMinPrice(price);
-                    SelectPriceUI.openUI(player, page, 1, false);
-                })
-                .extendedConfigItem(player, pane, config.getConfirmButton());
-
         pane.open(player, config.getGuiSettings());
     }
 
     private static void setPokemon(ForgeEnvyPlayer player, int page, Pane pane) {
-        PCStorage pc = StorageProxy.getPCForPlayerNow(player.getParent());
-        PCBox box = pc.getBox(page);
-        GuiConfig.SelectFromPCConfig config = EnvyGTSForge.getGui().getPcConfig();
-        var enchants = ServerLifecycleHooks.getCurrentServer().registryAccess().registryOrThrow(Registries.ENCHANTMENT);
+        var pc = StorageProxy.getPCForPlayerNow(player.getParent());
+        var box = pc.getBox(page);
+        var config = EnvyGTSForge.getGui().getPcConfig();
 
         for (int i = 0; i < config.getPerPage(); i++) {
             int posX = i % 5;
             int posY = i / 5;
-            Pokemon pokemon = box.get(i);
+            var pokemon = box.get(i);
 
             if (pokemon == null) {
-                pane.set(2 + posX, posY, GuiFactory.displayable((UtilConfigItem.fromConfigItem(config.getNoPokemonItem()))));
-            } else if (pokemon.isUntradeable() ||
-                    (!EnvyGTSForge.getConfig().isAllowEggs() && pokemon.isEgg()) ||
-                    EnvyGTSForge.getConfig().isBlackListed(pokemon)) {
-                pane.set(2 + posX, posY, GuiFactory.displayable(UtilConfigItem.fromConfigItem(config.getUntradeablePokemonItem())));
+                pane.set(2 + posX, posY, config.getNoPokemonItem().toDisplayable());
+            } else if (isBlockedPokemon(pokemon)) {
+                pane.set(2 + posX, posY, config.getUntradeablePokemonItem().toDisplayable());
             } else {
                 final int slot = i;
+
                 pane.set(2 + posX, posY, GuiFactory.displayableBuilder(ItemStack.class)
                         .itemStack(EnvyGTSForge.getGui().getSpriteConfig().fromPokemon(pokemon))
-                        .clickHandler((envyPlayer, clickType) -> {
-                            pane.set(config.getConfirmSlot() % 9, config.getConfirmSlot() / 9,
-                                    GuiFactory.displayableBuilder(ItemStack.class)
-                                            .itemStack(new ItemBuilder(EnvyGTSForge.getGui().getSpriteConfig().fromPokemon(box.get(slot)))
-                                                    .enchant(enchants.getHolder(Enchantments.UNBREAKING).orElseThrow(), 1)
-                                                    .itemFlag(ItemFlag.HIDE_ENCHANTS)
-                                                    .build())
-                                            .build()
-                            );
-                        }).build());
+                        .asyncClick(false)
+                        .clickHandler((envyPlayer, clickType) -> handleClickingPokemon(player, page, slot))
+                        .build());
             }
         }
+    }
+
+    private static boolean isBlockedPokemon(Pokemon pokemon) {
+        if (pokemon.isUntradeable()) {
+            return true;
+        }
+
+        if (!EnvyGTSForge.getConfig().isAllowEggs() && pokemon.isEgg()) {
+            return true;
+        }
+
+        return EnvyGTSForge.getConfig().isBlackListed(pokemon);
+    }
+
+    private static void handleClickingPokemon(ForgeEnvyPlayer player, int page, int slot) {
+        var attribute = player.getAttributeNow(GTSAttribute.class);
+
+        if (attribute.hasReachedMaximumTrades()) {
+            player.message(EnvyGTSForge.getLocale().getMessages().getMaxTradesAlreadyReached());
+            return;
+        }
+
+        var pc = StorageProxy.getPCForPlayerNow(player.getParent());
+        var box = pc.getBox(page);
+        var pokemon = box.get(slot);
+
+        if (pokemon == null) {
+            player.message(EnvyGTSForge.getLocale().getMessages().getNoPokemonInSlot());
+            return;
+        }
+
+        if (isBlockedPokemon(pokemon)) {
+            player.message(EnvyGTSForge.getLocale().getMessages().getBlockedPokemon());
+            return;
+        }
+
+        var price = UtilPokemonPrice.getMinPrice(pokemon);
+        attribute.setCurrentPrice(price);
+        attribute.setCurrentMinPrice(price);
+        SelectPriceUI.openUI(player, page, slot, false);
     }
 }
