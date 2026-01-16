@@ -37,7 +37,6 @@ public class jOOQTradeService extends CachedTradeService {
                 .join(GTSDatabase.TRADE_ITEMS)
                 .on(GTSDatabase.TRADE_ITEMS_OFFER_ID
                         .eq(GTSDatabase.TRADES_OFFER_ID))
-                .where(GTSDatabase.TRADES_EXPIRY_TIME.gt(System.currentTimeMillis()))
                 .andNotExists(
                         EnvyGTSForge.getDSLContext().selectOne()
                                 .from(GTSDatabase.TRADE_OUTCOMES)
