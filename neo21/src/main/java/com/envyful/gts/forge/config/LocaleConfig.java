@@ -42,11 +42,6 @@ public class LocaleConfig extends AbstractYamlConfig {
     private String durationInputDialogueText = "Enter the number of minutes you wish %pokemon% to be listed for";
     private String durationInputDialogueErrorText = "Enter the number of minutes you wish %pokemon% to be listed for. &cError:&r The value you entered was below the minimum duration (%min_duration%)";
 
-    private String noEnchantsText = "NO ENCHANTS!";
-    private String enchantHeader = "ENCHANTS:";
-    private String enchantFooter = "WOW!";
-    private String enchantSeperator = "\n";
-    private String enchantFormat = "%enchant% - %level%";
     private TimeFormatConfig expiryTimeFormat = new TimeFormatConfig();
 
     private Messages messages = new Messages();
@@ -95,26 +90,6 @@ public class LocaleConfig extends AbstractYamlConfig {
         return this.durationInputDialogueErrorText;
     }
 
-    public String getNoEnchantsText() {
-        return this.noEnchantsText;
-    }
-
-    public String getEnchantHeader() {
-        return this.enchantHeader;
-    }
-
-    public String getEnchantFooter() {
-        return this.enchantFooter;
-    }
-
-    public String getEnchantSeperator() {
-        return this.enchantSeperator;
-    }
-
-    public String getEnchantFormat() {
-        return this.enchantFormat;
-    }
-
     public TimeFormatConfig getExpiryTimeFormat() {
         return this.expiryTimeFormat;
     }
@@ -137,7 +112,6 @@ public class LocaleConfig extends AbstractYamlConfig {
         private String cannotGoBelowMinTime = "&c&l(!) &cYou cannot sell for less than %min_duration% seconds";
         private String cannotGoAboveMaxTime = "&c&l(!) &cYou cannot sell for more than %max_duration% seconds";
 
-        private String addedItemToGts = "&e&l(!) &eSuccessfully listed item on GTS";
         private String adminRemoveTrade = "&e&l(!) &eYou successfully removed the trade from the GTS";
         private String tradeRemovedByAdmin = "&e&l(!) &eYour trade was removed by an admin";
         private String purchasedTrade = "&e&l(!) &eSuccessfully purchased trade from GTS";
@@ -155,6 +129,7 @@ public class LocaleConfig extends AbstractYamlConfig {
         private String itemsToClaim = "&c&l(!) &cYou have auctions to claim in the GTS!";
         private String tradeNoLongerAvailable = "&c&l(!) &cThat trade is no longer available!";
         private String invenntoryFull = "&c&l(!) &cYou do not have enough inventory space to collect this item!";
+        private String listedItem = "&e&l(!) &eYou have listed %name% for $%price% in the GTS!";
 
         private List<String> createTradeBroadcast = Lists.newArrayList(
                 " ",
@@ -241,10 +216,6 @@ public class LocaleConfig extends AbstractYamlConfig {
             return this.priceMustBeMoreThanOne;
         }
 
-        public String getAddedItemToGts() {
-            return this.addedItemToGts;
-        }
-
         public String getToggledBroadcastsOn() {
             return this.toggledBroadcastsOn;
         }
@@ -307,6 +278,10 @@ public class LocaleConfig extends AbstractYamlConfig {
 
         public List<String> getBlockedItem() {
             return this.blockedItem;
+        }
+
+        public String getListedItem() {
+            return this.listedItem;
         }
     }
 

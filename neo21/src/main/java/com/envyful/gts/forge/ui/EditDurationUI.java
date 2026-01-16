@@ -4,14 +4,16 @@ import com.envyful.api.concurrency.UtilConcurrency;
 import com.envyful.api.neoforge.chat.UtilChatColour;
 import com.envyful.api.neoforge.player.ForgeEnvyPlayer;
 import com.envyful.api.platform.PlatformProxy;
+import com.envyful.api.text.Placeholder;
 import com.envyful.api.time.UtilTime;
 import com.envyful.api.time.UtilTimeFormat;
 import com.envyful.gts.forge.EnvyGTSForge;
 import com.envyful.gts.forge.api.TradeOffer;
 import com.envyful.gts.forge.api.item.type.PokemonTradeItem;
 import com.envyful.gts.forge.api.money.InstantPurchaseMoney;
-import com.envyful.gts.forge.api.trade.ActiveTrade;
 import com.envyful.gts.forge.api.player.GTSAttribute;
+import com.envyful.gts.forge.api.trade.ActiveTrade;
+import com.envyful.gts.forge.event.TradeCreateEvent;
 import com.pixelmonmod.pixelmon.api.dialogue.DialogueButton;
 import com.pixelmonmod.pixelmon.api.dialogue.DialogueFactory;
 import com.pixelmonmod.pixelmon.api.pokemon.Pokemon;
@@ -19,10 +21,12 @@ import com.pixelmonmod.pixelmon.api.storage.PCBox;
 import com.pixelmonmod.pixelmon.api.storage.PlayerPartyStorage;
 import com.pixelmonmod.pixelmon.api.storage.StorageProxy;
 import net.minecraft.network.chat.Component;
+import net.neoforged.neoforge.common.NeoForge;
 
 import java.awt.*;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 public class EditDurationUI {
@@ -92,9 +96,15 @@ public class EditDurationUI {
                                                     new PokemonTradeItem(pixelmon),
                                                     new InstantPurchaseMoney(attribute.getCurrentPrice()));
 
-                                            EnvyGTSForge.getTradeService().addListing(new ActiveTrade(offer));
+                                            var trade = new ActiveTrade(offer);
+                                            EnvyGTSForge.getTradeService().addListing(trade);
+                                            NeoForge.EVENT_BUS.post(new TradeCreateEvent(player, trade));
                                             attribute.setCurrentMinPrice(0);
                                             attribute.setCurrentPrice(0);
+                                            player.message(List.of(EnvyGTSForge.getLocale().getMessages().getListedItem()),
+                                                    trade,
+                                                    Placeholder.simple("%name%", pixelmon.getDisplayName().getString()),
+                                                    Placeholder.simple("%price%", String.format(EnvyGTSForge.getLocale().getMoneyFormat(), attribute.getCurrentPrice())));
                                         });
                                     })
                                     .build()
