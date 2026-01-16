@@ -1,6 +1,7 @@
 package com.envyful.gts.forge.config;
 
 import com.envyful.api.config.data.ConfigPath;
+import com.envyful.api.config.type.TimeFormatConfig;
 import com.envyful.api.config.yaml.AbstractYamlConfig;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
@@ -10,6 +11,7 @@ import com.pixelmonmod.pixelmon.api.pokemon.Pokemon;
 import org.spongepowered.configurate.objectmapping.ConfigSerializable;
 import org.spongepowered.configurate.objectmapping.meta.Comment;
 
+import java.sql.Time;
 import java.util.List;
 import java.util.Map;
 
@@ -40,15 +42,7 @@ public class LocaleConfig extends AbstractYamlConfig {
     private String durationInputDialogueText = "Enter the number of minutes you wish %pokemon% to be listed for";
     private String durationInputDialogueErrorText = "Enter the number of minutes you wish %pokemon% to be listed for. &cError:&r The value you entered was below the minimum duration (%min_duration%)";
 
-    private String noEnchantsText = "NO ENCHANTS!";
-    private String enchantHeader = "ENCHANTS:";
-    private String enchantFooter = "WOW!";
-    private String enchantSeperator = "\n";
-    private String enchantFormat = "%enchant% - %level%";
-    @Comment("The message sent to the player if they try to add an item to the GTS that fits one of the regex filters in the blacklist")
-    private List<String> blockedItem = List.of(
-            "&c&l(!) &cThat item was blocked from being added to the GTS because %reason%"
-    );
+    private TimeFormatConfig expiryTimeFormat = new TimeFormatConfig();
 
     private Messages messages = new Messages();
 
@@ -96,28 +90,8 @@ public class LocaleConfig extends AbstractYamlConfig {
         return this.durationInputDialogueErrorText;
     }
 
-    public String getNoEnchantsText() {
-        return this.noEnchantsText;
-    }
-
-    public String getEnchantHeader() {
-        return this.enchantHeader;
-    }
-
-    public String getEnchantFooter() {
-        return this.enchantFooter;
-    }
-
-    public String getEnchantSeperator() {
-        return this.enchantSeperator;
-    }
-
-    public String getEnchantFormat() {
-        return this.enchantFormat;
-    }
-
-    public List<String> getBlockedItem() {
-        return this.blockedItem;
+    public TimeFormatConfig getExpiryTimeFormat() {
+        return this.expiryTimeFormat;
     }
 
     @ConfigSerializable
@@ -130,7 +104,6 @@ public class LocaleConfig extends AbstractYamlConfig {
 
         private String amountMustBePositive = "&c&l(!) &cAmount must be a positive number!";
         private String priceMustBeMoreThanOne = "&c&l(!) &cPrice cannot be less than $1";
-        private String inventoryFull = "&c&l(!) &cYour inventory is full!";
         private String insufficientFunds = "&c&l(!) &cYou don't have enough money!";
         private String maxTradesAlreadyReached = "&c&l(!) &cYou cannot add anymore trades to the GTS";
         private String notEnoughItems = "&c&l(!) &cYou don't have enough in your hand to sell this amount!";
@@ -139,16 +112,24 @@ public class LocaleConfig extends AbstractYamlConfig {
         private String cannotGoBelowMinTime = "&c&l(!) &cYou cannot sell for less than %min_duration% seconds";
         private String cannotGoAboveMaxTime = "&c&l(!) &cYou cannot sell for more than %max_duration% seconds";
 
-        private String addedItemToGts = "&e&l(!) &eSuccessfully listed item on GTS";
         private String adminRemoveTrade = "&e&l(!) &eYou successfully removed the trade from the GTS";
+        private String tradeRemovedByAdmin = "&e&l(!) &eYour trade was removed by an admin";
         private String purchasedTrade = "&e&l(!) &eSuccessfully purchased trade from GTS";
         private String removedOwnTrade = "&e&l(!) &eSuccessfully removed your trade";
+        private String cannotPurchaseOwnTrade = "&c&l(!) &cYou cannot purchase your own trade!";
+        private String returnNoLongerAvailable = "&c&l(!) &cThe collection you're trying to claim is no longer available!";
+        private String returnCollected = "&e&l(!) &eSuccessfully collected your item from the GTS!";
+        private String blockedPokemon = "&c&l(!) &cYou cannot sell that pokemon on the GTS as it is blacklisted!";
+        private String insufficientPartyMembers = "&c&l(!) &cYou need one or more Pokemon in your party to sell to the GTS!";
+        private String noPokemonInSlot = "&c&l(!) &cYou don't have a pokemon in that slot!";
 
         private String toggledBroadcastsOn = "&e&l(!) &eToggled broadcasts &a&lON";
         private String toggledBroadcastsOff = "&e&l(!) &eToggled broadcasts &c&lOFF";
 
-        private String itemWasPurchased = "&e&l(!) &eYour %item% auction was purchased by %buyer% for %price% and &a$%tax%&e was taken!";
         private String itemsToClaim = "&c&l(!) &cYou have auctions to claim in the GTS!";
+        private String tradeNoLongerAvailable = "&c&l(!) &cThat trade is no longer available!";
+        private String invenntoryFull = "&c&l(!) &cYou do not have enough inventory space to collect this item!";
+        private String listedItem = "&e&l(!) &eYou have listed %name% for $%price% in the GTS!";
 
         private List<String> createTradeBroadcast = Lists.newArrayList(
                 " ",
@@ -164,7 +145,16 @@ public class LocaleConfig extends AbstractYamlConfig {
                 " "
         )));
 
+        @Comment("The message sent to the player if they try to add an item to the GTS that fits one of the regex filters in the blacklist")
+        private List<String> blockedItem = List.of(
+                "&c&l(!) &cThat item was blocked from being added to the GTS because %reason%"
+        );
+
         public Messages() {}
+
+        public String getTradeNoLongerAvailable() {
+            return this.tradeNoLongerAvailable;
+        }
 
         public String getCannotSellBlacklisted() {
             return this.cannotSellBlacklisted;
@@ -178,6 +168,10 @@ public class LocaleConfig extends AbstractYamlConfig {
             return this.insufficientFunds;
         }
 
+        public String getCannotPurchaseOwnTrade() {
+            return this.cannotPurchaseOwnTrade;
+        }
+
         public String getPurchasedTrade() {
             return this.purchasedTrade;
         }
@@ -186,8 +180,20 @@ public class LocaleConfig extends AbstractYamlConfig {
             return this.adminRemoveTrade;
         }
 
+        public String getTradeRemovedByAdmin() {
+            return this.tradeRemovedByAdmin;
+        }
+
+        public String getReturnNoLongerAvailable() {
+            return this.returnNoLongerAvailable;
+        }
+
         public String getInventoryFull() {
-            return this.inventoryFull;
+            return this.invenntoryFull;
+        }
+
+        public String getReturnCollected() {
+            return this.returnCollected;
         }
 
         public List<String> getOpeningUi() {
@@ -210,16 +216,24 @@ public class LocaleConfig extends AbstractYamlConfig {
             return this.priceMustBeMoreThanOne;
         }
 
-        public String getAddedItemToGts() {
-            return this.addedItemToGts;
-        }
-
         public String getToggledBroadcastsOn() {
             return this.toggledBroadcastsOn;
         }
 
         public String getToggledBroadcastsOff() {
             return this.toggledBroadcastsOff;
+        }
+
+        public String getBlockedPokemon() {
+            return this.blockedPokemon;
+        }
+
+        public String getNoPokemonInSlot() {
+            return this.noPokemonInSlot;
+        }
+
+        public String getInsufficientPartyMembers() {
+            return this.insufficientPartyMembers;
         }
 
         public List<String> getCreateTradeBroadcast(Pokemon pokemon) {
@@ -250,10 +264,6 @@ public class LocaleConfig extends AbstractYamlConfig {
             return this.cannotGoBelowMinTime;
         }
 
-        public String getItemWasPurchased() {
-            return this.itemWasPurchased;
-        }
-
         public String getItemsToClaim() {
             return this.itemsToClaim;
         }
@@ -264,6 +274,14 @@ public class LocaleConfig extends AbstractYamlConfig {
 
         public List<String> getCannotRideAndGts() {
             return this.cannotRideAndGts;
+        }
+
+        public List<String> getBlockedItem() {
+            return this.blockedItem;
+        }
+
+        public String getListedItem() {
+            return this.listedItem;
         }
     }
 

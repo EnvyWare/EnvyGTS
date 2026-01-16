@@ -6,7 +6,7 @@ import com.envyful.api.command.annotate.executor.Sender;
 import com.envyful.api.command.annotate.permission.Permissible;
 import com.envyful.api.platform.Messageable;
 import com.envyful.gts.forge.EnvyGTSForge;
-import com.envyful.gts.forge.event.GTSReloadEvent;
+import com.envyful.gts.forge.api.event.GTSReloadEvent;
 import net.neoforged.neoforge.common.NeoForge;
 
 @Command(

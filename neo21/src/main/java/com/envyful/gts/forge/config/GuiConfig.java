@@ -28,9 +28,7 @@ public class GuiConfig extends AbstractYamlConfig {
     private SellHandOrParty sellHandOrParty = new SellHandOrParty();
     private Returns returnsGui = new Returns();
 
-    private SpriteConfig spriteConfig = SpriteConfig.builder()
-            .addLore("%below_lore_data%")
-            .build();
+    private SpriteConfig spriteConfig = SpriteConfig.DEFAULT;
 
     public GuiConfig() {
         super();
@@ -63,7 +61,23 @@ public class GuiConfig extends AbstractYamlConfig {
     @ConfigSerializable
     public static class Returns {
 
-        private ConfigInterface guiSettings = ConfigInterface.defaultInterface("EnvyGTS");
+        private PaginatedConfigInterface guiSettings = PaginatedConfigInterface.paginatedBuilder()
+                .title("EnvyGTS")
+                .height(6)
+                .fillType(ConfigInterface.FillType.BLOCK)
+                .nextPageButton(ExtendedConfigItem.builder()
+                        .type("pixelmon:trade_holder_right")
+                        .amount(1)
+                        .name("&aNext Page")
+                        .positions(Pair.of(8, 5))
+                        .build())
+                .previousPageButton(ExtendedConfigItem.builder()
+                        .type("pixelmon:trade_holder_left")
+                        .amount(1)
+                        .name("&aPrevious Page")
+                        .positions(Pair.of(0, 5))
+                        .build())
+                .build();
 
         private ExtendedConfigItem backButton = ExtendedConfigItem.builder()
                 .type("pixelmon:eject_button")
@@ -72,24 +86,15 @@ public class GuiConfig extends AbstractYamlConfig {
                 .positions(Pair.of(4, 5))
                 .build();
 
-        private List<Integer> returnPositions = Lists.newArrayList(
-                1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22,
-                23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37
-        );
-
         public Returns() {
         }
 
-        public ConfigInterface getGuiSettings() {
+        public PaginatedConfigInterface getGuiSettings() {
             return this.guiSettings;
         }
 
         public ExtendedConfigItem getBackButton() {
             return this.backButton;
-        }
-
-        public List<Integer> getReturnPositions() {
-            return this.returnPositions;
         }
     }
 
@@ -257,14 +262,6 @@ public class GuiConfig extends AbstractYamlConfig {
                 10, 11, 12, 14, 15, 16
         );
 
-        private ExtendedConfigItem confirmItem =
-                ExtendedConfigItem.builder()
-                        .type("pixelmon:poke_ball")
-                        .amount(1)
-                        .name("&a&lCONFIRM")
-                        .positions(4, 2)
-                        .build();
-
         private ExtendedConfigItem viewPCButton =
                 ExtendedConfigItem.builder()
                         .type("pixelmon:trade_holder_right")
@@ -304,10 +301,6 @@ public class GuiConfig extends AbstractYamlConfig {
             return this.partySelectionPositions;
         }
 
-        public ExtendedConfigItem getConfirmItem() {
-            return this.confirmItem;
-        }
-
         public ExtendedConfigItem getViewPCButton() {
             return this.viewPCButton;
         }
@@ -344,14 +337,6 @@ public class GuiConfig extends AbstractYamlConfig {
                         .amount(1)
                         .name("&aPrevious Page")
                         .positions(0, 0)
-                        .build();
-
-        private ExtendedConfigItem confirmButton =
-                ExtendedConfigItem.builder()
-                        .type("pixelmon:poke_ball")
-                        .amount(1)
-                        .name("&a&lCONFIRM")
-                        .positions(7, 3)
                         .build();
 
         private ConfigItem noPokemonItem = ConfigItem.builder()
@@ -394,10 +379,6 @@ public class GuiConfig extends AbstractYamlConfig {
 
         public int getPerPage() {
             return this.perPage;
-        }
-
-        public ExtendedConfigItem getConfirmButton() {
-            return this.confirmButton;
         }
 
         public int getConfirmSlot() {

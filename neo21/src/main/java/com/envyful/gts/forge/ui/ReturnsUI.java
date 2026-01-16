@@ -1,35 +1,54 @@
 package com.envyful.gts.forge.ui;
 
+import com.envyful.api.gui.factory.GuiFactory;
+import com.envyful.api.neoforge.config.UtilConfigInterface;
 import com.envyful.api.neoforge.config.UtilConfigItem;
 import com.envyful.api.neoforge.player.ForgeEnvyPlayer;
-import com.envyful.gts.api.Trade;
 import com.envyful.gts.forge.EnvyGTSForge;
-import com.envyful.gts.forge.player.GTSAttribute;
-
-import java.util.stream.Collectors;
+import com.envyful.gts.forge.api.event.TradeCollectEvent;
+import com.envyful.gts.forge.api.player.GTSAttribute;
+import net.neoforged.neoforge.common.NeoForge;
 
 public class ReturnsUI {
 
     public static void openUI(ForgeEnvyPlayer player) {
+        openUI(player, 1);
+    }
+
+    @SuppressWarnings("unchecked")
+    public static void openUI(ForgeEnvyPlayer player, int page) {
         var config = EnvyGTSForge.getGui().getReturnsGui();
         var attribute = player.getAttributeNow(GTSAttribute.class);
-        var pane = config.getGuiSettings().toPane();
-        var returnPositions = config.getReturnPositions();
-        var collect = attribute.getOwnedTrades().stream().filter(trade -> trade.hasExpired() || trade.wasRemoved() || trade.wasPurchased()).collect(Collectors.toList());
+        var collections = attribute.getCollections();
 
-        for (int i = 0; i < returnPositions.size(); i++) {
-            if (i >= collect.size()) {
-                break;
-            }
+        UtilConfigInterface.paginatedBuilder(collections)
+                .itemConversion(collection -> GuiFactory.displayableBuilder(collection.offer().item().display())
+                        .clickHandler((envyPlayer, clickType) -> {
+                            var updatedCollection = attribute.getCollectionItem(collection.getId());
 
-            Trade trade = collect.get(i);
-            trade.displayClaimable(returnPositions.get(i), envyPlayer -> openUI(player), pane);
-        }
+                            if (updatedCollection == null) {
+                                openUI(player);
+                                player.message(EnvyGTSForge.getLocale().getMessages().getReturnNoLongerAvailable());
+                                return;
+                            }
 
-        UtilConfigItem.builder()
-                .clickHandler((envyPlayer, clickType) -> ViewTradesUI.openUI(player))
-                .extendedConfigItem(player, pane, config.getBackButton());
+                            if (collection.offer().item().collect(player)) {
+                                NeoForge.EVENT_BUS.post(new TradeCollectEvent(player, updatedCollection));
+                                attribute.removeCollectionItem(collection);
+                                openUI(player);
+                                player.message(EnvyGTSForge.getLocale().getMessages().getReturnCollected());
+                                return;
+                            }
 
-        pane.open(player, config.getGuiSettings());
+                            player.message(EnvyGTSForge.getLocale().getMessages().getInventoryFull());
+                        })
+                        .build())
+                .configSettings(config.getGuiSettings())
+                .extraItems((pane, currentPage) -> {
+                    UtilConfigItem.builder()
+                            .clickHandler((envyPlayer, clickType) -> ViewTradesUI.openUI(player))
+                            .extendedConfigItem(player, pane, config.getBackButton());
+                })
+                .open(player, page);
     }
 }

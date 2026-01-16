@@ -5,7 +5,7 @@ import com.envyful.api.neoforge.concurrency.UtilForgeConcurrency;
 import com.envyful.api.neoforge.player.ForgeEnvyPlayer;
 import com.envyful.api.type.UtilParse;
 import com.envyful.gts.forge.EnvyGTSForge;
-import com.envyful.gts.forge.player.GTSAttribute;
+import com.envyful.gts.forge.api.player.GTSAttribute;
 import com.pixelmonmod.pixelmon.api.dialogue.DialogueButton;
 import com.pixelmonmod.pixelmon.api.dialogue.DialogueFactory;
 import com.pixelmonmod.pixelmon.api.dialogue.InputPattern;
@@ -17,7 +17,7 @@ public class EditItemPriceUI {
 
     public static void openUI(ForgeEnvyPlayer player, ItemStack itemStack, boolean error) {
         player.getParent().closeContainer();
-        GTSAttribute attribute = player.getAttributeNow(GTSAttribute.class);
+        var attribute = player.getAttributeNow(GTSAttribute.class);
 
         UtilForgeConcurrency.runLater(() -> {
             DialogueFactory.builder()
