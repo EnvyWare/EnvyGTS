@@ -13,7 +13,7 @@ import com.envyful.gts.forge.api.TradeOffer;
 import com.envyful.gts.forge.api.item.type.ItemStackTradeItem;
 import com.envyful.gts.forge.api.money.InstantPurchaseMoney;
 import com.envyful.gts.forge.api.trade.ActiveTrade;
-import com.envyful.gts.forge.player.GTSAttribute;
+import com.envyful.gts.forge.api.player.GTSAttribute;
 import com.envyful.gts.forge.ui.SelectPartyPokemonUI;
 import com.envyful.gts.forge.ui.SellHandOrParty;
 import net.minecraft.world.InteractionHand;

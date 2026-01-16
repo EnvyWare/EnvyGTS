@@ -23,7 +23,7 @@ import com.envyful.gts.forge.api.trade.Trade;
 import com.envyful.gts.forge.event.PlaceholderCollectEvent;
 import com.envyful.gts.forge.event.TradeViewFilterEvent;
 import com.envyful.gts.forge.event.TradesGUISetupEvent;
-import com.envyful.gts.forge.player.GTSAttribute;
+import com.envyful.gts.forge.api.player.GTSAttribute;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.common.NeoForge;

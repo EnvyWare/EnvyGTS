@@ -7,11 +7,10 @@ import com.envyful.api.neoforge.player.util.UtilPlayer;
 import com.envyful.api.time.UtilTime;
 import com.envyful.api.time.UtilTimeFormat;
 import com.envyful.gts.forge.EnvyGTSForge;
-import com.envyful.gts.forge.player.GTSAttribute;
+import com.envyful.gts.forge.api.player.GTSAttribute;
 import com.pixelmonmod.pixelmon.api.dialogue.DialogueButton;
 import com.pixelmonmod.pixelmon.api.dialogue.DialogueFactory;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.item.ItemStack;
 
 import java.util.concurrent.TimeUnit;
 

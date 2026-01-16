@@ -9,7 +9,7 @@ import com.envyful.gts.forge.api.money.InstantPurchaseMoney;
 import com.envyful.gts.forge.api.player.PlayerInfo;
 import com.envyful.gts.forge.api.trade.ActiveTrade;
 import com.envyful.gts.forge.api.trade.Trade;
-import com.envyful.gts.forge.player.GTSDatabase;
+import com.envyful.gts.forge.api.GTSDatabase;
 
 import java.time.Instant;
 import java.util.UUID;

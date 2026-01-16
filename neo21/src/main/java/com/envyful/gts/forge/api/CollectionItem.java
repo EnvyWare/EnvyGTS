@@ -4,7 +4,6 @@ import com.envyful.api.concurrency.UtilConcurrency;
 import com.envyful.gts.forge.EnvyGTSForge;
 import com.envyful.gts.forge.api.player.PlayerInfo;
 import com.envyful.gts.forge.api.trade.Trade;
-import com.envyful.gts.forge.player.GTSDatabase;
 
 import java.util.UUID;
 

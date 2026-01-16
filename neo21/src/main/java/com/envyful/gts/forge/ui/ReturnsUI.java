@@ -5,7 +5,7 @@ import com.envyful.api.neoforge.config.UtilConfigInterface;
 import com.envyful.api.neoforge.config.UtilConfigItem;
 import com.envyful.api.neoforge.player.ForgeEnvyPlayer;
 import com.envyful.gts.forge.EnvyGTSForge;
-import com.envyful.gts.forge.player.GTSAttribute;
+import com.envyful.gts.forge.api.player.GTSAttribute;
 
 public class ReturnsUI {
 

@@ -1,18 +1,16 @@
-package com.envyful.gts.forge.player;
+package com.envyful.gts.forge.api.player;
 
 import com.envyful.api.concurrency.UtilConcurrency;
 import com.envyful.api.neoforge.player.ForgeEnvyPlayer;
 import com.envyful.api.neoforge.player.attribute.ManagedForgeAttribute;
-import com.envyful.api.platform.PlatformProxy;
 import com.envyful.api.player.attribute.adapter.SelfAttributeAdapter;
 import com.envyful.gts.forge.EnvyGTSForge;
 import com.envyful.gts.forge.api.CollectionItem;
+import com.envyful.gts.forge.api.GTSDatabase;
 import com.envyful.gts.forge.api.Sale;
 import com.envyful.gts.forge.api.TradeOffer;
 import com.envyful.gts.forge.api.item.TradeItem;
 import com.envyful.gts.forge.api.money.InstantPurchaseMoney;
-import com.envyful.gts.forge.api.player.PlayerInfo;
-import com.envyful.gts.forge.api.player.PlayerSettings;
 import com.envyful.gts.forge.api.trade.Trade;
 
 import java.time.Instant;
@@ -24,10 +22,8 @@ public class GTSAttribute extends ManagedForgeAttribute<EnvyGTSForge> implements
 
     private List<CollectionItem> collections = new ArrayList<>();
 
-    protected int selectedSlot = -1;
     protected double currentPrice = -1;
     protected double currentMinPrice = -1;
-    protected long currentDuration = -1;
     protected PlayerSettings settings = new PlayerSettings();
     protected String name;
 
@@ -71,28 +67,12 @@ public class GTSAttribute extends ManagedForgeAttribute<EnvyGTSForge> implements
         return ownedTrades.size() >= EnvyGTSForge.getConfig().getMaxListingsPerUser();
     }
 
-    public int getSelectedSlot() {
-        return this.selectedSlot;
-    }
-
-    public void setSelectedSlot(int selectedSlot) {
-        this.selectedSlot = selectedSlot;
-    }
-
     public double getCurrentPrice() {
         return this.currentPrice;
     }
 
     public void setCurrentPrice(double currentPrice) {
         this.currentPrice = currentPrice;
-    }
-
-    public long getCurrentDuration() {
-        return this.currentDuration;
-    }
-
-    public void setCurrentDuration(long currentDuration) {
-        this.currentDuration = currentDuration;
     }
 
     public double getCurrentMinPrice() {

@@ -1,4 +1,4 @@
-package com.envyful.gts.forge.player;
+package com.envyful.gts.forge.api;
 
 import org.jooq.Field;
 import org.jooq.Table;

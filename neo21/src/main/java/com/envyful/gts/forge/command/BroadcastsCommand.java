@@ -4,10 +4,9 @@ import com.envyful.api.command.annotate.Command;
 import com.envyful.api.command.annotate.executor.CommandProcessor;
 import com.envyful.api.command.annotate.executor.Sender;
 import com.envyful.api.command.annotate.permission.Permissible;
-import com.envyful.api.neoforge.chat.UtilChatColour;
 import com.envyful.api.neoforge.player.ForgeEnvyPlayer;
 import com.envyful.gts.forge.EnvyGTSForge;
-import com.envyful.gts.forge.player.GTSAttribute;
+import com.envyful.gts.forge.api.player.GTSAttribute;
 
 @Command(
         value = {

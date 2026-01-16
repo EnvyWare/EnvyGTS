@@ -7,14 +7,10 @@ import com.envyful.api.neoforge.config.UtilConfigItem;
 import com.envyful.api.neoforge.items.ItemBuilder;
 import com.envyful.api.neoforge.items.ItemFlag;
 import com.envyful.api.neoforge.player.ForgeEnvyPlayer;
-import com.envyful.api.reforged.pixelmon.sprite.UtilSprite;
-import com.envyful.api.text.Placeholder;
-import com.envyful.gts.forge.api.TradeOffer;
 import com.envyful.gts.forge.EnvyGTSForge;
 import com.envyful.gts.forge.config.GuiConfig;
-import com.envyful.gts.forge.player.GTSAttribute;
+import com.envyful.gts.forge.api.player.GTSAttribute;
 import com.envyful.gts.forge.util.UtilPokemonPrice;
-import com.google.common.collect.Lists;
 import com.pixelmonmod.pixelmon.api.pokemon.Pokemon;
 import com.pixelmonmod.pixelmon.api.storage.PCBox;
 import com.pixelmonmod.pixelmon.api.storage.PCStorage;
@@ -24,8 +20,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.neoforged.neoforge.server.ServerLifecycleHooks;
 
-import java.util.List;
-
 public class SelectPCPokemonUI {
 
     public static void openUI(ForgeEnvyPlayer player) {
@@ -33,10 +27,7 @@ public class SelectPCPokemonUI {
     }
 
     public static void openUI(ForgeEnvyPlayer player, int page) {
-        GuiConfig.SelectFromPCConfig config = EnvyGTSForge.getGui().getPcConfig();
-
-        (player.getAttributeNow(GTSAttribute.class)).setSelectedSlot(-1);
-
+        var config = EnvyGTSForge.getGui().getPcConfig();
         var pane = config.getGuiSettings().toPane();
 
         PCStorage pc = StorageProxy.getPCForPlayerNow(player.getParent());
@@ -73,9 +64,6 @@ public class SelectPCPokemonUI {
                 .clickHandler((envyPlayer, clickType) -> {
                     GTSAttribute attribute = player.getAttributeNow(GTSAttribute.class);
 
-                    if (attribute.getSelectedSlot() == -1) {
-                        return;
-                    }
 
                     if (attribute.hasReachedMaximumTrades()) {
                         player.message(UtilChatColour.colour(
@@ -84,12 +72,11 @@ public class SelectPCPokemonUI {
                         return;
                     }
 
-                    double price = UtilPokemonPrice.getMinPrice(pc.getBox(page).get(attribute.getSelectedSlot()));
+                    double price = UtilPokemonPrice.getMinPrice(pc.getBox(page).get(1));
 
                     attribute.setCurrentPrice(price);
                     attribute.setCurrentMinPrice(price);
-                    attribute.setCurrentDuration(EnvyGTSForge.getConfig().getDefaultTradeDurationSeconds());
-                    SelectPriceUI.openUI(player, page, attribute.getSelectedSlot(), false);
+                    SelectPriceUI.openUI(player, page, 1, false);
                 })
                 .extendedConfigItem(player, pane, config.getConfirmButton());
 
@@ -118,8 +105,6 @@ public class SelectPCPokemonUI {
                 pane.set(2 + posX, posY, GuiFactory.displayableBuilder(ItemStack.class)
                         .itemStack(EnvyGTSForge.getGui().getSpriteConfig().fromPokemon(pokemon))
                         .clickHandler((envyPlayer, clickType) -> {
-                            GTSAttribute attribute = player.getAttributeNow(GTSAttribute.class);
-                            attribute.setSelectedSlot(slot);
                             pane.set(config.getConfirmSlot() % 9, config.getConfirmSlot() / 9,
                                     GuiFactory.displayableBuilder(ItemStack.class)
                                             .itemStack(new ItemBuilder(EnvyGTSForge.getGui().getSpriteConfig().fromPokemon(box.get(slot)))

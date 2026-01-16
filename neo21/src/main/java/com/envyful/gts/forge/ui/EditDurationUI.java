@@ -11,7 +11,7 @@ import com.envyful.gts.forge.api.TradeOffer;
 import com.envyful.gts.forge.api.item.type.PokemonTradeItem;
 import com.envyful.gts.forge.api.money.InstantPurchaseMoney;
 import com.envyful.gts.forge.api.trade.ActiveTrade;
-import com.envyful.gts.forge.player.GTSAttribute;
+import com.envyful.gts.forge.api.player.GTSAttribute;
 import com.pixelmonmod.pixelmon.api.dialogue.DialogueButton;
 import com.pixelmonmod.pixelmon.api.dialogue.DialogueFactory;
 import com.pixelmonmod.pixelmon.api.pokemon.Pokemon;
@@ -93,10 +93,8 @@ public class EditDurationUI {
                                                     new InstantPurchaseMoney(attribute.getCurrentPrice()));
 
                                             EnvyGTSForge.getTradeService().addListing(new ActiveTrade(offer));
-                                            attribute.setCurrentDuration(0);
                                             attribute.setCurrentMinPrice(0);
                                             attribute.setCurrentPrice(0);
-                                            attribute.setSelectedSlot(-1);
                                         });
                                     })
                                     .build()

@@ -5,7 +5,7 @@ import com.envyful.api.neoforge.player.ForgeEnvyPlayer;
 import com.envyful.api.platform.PlatformProxy;
 import com.envyful.api.type.UtilParse;
 import com.envyful.gts.forge.EnvyGTSForge;
-import com.envyful.gts.forge.player.GTSAttribute;
+import com.envyful.gts.forge.api.player.GTSAttribute;
 import com.pixelmonmod.pixelmon.api.dialogue.DialogueButton;
 import com.pixelmonmod.pixelmon.api.dialogue.DialogueFactory;
 import com.pixelmonmod.pixelmon.api.dialogue.InputPattern;

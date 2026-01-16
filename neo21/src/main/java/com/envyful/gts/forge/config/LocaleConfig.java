@@ -145,6 +145,9 @@ public class LocaleConfig extends AbstractYamlConfig {
         private String cannotPurchaseOwnTrade = "&c&l(!) &cYou cannot purchase your own trade!";
         private String returnNoLongerAvailable = "&c&l(!) &cThe collection you're trying to claim is no longer available!";
         private String returnCollected = "&e&l(!) &eSuccessfully collected your item from the GTS!";
+        private String blockedPokemon = "&c&l(!) &cYou cannot sell that pokemon on the GTS as it is blacklisted!";
+        private String insufficientPartyMembers = "&c&l(!) &cYou need one or more Pokemon in your party to sell to the GTS!";
+        private String noPokemonInSlot = "&c&l(!) &cYou don't have a pokemon in that slot!";
 
         private String toggledBroadcastsOn = "&e&l(!) &eToggled broadcasts &a&lON";
         private String toggledBroadcastsOff = "&e&l(!) &eToggled broadcasts &c&lOFF";
@@ -248,6 +251,18 @@ public class LocaleConfig extends AbstractYamlConfig {
 
         public String getToggledBroadcastsOff() {
             return this.toggledBroadcastsOff;
+        }
+
+        public String getBlockedPokemon() {
+            return this.blockedPokemon;
+        }
+
+        public String getNoPokemonInSlot() {
+            return this.noPokemonInSlot;
+        }
+
+        public String getInsufficientPartyMembers() {
+            return this.insufficientPartyMembers;
         }
 
         public List<String> getCreateTradeBroadcast(Pokemon pokemon) {

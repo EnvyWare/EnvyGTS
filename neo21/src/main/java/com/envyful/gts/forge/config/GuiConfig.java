@@ -262,14 +262,6 @@ public class GuiConfig extends AbstractYamlConfig {
                 10, 11, 12, 14, 15, 16
         );
 
-        private ExtendedConfigItem confirmItem =
-                ExtendedConfigItem.builder()
-                        .type("pixelmon:poke_ball")
-                        .amount(1)
-                        .name("&a&lCONFIRM")
-                        .positions(4, 2)
-                        .build();
-
         private ExtendedConfigItem viewPCButton =
                 ExtendedConfigItem.builder()
                         .type("pixelmon:trade_holder_right")
@@ -307,10 +299,6 @@ public class GuiConfig extends AbstractYamlConfig {
 
         public List<Integer> getPartySelectionPositions() {
             return this.partySelectionPositions;
-        }
-
-        public ExtendedConfigItem getConfirmItem() {
-            return this.confirmItem;
         }
 
         public ExtendedConfigItem getViewPCButton() {
