@@ -35,6 +35,7 @@ public record TradeOffer(UUID id, PlayerInfo seller, Instant creationTime, Insta
     public String replace(String s) {
         return s.replace("%expires_in%", EnvyGTSForge.getLocale().getExpiryTimeFormat().format(this.expiryTime.toEpochMilli() - System.currentTimeMillis()))
                 .replace("%seller%", this.seller().name())
-                .replace("%price%", String.format(EnvyGTSForge.getLocale().getMoneyFormat(), this.price().getPrice()));
+                .replace("%price%", String.format(EnvyGTSForge.getLocale().getMoneyFormat(), this.price().getPrice()))
+                .replace("%name%", this.displayName());
     }
 }
