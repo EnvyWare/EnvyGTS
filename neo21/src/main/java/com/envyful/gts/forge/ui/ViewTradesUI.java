@@ -51,15 +51,16 @@ public class ViewTradesUI {
                             //TODO: check auction status before handling click when active
                             if (canAdminRemove(envyPlayer, clickType)) {
                                 //TODO: message the seller of the auction & the admin
-                                EnvyGTSForge.getTradeService().removeListing(activeTrade);
+                                EnvyGTSForge.getTradeService().adminRemoveListing(activeTrade);
                                 openUI(player, page, filter, sort);
                                 activeTrade.offer().item().collect(envyPlayer);
                                 return;
                             }
 
                             if (isOwnerRemoveClick(clickType) && activeTrade.isSeller(envyPlayer)) {
-                                EnvyGTSForge.getTradeService().removeListing(activeTrade);
+                                EnvyGTSForge.getTradeService().ownerRemoveListing(activeTrade);
                                 openUI(player, page, filter, sort);
+
                                 activeTrade.offer().item().collect(envyPlayer);
                                 //TODO: message the seller of the auction
                                 return;

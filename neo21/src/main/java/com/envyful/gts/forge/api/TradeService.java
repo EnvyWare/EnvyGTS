@@ -21,7 +21,9 @@ public interface TradeService {
 
     void addListing(Trade trade);
 
-    void removeListing(Trade trade);
+    void adminRemoveListing(Trade trade);
+
+    void ownerRemoveListing(Trade trade);
 
     void addSale(Sale sale);
 

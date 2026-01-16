@@ -1,10 +1,14 @@
 package com.envyful.gts.forge.api.item;
 
-import com.envyful.api.gui.item.Displayable;
 import com.envyful.api.player.EnvyPlayer;
+import com.envyful.gts.forge.api.item.type.ItemStackTradeItem;
+import com.envyful.gts.forge.api.item.type.PokemonTradeItem;
+import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import net.minecraft.world.item.ItemStack;
 
 public interface TradeItem {
+
+    String id();
 
     String displayName();
 
@@ -13,5 +17,13 @@ public interface TradeItem {
     boolean collect(EnvyPlayer<?> player);
 
     String serialize();
+
+    static TradeItem deserialize(String id, String data) throws CommandSyntaxException {
+        return switch (id) {
+            case "pokemon" -> new PokemonTradeItem(data);
+            case "item" -> new ItemStackTradeItem(data);
+            default -> throw new IllegalArgumentException("Unknown TradeItem id: " + id);
+        };
+    }
 
 }

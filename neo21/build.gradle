@@ -24,7 +24,11 @@ dependencies {
 
     shadow group: 'org.spongepowered', name: 'configurate-yaml', version: '4.2.0-COMMENTS'
 
-    var apiVersion = "8.3.0"
+    var apiVersion = "8.3.0-source-test"
+    var jooqVersion = "3.20.10"
+    shadow (group: 'org.jooq', name: 'jooq', version: jooqVersion)
+    shadow (group: 'org.jooq', name: 'jooq-meta', version: jooqVersion)
+    shadow (group: 'org.jooq', name: 'jooq-codegen', version: jooqVersion)
     shadow (group: 'com.envyful.api', name: 'commons', version: apiVersion)
     shadow (group: 'com.envyful.api', name: 'neo21', version: apiVersion) {
         transitive = false

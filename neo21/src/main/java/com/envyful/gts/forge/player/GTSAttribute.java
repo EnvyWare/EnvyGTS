@@ -1,14 +1,21 @@
 package com.envyful.gts.forge.player;
 
+import com.envyful.api.concurrency.UtilConcurrency;
 import com.envyful.api.neoforge.player.ForgeEnvyPlayer;
 import com.envyful.api.neoforge.player.attribute.ManagedForgeAttribute;
 import com.envyful.api.platform.PlatformProxy;
 import com.envyful.api.player.attribute.adapter.SelfAttributeAdapter;
 import com.envyful.gts.forge.EnvyGTSForge;
 import com.envyful.gts.forge.api.CollectionItem;
+import com.envyful.gts.forge.api.Sale;
+import com.envyful.gts.forge.api.TradeOffer;
+import com.envyful.gts.forge.api.item.TradeItem;
+import com.envyful.gts.forge.api.money.InstantPurchaseMoney;
+import com.envyful.gts.forge.api.player.PlayerInfo;
 import com.envyful.gts.forge.api.player.PlayerSettings;
 import com.envyful.gts.forge.api.trade.Trade;
 
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -48,6 +55,9 @@ public class GTSAttribute extends ManagedForgeAttribute<EnvyGTSForge> implements
 
     public void removeCollectionItem(CollectionItem item) {
         this.collections.remove(item);
+        EnvyGTSForge.getDSLContext().deleteFrom(GTSDatabase.COLLECTIONS)
+                .where(GTSDatabase.TRADES_OFFER_ID.eq(item.offer().id().toString()))
+                .executeAsync(UtilConcurrency.SCHEDULED_EXECUTOR_SERVICE);
     }
 
     public void addCollectionItem(CollectionItem item) {
@@ -115,7 +125,68 @@ public class GTSAttribute extends ManagedForgeAttribute<EnvyGTSForge> implements
 
     @Override
     public void load() {
+        var results = EnvyGTSForge.getDSLContext()
+                .select(
+                        GTSDatabase.COLLECTIONS_PLAYER,
+                        GTSDatabase.TRADES_OFFER_ID,
+                        GTSDatabase.SALES_SALE_ID,
 
+                        GTSDatabase.TRADES_SELLER_UUID,
+                        GTSDatabase.TRADES_SELLER_NAME,
+                        GTSDatabase.TRADES_CREATION_TIME,
+                        GTSDatabase.TRADES_EXPIRY_TIME,
+                        GTSDatabase.TRADES_PRICE,
+
+                        GTSDatabase.TRADE_ITEMS_TYPE,
+                        GTSDatabase.TRADE_ITEMS_DATA,
+
+                        GTSDatabase.SALES_BUYER_UUID,
+                        GTSDatabase.SALES_BUYER_NAME,
+                        GTSDatabase.SALES_PURCHASE_TIME,
+                        GTSDatabase.SALES_PURCHASE_PRICE
+                )
+                .from(GTSDatabase.COLLECTIONS)
+                .join(GTSDatabase.TRADES)
+                .on(GTSDatabase.COLLECTIONS_OFFER_ID
+                        .eq(GTSDatabase.TRADES_OFFER_ID))
+                .leftJoin(GTSDatabase.TRADE_ITEMS)
+                .on(GTSDatabase.TRADE_ITEMS_OFFER_ID
+                        .eq(GTSDatabase.TRADES_OFFER_ID))
+                .leftJoin(GTSDatabase.SALES)
+                .on(GTSDatabase.COLLECTIONS_SALE_ID
+                        .eq(GTSDatabase.SALES_SALE_ID))
+                .where(GTSDatabase.COLLECTIONS_PLAYER.eq(this.id.toString()))
+                .fetchArray();
+
+        try {
+            for (var result : results) {
+                this.collections.add(new CollectionItem(
+                        new TradeOffer(
+                                UUID.fromString(result.get(GTSDatabase.TRADES_OFFER_ID)),
+                                new PlayerInfo(
+                                        UUID.fromString(result.get(GTSDatabase.TRADES_SELLER_UUID)),
+                                        result.get(GTSDatabase.TRADES_SELLER_NAME)
+                                ),
+                                Instant.ofEpochMilli(result.get(GTSDatabase.TRADES_CREATION_TIME)),
+                                Instant.ofEpochMilli(result.get(GTSDatabase.TRADES_EXPIRY_TIME)),
+                                TradeItem.deserialize(result.get(GTSDatabase.TRADE_ITEMS_TYPE), result.get(GTSDatabase.TRADE_ITEMS_DATA)),
+                                new InstantPurchaseMoney(result.get(GTSDatabase.TRADES_PRICE))
+                        ),
+                        result.get(GTSDatabase.SALES_SALE_ID) == null ? null : new Sale(
+                                UUID.fromString(result.get(GTSDatabase.SALES_SALE_ID)),
+                                UUID.fromString(result.get(GTSDatabase.TRADES_OFFER_ID)),
+                                new PlayerInfo(
+                                        UUID.fromString(result.get(GTSDatabase.SALES_BUYER_UUID)),
+                                        result.get(GTSDatabase.SALES_BUYER_NAME)
+                                ),
+                                Instant.ofEpochMilli(result.get(GTSDatabase.SALES_PURCHASE_TIME)),
+                                result.get(GTSDatabase.SALES_PURCHASE_PRICE)
+                        )
+                ));
+            }
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to load GTS collections for player " + this.id, e);
+        }
     }
 
     @Override
