@@ -74,22 +74,24 @@ public class jOOQTradeService extends CachedTradeService {
     public void addListing(Trade trade) {
         super.addListing(trade);
 
-        EnvyGTSForge.getDSLContext()
-                .insertInto(GTSDatabase.TRADES)
-                .set(GTSDatabase.TRADES_OFFER_ID, trade.offer().id().toString())
-                .set(GTSDatabase.TRADES_SELLER_UUID, trade.offer().seller().uniqueId().toString())
-                .set(GTSDatabase.TRADES_SELLER_NAME, trade.offer().seller().name())
-                .set(GTSDatabase.TRADES_CREATION_TIME, trade.offer().creationTime().toEpochMilli())
-                .set(GTSDatabase.TRADES_EXPIRY_TIME, trade.offer().expiryTime().toEpochMilli())
-                .set(GTSDatabase.TRADES_PRICE, trade.offer().price().getPrice())
-                .executeAsync(UtilConcurrency.SCHEDULED_EXECUTOR_SERVICE);
+        UtilConcurrency.runAsync(() -> {
+            EnvyGTSForge.getDSLContext()
+                    .insertInto(GTSDatabase.TRADES)
+                    .set(GTSDatabase.TRADES_OFFER_ID, trade.offer().id().toString())
+                    .set(GTSDatabase.TRADES_SELLER_UUID, trade.offer().seller().uniqueId().toString())
+                    .set(GTSDatabase.TRADES_SELLER_NAME, trade.offer().seller().name())
+                    .set(GTSDatabase.TRADES_CREATION_TIME, trade.offer().creationTime().toEpochMilli())
+                    .set(GTSDatabase.TRADES_EXPIRY_TIME, trade.offer().expiryTime().toEpochMilli())
+                    .set(GTSDatabase.TRADES_PRICE, trade.offer().price().getPrice())
+                    .execute();
 
-        EnvyGTSForge.getDSLContext()
-                .insertInto(GTSDatabase.TRADE_ITEMS)
-                .set(GTSDatabase.TRADE_ITEMS_OFFER_ID, trade.offer().id().toString())
-                .set(GTSDatabase.TRADE_ITEMS_TYPE, trade.offer().item().id())
-                .set(GTSDatabase.TRADE_ITEMS_DATA, trade.offer().item().serialize())
-                .executeAsync(UtilConcurrency.SCHEDULED_EXECUTOR_SERVICE);
+            EnvyGTSForge.getDSLContext()
+                    .insertInto(GTSDatabase.TRADE_ITEMS)
+                    .set(GTSDatabase.TRADE_ITEMS_OFFER_ID, trade.offer().id().toString())
+                    .set(GTSDatabase.TRADE_ITEMS_TYPE, trade.offer().item().id())
+                    .set(GTSDatabase.TRADE_ITEMS_DATA, trade.offer().item().serialize())
+                    .execute();
+        });
     }
 
     @Override

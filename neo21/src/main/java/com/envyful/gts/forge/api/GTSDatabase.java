@@ -33,13 +33,13 @@ public class GTSDatabase {
      *
      */
 
-    public static final Table<?> TRADE_ITEMS = DSL.table(DSL.name("trade_items"));
+    public static final Table<?> TRADE_ITEMS = DSL.table(DSL.name("envy_gts_trade_items"));
 
-    public static final Field<String> TRADE_ITEMS_OFFER_ID = DSL.field(DSL.name("trade_items", "offer_id"), SQLDataType.VARCHAR(36));
+    public static final Field<String> TRADE_ITEMS_OFFER_ID = DSL.field(DSL.name("envy_gts_trade_items", "offer_id"), SQLDataType.VARCHAR(36));
 
-    public static final Field<String> TRADE_ITEMS_TYPE = DSL.field(DSL.name("trade_items", "trade_item_type"), String.class);
+    public static final Field<String> TRADE_ITEMS_TYPE = DSL.field(DSL.name("envy_gts_trade_items", "trade_item_type"), String.class);
 
-    public static final Field<String> TRADE_ITEMS_DATA = DSL.field(DSL.name("trade_items", "item_data"), SQLDataType.CLOB);
+    public static final Field<String> TRADE_ITEMS_DATA = DSL.field(DSL.name("envy_gts_trade_items", "item_data"), SQLDataType.CLOB);
 
     /**
      *
