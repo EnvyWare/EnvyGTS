@@ -130,7 +130,6 @@ public class LocaleConfig extends AbstractYamlConfig {
 
         private String amountMustBePositive = "&c&l(!) &cAmount must be a positive number!";
         private String priceMustBeMoreThanOne = "&c&l(!) &cPrice cannot be less than $1";
-        private String inventoryFull = "&c&l(!) &cYour inventory is full!";
         private String insufficientFunds = "&c&l(!) &cYou don't have enough money!";
         private String maxTradesAlreadyReached = "&c&l(!) &cYou cannot add anymore trades to the GTS";
         private String notEnoughItems = "&c&l(!) &cYou don't have enough in your hand to sell this amount!";
@@ -141,14 +140,20 @@ public class LocaleConfig extends AbstractYamlConfig {
 
         private String addedItemToGts = "&e&l(!) &eSuccessfully listed item on GTS";
         private String adminRemoveTrade = "&e&l(!) &eYou successfully removed the trade from the GTS";
+        private String tradeRemovedByAdmin = "&e&l(!) &eYour trade was removed by an admin";
         private String purchasedTrade = "&e&l(!) &eSuccessfully purchased trade from GTS";
         private String removedOwnTrade = "&e&l(!) &eSuccessfully removed your trade";
+        private String cannotPurchaseOwnTrade = "&c&l(!) &cYou cannot purchase your own trade!";
+        private String returnNoLongerAvailable = "&c&l(!) &cThe collection you're trying to claim is no longer available!";
+        private String returnCollected = "&e&l(!) &eSuccessfully collected your item from the GTS!";
 
         private String toggledBroadcastsOn = "&e&l(!) &eToggled broadcasts &a&lON";
         private String toggledBroadcastsOff = "&e&l(!) &eToggled broadcasts &c&lOFF";
 
         private String itemWasPurchased = "&e&l(!) &eYour %item% auction was purchased by %buyer% for %price% and &a$%tax%&e was taken!";
         private String itemsToClaim = "&c&l(!) &cYou have auctions to claim in the GTS!";
+        private String tradeNoLongerAvailable = "&c&l(!) &cThat trade is no longer available!";
+        private String invenntoryFull = "&c&l(!) &cYou do not have enough inventory space to collect this item!";
 
         private List<String> createTradeBroadcast = Lists.newArrayList(
                 " ",
@@ -166,6 +171,10 @@ public class LocaleConfig extends AbstractYamlConfig {
 
         public Messages() {}
 
+        public String getTradeNoLongerAvailable() {
+            return this.tradeNoLongerAvailable;
+        }
+
         public String getCannotSellBlacklisted() {
             return this.cannotSellBlacklisted;
         }
@@ -178,6 +187,10 @@ public class LocaleConfig extends AbstractYamlConfig {
             return this.insufficientFunds;
         }
 
+        public String getCannotPurchaseOwnTrade() {
+            return this.cannotPurchaseOwnTrade;
+        }
+
         public String getPurchasedTrade() {
             return this.purchasedTrade;
         }
@@ -186,8 +199,20 @@ public class LocaleConfig extends AbstractYamlConfig {
             return this.adminRemoveTrade;
         }
 
+        public String getTradeRemovedByAdmin() {
+            return this.tradeRemovedByAdmin;
+        }
+
+        public String getReturnNoLongerAvailable() {
+            return this.returnNoLongerAvailable;
+        }
+
         public String getInventoryFull() {
-            return this.inventoryFull;
+            return this.invenntoryFull;
+        }
+
+        public String getReturnCollected() {
+            return this.returnCollected;
         }
 
         public List<String> getOpeningUi() {

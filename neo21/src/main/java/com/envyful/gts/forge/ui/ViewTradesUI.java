@@ -42,7 +42,7 @@ public class ViewTradesUI {
                             var updatedTrade = EnvyGTSForge.getTradeService().activeListing(trade.offer().id());
 
                             if (!(updatedTrade instanceof ActiveTrade)) {
-                                //TODO: message the player
+                                player.message(EnvyGTSForge.getLocale().getMessages().getTradeNoLongerAvailable());
                                 return;
                             }
 
@@ -50,7 +50,14 @@ public class ViewTradesUI {
 
                             //TODO: check auction status before handling click when active
                             if (canAdminRemove(envyPlayer, clickType)) {
-                                //TODO: message the seller of the auction & the admin
+                                player.message(EnvyGTSForge.getLocale().getMessages().getAdminRemoveTrade());
+
+                                if (trade.offer().seller().getPlayer() != null) {
+                                    trade.offer().seller().getPlayer().message(
+                                            EnvyGTSForge.getLocale().getMessages().getTradeRemovedByAdmin()
+                                    );
+                                }
+
                                 EnvyGTSForge.getTradeService().adminRemoveListing(activeTrade);
                                 openUI(player, page, filter, sort);
                                 activeTrade.offer().item().collect(envyPlayer);
@@ -62,12 +69,12 @@ public class ViewTradesUI {
                                 openUI(player, page, filter, sort);
 
                                 activeTrade.offer().item().collect(envyPlayer);
-                                //TODO: message the seller of the auction
+                                player.message(EnvyGTSForge.getLocale().getMessages().getRemovedOwnTrade());
                                 return;
                             }
 
                             if (activeTrade.isSeller(envyPlayer)) {
-                                //TODO: message the player
+                                player.message(EnvyGTSForge.getLocale().getMessages().getCannotPurchaseOwnTrade());
                                 return;
                             }
 
@@ -81,18 +88,19 @@ public class ViewTradesUI {
                                                 var tradeAfterClick = EnvyGTSForge.getTradeService().activeListing(activeTrade.offer().id());
 
                                                 if (!(tradeAfterClick instanceof ActiveTrade)) {
-                                                    //TODO: message the player
+                                                    player.message(EnvyGTSForge.getLocale().getMessages().getTradeNoLongerAvailable());
                                                     openUI(player, page, filter, sort);
                                                     return;
                                                 }
 
                                                 if (attemptPurchase(clicker, tradeAfterClick)) {
                                                     openUI(player, page, filter, sort);
+                                                    player.message(EnvyGTSForge.getLocale().getMessages().getPurchasedTrade());
                                                     return;
                                                 }
 
                                                 openUI(player, page, filter, sort);
-                                                //TODO: message the player
+                                                player.message(EnvyGTSForge.getLocale().getMessages().getInsufficientFunds());
                                             }))
                                     .returnHandler((envyPlayer1, clickType1) -> ViewTradesUI.openUI((ForgeEnvyPlayer) envyPlayer))
                                     .open();
@@ -158,7 +166,6 @@ public class ViewTradesUI {
         var bank = ((ForgeEnvyPlayer) player).getParent().getPartyNow();
 
         if (bank.getBalance().doubleValue() < trade.offer().price().getPrice()) {
-            //TODO: message the player
             return false;
         }
 
@@ -167,8 +174,6 @@ public class ViewTradesUI {
         bank.take(trade.offer().price().getPrice());
         EnvyGTSForge.getTradeService().addSale(sale);
         gtsAttribute.addCollectionItem(new CollectionItem(trade, sale));
-
-        //TODO: message players
 
         return true;
     }

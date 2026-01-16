@@ -111,16 +111,9 @@ public class GTSAttribute extends ManagedForgeAttribute<EnvyGTSForge> implements
         super.setParent(parent);
 
         this.name = parent.getName();
-
-        PlatformProxy.runSync(() -> {
-            boolean returnMessage = false;
-
-            //TODO: check collections
-
-            if (returnMessage) {
-                this.parent.message(EnvyGTSForge.getLocale().getMessages().getItemsToClaim());
-            }
-        });
+        if (!this.collections.isEmpty()) {
+            this.parent.message(EnvyGTSForge.getLocale().getMessages().getItemsToClaim());
+        }
     }
 
     @Override

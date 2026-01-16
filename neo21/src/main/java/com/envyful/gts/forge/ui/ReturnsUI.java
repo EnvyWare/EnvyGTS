@@ -26,14 +26,18 @@ public class ReturnsUI {
 
                             if (updatedCollection == null) {
                                 openUI(player);
-                                //TODO: message the player
+                                player.message(EnvyGTSForge.getLocale().getMessages().getReturnNoLongerAvailable());
                                 return;
                             }
 
-                            attribute.removeCollectionItem(collection);
-                            collection.offer().item().collect(player);
-                            openUI(player);
-                            //TODO: message the player
+                            if (collection.offer().item().collect(player)) {
+                                attribute.removeCollectionItem(collection);
+                                openUI(player);
+                                player.message(EnvyGTSForge.getLocale().getMessages().getReturnCollected());
+                                return;
+                            }
+
+                            player.message(EnvyGTSForge.getLocale().getMessages().getInventoryFull());
                         })
                         .build())
                 .configSettings(config.getGuiSettings())
