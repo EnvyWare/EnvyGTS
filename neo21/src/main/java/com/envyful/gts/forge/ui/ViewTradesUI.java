@@ -168,7 +168,7 @@ public class ViewTradesUI {
 
     private static boolean attemptPurchase(EnvyPlayer<?> player, Trade trade) {
         var gtsAttribute = player.getAttributeNow(GTSAttribute.class);
-        var bank = ((ForgeEnvyPlayer) player).getParent().getPartyNow();
+        var bank = ((ForgeEnvyPlayer) player).getParent().getBankAccountNow();
 
         if (bank.getBalance().doubleValue() < trade.offer().price().getPrice()) {
             return false;
