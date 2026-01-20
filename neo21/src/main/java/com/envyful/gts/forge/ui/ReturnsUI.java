@@ -46,7 +46,7 @@ public class ReturnsUI {
                 .configSettings(config.getGuiSettings())
                 .extraItems((pane, currentPage) -> {
                     UtilConfigItem.builder()
-                            .clickHandler((envyPlayer, clickType) -> ViewTradesUI.openUI(player))
+                            .clickHandler((envyPlayer, clickType) -> EnvyGTSForge.getGui().getViewTradesUI().openUI(player))
                             .extendedConfigItem(player, pane, config.getBackButton());
                 })
                 .open(player, page);

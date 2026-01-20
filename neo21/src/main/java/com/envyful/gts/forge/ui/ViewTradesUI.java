@@ -1,9 +1,13 @@
 package com.envyful.gts.forge.ui;
 
+import com.envyful.api.config.type.ConfigInterface;
+import com.envyful.api.config.type.ExtendedConfigItem;
+import com.envyful.api.config.type.PaginatedConfigInterface;
 import com.envyful.api.gui.factory.GuiFactory;
 import com.envyful.api.gui.item.Displayable;
 import com.envyful.api.neoforge.config.UtilConfigInterface;
 import com.envyful.api.neoforge.config.UtilConfigItem;
+import com.envyful.api.neoforge.config.yaml.YamlOps;
 import com.envyful.api.neoforge.gui.type.ConfirmationUI;
 import com.envyful.api.neoforge.items.ItemBuilder;
 import com.envyful.api.neoforge.player.ForgeEnvyPlayer;
@@ -11,6 +15,7 @@ import com.envyful.api.platform.PlatformProxy;
 import com.envyful.api.player.EnvyPlayer;
 import com.envyful.api.text.PlaceholderFactory;
 import com.envyful.api.text.parse.SimplePlaceholder;
+import com.envyful.api.type.Pair;
 import com.envyful.gts.forge.EnvyGTSForge;
 import com.envyful.gts.forge.api.CollectionItem;
 import com.envyful.gts.forge.api.Sale;
@@ -23,22 +28,79 @@ import com.envyful.gts.forge.api.gui.SortType;
 import com.envyful.gts.forge.api.player.GTSAttribute;
 import com.envyful.gts.forge.api.trade.ActiveTrade;
 import com.envyful.gts.forge.api.trade.Trade;
+import com.pixelmonmod.pixelmon.api.pokemon.item.pokeball.PokeBallRegistry;
+import com.pixelmonmod.pixelmon.init.registry.PixelmonDataComponents;
+import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.common.NeoForge;
+import org.spongepowered.configurate.objectmapping.ConfigSerializable;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@ConfigSerializable
 public class ViewTradesUI {
 
-    public static void openUI(ForgeEnvyPlayer player) {
+    private PaginatedConfigInterface guiSettings = PaginatedConfigInterface.paginatedBuilder()
+            .title("EnvyGTS")
+            .height(6)
+            .fillType(ConfigInterface.FillType.BLOCK)
+            .nextPageButton(ExtendedConfigItem.builder()
+                    .type("pixelmon:trade_holder_right")
+                    .amount(1)
+                    .name("&aNext Page")
+                    .positions(Pair.of(8, 5))
+                    .build())
+            .previousPageButton(ExtendedConfigItem.builder()
+                    .type("pixelmon:trade_holder_left")
+                    .amount(1)
+                    .name("&aPrevious Page")
+                    .positions(Pair.of(0, 5))
+                    .build())
+            .build();
+
+    private ConfirmationUI.ConfirmConfig confirmGuiConfig = new ConfirmationUI.ConfirmConfig();
+
+    private ExtendedConfigItem sellButton = ExtendedConfigItem.builder()
+            .type("pixelmon:eject_button")
+            .amount(1)
+            .name("&aSell Stuff")
+            .positions(Pair.of(4, 5))
+            .build();
+
+    private ExtendedConfigItem returnsButton = ExtendedConfigItem.builder()
+            .type("minecraft:diamond")
+            .amount(1)
+            .name("&aCollect your returns")
+            .positions(Pair.of(5, 5))
+            .build();
+
+    private ExtendedConfigItem filterButton = ExtendedConfigItem.builder()
+            .type("pixelmon:poke_ball")
+            .amount(1)
+            .name("&bChange filter")
+            .lore("&aCurrent Filter: &f%filter%")
+            .positions(2, 5)
+            .dataComponents(DataComponentMap.CODEC.encode(
+                    DataComponentMap.builder()
+                            .set(PixelmonDataComponents.POKE_BALL, PokeBallRegistry.NET_BALL).build(), YamlOps.INSTANCE, YamlOps.INSTANCE.empty()).getOrThrow())
+            .build();
+
+    private ExtendedConfigItem orderButton = ExtendedConfigItem.builder()
+            .type("pixelmon:blue_orb")
+            .amount(1)
+            .name("&bChange order")
+            .lore("&aCurrent order: &f%order%")
+            .positions(6, 5)
+            .build();
+
+    public void openUI(ForgeEnvyPlayer player) {
         openUI(player, 1, FilterTypeFactory.getDefault(), SortType.MOST_RECENT);
     }
 
     @SuppressWarnings("unchecked")
-    public static void openUI(ForgeEnvyPlayer player, int page, FilterType filter, SortType sort) {
-        var config = EnvyGTSForge.getGui().getSearchUIConfig();
+    public void openUI(ForgeEnvyPlayer player, int page, FilterType filter, SortType sort) {
         var allTrades = getAllVisibleTrades(player, filter, sort);
 
         UtilConfigInterface.paginatedBuilder(allTrades)
@@ -86,7 +148,7 @@ public class ViewTradesUI {
                             ConfirmationUI.builder()
                                     .player(envyPlayer)
                                     .playerManager(EnvyGTSForge.getPlayerManager())
-                                    .config(EnvyGTSForge.getGui().getSearchUIConfig().getConfirmGuiConfig())
+                                    .config(this.confirmGuiConfig)
                                     .descriptionItem(activeTrade.offer().item().display())
                                     .confirmHandler((clicker, clickType1) ->
                                             PlatformProxy.runSync(() -> {
@@ -107,23 +169,23 @@ public class ViewTradesUI {
                                                 openUI(player, page, filter, sort);
                                                 player.message(EnvyGTSForge.getLocale().getMessages().getInsufficientFunds());
                                             }))
-                                    .returnHandler((envyPlayer1, clickType1) -> ViewTradesUI.openUI((ForgeEnvyPlayer) envyPlayer))
+                                    .returnHandler((envyPlayer1, clickType1) -> this.openUI((ForgeEnvyPlayer) envyPlayer))
                                     .open();
                         })
                         .build())
-                .configSettings(config.getGuiSettings())
+                .configSettings(this.guiSettings)
                 .extraItems((pane, currentPage) -> {
                     UtilConfigItem.builder()
                             .clickHandler((envyPlayer, clickType) -> SellHandOrParty.open(player))
-                            .extendedConfigItem(player, pane, config.getSellButton());
+                            .extendedConfigItem(player, pane, this.sellButton);
 
                     UtilConfigItem.builder()
                             .clickHandler((envyPlayer, clickType) -> ReturnsUI.openUI(player))
-                            .extendedConfigItem(player, pane, config.getReturnsButton());
+                            .extendedConfigItem(player, pane, this.returnsButton);
 
                     UtilConfigItem.builder()
                             .clickHandler((envyPlayer, clickType) -> openUI(player, page, filter, sort.getNext()))
-                            .extendedConfigItem(player, pane, config.getOrderButton(),
+                            .extendedConfigItem(player, pane, this.orderButton,
                                     (SimplePlaceholder) name -> name
                                             .replace("%filter%", filter.getDisplayName())
                                             .replace("%order%", sort.getDisplayName()));
@@ -140,7 +202,7 @@ public class ViewTradesUI {
                 .open(player, page);
     }
 
-    private static List<Trade> getAllVisibleTrades(ForgeEnvyPlayer player, FilterType filter, SortType sortType) {
+    private List<Trade> getAllVisibleTrades(ForgeEnvyPlayer player, FilterType filter, SortType sortType) {
         List<Trade> allTrades = new ArrayList<>(EnvyGTSForge.getTradeService().activeListings());
 
         allTrades.removeIf(trade -> !filter.isAllowed(player, trade));
@@ -154,7 +216,7 @@ public class ViewTradesUI {
         return allTrades;
     }
 
-    private static boolean canAdminRemove(EnvyPlayer<?> player, Displayable.ClickType clickType) {
+    private boolean canAdminRemove(EnvyPlayer<?> player, Displayable.ClickType clickType) {
         if (!isOwnerRemoveClick(clickType)) {
             return false;
         }
@@ -162,11 +224,11 @@ public class ViewTradesUI {
         return player.hasPermission("envygts.admin");
     }
 
-    private static boolean isOwnerRemoveClick(Displayable.ClickType clickType){
+    private boolean isOwnerRemoveClick(Displayable.ClickType clickType){
         return clickType == EnvyGTSForge.getConfig().getOwnerRemoveButton();
     }
 
-    private static boolean attemptPurchase(EnvyPlayer<?> player, Trade trade) {
+    private boolean attemptPurchase(EnvyPlayer<?> player, Trade trade) {
         var gtsAttribute = player.getAttributeNow(GTSAttribute.class);
         var bank = ((ForgeEnvyPlayer) player).getParent().getBankAccountNow();
 
@@ -190,7 +252,7 @@ public class ViewTradesUI {
         return true;
     }
 
-    private static Displayable.Builder<ItemStack> buildDisplay(Trade trade) {
+    private Displayable.Builder<ItemStack> buildDisplay(Trade trade) {
         var item = new ItemBuilder(trade.offer().item().display(trade));
 
         for (var belowLoreMessage : PlaceholderFactory.handlePlaceholders(EnvyGTSForge.getLocale().getListingBelowDataLore(), trade)) {
@@ -198,5 +260,9 @@ public class ViewTradesUI {
         }
 
         return GuiFactory.displayableBuilder(item.build());
+    }
+
+    public ExtendedConfigItem getFilterButton() {
+        return this.filterButton;
     }
 }

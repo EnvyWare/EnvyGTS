@@ -7,7 +7,6 @@ import com.envyful.api.command.annotate.executor.Sender;
 import com.envyful.api.command.annotate.permission.Permissible;
 import com.envyful.api.neoforge.player.ForgeEnvyPlayer;
 import com.envyful.gts.forge.EnvyGTSForge;
-import com.envyful.gts.forge.ui.ViewTradesUI;
 
 @Command(
         value = {
@@ -30,6 +29,6 @@ public class GTSCommand {
 
         player.message(EnvyGTSForge.getLocale().getMessages().getOpeningUi());
         player.getParent().getPartyNow().retrieveAll("GTS");
-        ViewTradesUI.openUI(player);
+        EnvyGTSForge.getGui().getViewTradesUI().openUI(player);
     }
 }

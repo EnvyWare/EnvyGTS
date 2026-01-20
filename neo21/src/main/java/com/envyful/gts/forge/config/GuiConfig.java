@@ -10,6 +10,7 @@ import com.envyful.api.neoforge.config.yaml.YamlOps;
 import com.envyful.api.neoforge.gui.type.ConfirmationUI;
 import com.envyful.api.reforged.pixelmon.config.SpriteConfig;
 import com.envyful.api.type.Pair;
+import com.envyful.gts.forge.ui.ViewTradesUI;
 import com.google.common.collect.Lists;
 import com.pixelmonmod.pixelmon.api.pokemon.item.pokeball.PokeBallRegistry;
 import com.pixelmonmod.pixelmon.init.registry.PixelmonDataComponents;
@@ -22,7 +23,7 @@ import java.util.List;
 @ConfigPath("config/EnvyGTS/guis.yml")
 public class GuiConfig extends AbstractYamlConfig {
 
-    private SearchTradesConfig searchUIConfig = new SearchTradesConfig();
+    private ViewTradesUI searchUIConfig = new ViewTradesUI();
     private PartyPokemonConfig partyPokemonUIConfig = new PartyPokemonConfig();
     private SelectFromPCConfig pcConfig = new SelectFromPCConfig();
     private SellHandOrParty sellHandOrParty = new SellHandOrParty();
@@ -34,7 +35,7 @@ public class GuiConfig extends AbstractYamlConfig {
         super();
     }
 
-    public SearchTradesConfig getSearchUIConfig() {
+    public ViewTradesUI getViewTradesUI() {
         return this.searchUIConfig;
     }
 
@@ -150,90 +151,6 @@ public class GuiConfig extends AbstractYamlConfig {
 
         public ExtendedConfigItem getBackButton() {
             return this.backButton;
-        }
-    }
-
-    @ConfigSerializable
-    public static class SearchTradesConfig {
-
-        private PaginatedConfigInterface guiSettings = PaginatedConfigInterface.paginatedBuilder()
-                .title("EnvyGTS")
-                .height(6)
-                .fillType(ConfigInterface.FillType.BLOCK)
-                .nextPageButton(ExtendedConfigItem.builder()
-                        .type("pixelmon:trade_holder_right")
-                        .amount(1)
-                        .name("&aNext Page")
-                        .positions(Pair.of(8, 5))
-                        .build())
-                .previousPageButton(ExtendedConfigItem.builder()
-                        .type("pixelmon:trade_holder_left")
-                        .amount(1)
-                        .name("&aPrevious Page")
-                        .positions(Pair.of(0, 5))
-                        .build())
-                .build();
-
-        private ConfirmationUI.ConfirmConfig confirmGuiConfig = new ConfirmationUI.ConfirmConfig();
-
-        private ExtendedConfigItem sellButton = ExtendedConfigItem.builder()
-                .type("pixelmon:eject_button")
-                .amount(1)
-                .name("&aSell Stuff")
-                .positions(Pair.of(4, 5))
-                .build();
-
-        private ExtendedConfigItem returnsButton = ExtendedConfigItem.builder()
-                .type("minecraft:diamond")
-                .amount(1)
-                .name("&aCollect your returns")
-                .positions(Pair.of(5, 5))
-                .build();
-
-        private ExtendedConfigItem filterButton = ExtendedConfigItem.builder()
-                .type("pixelmon:poke_ball")
-                .amount(1)
-                .name("&bChange filter")
-                .lore("&aCurrent Filter: &f%filter%")
-                .positions(2, 5)
-                .dataComponents(DataComponentMap.CODEC.encode(
-                        DataComponentMap.builder()
-                                .set(PixelmonDataComponents.POKE_BALL, PokeBallRegistry.NET_BALL).build(), YamlOps.INSTANCE, YamlOps.INSTANCE.empty()).getOrThrow())
-                .build();
-
-        private ExtendedConfigItem orderButton = ExtendedConfigItem.builder()
-                .type("pixelmon:blue_orb")
-                .amount(1)
-                .name("&bChange order")
-                .lore("&aCurrent order: &f%order%")
-                .positions(6, 5)
-                .build();
-
-        public SearchTradesConfig() {
-        }
-
-        public ConfirmationUI.ConfirmConfig getConfirmGuiConfig() {
-            return this.confirmGuiConfig;
-        }
-
-        public PaginatedConfigInterface getGuiSettings() {
-            return this.guiSettings;
-        }
-
-        public ExtendedConfigItem getSellButton() {
-            return this.sellButton;
-        }
-
-        public ExtendedConfigItem getFilterButton() {
-            return this.filterButton;
-        }
-
-        public ExtendedConfigItem getOrderButton() {
-            return this.orderButton;
-        }
-
-        public ExtendedConfigItem getReturnsButton() {
-            return this.returnsButton;
         }
     }
 

@@ -25,6 +25,6 @@ public class InstantBuyFilterType implements FilterType {
 
     @Override
     public ExtendedConfigItem getDisplay() {
-        return EnvyGTSForge.getGui().getSearchUIConfig().getFilterButton();
+        return EnvyGTSForge.getGui().getViewTradesUI().getFilterButton();
     }
 }

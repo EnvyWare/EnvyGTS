@@ -36,7 +36,7 @@ public class SellHandOrParty {
 
         UtilConfigItem.builder()
                 .asyncClick(false)
-                .clickHandler((envyPlayer, clickType) -> ViewTradesUI.openUI(player))
+                .clickHandler((envyPlayer, clickType) -> EnvyGTSForge.getGui().getViewTradesUI().openUI(player))
                 .extendedConfigItem(player, pane, config.getBackButton());
 
         pane.open(player, config.getGuiSettings());
