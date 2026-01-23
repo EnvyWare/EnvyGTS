@@ -28,6 +28,7 @@ import com.envyful.gts.forge.api.gui.SortType;
 import com.envyful.gts.forge.api.player.GTSAttribute;
 import com.envyful.gts.forge.api.trade.ActiveTrade;
 import com.envyful.gts.forge.api.trade.Trade;
+import com.pixelmonmod.pixelmon.api.economy.BankAccountProxy;
 import com.pixelmonmod.pixelmon.api.pokemon.item.pokeball.PokeBallRegistry;
 import com.pixelmonmod.pixelmon.init.registry.PixelmonDataComponents;
 import net.minecraft.core.component.DataComponentMap;
@@ -245,6 +246,17 @@ public class ViewTradesUI {
         var sale = new Sale(trade, (ForgeEnvyPlayer) player);
 
         bank.take(trade.offer().price().getPrice());
+
+        BankAccountProxy.getBankAccount(trade.offer().seller().uniqueId()).thenAccept(bankAccount -> {
+            var price = trade.offer().price().getPrice();
+
+            if (EnvyGTSForge.getConfig().isEnableTax()) {
+                price = price * EnvyGTSForge.getConfig().getTaxRate();
+            }
+
+            bankAccount.add(price);
+        });
+
         EnvyGTSForge.getTradeService().addSale(sale);
         gtsAttribute.addCollectionItem(new CollectionItem(trade, sale));
         NeoForge.EVENT_BUS.post(new TradePurchaseEvent.Post(trade.offer().seller().getPlayer(), (ForgeEnvyPlayer) player, trade));
