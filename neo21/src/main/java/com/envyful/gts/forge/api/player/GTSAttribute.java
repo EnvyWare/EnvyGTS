@@ -59,6 +59,7 @@ public class GTSAttribute extends ManagedForgeAttribute<EnvyGTSForge> implements
 
     public void addCollectionItem(CollectionItem item) {
         this.collections.add(item);
+        item.record();
     }
 
     public boolean hasReachedMaximumTrades() {

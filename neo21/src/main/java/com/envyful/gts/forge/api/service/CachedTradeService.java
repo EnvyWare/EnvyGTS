@@ -5,9 +5,9 @@ import com.envyful.api.neoforge.player.ForgeEnvyPlayer;
 import com.envyful.gts.forge.api.CollectionItem;
 import com.envyful.gts.forge.api.Sale;
 import com.envyful.gts.forge.api.TradeService;
-import com.envyful.gts.forge.api.trade.Trade;
 import com.envyful.gts.forge.api.event.TradeRemoveEvent;
 import com.envyful.gts.forge.api.player.GTSAttribute;
+import com.envyful.gts.forge.api.trade.Trade;
 import net.neoforged.neoforge.common.NeoForge;
 
 import java.util.*;
@@ -58,13 +58,14 @@ public class CachedTradeService implements TradeService {
     protected void onTradeExpire(Trade trade) {
         this.removeListing(trade);
         var collection = new CollectionItem(trade, null);
-        collection.record();
 
         var player = trade.offer().seller().getPlayer();
 
         if (player != null && player.hasAttribute(GTSAttribute.class)) {
             var attribute = player.getAttributeNow(GTSAttribute.class);
             attribute.addCollectionItem(collection);
+        } else {
+            collection.record();
         }
     }
 
