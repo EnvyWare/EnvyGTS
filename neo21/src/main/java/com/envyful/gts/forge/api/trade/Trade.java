@@ -6,6 +6,7 @@ import com.envyful.api.text.Placeholder;
 import com.envyful.gts.forge.api.TradeOffer;
 import com.envyful.gts.forge.api.event.PlaceholderCollectEvent;
 import net.minecraft.server.level.ServerPlayer;
+import net.neoforged.neoforge.common.NeoForge;
 import org.checkerframework.checker.nullness.qual.NonNull;
 
 import java.util.UUID;
@@ -34,6 +35,8 @@ public sealed interface Trade extends Placeholder
     @Override
     default @NonNull ParseResult replace(@NonNull ParseResult parseResult) {
         var event = new PlaceholderCollectEvent(this, this.offer());
+
+        NeoForge.EVENT_BUS.post(event);
 
         for (var placeholder : event.getPlaceholders()) {
             parseResult = placeholder.replace(parseResult);
