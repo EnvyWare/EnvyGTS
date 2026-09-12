@@ -1,6 +1,5 @@
 package com.envyful.gts.forge;
 
-import com.envyful.api.concurrency.UtilConcurrency;
 import com.envyful.api.concurrency.UtilLogger;
 import com.envyful.api.config.database.DatabaseDetailsConfig;
 import com.envyful.api.config.database.DatabaseDetailsRegistry;
@@ -44,7 +43,6 @@ import org.jooq.Table;
 import org.jooq.impl.DSL;
 
 import java.io.IOException;
-import java.util.concurrent.CompletableFuture;
 
 @Mod("envygts")
 public class EnvyGTSForge {
