@@ -8,8 +8,8 @@ import com.envyful.gts.forge.api.TradeService;
 import com.envyful.gts.forge.api.event.TradeRemoveEvent;
 import com.envyful.gts.forge.api.player.GTSAttribute;
 import com.envyful.gts.forge.api.trade.Trade;
+import com.envyful.gts.forge.api.item.TradeItemType;
 import com.envyful.gts.forge.api.trade.TradeHistory;
-import com.envyful.gts.forge.api.trade.TradeHistoryItemType;
 import net.neoforged.neoforge.common.NeoForge;
 
 import java.time.Instant;
@@ -108,7 +108,7 @@ public class CachedTradeService implements TradeService {
     }
 
     @Override
-    public TradeHistory highestPrices(Instant since, TradeHistoryItemType itemType) {
+    public TradeHistory highestPrices(Instant since, TradeItemType itemType) {
         return TradeHistory.EMPTY;
     }
 }

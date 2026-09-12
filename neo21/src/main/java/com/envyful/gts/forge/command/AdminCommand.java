@@ -7,9 +7,11 @@ import com.envyful.api.command.annotate.permission.Permissible;
 import com.envyful.api.neoforge.player.ForgeEnvyPlayer;
 import com.envyful.api.time.UtilTime;
 import com.envyful.gts.forge.EnvyGTSForge;
-import com.envyful.gts.forge.api.trade.TradeHistoryItemTypeFactory;
+import com.envyful.gts.forge.api.item.TradeItemType;
+import com.envyful.gts.forge.api.item.TradeItemTypeFactory;
 
 import java.time.Duration;
+import java.util.List;
 import java.util.Locale;
 
 @Command(
@@ -22,6 +24,8 @@ import java.util.Locale;
 public class AdminCommand {
 
     private static final Duration DEFAULT_PRICE_WINDOW = Duration.ofHours(24);
+
+    private static final List<String> EVERY_TYPE_ALIASES = List.of("all", "any");
 
     @CommandProcessor(executeAsync = false)
     public void onCommand(@Sender ForgeEnvyPlayer player, String[] args) {
@@ -48,10 +52,15 @@ public class AdminCommand {
 
     private void openHighestPrices(ForgeEnvyPlayer player, String[] args) {
         var window = DEFAULT_PRICE_WINDOW;
-        var type = TradeHistoryItemTypeFactory.getDefault();
+        TradeItemType type = null;
 
         for (int i = 1; i < args.length; i++) {
-            var parsedType = TradeHistoryItemTypeFactory.parse(args[i]);
+            if (EVERY_TYPE_ALIASES.contains(args[i].toLowerCase(Locale.ROOT))) {
+                type = null;
+                continue;
+            }
+
+            var parsedType = TradeItemTypeFactory.parse(args[i]);
 
             if (parsedType.isPresent()) {
                 type = parsedType.get();

@@ -14,8 +14,8 @@ import com.envyful.gts.forge.api.trade.ExpiredTrade;
 import com.envyful.gts.forge.api.trade.RemovedTrade;
 import com.envyful.gts.forge.api.trade.SoldTrade;
 import com.envyful.gts.forge.api.trade.Trade;
+import com.envyful.gts.forge.api.item.TradeItemType;
 import com.envyful.gts.forge.api.trade.TradeHistory;
-import com.envyful.gts.forge.api.trade.TradeHistoryItemType;
 import com.envyful.gts.forge.api.GTSDatabase;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import org.jooq.Condition;
@@ -151,15 +151,13 @@ public class jOOQTradeService extends CachedTradeService {
     }
 
     @Override
-    public TradeHistory highestPrices(Instant since, TradeHistoryItemType itemType) {
+    public TradeHistory highestPrices(Instant since, TradeItemType itemType) {
         var condition = GTSDatabase.TRADE_OUTCOMES_TYPE.eq("SOLD")
                 .and(GTSDatabase.SALES_SALE_ID.isNotNull())
                 .and(GTSDatabase.SALES_PURCHASE_TIME.ge(since.toEpochMilli()));
 
-        var tradeItemId = itemType.getTradeItemId();
-
-        if (tradeItemId.isPresent()) {
-            condition = condition.and(GTSDatabase.TRADE_ITEMS_TYPE.eq(tradeItemId.get()));
+        if (itemType != null) {
+            condition = condition.and(GTSDatabase.TRADE_ITEMS_TYPE.eq(itemType.id()));
         }
 
         return this.deserializeHistory(this.historyQuery(condition)

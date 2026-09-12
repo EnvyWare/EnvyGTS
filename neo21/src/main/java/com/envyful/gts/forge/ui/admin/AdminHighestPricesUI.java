@@ -14,8 +14,8 @@ import com.envyful.api.time.UtilTime;
 import com.envyful.api.type.Pair;
 import com.envyful.gts.forge.EnvyGTSForge;
 import com.envyful.gts.forge.api.trade.Trade;
-import com.envyful.gts.forge.api.trade.TradeHistoryItemType;
-import com.envyful.gts.forge.api.trade.TradeHistoryItemTypeFactory;
+import com.envyful.gts.forge.api.item.TradeItemType;
+import com.envyful.gts.forge.api.item.TradeItemTypeFactory;
 import com.pixelmonmod.pixelmon.api.dialogue.DialogueButton;
 import com.pixelmonmod.pixelmon.api.dialogue.DialogueFactory;
 import com.pixelmonmod.pixelmon.api.dialogue.InputPattern;
@@ -81,6 +81,8 @@ public class AdminHighestPricesUI {
             .positions(Pair.of(5, 5))
             .build();
 
+    private String everyTypeDisplayName = "All";
+
     public void openInput(ForgeEnvyPlayer player) {
         player.getParent().closeContainer();
 
@@ -88,11 +90,11 @@ public class AdminHighestPricesUI {
                 .sendTo(player.getParent()), 5);
     }
 
-    public void openHighestPrices(ForgeEnvyPlayer player, Duration window, TradeHistoryItemType type) {
+    public void openHighestPrices(ForgeEnvyPlayer player, Duration window, TradeItemType type) {
         this.openHighestPrices(player, window, type, 1);
     }
 
-    public void openHighestPrices(ForgeEnvyPlayer player, Duration window, TradeHistoryItemType type, int page) {
+    public void openHighestPrices(ForgeEnvyPlayer player, Duration window, TradeItemType type, int page) {
         UtilConcurrency.runAsync(() -> {
             var history = EnvyGTSForge.getTradeService().highestPrices(Instant.now().minus(window), type);
 
@@ -102,7 +104,7 @@ public class AdminHighestPricesUI {
     }
 
     @SuppressWarnings("unchecked")
-    private void openPane(ForgeEnvyPlayer player, List<Trade> trades, Duration window, TradeHistoryItemType type, int page) {
+    private void openPane(ForgeEnvyPlayer player, List<Trade> trades, Duration window, TradeItemType type, int page) {
         var openPage = new AtomicInteger(page);
 
         UtilConfigInterface.paginatedBuilder(trades)
@@ -123,9 +125,9 @@ public class AdminHighestPricesUI {
 
                     UtilConfigItem.builder()
                             .asyncClick(false)
-                            .clickHandler((envyPlayer, clickType) -> this.openHighestPrices(player, window, type.getNext()))
+                            .clickHandler((envyPlayer, clickType) -> this.openHighestPrices(player, window, TradeItemTypeFactory.getNext(type)))
                             .extendedConfigItem(player, pane, this.priceTypeButton,
-                                    (SimplePlaceholder) input -> input.replace("%type%", type.getDisplayName()));
+                                    (SimplePlaceholder) input -> input.replace("%type%", this.displayName(type)));
 
                     UtilConfigItem.builder()
                             .asyncClick(false)
@@ -161,9 +163,13 @@ public class AdminHighestPricesUI {
                                 return;
                             }
 
-                            this.openHighestPrices(player, Duration.ofMillis(parsedDuration.get()), TradeHistoryItemTypeFactory.getDefault());
+                            this.openHighestPrices(player, Duration.ofMillis(parsedDuration.get()), null);
                         })
                         .build());
+    }
+
+    private String displayName(TradeItemType type) {
+        return type == null ? this.everyTypeDisplayName : type.getDisplayName();
     }
 
     private Duration nextWindow(Duration current) {

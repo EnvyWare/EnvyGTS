@@ -17,8 +17,9 @@ import com.envyful.api.sqlite.config.SQLiteDatabaseDetailsConfig;
 import com.envyful.gts.forge.api.TradeService;
 import com.envyful.gts.forge.api.gui.FilterTypeFactory;
 import com.envyful.gts.forge.api.gui.impl.*;
-import com.envyful.gts.forge.api.trade.TradeHistoryItemTypeFactory;
-import com.envyful.gts.forge.api.trade.impl.*;
+import com.envyful.gts.forge.api.item.TradeItemTypeFactory;
+import com.envyful.gts.forge.api.item.type.ItemStackTradeItemType;
+import com.envyful.gts.forge.api.item.type.PokemonTradeItemType;
 import com.envyful.gts.forge.api.service.jOOQTradeService;
 import com.envyful.gts.forge.command.GTSCommand;
 import com.envyful.gts.forge.config.EnvyGTSConfig;
@@ -84,10 +85,9 @@ public class EnvyGTSForge {
         FilterTypeFactory.register(new ItemFilterType());
         FilterTypeFactory.register(new PokemonFilterType());
 
-        TradeHistoryItemTypeFactory.init();
-        TradeHistoryItemTypeFactory.register(new AllTradeHistoryItemType());
-        TradeHistoryItemTypeFactory.register(new PokemonTradeHistoryItemType());
-        TradeHistoryItemTypeFactory.register(new ItemTradeHistoryItemType());
+        TradeItemTypeFactory.init();
+        TradeItemTypeFactory.register(new PokemonTradeItemType());
+        TradeItemTypeFactory.register(new ItemStackTradeItemType());
 
         this.loadConfig();
         this.playerManager.setGlobalSaveMode(DatabaseDetailsRegistry.getRegistry().getKey((Class<DatabaseDetailsConfig>) this.getConfig().getDatabaseDetails().getClass()));

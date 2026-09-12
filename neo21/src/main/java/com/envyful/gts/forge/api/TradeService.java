@@ -2,8 +2,9 @@ package com.envyful.gts.forge.api;
 
 import com.envyful.api.neoforge.player.ForgeEnvyPlayer;
 import com.envyful.gts.forge.api.trade.Trade;
+import com.envyful.gts.forge.api.item.TradeItemType;
 import com.envyful.gts.forge.api.trade.TradeHistory;
-import com.envyful.gts.forge.api.trade.TradeHistoryItemType;
+import org.jetbrains.annotations.Nullable;
 
 import java.time.Instant;
 import java.util.List;
@@ -36,6 +37,6 @@ public interface TradeService {
 
     TradeHistory historicalListings(String playerQuery);
 
-    TradeHistory highestPrices(Instant since, TradeHistoryItemType itemType);
+    TradeHistory highestPrices(Instant since, @Nullable TradeItemType itemType);
 
 }
