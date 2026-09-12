@@ -8,6 +8,10 @@ import com.envyful.api.config.type.PaginatedConfigInterface;
 import com.envyful.api.config.yaml.AbstractYamlConfig;
 import com.envyful.api.reforged.pixelmon.config.SpriteConfig;
 import com.envyful.api.type.Pair;
+import com.envyful.gts.forge.ui.admin.AdminHighestPricesUI;
+import com.envyful.gts.forge.ui.admin.AdminTradeDetailUI;
+import com.envyful.gts.forge.ui.admin.AdminTradeHistoryUI;
+import com.envyful.gts.forge.ui.admin.AdminTradesUI;
 import com.envyful.gts.forge.ui.ViewTradesUI;
 import com.google.common.collect.Lists;
 import org.spongepowered.configurate.objectmapping.ConfigSerializable;
@@ -23,6 +27,10 @@ public class GuiConfig extends AbstractYamlConfig {
     private SelectFromPCConfig pcConfig = new SelectFromPCConfig();
     private SellHandOrParty sellHandOrParty = new SellHandOrParty();
     private Returns returnsGui = new Returns();
+    private AdminTradesUI adminTradesUI = new AdminTradesUI();
+    private AdminTradeHistoryUI adminTradeHistoryUI = new AdminTradeHistoryUI();
+    private AdminHighestPricesUI adminHighestPricesUI = new AdminHighestPricesUI();
+    private AdminTradeDetailUI adminTradeDetailUI = new AdminTradeDetailUI();
 
     private SpriteConfig spriteConfig = SpriteConfig.DEFAULT;
 
@@ -48,6 +56,22 @@ public class GuiConfig extends AbstractYamlConfig {
 
     public Returns getReturnsGui() {
         return this.returnsGui;
+    }
+
+    public AdminTradesUI getAdminTradesUI() {
+        return this.adminTradesUI;
+    }
+
+    public AdminTradeHistoryUI getAdminTradeHistoryUI() {
+        return this.adminTradeHistoryUI;
+    }
+
+    public AdminHighestPricesUI getAdminHighestPricesUI() {
+        return this.adminHighestPricesUI;
+    }
+
+    public AdminTradeDetailUI getAdminTradeDetailUI() {
+        return this.adminTradeDetailUI;
     }
 
     public SpriteConfig getSpriteConfig() {
