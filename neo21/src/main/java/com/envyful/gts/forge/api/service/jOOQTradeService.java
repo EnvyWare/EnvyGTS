@@ -1,20 +1,42 @@
 package com.envyful.gts.forge.api.service;
 
 import com.envyful.api.concurrency.UtilConcurrency;
+import com.envyful.api.neoforge.player.ForgeEnvyPlayer;
 import com.envyful.gts.forge.EnvyGTSForge;
+import com.envyful.gts.forge.api.RemovalInfo;
 import com.envyful.gts.forge.api.Sale;
 import com.envyful.gts.forge.api.TradeOffer;
 import com.envyful.gts.forge.api.item.TradeItem;
 import com.envyful.gts.forge.api.money.InstantPurchaseMoney;
 import com.envyful.gts.forge.api.player.PlayerInfo;
 import com.envyful.gts.forge.api.trade.ActiveTrade;
+import com.envyful.gts.forge.api.trade.ExpiredTrade;
+import com.envyful.gts.forge.api.trade.RemovedTrade;
+import com.envyful.gts.forge.api.trade.SoldTrade;
 import com.envyful.gts.forge.api.trade.Trade;
+import com.envyful.gts.forge.api.trade.TradeHistory;
+import com.envyful.gts.forge.api.trade.TradeHistoryItemType;
 import com.envyful.gts.forge.api.GTSDatabase;
+import com.mojang.brigadier.exceptions.CommandSyntaxException;
+import org.jooq.Condition;
+import org.jooq.Field;
+import org.jooq.OrderField;
+import org.jooq.Record;
+import org.jooq.impl.DSL;
 
 import java.time.Instant;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
 import java.util.UUID;
 
 public class jOOQTradeService extends CachedTradeService {
+
+    private static final PlayerInfo UNKNOWN_PLAYER = new PlayerInfo(new UUID(0L, 0L), "Unknown");
+
+    private static final int MAX_HISTORY_RESULTS = 1000;
+
+    private static final Field<Long> OUTCOME_TIME = DSL.coalesce(GTSDatabase.SALES_PURCHASE_TIME, GTSDatabase.TRADE_OUTCOMES_TIME);
 
     public jOOQTradeService() {
         super();
@@ -68,6 +90,42 @@ public class jOOQTradeService extends CachedTradeService {
         } catch (Exception e) {
             throw new RuntimeException("Failed to load active trades from database", e);
         }
+    }
+
+    @Override
+    public TradeHistory historicalListings() {
+        return this.fetchHistory(DSL.noCondition(), OUTCOME_TIME.desc());
+    }
+
+    @Override
+    public TradeHistory historicalListings(ForgeEnvyPlayer player) {
+        return this.historicalListings(player.getUniqueId().toString());
+    }
+
+    @Override
+    public TradeHistory historicalListings(String playerQuery) {
+        return this.fetchHistory(
+                GTSDatabase.TRADES_SELLER_UUID.equalIgnoreCase(playerQuery)
+                        .or(GTSDatabase.TRADES_SELLER_NAME.equalIgnoreCase(playerQuery))
+                        .or(GTSDatabase.SALES_BUYER_UUID.equalIgnoreCase(playerQuery))
+                        .or(GTSDatabase.SALES_BUYER_NAME.equalIgnoreCase(playerQuery)),
+                OUTCOME_TIME.desc()
+        );
+    }
+
+    @Override
+    public TradeHistory highestPrices(Instant since, TradeHistoryItemType itemType) {
+        var condition = GTSDatabase.TRADE_OUTCOMES_TYPE.equalIgnoreCase("SOLD")
+                .and(GTSDatabase.SALES_SALE_ID.isNotNull())
+                .and(GTSDatabase.SALES_PURCHASE_TIME.ge(since.toEpochMilli()));
+
+        if (itemType.getTradeItemId() != null) {
+            condition = condition.and(GTSDatabase.TRADE_ITEMS_TYPE.equalIgnoreCase(itemType.getTradeItemId()));
+        }
+
+        return this.fetchHistory(condition,
+                GTSDatabase.SALES_PURCHASE_PRICE.desc(),
+                GTSDatabase.SALES_PURCHASE_TIME.desc());
     }
 
     @Override
@@ -150,5 +208,107 @@ public class jOOQTradeService extends CachedTradeService {
                 .set(GTSDatabase.TRADE_OUTCOMES_TYPE, "OWNER_REMOVED")
                 .set(GTSDatabase.TRADE_OUTCOMES_TIME, System.currentTimeMillis())
                 .executeAsync(UtilConcurrency.SCHEDULED_EXECUTOR_SERVICE);
+    }
+
+    private TradeHistory fetchHistory(Condition condition, OrderField<?>... ordering) {
+        var records = EnvyGTSForge.getDSLContext()
+                .select(
+                        GTSDatabase.TRADES_OFFER_ID,
+                        GTSDatabase.TRADES_SELLER_UUID,
+                        GTSDatabase.TRADES_SELLER_NAME,
+                        GTSDatabase.TRADES_CREATION_TIME,
+                        GTSDatabase.TRADES_EXPIRY_TIME,
+                        GTSDatabase.TRADES_PRICE,
+                        GTSDatabase.TRADE_ITEMS_TYPE,
+                        GTSDatabase.TRADE_ITEMS_DATA,
+                        GTSDatabase.TRADE_OUTCOMES_TYPE,
+                        GTSDatabase.TRADE_OUTCOMES_TIME,
+                        GTSDatabase.SALES_SALE_ID,
+                        GTSDatabase.SALES_OFFER_ID,
+                        GTSDatabase.SALES_BUYER_UUID,
+                        GTSDatabase.SALES_BUYER_NAME,
+                        GTSDatabase.SALES_PURCHASE_TIME,
+                        GTSDatabase.SALES_PURCHASE_PRICE
+                )
+                .from(GTSDatabase.TRADES)
+                .join(GTSDatabase.TRADE_ITEMS)
+                .on(GTSDatabase.TRADE_ITEMS_OFFER_ID.eq(GTSDatabase.TRADES_OFFER_ID))
+                .join(GTSDatabase.TRADE_OUTCOMES)
+                .on(GTSDatabase.TRADE_OUTCOMES_OFFER_ID.eq(GTSDatabase.TRADES_OFFER_ID))
+                .leftJoin(GTSDatabase.SALES)
+                .on(GTSDatabase.SALES_OFFER_ID.eq(GTSDatabase.TRADES_OFFER_ID))
+                .where(condition)
+                .orderBy(ordering)
+                .maxRows(MAX_HISTORY_RESULTS)
+                .fetch();
+
+        var history = new ArrayList<Trade>();
+        var failed = 0;
+
+        for (var record : records) {
+            try {
+                history.add(this.deserializeHistoricalTrade(record));
+            } catch (Exception e) {
+                ++failed;
+                EnvyGTSForge.getLogger().error("Failed to read historical GTS trade {} from the database",
+                        record.get(GTSDatabase.TRADES_OFFER_ID), e);
+            }
+        }
+
+        if (failed > 0) {
+            EnvyGTSForge.getLogger().error("{} of the {} historical GTS trades read could not be deserialized and have been omitted",
+                    failed, records.size());
+        }
+
+        return new TradeHistory(List.copyOf(history), failed);
+    }
+
+    private Trade deserializeHistoricalTrade(Record record) throws CommandSyntaxException {
+        var tradeId = UUID.fromString(record.get(GTSDatabase.TRADES_OFFER_ID));
+        var offer = new TradeOffer(
+                tradeId,
+                new PlayerInfo(
+                        UUID.fromString(record.get(GTSDatabase.TRADES_SELLER_UUID)),
+                        record.get(GTSDatabase.TRADES_SELLER_NAME)
+                ),
+                Instant.ofEpochMilli(record.get(GTSDatabase.TRADES_CREATION_TIME)),
+                Instant.ofEpochMilli(record.get(GTSDatabase.TRADES_EXPIRY_TIME)),
+                TradeItem.deserialize(
+                        record.get(GTSDatabase.TRADE_ITEMS_TYPE),
+                        record.get(GTSDatabase.TRADE_ITEMS_DATA)
+                ),
+                new InstantPurchaseMoney(record.get(GTSDatabase.TRADES_PRICE))
+        );
+
+        var outcomeType = record.get(GTSDatabase.TRADE_OUTCOMES_TYPE);
+        var outcomeTime = Instant.ofEpochMilli(record.get(GTSDatabase.TRADE_OUTCOMES_TIME));
+        var sale = this.deserializeSale(record);
+
+        return switch (outcomeType.toUpperCase(Locale.ROOT)) {
+            case "SOLD" -> sale == null ?
+                    new RemovedTrade(offer, new RemovalInfo(UNKNOWN_PLAYER, outcomeTime, "SOLD")) :
+                    new SoldTrade(offer, sale);
+            case "EXPIRED" -> new ExpiredTrade(offer, outcomeTime);
+            default -> new RemovedTrade(offer, new RemovalInfo(UNKNOWN_PLAYER, outcomeTime, outcomeType));
+        };
+    }
+
+    private Sale deserializeSale(Record record) {
+        var saleId = record.get(GTSDatabase.SALES_SALE_ID);
+
+        if (saleId == null) {
+            return null;
+        }
+
+        return new Sale(
+                UUID.fromString(saleId),
+                UUID.fromString(record.get(GTSDatabase.SALES_OFFER_ID)),
+                new PlayerInfo(
+                        UUID.fromString(record.get(GTSDatabase.SALES_BUYER_UUID)),
+                        record.get(GTSDatabase.SALES_BUYER_NAME)
+                ),
+                Instant.ofEpochMilli(record.get(GTSDatabase.SALES_PURCHASE_TIME)),
+                record.get(GTSDatabase.SALES_PURCHASE_PRICE)
+        );
     }
 }

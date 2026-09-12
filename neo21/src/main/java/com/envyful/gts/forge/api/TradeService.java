@@ -2,7 +2,10 @@ package com.envyful.gts.forge.api;
 
 import com.envyful.api.neoforge.player.ForgeEnvyPlayer;
 import com.envyful.gts.forge.api.trade.Trade;
+import com.envyful.gts.forge.api.trade.TradeHistory;
+import com.envyful.gts.forge.api.trade.TradeHistoryItemType;
 
+import java.time.Instant;
 import java.util.List;
 import java.util.UUID;
 
@@ -27,8 +30,12 @@ public interface TradeService {
 
     void addSale(Sale sale);
 
-    List<Trade> historicalListings();
+    TradeHistory historicalListings();
 
-    List<Trade> historicalListings(ForgeEnvyPlayer player);
+    TradeHistory historicalListings(ForgeEnvyPlayer player);
+
+    TradeHistory historicalListings(String playerQuery);
+
+    TradeHistory highestPrices(Instant since, TradeHistoryItemType itemType);
 
 }
