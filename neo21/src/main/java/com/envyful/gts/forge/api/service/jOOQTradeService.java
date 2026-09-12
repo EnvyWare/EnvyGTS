@@ -119,8 +119,10 @@ public class jOOQTradeService extends CachedTradeService {
                 .and(GTSDatabase.SALES_SALE_ID.isNotNull())
                 .and(GTSDatabase.SALES_PURCHASE_TIME.ge(since.toEpochMilli()));
 
-        if (itemType.getTradeItemId() != null) {
-            condition = condition.and(GTSDatabase.TRADE_ITEMS_TYPE.equalIgnoreCase(itemType.getTradeItemId()));
+        var tradeItemId = itemType.getTradeItemId();
+
+        if (tradeItemId.isPresent()) {
+            condition = condition.and(GTSDatabase.TRADE_ITEMS_TYPE.eq(tradeItemId.get()));
         }
 
         return this.fetchHistory(condition,

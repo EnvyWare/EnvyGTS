@@ -7,7 +7,7 @@ import com.envyful.api.command.annotate.permission.Permissible;
 import com.envyful.api.neoforge.player.ForgeEnvyPlayer;
 import com.envyful.api.time.UtilTime;
 import com.envyful.gts.forge.EnvyGTSForge;
-import com.envyful.gts.forge.api.trade.TradeHistoryItemType;
+import com.envyful.gts.forge.api.trade.TradeHistoryItemTypeFactory;
 
 import java.time.Duration;
 import java.util.Locale;
@@ -48,10 +48,10 @@ public class AdminCommand {
 
     private void openHighestPrices(ForgeEnvyPlayer player, String[] args) {
         var window = DEFAULT_PRICE_WINDOW;
-        var type = TradeHistoryItemType.ALL;
+        var type = TradeHistoryItemTypeFactory.getDefault();
 
         for (int i = 1; i < args.length; i++) {
-            var parsedType = TradeHistoryItemType.parse(args[i]);
+            var parsedType = TradeHistoryItemTypeFactory.parse(args[i]);
 
             if (parsedType.isPresent()) {
                 type = parsedType.get();

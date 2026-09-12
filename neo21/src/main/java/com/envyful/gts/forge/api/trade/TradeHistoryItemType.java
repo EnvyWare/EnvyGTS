@@ -1,48 +1,18 @@
 package com.envyful.gts.forge.api.trade;
 
-import java.util.Locale;
+import java.util.List;
 import java.util.Optional;
 
-public enum TradeHistoryItemType {
+public interface TradeHistoryItemType {
 
-    ALL("All", null),
-    ITEM("Items", "item"),
-    POKEMON("Pokemon", "pokemon");
+    String getDisplayName();
 
-    private final String displayName;
-    private final String tradeItemId;
+    Optional<String> getTradeItemId();
 
-    TradeHistoryItemType(String displayName, String tradeItemId) {
-        this.displayName = displayName;
-        this.tradeItemId = tradeItemId;
+    List<String> getAliases();
+
+    default TradeHistoryItemType getNext() {
+        return TradeHistoryItemTypeFactory.getNext(this);
     }
 
-    public String getDisplayName() {
-        return this.displayName;
-    }
-
-    public String getTradeItemId() {
-        return this.tradeItemId;
-    }
-
-    public boolean allows(Trade trade) {
-        return this.tradeItemId == null || trade.offer().item().id().equalsIgnoreCase(this.tradeItemId);
-    }
-
-    public TradeHistoryItemType getNext() {
-        return switch (this) {
-            case ALL -> POKEMON;
-            case POKEMON -> ITEM;
-            case ITEM -> ALL;
-        };
-    }
-
-    public static Optional<TradeHistoryItemType> parse(String input) {
-        return switch (input.toLowerCase(Locale.ROOT)) {
-            case "all", "any" -> Optional.of(ALL);
-            case "item", "items" -> Optional.of(ITEM);
-            case "pokemon", "poke", "pokes" -> Optional.of(POKEMON);
-            default -> Optional.empty();
-        };
-    }
 }

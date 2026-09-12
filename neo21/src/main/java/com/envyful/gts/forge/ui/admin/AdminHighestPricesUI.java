@@ -15,6 +15,7 @@ import com.envyful.api.type.Pair;
 import com.envyful.gts.forge.EnvyGTSForge;
 import com.envyful.gts.forge.api.trade.Trade;
 import com.envyful.gts.forge.api.trade.TradeHistoryItemType;
+import com.envyful.gts.forge.api.trade.TradeHistoryItemTypeFactory;
 import com.pixelmonmod.pixelmon.api.dialogue.DialogueButton;
 import com.pixelmonmod.pixelmon.api.dialogue.DialogueFactory;
 import com.pixelmonmod.pixelmon.api.dialogue.InputPattern;
@@ -160,7 +161,7 @@ public class AdminHighestPricesUI {
                                 return;
                             }
 
-                            this.openHighestPrices(player, Duration.ofMillis(parsedDuration.get()), TradeHistoryItemType.ALL);
+                            this.openHighestPrices(player, Duration.ofMillis(parsedDuration.get()), TradeHistoryItemTypeFactory.getDefault());
                         })
                         .build());
     }
