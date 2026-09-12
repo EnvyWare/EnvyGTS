@@ -6,15 +6,10 @@ import com.envyful.api.config.type.ConfigItem;
 import com.envyful.api.config.type.ExtendedConfigItem;
 import com.envyful.api.config.type.PaginatedConfigInterface;
 import com.envyful.api.config.yaml.AbstractYamlConfig;
-import com.envyful.api.neoforge.config.yaml.YamlOps;
-import com.envyful.api.neoforge.gui.type.ConfirmationUI;
 import com.envyful.api.reforged.pixelmon.config.SpriteConfig;
 import com.envyful.api.type.Pair;
 import com.envyful.gts.forge.ui.ViewTradesUI;
 import com.google.common.collect.Lists;
-import com.pixelmonmod.pixelmon.api.pokemon.item.pokeball.PokeBallRegistry;
-import com.pixelmonmod.pixelmon.init.registry.PixelmonDataComponents;
-import net.minecraft.core.component.DataComponentMap;
 import org.spongepowered.configurate.objectmapping.ConfigSerializable;
 
 import java.util.List;
