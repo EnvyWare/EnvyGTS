@@ -38,7 +38,9 @@ import net.neoforged.neoforge.event.server.ServerStartedEvent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jooq.DSLContext;
+import org.jooq.Field;
 import org.jooq.SQLDialect;
+import org.jooq.Table;
 import org.jooq.impl.DSL;
 
 import java.io.IOException;
@@ -99,6 +101,7 @@ public class EnvyGTSForge {
         dslContext = DSL.using(this.database, this.config.getDatabaseDetails() instanceof SQLiteDatabaseDetailsConfig ? SQLDialect.SQLITE : SQLDialect.MARIADB);
 
         createTables();
+        createIndexes();
         tradeService = new jOOQTradeService();
     }
 
@@ -216,5 +219,25 @@ public class EnvyGTSForge {
                 .constraint(DSL.foreignKey(GTSDatabase.COLLECTIONS_SALE_ID).references(GTSDatabase.SALES, GTSDatabase.SALES_SALE_ID))
                 .constraint(DSL.foreignKey(GTSDatabase.COLLECTIONS_OFFER_ID).references(GTSDatabase.TRADES, GTSDatabase.TRADES_OFFER_ID))
                 .execute();
+    }
+
+    private void createIndexes() {
+        this.createIndex("idx_envy_gts_trades_seller_uuid", GTSDatabase.TRADES, GTSDatabase.TRADES_SELLER_UUID);
+        this.createIndex("idx_envy_gts_trades_seller_name", GTSDatabase.TRADES, GTSDatabase.TRADES_SELLER_NAME);
+        this.createIndex("idx_envy_gts_trade_items_type", GTSDatabase.TRADE_ITEMS, GTSDatabase.TRADE_ITEMS_TYPE);
+        this.createIndex("idx_envy_gts_trade_outcomes_time", GTSDatabase.TRADE_OUTCOMES, GTSDatabase.TRADE_OUTCOMES_TIME);
+        this.createIndex("idx_envy_gts_trade_outcomes_type", GTSDatabase.TRADE_OUTCOMES, GTSDatabase.TRADE_OUTCOMES_TYPE);
+        this.createIndex("idx_envy_gts_sales_buyer_uuid", GTSDatabase.SALES, GTSDatabase.SALES_BUYER_UUID);
+        this.createIndex("idx_envy_gts_sales_buyer_name", GTSDatabase.SALES, GTSDatabase.SALES_BUYER_NAME);
+        this.createIndex("idx_envy_gts_sales_purchase_time", GTSDatabase.SALES, GTSDatabase.SALES_PURCHASE_TIME);
+        this.createIndex("idx_envy_gts_sales_purchase_price", GTSDatabase.SALES, GTSDatabase.SALES_PURCHASE_PRICE);
+    }
+
+    private void createIndex(String name, Table<?> table, Field<?> column) {
+        try {
+            dslContext.createIndex(name).on(table, column).execute();
+        } catch (Exception e) {
+            LOGGER.debug("Did not create the GTS index {}, it most likely already exists", name, e);
+        }
     }
 }
