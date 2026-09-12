@@ -19,9 +19,10 @@ import com.envyful.gts.forge.api.trade.TradeHistoryItemType;
 import com.envyful.gts.forge.api.GTSDatabase;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import org.jooq.Condition;
-import org.jooq.Field;
-import org.jooq.OrderField;
 import org.jooq.Record;
+import org.jooq.Result;
+import org.jooq.SelectConditionStep;
+import org.jooq.SelectFieldOrAsterisk;
 import org.jooq.impl.DSL;
 
 import java.time.Instant;
@@ -36,7 +37,24 @@ public class jOOQTradeService extends CachedTradeService {
 
     private static final int MAX_HISTORY_RESULTS = 1000;
 
-    private static final Field<Long> OUTCOME_TIME = DSL.coalesce(GTSDatabase.SALES_PURCHASE_TIME, GTSDatabase.TRADE_OUTCOMES_TIME);
+    private static final List<SelectFieldOrAsterisk> HISTORY_FIELDS = List.of(
+            GTSDatabase.TRADES_OFFER_ID,
+            GTSDatabase.TRADES_SELLER_UUID,
+            GTSDatabase.TRADES_SELLER_NAME,
+            GTSDatabase.TRADES_CREATION_TIME,
+            GTSDatabase.TRADES_EXPIRY_TIME,
+            GTSDatabase.TRADES_PRICE,
+            GTSDatabase.TRADE_ITEMS_TYPE,
+            GTSDatabase.TRADE_ITEMS_DATA,
+            GTSDatabase.TRADE_OUTCOMES_TYPE,
+            GTSDatabase.TRADE_OUTCOMES_TIME,
+            GTSDatabase.SALES_SALE_ID,
+            GTSDatabase.SALES_OFFER_ID,
+            GTSDatabase.SALES_BUYER_UUID,
+            GTSDatabase.SALES_BUYER_NAME,
+            GTSDatabase.SALES_PURCHASE_TIME,
+            GTSDatabase.SALES_PURCHASE_PRICE
+    );
 
     public jOOQTradeService() {
         super();
@@ -94,7 +112,10 @@ public class jOOQTradeService extends CachedTradeService {
 
     @Override
     public TradeHistory historicalListings() {
-        return this.fetchHistory(DSL.noCondition(), OUTCOME_TIME.desc());
+        return this.deserializeHistory(this.historyQuery(DSL.noCondition())
+                .orderBy(GTSDatabase.TRADE_OUTCOMES_TIME.desc())
+                .maxRows(MAX_HISTORY_RESULTS)
+                .fetch());
     }
 
     @Override
@@ -104,18 +125,34 @@ public class jOOQTradeService extends CachedTradeService {
 
     @Override
     public TradeHistory historicalListings(String playerQuery) {
-        return this.fetchHistory(
-                GTSDatabase.TRADES_SELLER_UUID.equalIgnoreCase(playerQuery)
-                        .or(GTSDatabase.TRADES_SELLER_NAME.equalIgnoreCase(playerQuery))
-                        .or(GTSDatabase.SALES_BUYER_UUID.equalIgnoreCase(playerQuery))
-                        .or(GTSDatabase.SALES_BUYER_NAME.equalIgnoreCase(playerQuery)),
-                OUTCOME_TIME.desc()
-        );
+        var exactMatch = this.involvedListings(playerQuery, false);
+
+        return exactMatch.trades().isEmpty() ? this.involvedListings(playerQuery, true) : exactMatch;
+    }
+
+    private TradeHistory involvedListings(String playerQuery, boolean ignoreNameCase) {
+        var uniqueId = playerQuery.toLowerCase(Locale.ROOT);
+
+        var seller = GTSDatabase.TRADES_SELLER_UUID.eq(uniqueId)
+                .or(ignoreNameCase ?
+                        GTSDatabase.TRADES_SELLER_NAME.equalIgnoreCase(playerQuery) :
+                        GTSDatabase.TRADES_SELLER_NAME.eq(playerQuery));
+
+        var buyer = GTSDatabase.SALES_BUYER_UUID.eq(uniqueId)
+                .or(ignoreNameCase ?
+                        GTSDatabase.SALES_BUYER_NAME.equalIgnoreCase(playerQuery) :
+                        GTSDatabase.SALES_BUYER_NAME.eq(playerQuery));
+
+        return this.deserializeHistory(this.historyQuery(seller)
+                .union(this.historyQuery(buyer))
+                .orderBy(GTSDatabase.TRADE_OUTCOMES_TIME.desc())
+                .maxRows(MAX_HISTORY_RESULTS)
+                .fetch());
     }
 
     @Override
     public TradeHistory highestPrices(Instant since, TradeHistoryItemType itemType) {
-        var condition = GTSDatabase.TRADE_OUTCOMES_TYPE.equalIgnoreCase("SOLD")
+        var condition = GTSDatabase.TRADE_OUTCOMES_TYPE.eq("SOLD")
                 .and(GTSDatabase.SALES_SALE_ID.isNotNull())
                 .and(GTSDatabase.SALES_PURCHASE_TIME.ge(since.toEpochMilli()));
 
@@ -125,9 +162,10 @@ public class jOOQTradeService extends CachedTradeService {
             condition = condition.and(GTSDatabase.TRADE_ITEMS_TYPE.eq(tradeItemId.get()));
         }
 
-        return this.fetchHistory(condition,
-                GTSDatabase.SALES_PURCHASE_PRICE.desc(),
-                GTSDatabase.SALES_PURCHASE_TIME.desc());
+        return this.deserializeHistory(this.historyQuery(condition)
+                .orderBy(GTSDatabase.SALES_PURCHASE_PRICE.desc(), GTSDatabase.SALES_PURCHASE_TIME.desc())
+                .maxRows(MAX_HISTORY_RESULTS)
+                .fetch());
     }
 
     @Override
@@ -212,26 +250,9 @@ public class jOOQTradeService extends CachedTradeService {
                 .executeAsync(UtilConcurrency.SCHEDULED_EXECUTOR_SERVICE);
     }
 
-    private TradeHistory fetchHistory(Condition condition, OrderField<?>... ordering) {
-        var records = EnvyGTSForge.getDSLContext()
-                .select(
-                        GTSDatabase.TRADES_OFFER_ID,
-                        GTSDatabase.TRADES_SELLER_UUID,
-                        GTSDatabase.TRADES_SELLER_NAME,
-                        GTSDatabase.TRADES_CREATION_TIME,
-                        GTSDatabase.TRADES_EXPIRY_TIME,
-                        GTSDatabase.TRADES_PRICE,
-                        GTSDatabase.TRADE_ITEMS_TYPE,
-                        GTSDatabase.TRADE_ITEMS_DATA,
-                        GTSDatabase.TRADE_OUTCOMES_TYPE,
-                        GTSDatabase.TRADE_OUTCOMES_TIME,
-                        GTSDatabase.SALES_SALE_ID,
-                        GTSDatabase.SALES_OFFER_ID,
-                        GTSDatabase.SALES_BUYER_UUID,
-                        GTSDatabase.SALES_BUYER_NAME,
-                        GTSDatabase.SALES_PURCHASE_TIME,
-                        GTSDatabase.SALES_PURCHASE_PRICE
-                )
+    private SelectConditionStep<Record> historyQuery(Condition condition) {
+        return EnvyGTSForge.getDSLContext()
+                .select(HISTORY_FIELDS)
                 .from(GTSDatabase.TRADES)
                 .join(GTSDatabase.TRADE_ITEMS)
                 .on(GTSDatabase.TRADE_ITEMS_OFFER_ID.eq(GTSDatabase.TRADES_OFFER_ID))
@@ -239,11 +260,10 @@ public class jOOQTradeService extends CachedTradeService {
                 .on(GTSDatabase.TRADE_OUTCOMES_OFFER_ID.eq(GTSDatabase.TRADES_OFFER_ID))
                 .leftJoin(GTSDatabase.SALES)
                 .on(GTSDatabase.SALES_OFFER_ID.eq(GTSDatabase.TRADES_OFFER_ID))
-                .where(condition)
-                .orderBy(ordering)
-                .maxRows(MAX_HISTORY_RESULTS)
-                .fetch();
+                .where(condition);
+    }
 
+    private TradeHistory deserializeHistory(Result<Record> records) {
         var history = new ArrayList<Trade>();
         var failed = 0;
 
