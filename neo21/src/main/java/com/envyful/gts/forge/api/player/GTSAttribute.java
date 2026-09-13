@@ -65,7 +65,11 @@ public class GTSAttribute extends ManagedForgeAttribute<EnvyGTSForge> implements
     public boolean hasReachedMaximumTrades() {
         var ownedTrades = this.getOwnedTrades();
 
-        return ownedTrades.size() >= EnvyGTSForge.getConfig().getMaxListingsPerUser();
+        return ownedTrades.size() >= this.getMaxTrades();
+    }
+
+    public int getMaxTrades() {
+        return EnvyGTSForge.getConfig().getMaxListings(this.parent);
     }
 
     public double getCurrentPrice() {
