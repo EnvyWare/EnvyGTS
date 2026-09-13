@@ -12,6 +12,11 @@ import com.envyful.gts.forge.ui.admin.AdminHighestPricesUI;
 import com.envyful.gts.forge.ui.admin.AdminTradeDetailUI;
 import com.envyful.gts.forge.ui.admin.AdminTradeHistoryUI;
 import com.envyful.gts.forge.ui.admin.AdminTradesUI;
+import com.envyful.gts.forge.ui.market.MarketTradeDetailUI;
+import com.envyful.gts.forge.ui.market.MarketUI;
+import com.envyful.gts.forge.ui.market.PriceListUI;
+import com.envyful.gts.forge.ui.market.PriceStatisticsUI;
+import com.envyful.gts.forge.ui.market.RecentTradesUI;
 import com.envyful.gts.forge.ui.ViewTradesUI;
 import com.google.common.collect.Lists;
 import org.spongepowered.configurate.objectmapping.ConfigSerializable;
@@ -31,6 +36,11 @@ public class GuiConfig extends AbstractYamlConfig {
     private AdminTradeHistoryUI adminTradeHistoryUI = new AdminTradeHistoryUI();
     private AdminHighestPricesUI adminHighestPricesUI = new AdminHighestPricesUI();
     private AdminTradeDetailUI adminTradeDetailUI = new AdminTradeDetailUI();
+    private MarketUI marketUI = new MarketUI();
+    private RecentTradesUI recentTradesUI = new RecentTradesUI();
+    private PriceStatisticsUI priceStatisticsUI = new PriceStatisticsUI();
+    private PriceListUI priceListUI = new PriceListUI();
+    private MarketTradeDetailUI marketTradeDetailUI = new MarketTradeDetailUI();
 
     private SpriteConfig spriteConfig = SpriteConfig.DEFAULT;
 
@@ -72,6 +82,26 @@ public class GuiConfig extends AbstractYamlConfig {
 
     public AdminTradeDetailUI getAdminTradeDetailUI() {
         return this.adminTradeDetailUI;
+    }
+
+    public MarketUI getMarketUI() {
+        return this.marketUI;
+    }
+
+    public RecentTradesUI getRecentTradesUI() {
+        return this.recentTradesUI;
+    }
+
+    public PriceStatisticsUI getPriceStatisticsUI() {
+        return this.priceStatisticsUI;
+    }
+
+    public PriceListUI getPriceListUI() {
+        return this.priceListUI;
+    }
+
+    public MarketTradeDetailUI getMarketTradeDetailUI() {
+        return this.marketTradeDetailUI;
     }
 
     public SpriteConfig getSpriteConfig() {

@@ -88,6 +88,14 @@ public class ViewTradesUI {
                             .set(PixelmonDataComponents.POKE_BALL, PokeBallRegistry.NET_BALL).build(), YamlOps.INSTANCE, YamlOps.INSTANCE.empty()).getOrThrow())
             .build();
 
+    private ExtendedConfigItem marketButton = ExtendedConfigItem.builder()
+            .type("minecraft:book")
+            .amount(1)
+            .name("&bMarket Info")
+            .lore("&7Browse the recent trades and the", "&7prices things have sold for")
+            .positions(Pair.of(3, 5))
+            .build();
+
     private ExtendedConfigItem orderButton = ExtendedConfigItem.builder()
             .type("pixelmon:blue_orb")
             .amount(1)
@@ -183,6 +191,10 @@ public class ViewTradesUI {
                     UtilConfigItem.builder()
                             .clickHandler((envyPlayer, clickType) -> ReturnsUI.openUI(player))
                             .extendedConfigItem(player, pane, this.returnsButton);
+
+                    UtilConfigItem.builder()
+                            .clickHandler((envyPlayer, clickType) -> EnvyGTSForge.getGui().getMarketUI().openMenu(player))
+                            .extendedConfigItem(player, pane, this.marketButton);
 
                     UtilConfigItem.builder()
                             .clickHandler((envyPlayer, clickType) -> openUI(player, page, filter, sort.getNext()))
