@@ -41,6 +41,10 @@ public class GTSDatabase {
 
     public static final Field<String> TRADE_ITEMS_DATA = DSL.field(DSL.name("envy_gts_trade_items", "item_data"), SQLDataType.CLOB);
 
+    public static final Field<String> TRADE_ITEMS_NAME = DSL.field(DSL.name("envy_gts_trade_items", "item_name"), SQLDataType.VARCHAR(255));
+
+    public static final Field<String> TRADE_ITEMS_SEARCH_KEY = DSL.field(DSL.name("envy_gts_trade_items", "item_search_key"), SQLDataType.VARCHAR(255));
+
     /**
      *
      * Trade Outcomes

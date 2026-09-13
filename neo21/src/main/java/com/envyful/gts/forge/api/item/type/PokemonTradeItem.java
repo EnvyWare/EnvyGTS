@@ -13,6 +13,8 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.server.ServerLifecycleHooks;
 
+import java.util.Locale;
+
 public class PokemonTradeItem implements TradeItem {
 
     private final Pokemon pokemon;
@@ -38,6 +40,11 @@ public class PokemonTradeItem implements TradeItem {
     @Override
     public String displayName() {
         return this.pokemon.getDisplayName().getString();
+    }
+
+    @Override
+    public String searchKey() {
+        return this.pokemon.getSpecies().getName().toLowerCase(Locale.ROOT);
     }
 
     public Pokemon getPokemon() {

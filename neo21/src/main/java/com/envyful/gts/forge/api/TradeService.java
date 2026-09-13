@@ -1,12 +1,11 @@
 package com.envyful.gts.forge.api;
 
 import com.envyful.api.neoforge.player.ForgeEnvyPlayer;
+import com.envyful.gts.forge.api.trade.PriceStatistics;
 import com.envyful.gts.forge.api.trade.Trade;
-import com.envyful.gts.forge.api.item.TradeItemType;
 import com.envyful.gts.forge.api.trade.TradeHistory;
-import org.jetbrains.annotations.Nullable;
+import com.envyful.gts.forge.api.trade.TradeQuery;
 
-import java.time.Instant;
 import java.util.List;
 import java.util.UUID;
 
@@ -31,12 +30,20 @@ public interface TradeService {
 
     void addSale(Sale sale);
 
-    TradeHistory historicalListings();
+    TradeHistory completedListings(TradeQuery query);
 
-    TradeHistory historicalListings(ForgeEnvyPlayer player);
+    TradeHistory highestPrices(TradeQuery query);
 
-    TradeHistory historicalListings(String playerQuery);
+    TradeHistory lowestPrices(TradeQuery query);
 
-    TradeHistory highestPrices(Instant since, @Nullable TradeItemType itemType);
+    PriceStatistics priceStatistics(TradeQuery query);
+
+    /**
+     *
+     * Called once the server has started, for any work that has to wait until then
+     *
+     */
+    default void onServerStarted() {
+    }
 
 }

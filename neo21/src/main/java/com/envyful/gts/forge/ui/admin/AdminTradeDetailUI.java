@@ -11,6 +11,7 @@ import com.envyful.api.type.Pair;
 import com.envyful.gts.forge.EnvyGTSForge;
 import com.envyful.gts.forge.api.trade.SoldTrade;
 import com.envyful.gts.forge.api.trade.Trade;
+import com.envyful.gts.forge.ui.TradeHistoryDisplay;
 import org.spongepowered.configurate.objectmapping.ConfigSerializable;
 
 @ConfigSerializable
@@ -141,7 +142,7 @@ public class AdminTradeDetailUI {
 
     public void openDetails(ForgeEnvyPlayer player, Trade trade, Runnable back) {
         var pane = this.menuSettings.toPane();
-        var placeholder = AdminTradeDisplay.detailPlaceholder(trade);
+        var placeholder = TradeHistoryDisplay.placeholder(trade);
 
         pane.set(this.itemPositionX, this.itemPositionY,
                 GuiFactory.displayableBuilder(trade.offer().item().display()).build());
@@ -179,7 +180,7 @@ public class AdminTradeDetailUI {
 
     private void confirmCopy(ForgeEnvyPlayer player, Trade trade, Runnable back) {
         var pane = this.copyConfirmSettings.toPane();
-        var placeholder = AdminTradeDisplay.detailPlaceholder(trade);
+        var placeholder = TradeHistoryDisplay.placeholder(trade);
 
         pane.set(this.copyConfirmItemPositionX, this.copyConfirmItemPositionY,
                 GuiFactory.displayableBuilder(trade.offer().item().display()).build());
@@ -199,7 +200,8 @@ public class AdminTradeDetailUI {
         var displayName = trade.offer().item().displayName();
 
         if (!trade.offer().item().collect(player)) {
-            player.message("&cThere was no room to give you a copy of &f" + displayName + "&c.");
+            player.message(EnvyGTSForge.getLocale().getMessages().getNoRoomForTradeCopy()
+                    .replace("%item%", displayName));
             this.openDetails(player, trade, back);
             return;
         }
@@ -207,7 +209,8 @@ public class AdminTradeDetailUI {
         EnvyGTSForge.getLogger().info("{} ({}) took a copy of {} from GTS listing {} using the admin menu",
                 player.getName(), player.getUniqueId(), displayName, trade.offer().id());
 
-        player.message("&aA copy of &f" + displayName + " &ahas been sent to you.");
+        player.message(EnvyGTSForge.getLocale().getMessages().getTradeCopySent()
+                .replace("%item%", displayName));
         this.openDetails(player, trade, back);
     }
 }

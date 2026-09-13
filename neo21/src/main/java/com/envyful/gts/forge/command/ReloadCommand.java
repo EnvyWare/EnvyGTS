@@ -19,6 +19,6 @@ public class ReloadCommand {
     public void onCommand(@Sender Messageable<?> sender, String[] args) {
         EnvyGTSForge.getInstance().loadConfig();
         NeoForge.EVENT_BUS.post(new GTSReloadEvent());
-        sender.message("Reloaded config");
+        sender.message(EnvyGTSForge.getLocale().getMessages().getReloadedConfig());
     }
 }

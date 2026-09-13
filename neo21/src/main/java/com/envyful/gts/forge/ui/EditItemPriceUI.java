@@ -31,7 +31,7 @@ public class EditItemPriceUI {
                     .onClose(closedScreen -> SellHandOrParty.open(player))
                     .buttons(DialogueButton.builder()
                             .acceptedInputs(InputPattern.of("[0-9]+", UtilChatColour.colour(EnvyGTSForge.getLocale().getSellPriceInputDialogueErrorText())))
-                            .text("Submit")
+                            .text(EnvyGTSForge.getLocale().getSellDialogueSubmitButtonText())
                             .backgroundColor(Color.GRAY)
                             .onClick(submitted -> EditItemDurationUI.openUI(player, UtilParse.parseDouble(submitted.getInput()).orElse(0.0), false))
                             .build())

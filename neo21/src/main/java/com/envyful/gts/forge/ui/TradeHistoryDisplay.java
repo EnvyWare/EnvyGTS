@@ -1,4 +1,4 @@
-package com.envyful.gts.forge.ui.admin;
+package com.envyful.gts.forge.ui;
 
 import com.envyful.api.gui.factory.GuiFactory;
 import com.envyful.api.gui.item.Displayable;
@@ -7,6 +7,8 @@ import com.envyful.api.neoforge.player.ForgeEnvyPlayer;
 import com.envyful.api.platform.PlatformProxy;
 import com.envyful.api.text.parse.SimplePlaceholder;
 import com.envyful.gts.forge.EnvyGTSForge;
+import com.envyful.gts.forge.api.item.TradeItemType;
+import com.envyful.gts.forge.api.item.TradeItemTypeFactory;
 import com.envyful.gts.forge.api.trade.ExpiredTrade;
 import com.envyful.gts.forge.api.trade.RemovedTrade;
 import com.envyful.gts.forge.api.trade.SoldTrade;
@@ -14,15 +16,20 @@ import com.envyful.gts.forge.api.trade.Trade;
 import com.envyful.gts.forge.api.trade.TradeHistory;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
+import org.jetbrains.annotations.Nullable;
 
 import java.time.Instant;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-final class AdminTradeDisplay {
+/**
+ *
+ * Shared formatting for the UIs that display historical {@link Trade}s
+ *
+ */
+public final class TradeHistoryDisplay {
 
     private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss z");
 
@@ -30,53 +37,56 @@ final class AdminTradeDisplay {
 
     private static final String NONE = "-";
 
-    private AdminTradeDisplay() {
+    private TradeHistoryDisplay() {
     }
 
-    static void reportFailures(ForgeEnvyPlayer player, TradeHistory history) {
+    /**
+     *
+     * Warns the player about any trades that the database lookup could not read, as they are missing from
+     * whatever is about to be displayed to them
+     *
+     * @param player The player viewing the history
+     * @param history The history that was read from the database
+     *
+     */
+    public static void reportFailures(ForgeEnvyPlayer player, TradeHistory history) {
         if (!history.hasFailures()) {
             return;
         }
 
-        player.message("&c" + history.failed() + " trade(s) could not be read from the database and are " +
-                "missing from this view. Check the server console for details.");
+        player.message(EnvyGTSForge.getLocale().getMessages().getTradeHistoryReadFailure()
+                .replace("%failed%", String.valueOf(history.failed())));
     }
 
-    static Displayable.Builder<ItemStack> build(Trade trade, boolean priceHistory) {
+    /**
+     *
+     * Builds the display for a single historical trade, appending the given lore to the item's own display
+     *
+     * @param trade The trade being displayed
+     * @param lore The lore lines, which may contain any of the placeholders from {@link #placeholder(Trade)}
+     * @return The builder for the trade's display
+     *
+     */
+    public static Displayable.Builder<ItemStack> build(Trade trade, List<String> lore) {
         var item = new ItemBuilder(trade.offer().item().display());
+        var placeholder = placeholder(trade);
 
-        for (var lore : buildLore(trade, priceHistory)) {
-            item.addLore(PlatformProxy.<Component>flatParse(lore));
+        for (var line : lore) {
+            item.addLore(PlatformProxy.<Component>flatParse(placeholder.replace(line)));
         }
 
         return GuiFactory.displayableBuilder(item.build());
     }
 
-    private static List<String> buildLore(Trade trade, boolean priceHistory) {
-        var lore = new ArrayList<String>();
-
-        lore.add(" ");
-
-        if (priceHistory) {
-            lore.add("&6Sold for &a$" + formatMoney(finalPrice(trade)));
-        } else {
-            lore.add("&bOutcome: &f" + outcomeDisplayName(trade));
-        }
-
-        lore.add("&bSeller: &f" + trade.offer().seller().name());
-
-        if (trade instanceof SoldTrade soldTrade) {
-            lore.add("&bBuyer: &f" + soldTrade.sale().buyer().name());
-        }
-
-        lore.add("&bDate: &f" + SHORT_DATE_FORMATTER.format(outcomeTime(trade).atZone(ZoneId.systemDefault())));
-        lore.add(" ");
-        lore.add("&eClick for full details");
-
-        return lore;
-    }
-
-    static SimplePlaceholder detailPlaceholder(Trade trade) {
+    /**
+     *
+     * The placeholders describing a historical trade
+     *
+     * @param trade The trade being displayed
+     * @return The placeholder
+     *
+     */
+    public static SimplePlaceholder placeholder(Trade trade) {
         return line -> line
                 .replace("%seller%", trade.offer().seller().name())
                 .replace("%seller_uuid%", trade.offer().seller().uniqueId().toString())
@@ -84,13 +94,32 @@ final class AdminTradeDisplay {
                 .replace("%buyer_uuid%", buyerUniqueId(trade))
                 .replace("%listed_price%", formatMoney(trade.offer().price().getPrice()))
                 .replace("%sold_price%", soldPrice(trade))
+                .replace("%final_price%", formatMoney(finalPrice(trade)))
                 .replace("%listed_time%", formatDate(trade.offer().creationTime()))
                 .replace("%expiry_time%", formatDate(trade.offer().expiryTime()))
                 .replace("%outcome_time%", formatDate(outcomeTime(trade)))
+                .replace("%outcome_date%", formatShortDate(outcomeTime(trade)))
                 .replace("%outcome%", outcomeDisplayName(trade))
                 .replace("%type%", formatItemType(trade))
                 .replace("%offer_id%", trade.offer().id().toString())
                 .replace("%item%", trade.offer().item().displayName());
+    }
+
+    /**
+     *
+     * The display name for the type of trade a lookup was filtered to
+     *
+     * @param itemType The type the lookup was filtered to, or null if it was not filtered
+     * @param everyTypeDisplayName The name to use when the lookup was not filtered
+     * @return The display name
+     *
+     */
+    public static String itemTypeName(@Nullable TradeItemType itemType, String everyTypeDisplayName) {
+        return itemType == null ? everyTypeDisplayName : itemType.getDisplayName();
+    }
+
+    public static String formatMoney(double price) {
+        return String.format(EnvyGTSForge.getLocale().getMoneyFormat(), price);
     }
 
     private static String buyerName(Trade trade) {
@@ -106,11 +135,9 @@ final class AdminTradeDisplay {
     }
 
     private static String formatItemType(Trade trade) {
-        return switch (trade.offer().item().id()) {
-            case "pokemon" -> "Pokemon";
-            case "item" -> "Item";
-            default -> trade.offer().item().id();
-        };
+        return TradeItemTypeFactory.byId(trade.offer().item().id())
+                .map(TradeItemType::getDisplayName)
+                .orElseGet(() -> trade.offer().item().id());
     }
 
     private static double finalPrice(Trade trade) {
@@ -157,11 +184,11 @@ final class AdminTradeDisplay {
         return trade.offer().creationTime();
     }
 
-    private static String formatMoney(double price) {
-        return String.format(EnvyGTSForge.getLocale().getMoneyFormat(), price);
-    }
-
     private static String formatDate(Instant instant) {
         return DATE_FORMATTER.format(instant.atZone(ZoneId.systemDefault()));
+    }
+
+    private static String formatShortDate(Instant instant) {
+        return SHORT_DATE_FORMATTER.format(instant.atZone(ZoneId.systemDefault()));
     }
 }

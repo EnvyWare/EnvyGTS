@@ -74,7 +74,8 @@ public class AdminCommand {
                 continue;
             }
 
-            player.message("&cInvalid price history argument: " + args[i]);
+            player.message(EnvyGTSForge.getLocale().getMessages().getInvalidPriceHistoryArgument()
+                    .replace("%argument%", args[i]));
             this.sendUsage(player);
             return;
         }
@@ -83,9 +84,6 @@ public class AdminCommand {
     }
 
     private void sendUsage(ForgeEnvyPlayer player) {
-        player.message("&e/gts admin &7- Open the admin menu");
-        player.message("&e/gts admin history &7- View global trade history");
-        player.message("&e/gts admin history <player|uuid> &7- View player trade history");
-        player.message("&e/gts admin prices <duration> [all|item|pokemon] &7- View highest sold prices");
+        player.message(EnvyGTSForge.getLocale().getMessages().getAdminCommandUsage());
     }
 }

@@ -99,6 +99,7 @@ public class EnvyGTSForge {
         dslContext = DSL.using(this.database, this.config.getDatabaseDetails() instanceof SQLiteDatabaseDetailsConfig ? SQLDialect.SQLITE : SQLDialect.MARIADB);
 
         createTables();
+        createColumns();
         createIndexes();
         tradeService = new jOOQTradeService();
     }
@@ -107,6 +108,7 @@ public class EnvyGTSForge {
     public void onServerStarted(ServerStartedEvent event) {
         new TradeCreateListener();
         NeoForge.EVENT_BUS.register(new WebhookListener());
+        this.tradeService.onServerStarted();
     }
 
     public void loadConfig() {
@@ -177,7 +179,9 @@ public class EnvyGTSForge {
                 .columns(
                         GTSDatabase.TRADE_ITEMS_OFFER_ID,
                         GTSDatabase.TRADE_ITEMS_TYPE,
-                        GTSDatabase.TRADE_ITEMS_DATA
+                        GTSDatabase.TRADE_ITEMS_DATA,
+                        GTSDatabase.TRADE_ITEMS_NAME,
+                        GTSDatabase.TRADE_ITEMS_SEARCH_KEY
                 )
                 .primaryKey(GTSDatabase.TRADES_OFFER_ID)
                 .constraint(DSL.foreignKey(GTSDatabase.TRADES_OFFER_ID).references(GTSDatabase.TRADES, GTSDatabase.TRADES_OFFER_ID))
@@ -217,6 +221,19 @@ public class EnvyGTSForge {
                 .constraint(DSL.foreignKey(GTSDatabase.COLLECTIONS_SALE_ID).references(GTSDatabase.SALES, GTSDatabase.SALES_SALE_ID))
                 .constraint(DSL.foreignKey(GTSDatabase.COLLECTIONS_OFFER_ID).references(GTSDatabase.TRADES, GTSDatabase.TRADES_OFFER_ID))
                 .execute();
+    }
+
+    private void createColumns() {
+        this.createColumn(GTSDatabase.TRADE_ITEMS, GTSDatabase.TRADE_ITEMS_NAME);
+        this.createColumn(GTSDatabase.TRADE_ITEMS, GTSDatabase.TRADE_ITEMS_SEARCH_KEY);
+    }
+
+    private void createColumn(Table<?> table, Field<?> column) {
+        try {
+            dslContext.alterTable(table).addColumn(column).execute();
+        } catch (Exception e) {
+            LOGGER.debug("Did not add the GTS column {}, it most likely already exists", column.getName(), e);
+        }
     }
 
     private void createIndexes() {

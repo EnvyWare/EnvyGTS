@@ -5,10 +5,14 @@ import com.envyful.api.player.EnvyPlayer;
 import com.envyful.api.text.Placeholder;
 import com.envyful.gts.forge.api.item.TradeItem;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
+import net.minecraft.ChatFormatting;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.TagParser;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.server.ServerLifecycleHooks;
+
+import java.util.Locale;
 
 public class ItemStackTradeItem implements TradeItem {
 
@@ -35,6 +39,18 @@ public class ItemStackTradeItem implements TradeItem {
     @Override
     public String displayName() {
         return this.itemStack.getDisplayName().getString();
+    }
+
+    @Override
+    public String searchKey() {
+        var name = ChatFormatting.stripFormatting(this.itemStack.getHoverName().getString());
+        var itemId = BuiltInRegistries.ITEM.getKey(this.itemStack.getItem()).toString();
+
+        if (name == null || name.isBlank()) {
+            return itemId.toLowerCase(Locale.ROOT);
+        }
+
+        return (name + " " + itemId).toLowerCase(Locale.ROOT);
     }
 
     @Override

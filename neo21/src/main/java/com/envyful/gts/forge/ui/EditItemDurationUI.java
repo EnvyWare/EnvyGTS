@@ -39,7 +39,7 @@ public class EditItemDurationUI {
                 .closeOnEscape()
                 .onClose(closedScreen -> SellHandOrParty.open(player))
                 .buttons(DialogueButton.builder()
-                        .text("Submit")
+                        .text(EnvyGTSForge.getLocale().getSellDialogueSubmitButtonText())
                         .onClick(submitted -> {
                             long inputtedValue = UtilTime.attemptParseTime(submitted.getInput()).orElse(-1L);
 
