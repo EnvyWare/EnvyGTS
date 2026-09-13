@@ -7,6 +7,7 @@ import com.envyful.api.config.yaml.AbstractYamlConfig;
 import com.envyful.api.discord.yaml.DiscordEmbedConfig;
 import com.envyful.api.discord.yaml.DiscordWebHookConfig;
 import com.envyful.api.gui.item.Displayable;
+import com.envyful.api.player.EnvyPlayer;
 import com.envyful.api.sqlite.config.SQLiteDatabaseDetailsConfig;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
@@ -71,8 +72,14 @@ public class EnvyGTSConfig extends AbstractYamlConfig {
     @Comment("Whether to enable broadcasts when a new listing is created")
     private boolean enableNewListingBroadcasts = true;
 
-    @Comment("The maximum number of listings a user can have at once")
+    @Comment("The maximum number of listings a user can have at once when they have none of the permissions in max-listings-permissions")
     private int maxListingsPerUser = 5;
+
+    @Comment("Permission based overrides for the number of listings a user can have at once, mapping a permission to the limit it grants. A player holding several of these gets the highest limit among them, and a player holding none gets max-listings-per-user. A limit of -1 means unlimited")
+    private Map<String, Integer> maxListingsPermissions = ImmutableMap.of(
+            "envygts.listings.10", 10,
+            "envygts.listings.unlimited", -1
+    );
 
     @Comment("The maximum price a Pokemon can be listed for")
     private double maxPrice = 10_000_000;
@@ -237,6 +244,36 @@ public class EnvyGTSConfig extends AbstractYamlConfig {
 
     public int getMaxListingsPerUser() {
         return this.maxListingsPerUser;
+    }
+
+    public Map<String, Integer> getMaxListingsPermissions() {
+        return this.maxListingsPermissions;
+    }
+
+    /**
+     *
+     * Gets the number of listings the given player may have at once, being the highest limit of the
+     * permissions they hold, or {@link #getMaxListingsPerUser()} when they hold none of them.
+     *
+     * A configured limit of -1 means unlimited, so it beats every other limit rather than losing to them
+     *
+     */
+    public int getMaxListings(EnvyPlayer<?> player) {
+        int max = this.maxListingsPerUser;
+
+        for (var entry : this.maxListingsPermissions.entrySet()) {
+            if (!player.hasPermission(entry.getKey())) {
+                continue;
+            }
+
+            if (entry.getValue() < 0) {
+                return Integer.MAX_VALUE;
+            }
+
+            max = Math.max(max, entry.getValue());
+        }
+
+        return max;
     }
 
     public double getMaxPrice() {
