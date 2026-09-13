@@ -16,7 +16,7 @@ import com.envyful.gts.forge.EnvyGTSForge;
 )
 @Permissible("com.envyful.gts.command.gts")
 @SubCommands({
-        SellCommand.class, ReloadCommand.class, BroadcastsCommand.class, AdminCommand.class
+        SellCommand.class, ReloadCommand.class, BroadcastsCommand.class, MarketCommand.class, AdminCommand.class
 })
 public class GTSCommand {
 
