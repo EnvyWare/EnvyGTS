@@ -7,12 +7,12 @@ import com.envyful.gts.forge.api.Sale;
 import com.envyful.gts.forge.api.TradeService;
 import com.envyful.gts.forge.api.event.TradeRemoveEvent;
 import com.envyful.gts.forge.api.player.GTSAttribute;
+import com.envyful.gts.forge.api.trade.PriceStatistics;
 import com.envyful.gts.forge.api.trade.Trade;
-import com.envyful.gts.forge.api.item.TradeItemType;
 import com.envyful.gts.forge.api.trade.TradeHistory;
+import com.envyful.gts.forge.api.trade.TradeQuery;
 import net.neoforged.neoforge.common.NeoForge;
 
-import java.time.Instant;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 
@@ -93,22 +93,22 @@ public class CachedTradeService implements TradeService {
     }
 
     @Override
-    public TradeHistory historicalListings() {
+    public TradeHistory completedListings(TradeQuery query) {
         return TradeHistory.EMPTY;
     }
 
     @Override
-    public TradeHistory historicalListings(ForgeEnvyPlayer player) {
+    public TradeHistory highestPrices(TradeQuery query) {
         return TradeHistory.EMPTY;
     }
 
     @Override
-    public TradeHistory historicalListings(String playerQuery) {
+    public TradeHistory lowestPrices(TradeQuery query) {
         return TradeHistory.EMPTY;
     }
 
     @Override
-    public TradeHistory highestPrices(Instant since, TradeItemType itemType) {
-        return TradeHistory.EMPTY;
+    public PriceStatistics priceStatistics(TradeQuery query) {
+        return PriceStatistics.EMPTY;
     }
 }

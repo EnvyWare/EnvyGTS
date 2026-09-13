@@ -9,36 +9,31 @@ import com.envyful.api.neoforge.config.UtilConfigInterface;
 import com.envyful.api.neoforge.config.UtilConfigItem;
 import com.envyful.api.neoforge.player.ForgeEnvyPlayer;
 import com.envyful.api.platform.PlatformProxy;
-import com.envyful.api.text.parse.SimplePlaceholder;
 import com.envyful.api.time.UtilTime;
 import com.envyful.api.type.Pair;
 import com.envyful.gts.forge.EnvyGTSForge;
-import com.envyful.gts.forge.api.trade.Trade;
 import com.envyful.gts.forge.api.item.TradeItemType;
 import com.envyful.gts.forge.api.item.TradeItemTypeFactory;
+import com.envyful.gts.forge.api.trade.Trade;
+import com.envyful.gts.forge.ui.TradeFilter;
+import com.envyful.gts.forge.ui.TradeFilterConfig;
+import com.envyful.gts.forge.ui.TradeHistoryDisplay;
+import com.envyful.gts.forge.ui.TradeWindowConfig;
 import com.pixelmonmod.pixelmon.api.dialogue.DialogueButton;
 import com.pixelmonmod.pixelmon.api.dialogue.DialogueFactory;
 import com.pixelmonmod.pixelmon.api.dialogue.InputPattern;
 import net.minecraft.network.chat.Component;
+import org.jetbrains.annotations.Nullable;
 import org.spongepowered.configurate.objectmapping.ConfigSerializable;
 
 import java.awt.Color;
 import java.time.Duration;
-import java.time.Instant;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.regex.Pattern;
 
 @ConfigSerializable
 public class AdminHighestPricesUI {
-
-    private static final Duration DEFAULT_PRICE_WINDOW = Duration.ofHours(24);
-    private static final List<Duration> PRICE_WINDOWS = List.of(
-            Duration.ofHours(1),
-            Duration.ofHours(24),
-            Duration.ofDays(7),
-            Duration.ofDays(30)
-    );
 
     private PaginatedConfigInterface pricesSettings = PaginatedConfigInterface.paginatedBuilder()
             .title("EnvyGTS Highest Prices")
@@ -58,11 +53,30 @@ public class AdminHighestPricesUI {
                     .build())
             .build();
 
+    private TradeFilterConfig filterConfig = new TradeFilterConfig(
+            new TradeWindowConfig("1d", List.of("1h", "1d", "7d", "30d")));
+
     private ExtendedConfigItem backButton = ExtendedConfigItem.builder()
             .type("pixelmon:eject_button")
             .amount(1)
             .name("&cBack")
             .positions(Pair.of(4, 5))
+            .build();
+
+    private ExtendedConfigItem searchButton = ExtendedConfigItem.builder()
+            .type("minecraft:oak_sign")
+            .amount(1)
+            .name("&bSearch: &f%search%")
+            .lore("&7Click to look up a Pokemon", "&7species or an item by name")
+            .positions(Pair.of(2, 5))
+            .build();
+
+    private ExtendedConfigItem playerButton = ExtendedConfigItem.builder()
+            .type("minecraft:player_head")
+            .amount(1)
+            .name("&bPlayer: &f%player%")
+            .lore("&7Click to search by player", "&7name or UUID")
+            .positions(Pair.of(6, 5))
             .build();
 
     private ExtendedConfigItem priceTypeButton = ExtendedConfigItem.builder()
@@ -81,7 +95,15 @@ public class AdminHighestPricesUI {
             .positions(Pair.of(5, 5))
             .build();
 
-    private String everyTypeDisplayName = "All";
+    private List<String> listingLore = List.of(
+            " ",
+            "&6Sold for &a$%sold_price%",
+            "&bSeller: &f%seller%",
+            "&bBuyer: &f%buyer%",
+            "&bDate: &f%outcome_date%",
+            " ",
+            "&eClick for full details"
+    );
 
     public void openInput(ForgeEnvyPlayer player) {
         player.getParent().closeContainer();
@@ -90,29 +112,35 @@ public class AdminHighestPricesUI {
                 .sendTo(player.getParent()), 5);
     }
 
-    public void openHighestPrices(ForgeEnvyPlayer player, Duration window, TradeItemType type) {
-        this.openHighestPrices(player, window, type, 1);
+    public void openHighestPrices(ForgeEnvyPlayer player, Duration window, @Nullable TradeItemType type) {
+        this.openHighestPrices(player, TradeFilter.of(window).withItemType(type), 1);
     }
 
-    public void openHighestPrices(ForgeEnvyPlayer player, Duration window, TradeItemType type, int page) {
+    public void openHighestPrices(ForgeEnvyPlayer player, TradeFilter filter, int page) {
         UtilConcurrency.runAsync(() -> {
-            var history = EnvyGTSForge.getTradeService().highestPrices(Instant.now().minus(window), type);
+            var history = EnvyGTSForge.getTradeService().highestPrices(filter.toQuery());
 
-            AdminTradeDisplay.reportFailures(player, history);
-            this.openPane(player, history.trades(), window, type, page);
+            TradeHistoryDisplay.reportFailures(player, history);
+
+            if (history.trades().isEmpty()) {
+                this.filterConfig.reportNoSales(player, filter);
+            }
+
+            this.openPane(player, history.trades(), filter, page);
         });
     }
 
     @SuppressWarnings("unchecked")
-    private void openPane(ForgeEnvyPlayer player, List<Trade> trades, Duration window, TradeItemType type, int page) {
+    private void openPane(ForgeEnvyPlayer player, List<Trade> trades, TradeFilter filter, int page) {
         var openPage = new AtomicInteger(page);
+        var placeholder = this.filterConfig.placeholder(filter);
 
         UtilConfigInterface.paginatedBuilder(trades)
-                .itemConversion(trade -> AdminTradeDisplay.build(trade, true)
+                .itemConversion(trade -> TradeHistoryDisplay.build(trade, this.listingLore)
                         .singleClick()
                         .asyncClick()
                         .clickHandler((envyPlayer, clickType) -> EnvyGTSForge.getGui().getAdminTradeDetailUI()
-                                .openDetails(player, trade, () -> this.openPane(player, trades, window, type, openPage.get())))
+                                .openDetails(player, trade, () -> this.openPane(player, trades, filter, openPage.get())))
                         .build())
                 .configSettings(this.pricesSettings)
                 .extraItems((pane, currentPage) -> {
@@ -125,15 +153,27 @@ public class AdminHighestPricesUI {
 
                     UtilConfigItem.builder()
                             .asyncClick(false)
-                            .clickHandler((envyPlayer, clickType) -> this.openHighestPrices(player, window, TradeItemTypeFactory.getNext(type)))
-                            .extendedConfigItem(player, pane, this.priceTypeButton,
-                                    (SimplePlaceholder) input -> input.replace("%type%", this.displayName(type)));
+                            .clickHandler((envyPlayer, clickType) -> this.filterConfig.openItemSearch(player, filter,
+                                    searched -> this.openHighestPrices(player, searched, 1)))
+                            .extendedConfigItem(player, pane, this.searchButton, placeholder);
 
                     UtilConfigItem.builder()
                             .asyncClick(false)
-                            .clickHandler((envyPlayer, clickType) -> this.openHighestPrices(player, this.nextWindow(window), type))
-                            .extendedConfigItem(player, pane, this.priceWindowButton,
-                                    (SimplePlaceholder) input -> input.replace("%window%", this.formatDuration(window)));
+                            .clickHandler((envyPlayer, clickType) -> this.filterConfig.openPlayerSearch(player, filter,
+                                    searched -> this.openHighestPrices(player, searched, 1)))
+                            .extendedConfigItem(player, pane, this.playerButton, placeholder);
+
+                    UtilConfigItem.builder()
+                            .asyncClick(false)
+                            .clickHandler((envyPlayer, clickType) -> this.openHighestPrices(player,
+                                    filter.withItemType(TradeItemTypeFactory.getNext(filter.itemType())), 1))
+                            .extendedConfigItem(player, pane, this.priceTypeButton, placeholder);
+
+                    UtilConfigItem.builder()
+                            .asyncClick(false)
+                            .clickHandler((envyPlayer, clickType) -> this.openHighestPrices(player,
+                                    filter.withWindow(this.filterConfig.getWindowConfig().getNext(filter.window())), 1))
+                            .extendedConfigItem(player, pane, this.priceWindowButton, placeholder);
                 })
                 .open(player, page);
     }
@@ -144,7 +184,7 @@ public class AdminHighestPricesUI {
                 .description(UtilChatColour.colour(error ?
                         "&cInvalid time window. Use values like 24h or 7d." :
                         "&7Enter a time window, for example 1h, 24h, 7d, or 30d."))
-                .defaultText(this.formatDuration(DEFAULT_PRICE_WINDOW))
+                .defaultText(TradeWindowConfig.format(this.filterConfig.getWindowConfig().getDefaultWindow()))
                 .maxInputLength(10)
                 .closeOnEscape()
                 .hideUI()
@@ -166,46 +206,5 @@ public class AdminHighestPricesUI {
                             this.openHighestPrices(player, Duration.ofMillis(parsedDuration.get()), null);
                         })
                         .build());
-    }
-
-    private String displayName(TradeItemType type) {
-        return type == null ? this.everyTypeDisplayName : type.getDisplayName();
-    }
-
-    private Duration nextWindow(Duration current) {
-        for (int i = 0; i < PRICE_WINDOWS.size(); i++) {
-            if (PRICE_WINDOWS.get(i).equals(current)) {
-                return PRICE_WINDOWS.get((i + 1) % PRICE_WINDOWS.size());
-            }
-        }
-
-        return PRICE_WINDOWS.get(0);
-    }
-
-    private String formatDuration(Duration duration) {
-        var totalSeconds = duration.toSeconds();
-        var days = totalSeconds / 86_400L;
-        var hours = (totalSeconds % 86_400L) / 3_600L;
-        var minutes = (totalSeconds % 3_600L) / 60L;
-        var seconds = totalSeconds % 60L;
-        var result = new StringBuilder();
-
-        if (days > 0) {
-            result.append(days).append("d");
-        }
-
-        if (hours > 0) {
-            result.append(hours).append("h");
-        }
-
-        if (minutes > 0) {
-            result.append(minutes).append("m");
-        }
-
-        if (seconds > 0 || result.length() == 0) {
-            result.append(seconds).append("s");
-        }
-
-        return result.toString();
     }
 }

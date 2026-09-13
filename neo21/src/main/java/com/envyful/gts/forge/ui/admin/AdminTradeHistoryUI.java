@@ -4,24 +4,22 @@ import com.envyful.api.concurrency.UtilConcurrency;
 import com.envyful.api.config.type.ConfigInterface;
 import com.envyful.api.config.type.ExtendedConfigItem;
 import com.envyful.api.config.type.PaginatedConfigInterface;
-import com.envyful.api.neoforge.chat.UtilChatColour;
 import com.envyful.api.neoforge.config.UtilConfigInterface;
 import com.envyful.api.neoforge.config.UtilConfigItem;
 import com.envyful.api.neoforge.player.ForgeEnvyPlayer;
-import com.envyful.api.platform.PlatformProxy;
 import com.envyful.api.type.Pair;
 import com.envyful.gts.forge.EnvyGTSForge;
+import com.envyful.gts.forge.api.item.TradeItemTypeFactory;
+import com.envyful.gts.forge.api.trade.SoldTrade;
 import com.envyful.gts.forge.api.trade.Trade;
-import com.pixelmonmod.pixelmon.api.dialogue.DialogueButton;
-import com.pixelmonmod.pixelmon.api.dialogue.DialogueFactory;
-import com.pixelmonmod.pixelmon.api.dialogue.InputPattern;
-import net.minecraft.network.chat.Component;
+import com.envyful.gts.forge.ui.TradeFilter;
+import com.envyful.gts.forge.ui.TradeFilterConfig;
+import com.envyful.gts.forge.ui.TradeHistoryDisplay;
+import com.envyful.gts.forge.ui.TradeWindowConfig;
 import org.spongepowered.configurate.objectmapping.ConfigSerializable;
 
-import java.awt.Color;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.regex.Pattern;
 
 @ConfigSerializable
 public class AdminTradeHistoryUI {
@@ -44,6 +42,9 @@ public class AdminTradeHistoryUI {
                     .build())
             .build();
 
+    private TradeFilterConfig filterConfig = new TradeFilterConfig(
+            new TradeWindowConfig("1d", List.of("1d", "7d", "30d"), true));
+
     private ExtendedConfigItem backButton = ExtendedConfigItem.builder()
             .type("pixelmon:eject_button")
             .amount(1)
@@ -51,39 +52,101 @@ public class AdminTradeHistoryUI {
             .positions(Pair.of(4, 5))
             .build();
 
-    public void openGlobalHistory(ForgeEnvyPlayer player) {
-        UtilConcurrency.runAsync(() -> {
-            var history = EnvyGTSForge.getTradeService().historicalListings();
+    private ExtendedConfigItem searchButton = ExtendedConfigItem.builder()
+            .type("minecraft:oak_sign")
+            .amount(1)
+            .name("&bSearch: &f%search%")
+            .lore("&7Click to look up a Pokemon", "&7species or an item by name")
+            .positions(Pair.of(2, 5))
+            .build();
 
-            AdminTradeDisplay.reportFailures(player, history);
-            this.openHistory(player, history.trades(), 1);
-        });
+    private ExtendedConfigItem playerButton = ExtendedConfigItem.builder()
+            .type("minecraft:player_head")
+            .amount(1)
+            .name("&bPlayer: &f%player%")
+            .lore("&7Click to search by player", "&7name or UUID")
+            .positions(Pair.of(5, 5))
+            .build();
+
+    private ExtendedConfigItem typeButton = ExtendedConfigItem.builder()
+            .type("pixelmon:poke_ball")
+            .amount(1)
+            .name("&bShowing: &f%type%")
+            .lore("&7Click to switch between all,", "&7pokemon, and items")
+            .positions(Pair.of(3, 5))
+            .build();
+
+    private ExtendedConfigItem windowButton = ExtendedConfigItem.builder()
+            .type("minecraft:clock")
+            .amount(1)
+            .name("&eWindow: &f%window%")
+            .lore("&7Click to change how far back", "&7the trades shown go")
+            .positions(Pair.of(6, 5))
+            .build();
+
+    private List<String> soldListingLore = List.of(
+            " ",
+            "&bOutcome: &f%outcome%",
+            "&bSeller: &f%seller%",
+            "&bBuyer: &f%buyer%",
+            "&bDate: &f%outcome_date%",
+            " ",
+            "&eClick for full details"
+    );
+
+    private List<String> unsoldListingLore = List.of(
+            " ",
+            "&bOutcome: &f%outcome%",
+            "&bSeller: &f%seller%",
+            "&bDate: &f%outcome_date%",
+            " ",
+            "&eClick for full details"
+    );
+
+    public void openGlobalHistory(ForgeEnvyPlayer player) {
+        this.openHistory(player, TradeFilter.ALL_TIME, 1);
     }
 
     public void openPlayerHistory(ForgeEnvyPlayer player, String playerQuery) {
-        UtilConcurrency.runAsync(() -> {
-            var history = EnvyGTSForge.getTradeService().historicalListings(playerQuery);
+        this.openHistory(player, TradeFilter.ALL_TIME.withPlayer(playerQuery), 1);
+    }
 
-            AdminTradeDisplay.reportFailures(player, history);
+    /**
+     *
+     * Asks which player to look up before opening the history filtered to them
+     *
+     */
+    public void openPlayerHistoryInput(ForgeEnvyPlayer player) {
+        this.filterConfig.openPlayerSearch(player, TradeFilter.ALL_TIME,
+                searched -> this.openHistory(player, searched, 1),
+                () -> EnvyGTSForge.getGui().getAdminTradesUI().openMenu(player));
+    }
+
+    public void openHistory(ForgeEnvyPlayer player, TradeFilter filter, int page) {
+        UtilConcurrency.runAsync(() -> {
+            var history = EnvyGTSForge.getTradeService().completedListings(filter.toQuery());
+
+            TradeHistoryDisplay.reportFailures(player, history);
 
             if (history.trades().isEmpty()) {
-                player.message("&cNo GTS history found for " + playerQuery);
+                this.filterConfig.reportNoTrades(player, filter);
             }
 
-            this.openHistory(player, history.trades(), 1);
+            this.openPane(player, history.trades(), filter, page);
         });
     }
 
     @SuppressWarnings("unchecked")
-    public void openHistory(ForgeEnvyPlayer player, List<Trade> trades, int page) {
+    private void openPane(ForgeEnvyPlayer player, List<Trade> trades, TradeFilter filter, int page) {
         var openPage = new AtomicInteger(page);
+        var placeholder = this.filterConfig.placeholder(filter);
 
         UtilConfigInterface.paginatedBuilder(trades)
-                .itemConversion(trade -> AdminTradeDisplay.build(trade, false)
+                .itemConversion(trade -> TradeHistoryDisplay.build(trade, this.listingLore(trade))
                         .singleClick()
                         .asyncClick()
                         .clickHandler((envyPlayer, clickType) -> EnvyGTSForge.getGui().getAdminTradeDetailUI()
-                                .openDetails(player, trade, () -> this.openHistory(player, trades, openPage.get())))
+                                .openDetails(player, trade, () -> this.openPane(player, trades, filter, openPage.get())))
                         .build())
                 .configSettings(this.historySettings)
                 .extraItems((pane, currentPage) -> {
@@ -93,28 +156,35 @@ public class AdminTradeHistoryUI {
                             .asyncClick(false)
                             .clickHandler((envyPlayer, clickType) -> EnvyGTSForge.getGui().getAdminTradesUI().openMenu(player))
                             .extendedConfigItem(player, pane, this.backButton);
+
+                    UtilConfigItem.builder()
+                            .asyncClick(false)
+                            .clickHandler((envyPlayer, clickType) -> this.filterConfig.openItemSearch(player, filter,
+                                    searched -> this.openHistory(player, searched, 1)))
+                            .extendedConfigItem(player, pane, this.searchButton, placeholder);
+
+                    UtilConfigItem.builder()
+                            .asyncClick(false)
+                            .clickHandler((envyPlayer, clickType) -> this.filterConfig.openPlayerSearch(player, filter,
+                                    searched -> this.openHistory(player, searched, 1)))
+                            .extendedConfigItem(player, pane, this.playerButton, placeholder);
+
+                    UtilConfigItem.builder()
+                            .asyncClick(false)
+                            .clickHandler((envyPlayer, clickType) -> this.openHistory(player,
+                                    filter.withItemType(TradeItemTypeFactory.getNext(filter.itemType())), 1))
+                            .extendedConfigItem(player, pane, this.typeButton, placeholder);
+
+                    UtilConfigItem.builder()
+                            .asyncClick(false)
+                            .clickHandler((envyPlayer, clickType) -> this.openHistory(player,
+                                    filter.withWindow(this.filterConfig.getWindowConfig().getNext(filter.window())), 1))
+                            .extendedConfigItem(player, pane, this.windowButton, placeholder);
                 })
                 .open(player, page);
     }
 
-    public void openPlayerHistoryInput(ForgeEnvyPlayer player) {
-        player.getParent().closeContainer();
-
-        PlatformProxy.runLater(() -> DialogueFactory.builder()
-                .title(PlatformProxy.<Component>flatParse("&bPlayer Trade History"))
-                .description(UtilChatColour.colour("&7Enter a player name or UUID to inspect their GTS history."))
-                .defaultText(player.getName())
-                .maxInputLength(36)
-                .closeOnEscape()
-                .hideUI()
-                .onClose(closedScreen -> EnvyGTSForge.getGui().getAdminTradesUI().openMenu(player))
-                .buttons(DialogueButton.builder()
-                        .text("Search")
-                        .backgroundColor(Color.GRAY)
-                        .acceptedInputs(InputPattern.of(Pattern.compile("[A-Za-z0-9_\\-]{1,36}"),
-                                UtilChatColour.colour("&cEnter a valid player name or UUID.")))
-                        .onClick(submitted -> this.openPlayerHistory(player, submitted.getInput().trim()))
-                        .build())
-                .sendTo(player.getParent()), 5);
+    private List<String> listingLore(Trade trade) {
+        return trade instanceof SoldTrade ? this.soldListingLore : this.unsoldListingLore;
     }
 }

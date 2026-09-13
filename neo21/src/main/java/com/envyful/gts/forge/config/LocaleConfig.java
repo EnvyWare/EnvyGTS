@@ -126,6 +126,15 @@ public class LocaleConfig extends AbstractYamlConfig {
         private String toggledBroadcastsOn = "&e&l(!) &eToggled broadcasts &a&lON";
         private String toggledBroadcastsOff = "&e&l(!) &eToggled broadcasts &c&lOFF";
 
+        @Comment("The message sent when some of the trades a history UI looked up could not be read back from the database")
+        private String tradeHistoryReadFailure = "&c&l(!) &c%failed% trade(s) could not be read from the database and are missing from this view";
+
+        @Comment("The message sent when a trade history lookup found nothing. %search%, %player%, %type%, and %window% are the filters that were used")
+        private String noTradesFound = "&c&l(!) &cNo completed GTS trades found &7(search: &f%search%&7, player: &f%player%&7, type: &f%type%&7, window: &f%window%&7)";
+
+        @Comment("The message sent when a sell price lookup found nothing. %search%, %player%, %type%, and %window% are the filters that were used")
+        private String noSalesFound = "&c&l(!) &cNo GTS sales found &7(search: &f%search%&7, player: &f%player%&7, type: &f%type%&7, window: &f%window%&7)";
+
         private String itemsToClaim = "&c&l(!) &cYou have auctions to claim in the GTS!";
         private String tradeNoLongerAvailable = "&c&l(!) &cThat trade is no longer available!";
         private String invenntoryFull = "&c&l(!) &cYou do not have enough inventory space to collect this item!";
@@ -282,6 +291,18 @@ public class LocaleConfig extends AbstractYamlConfig {
 
         public String getListedItem() {
             return this.listedItem;
+        }
+
+        public String getTradeHistoryReadFailure() {
+            return this.tradeHistoryReadFailure;
+        }
+
+        public String getNoTradesFound() {
+            return this.noTradesFound;
+        }
+
+        public String getNoSalesFound() {
+            return this.noSalesFound;
         }
     }
 
