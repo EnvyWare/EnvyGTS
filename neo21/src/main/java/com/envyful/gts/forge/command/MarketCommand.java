@@ -64,9 +64,6 @@ public class MarketCommand {
     }
 
     private void sendUsage(ForgeEnvyPlayer player) {
-        player.message("&e/gts market &7- Open the market menu");
-        player.message("&e/gts market recent [name] &7- View the trades completed recently");
-        player.message("&e/gts market prices [name] &7- View the highest, lowest, and mean sell prices");
-        player.message("&e/gts market player [name] &7- View the trades a player sold or bought");
+        player.message(EnvyGTSForge.getLocale().getMessages().getMarketCommandUsage());
     }
 }

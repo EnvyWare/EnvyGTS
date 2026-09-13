@@ -200,7 +200,8 @@ public class AdminTradeDetailUI {
         var displayName = trade.offer().item().displayName();
 
         if (!trade.offer().item().collect(player)) {
-            player.message("&cThere was no room to give you a copy of &f" + displayName + "&c.");
+            player.message(EnvyGTSForge.getLocale().getMessages().getNoRoomForTradeCopy()
+                    .replace("%item%", displayName));
             this.openDetails(player, trade, back);
             return;
         }
@@ -208,7 +209,8 @@ public class AdminTradeDetailUI {
         EnvyGTSForge.getLogger().info("{} ({}) took a copy of {} from GTS listing {} using the admin menu",
                 player.getName(), player.getUniqueId(), displayName, trade.offer().id());
 
-        player.message("&aA copy of &f" + displayName + " &ahas been sent to you.");
+        player.message(EnvyGTSForge.getLocale().getMessages().getTradeCopySent()
+                .replace("%item%", displayName));
         this.openDetails(player, trade, back);
     }
 }

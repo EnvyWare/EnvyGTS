@@ -42,6 +42,8 @@ public class LocaleConfig extends AbstractYamlConfig {
     private String durationInputDialogueText = "Enter the number of minutes you wish %pokemon% to be listed for";
     private String durationInputDialogueErrorText = "Enter the number of minutes you wish %pokemon% to be listed for. &cError:&r The value you entered was below the minimum duration (%min_duration%)";
 
+    private String sellDialogueSubmitButtonText = "Submit";
+
     private TimeFormatConfig expiryTimeFormat = new TimeFormatConfig();
 
     private Messages messages = new Messages();
@@ -90,6 +92,10 @@ public class LocaleConfig extends AbstractYamlConfig {
         return this.durationInputDialogueErrorText;
     }
 
+    public String getSellDialogueSubmitButtonText() {
+        return this.sellDialogueSubmitButtonText;
+    }
+
     public TimeFormatConfig getExpiryTimeFormat() {
         return this.expiryTimeFormat;
     }
@@ -134,6 +140,34 @@ public class LocaleConfig extends AbstractYamlConfig {
 
         @Comment("The message sent when a sell price lookup found nothing. %search%, %player%, %type%, and %window% are the filters that were used")
         private String noSalesFound = "&c&l(!) &cNo GTS sales found &7(search: &f%search%&7, player: &f%player%&7, type: &f%type%&7, window: &f%window%&7)";
+
+        @Comment("The message sent when the config has been reloaded")
+        private String reloadedConfig = "&e&l(!) &eReloaded the GTS config";
+
+        @Comment("The message sent when an admin takes a copy of an item from a historical listing. %item% is the item copied")
+        private String tradeCopySent = "&e&l(!) &eA copy of &f%item% &ehas been sent to you";
+
+        @Comment("The message sent when an admin has no room for the copy they asked for. %item% is the item copied")
+        private String noRoomForTradeCopy = "&c&l(!) &cThere was no room to give you a copy of &f%item%";
+
+        @Comment("The message sent when an argument given to the price history command cannot be read. %argument% is the argument")
+        private String invalidPriceHistoryArgument = "&c&l(!) &cInvalid price history argument: &f%argument%";
+
+        @Comment("The help sent when the market command is used incorrectly")
+        private List<String> marketCommandUsage = Lists.newArrayList(
+                "&e/gts market &7- Open the market menu",
+                "&e/gts market recent [name] &7- View the trades completed recently",
+                "&e/gts market prices [name] &7- View the highest, lowest, and mean sell prices",
+                "&e/gts market player [name] &7- View the trades a player sold or bought"
+        );
+
+        @Comment("The help sent when the admin command is used incorrectly")
+        private List<String> adminCommandUsage = Lists.newArrayList(
+                "&e/gts admin &7- Open the admin menu",
+                "&e/gts admin history &7- View global trade history",
+                "&e/gts admin history <player|uuid> &7- View player trade history",
+                "&e/gts admin prices <duration> [all|item|pokemon] &7- View highest sold prices"
+        );
 
         private String itemsToClaim = "&c&l(!) &cYou have auctions to claim in the GTS!";
         private String tradeNoLongerAvailable = "&c&l(!) &cThat trade is no longer available!";
@@ -303,6 +337,30 @@ public class LocaleConfig extends AbstractYamlConfig {
 
         public String getNoSalesFound() {
             return this.noSalesFound;
+        }
+
+        public String getReloadedConfig() {
+            return this.reloadedConfig;
+        }
+
+        public String getTradeCopySent() {
+            return this.tradeCopySent;
+        }
+
+        public String getNoRoomForTradeCopy() {
+            return this.noRoomForTradeCopy;
+        }
+
+        public String getInvalidPriceHistoryArgument() {
+            return this.invalidPriceHistoryArgument;
+        }
+
+        public List<String> getMarketCommandUsage() {
+            return this.marketCommandUsage;
+        }
+
+        public List<String> getAdminCommandUsage() {
+            return this.adminCommandUsage;
         }
     }
 

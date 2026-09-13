@@ -95,6 +95,16 @@ public class AdminHighestPricesUI {
             .positions(Pair.of(5, 5))
             .build();
 
+    private String windowInputTitle = "&6Highest Sold Prices";
+
+    private String windowInputDescription = "&7Enter a time window, for example 1h, 24h, 7d, or 30d.";
+
+    private String windowInputInvalidDescription = "&cInvalid time window. Use values like 24h or 7d.";
+
+    private String windowInputInvalidMessage = "&cEnter a time window like 24h or 7d.";
+
+    private String windowInputButtonText = "Search";
+
     private List<String> listingLore = List.of(
             " ",
             "&6Sold for &a$%sold_price%",
@@ -180,20 +190,20 @@ public class AdminHighestPricesUI {
 
     private DialogueFactory.Builder inputBuilder(ForgeEnvyPlayer player, boolean error) {
         return DialogueFactory.builder()
-                .title(PlatformProxy.<Component>flatParse("&6Highest Sold Prices"))
+                .title(PlatformProxy.<Component>flatParse(this.windowInputTitle))
                 .description(UtilChatColour.colour(error ?
-                        "&cInvalid time window. Use values like 24h or 7d." :
-                        "&7Enter a time window, for example 1h, 24h, 7d, or 30d."))
+                        this.windowInputInvalidDescription :
+                        this.windowInputDescription))
                 .defaultText(TradeWindowConfig.format(this.filterConfig.getWindowConfig().getDefaultWindow()))
                 .maxInputLength(10)
                 .closeOnEscape()
                 .hideUI()
                 .onClose(closedScreen -> EnvyGTSForge.getGui().getAdminTradesUI().openMenu(player))
                 .buttons(DialogueButton.builder()
-                        .text("Search")
+                        .text(this.windowInputButtonText)
                         .backgroundColor(Color.GRAY)
                         .acceptedInputs(InputPattern.of(Pattern.compile("[0-9A-Za-z]+"),
-                                UtilChatColour.colour("&cEnter a time window like 24h or 7d.")))
+                                UtilChatColour.colour(this.windowInputInvalidMessage)))
                         .onClick(submitted -> {
                             var parsedDuration = UtilTime.attemptParseTime(submitted.getInput());
 
