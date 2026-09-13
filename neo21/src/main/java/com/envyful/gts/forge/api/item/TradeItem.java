@@ -11,6 +11,17 @@ public interface TradeItem {
 
     String displayName();
 
+    /**
+     *
+     * The lower case terms this item can be found by when a player searches the trade history, separated by
+     * spaces. For a Pokemon that is its species, and for an item it is the name it is called in game followed
+     * by its item id, so that a renamed custom item is still found by the name players know it as
+     *
+     * @return The search terms
+     *
+     */
+    String searchKey();
+
     ItemStack display(Placeholder... placeholders);
 
     boolean collect(EnvyPlayer<?> player);
