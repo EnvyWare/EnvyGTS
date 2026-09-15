@@ -21,15 +21,13 @@ public class LocaleConfig extends AbstractYamlConfig {
 
     private List<String> listingBelowDataLore = Lists.newArrayList(
             "  ",
-            "&bSeller: %seller%",
-            "&bCost: &a$%price%",
-            "&bRemaining Time: &e%expires_in%"
+            "&e&l$%price%&7 from &f%seller%",
+            "&7Ends in &f%expires_in%"
     );
 
     private List<String> listingBelowExpiredOrClaimableLore = Lists.newArrayList(
             "  ",
-            "&bSeller: %original_owner%",
-            "&bCost: &a$%price%"
+            "&e&l$%price%&7 from &f%original_owner%"
     );
 
     private String moneyFormat = "%.2f";
