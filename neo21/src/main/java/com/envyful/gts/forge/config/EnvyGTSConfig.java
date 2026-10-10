@@ -11,6 +11,7 @@ import com.envyful.api.player.EnvyPlayer;
 import com.envyful.api.sqlite.config.SQLiteDatabaseDetailsConfig;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Sets;
 import com.pixelmonmod.api.pokemon.PokemonSpecification;
 import com.pixelmonmod.api.pokemon.PokemonSpecificationProxy;
 import com.pixelmonmod.pixelmon.api.pokemon.Pokemon;
@@ -30,6 +31,7 @@ import org.spongepowered.configurate.objectmapping.meta.Comment;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
 import java.util.regex.Pattern;
 
 @SuppressWarnings("FieldMayBeFinal")
@@ -257,6 +259,27 @@ public class EnvyGTSConfig extends AbstractYamlConfig {
 
     public Map<String, Integer> getAdditionalListingsPermissions() {
         return this.additionalListingsPermissions;
+    }
+
+    /**
+     *
+     * Every permission the listing limit is worked out from, so that they can be registered as permission nodes.
+     * EnvyAPI refuses a node it was never given to everyone who is not an operator, whatever the permissions
+     * plugin says, so without this the limits in the two maps never apply to ordinary players
+     *
+     */
+    public Set<String> getListingPermissions() {
+        Set<String> permissions = Sets.newHashSet();
+
+        if (this.maxListingsPermissions != null) {
+            permissions.addAll(this.maxListingsPermissions.keySet());
+        }
+
+        if (this.additionalListingsPermissions != null) {
+            permissions.addAll(this.additionalListingsPermissions.keySet());
+        }
+
+        return permissions;
     }
 
     /**
