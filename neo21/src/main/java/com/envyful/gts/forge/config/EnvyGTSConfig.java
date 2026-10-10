@@ -81,6 +81,11 @@ public class EnvyGTSConfig extends AbstractYamlConfig {
             "envygts.listings.unlimited", -1
     );
 
+    @Comment("Permissions that add extra listings on top of the limit from max-listings-per-user and max-listings-permissions, mapping a permission to the number of listings it adds. Unlike max-listings-permissions these stack: every one of them the player holds is added, so they suit rewards that are earned one at a time (e.g. one per dex rank). Negative values are ignored, and they add nothing to an unlimited limit")
+    private Map<String, Integer> additionalListingsPermissions = ImmutableMap.of(
+            "envygts.listings.bonus.example", 1
+    );
+
     @Comment("The maximum price a Pokemon can be listed for")
     private double maxPrice = 10_000_000;
 
@@ -250,12 +255,20 @@ public class EnvyGTSConfig extends AbstractYamlConfig {
         return this.maxListingsPermissions;
     }
 
+    public Map<String, Integer> getAdditionalListingsPermissions() {
+        return this.additionalListingsPermissions;
+    }
+
     /**
      *
-     * Gets the number of listings the given player may have at once, being the highest limit of the
-     * permissions they hold, or {@link #getMaxListingsPerUser()} when they hold none of them.
+     * Gets the number of listings the given player may have at once. The base is the highest limit of the
+     * {@link #getMaxListingsPermissions()} they hold, or {@link #getMaxListingsPerUser()} when they hold none of them,
+     * and every {@link #getAdditionalListingsPermissions()} they hold is then added on top, so bonuses earned
+     * separately (such as one per dex rank) stack instead of competing with the base limit.
      *
-     * A configured limit of -1 means unlimited, so it beats every other limit rather than losing to them
+     * A configured limit of -1 means unlimited, so it beats every other limit rather than losing to them.
+     * Negative bonuses are ignored so a bad config entry cannot take listings away, and the total is summed
+     * as a long and capped at {@link Integer#MAX_VALUE} so large values cannot overflow into a negative limit
      *
      */
     public int getMaxListings(EnvyPlayer<?> player) {
@@ -273,7 +286,21 @@ public class EnvyGTSConfig extends AbstractYamlConfig {
             max = Math.max(max, entry.getValue());
         }
 
-        return max;
+        if (this.additionalListingsPermissions == null) {
+            return max;
+        }
+
+        long total = max;
+
+        for (var entry : this.additionalListingsPermissions.entrySet()) {
+            if (entry.getValue() == null || entry.getValue() <= 0 || !player.hasPermission(entry.getKey())) {
+                continue;
+            }
+
+            total += entry.getValue();
+        }
+
+        return (int) Math.min(total, Integer.MAX_VALUE);
     }
 
     public double getMaxPrice() {
