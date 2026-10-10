@@ -234,7 +234,7 @@ public class ViewTradesUI {
             return false;
         }
 
-        return player.hasPermission("envygts.admin");
+        return player.hasPermission(EnvyGTSForge.ADMIN_PERMISSION);
     }
 
     private boolean isOwnerRemoveClick(Displayable.ClickType clickType){

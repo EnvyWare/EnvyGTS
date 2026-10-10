@@ -29,12 +29,15 @@ import com.envyful.gts.forge.listener.TradeCreateListener;
 import com.envyful.gts.forge.listener.WebhookListener;
 import com.envyful.gts.forge.api.player.GTSAttribute;
 import com.envyful.gts.forge.api.GTSDatabase;
+import com.envyful.api.neoforge.player.util.UtilPlayer;
+import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.RegisterCommandsEvent;
 import net.neoforged.neoforge.event.server.ServerAboutToStartEvent;
 import net.neoforged.neoforge.event.server.ServerStartedEvent;
+import net.neoforged.neoforge.server.permission.events.PermissionGatherEvent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jooq.DSLContext;
@@ -50,7 +53,11 @@ public class EnvyGTSForge {
 
     private static final Logger LOGGER = LogManager.getLogger("EnvyGTS");
 
+    public static final String ADMIN_PERMISSION = "envygts.admin";
+
     private static EnvyGTSForge instance;
+
+    private boolean permissionsGathered = false;
 
     private ForgePlayerManager playerManager = new ForgePlayerManager();
     private ForgeCommandFactory commandFactory = new ForgeCommandFactory(ForgeAnnotationCommandParser::new, playerManager);
@@ -118,6 +125,45 @@ public class EnvyGTSForge {
             this.locale = YamlConfigFactory.getInstance(LocaleConfig.class);
         } catch (IOException e) {
             LOGGER.error("Error while loading configs", e);
+        }
+
+        if (this.permissionsGathered && this.config != null) {
+            for (var permission : this.config.getListingPermissions()) {
+                if (UtilPlayer.getPermission(permission) == null) {
+                    LOGGER.warn("The listing permission {} was added after the server started, so it is not registered and will not apply until a restart", permission);
+                }
+            }
+        }
+    }
+
+    /**
+     *
+     * EnvyAPI refuses any permission node it was not given through UtilPlayer#registerPermission to everyone who is
+     * not an operator, and NeoForge only accepts nodes while the server is starting. The listing permissions come
+     * from the config, so they are registered here, after the config has loaded on ServerAboutToStartEvent.
+     *
+     * This runs last so that a node another mod has already registered under the same name (such as a shared
+     * group.<name>) is reused rather than added twice, which NeoForge rejects and which would stop the server starting
+     *
+     */
+    @SubscribeEvent(priority = EventPriority.LOWEST)
+    public void onPermissionGather(PermissionGatherEvent.Nodes event) {
+        this.permissionsGathered = true;
+
+        if (this.config == null) {
+            return;
+        }
+
+        var permissions = this.config.getListingPermissions();
+
+        permissions.add(ADMIN_PERMISSION);
+
+        for (var permission : permissions) {
+            var node = UtilPlayer.registerPermission(permission);
+
+            if (!event.getNodes().contains(node)) {
+                event.addNodes(node);
+            }
         }
     }
 
